@@ -21,6 +21,7 @@ using UnityEngine;
 public class Player : BaseObject {
 
     [SerializeField] Vector3Int _havePos;   //!< 持ってるオブジェクトの座標の保持
+    bool _isUpdate;
 
 
     /*
@@ -49,7 +50,7 @@ public class Player : BaseObject {
      */
     override public void Update()
     {
-        
+        _isUpdate = false;
     }
 
 
@@ -140,23 +141,39 @@ public class Player : BaseObject {
      */
     override public void Lift()
     {
+        if (_isUpdate) return;
+
         FieldController fieldCtrl = GameObject.FindGameObjectWithTag("FieldController")
             .GetComponent<FieldController>();   //!< メインのフィールド保持
         Vector3Int targetPos = new Vector3Int(_position.x + _direct.x, _position.y + _direct.y, _position.z + _direct.z);
 
-        if (fieldCtrl.isCollisionToObject(targetPos) &&
-            !fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y + 1, targetPos.z)))
-        {// 前方に何かオブジェクトがあったら
+        // 前方に何かオブジェクトがあったら
+        if (fieldCtrl.isCollisionToObject(targetPos))
+        {
+            if (fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y, targetPos.z), E_FIELD_OBJECT.BLOCK_NORMAL) &&
+                fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y + 1, targetPos.z)))
+            {
+                return;
+            }
+
+            // 持ち上げる
             Debug.Log(name + " が" + fieldCtrl._aField[targetPos.x, targetPos.y, targetPos.z].name + " を持ち上げました");
-            _eHaveObj = fieldCtrl.LiftObject(_position, targetPos);    // 持ち上げる
+            _eHaveObj = fieldCtrl.LiftObject(_position, targetPos);
+
+            // 追従
             GameObject.Find(fieldCtrl._aField[_position.x, _position.y + 1, _position.z].name).transform.parent = transform;
             _havePos = new Vector3Int(_position.x, _position.y + 1, _position.z);
 
+            // もし既に何かを持っていたら
             if (!fieldCtrl._aField[_position.x, _position.y + 1, _position.z]._eHaveObj.Equals(E_FIELD_OBJECT.NONE))
-            {// もし既に何かを持っていたら
-                fieldCtrl._aField[_position.x, _position.y + 1, _position.z].Lift();   // もう一度持ち上げる
+            {
+                // もう一度持ち上げる
+                fieldCtrl._aField[_position.x, _position.y + 1, _position.z].Lift();
+                Debug.Log("もう一度持ち上げるドン！");
             }
         }
+
+        _isUpdate = true;
     }
 
 
@@ -166,12 +183,15 @@ public class Player : BaseObject {
      */
     override public void LetDown()
     {
+        if (_isUpdate) return;
+
         FieldController fieldCtrl = GameObject.FindGameObjectWithTag("FieldController")
             .GetComponent<FieldController>();   //!< メインのフィールド保持
         Vector3Int targetPos = new Vector3Int(_position.x + _direct.x, _position.y + _direct.y, _position.z + _direct.z);
 
         if (!fieldCtrl.isPut(targetPos))
         {
+            Debug.Log(name + "離した");
             // 親子関係を解除
             GameObject.Find(fieldCtrl._aField[_havePos.x, _havePos.y, _havePos.z].name).transform.parent = null;
             // オブジェクトを手放す
@@ -191,11 +211,14 @@ public class Player : BaseObject {
             fieldCtrl._aField[_havePos.x, _havePos.y, _havePos.z].
                 Put(new Vector3Int(targetPos.x, targetPos.y, targetPos.z));
 
+            // もし既に何かを持っていたら
             if (!fieldCtrl._aField[targetPos.x, targetPos.y, targetPos.z]._eHaveObj.Equals(E_FIELD_OBJECT.NONE))
-            {// もし既に何かを持っていたら
+            {
                 fieldCtrl._aField[targetPos.x, targetPos.y, targetPos.z].LetDown();   // もう一度置く
             }
         }
+
+        _isUpdate = true;
     }
 }
 
