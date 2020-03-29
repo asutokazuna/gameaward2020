@@ -91,7 +91,7 @@ public class BaseObject : MonoBehaviour
      * @param1 FieldControllerのワールド座標
      * @return なし
      */
-    private void offSetArrayPos()
+    virtual protected void offSetArrayPos()
     {
         _oldPosition = _position = new Vector3Int(
             (int)(transform.position.x - GameObject.FindGameObjectWithTag("FieldController").transform.position.x),
@@ -165,7 +165,7 @@ public class BaseObject : MonoBehaviour
         _oldPosition        = _position;
         _position           = pos;
         fieldCtrl.UpdateField(this);
-        transform.position  = fieldCtrl.offsetPos(_position);
+        transform.position  = fieldCtrl.offsetPos(_myObject, _position);
         _bLifted            = true;
     }
 
@@ -192,7 +192,7 @@ public class BaseObject : MonoBehaviour
         _oldPosition = _position;
         _position = pos;
         fieldCtrl.UpdateField(this);
-        transform.position = fieldCtrl.offsetPos(_position);
+        transform.position = fieldCtrl.offsetPos(_myObject, _position);
         _bLifted = false;
     }
 

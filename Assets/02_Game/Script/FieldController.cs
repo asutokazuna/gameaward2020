@@ -369,11 +369,20 @@ public class FieldController : MonoBehaviour {
      * @brief ワールド座標の補正
      *        とりあえずの処理
      *        更新処理の最後に呼び出す
-     * @param1 自身の
+     * @param1 自身のオブジェクト情報
+     * @param2 自身のフィールド座標
      * @return ワールド座標
      */
-    public Vector3 offsetPos(Vector3Int pos)
+    public Vector3 offsetPos(E_FIELD_OBJECT obj, Vector3Int pos)
     {
+        if (obj.Equals(E_FIELD_OBJECT.PLAYER_01))
+        {
+            return new Vector3(
+            pos.x - MAX_FIELD_OBJECT * 0.5f,
+            pos.y - 0.5f,
+            pos.z - MAX_FIELD_OBJECT * 0.5f
+            );
+        }
         return new Vector3(
             pos.x - MAX_FIELD_OBJECT * 0.5f,
             pos.y,
@@ -413,49 +422,6 @@ public class FieldController : MonoBehaviour {
         }
         return new Vector3Int();
     }
-    
-
-    // なし
-    // /*
-    //  * @brief カメラの回転
-    //  *        回転するのはカメラ
-    //  *        プレイヤーの移動などの為にフィールドの角度を算出
-    //  */
-    // private void FieldRotate()
-    // {
-    //     // 左回転
-    //     if (Input.GetKeyDown(KeyCode.Q))
-    //     {
-    //         if (_FieldAngle - VAL_FIELD_ROTATE < 0)
-    //         {
-    //             _FieldAngle += VAL_FIELD_ROTATE * (360 / VAL_FIELD_ROTATE - 1);
-    //         }
-    //         else
-    //         {
-    //             _FieldAngle -= VAL_FIELD_ROTATE;
-    //         }
-    //     }
-    //     // 右回転
-    //     if (Input.GetKeyDown(KeyCode.E))
-    //     {
-    //         if (_FieldAngle + VAL_FIELD_ROTATE > 360)
-    //         {
-    //             _FieldAngle -= VAL_FIELD_ROTATE * (360 / VAL_FIELD_ROTATE - 1);
-    //         }
-    //         else
-    //         {
-    //             _FieldAngle += VAL_FIELD_ROTATE;
-    //         }
-    //     }
-    // }
-    // 
-    // /*
-    //  * return マップを見る角度
-    //  */
-    // public int GetFieldAngle()
-    // {
-    //     return _FieldAngle;
-    // }
 }
 
 // EOF
