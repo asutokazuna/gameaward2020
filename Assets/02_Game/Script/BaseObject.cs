@@ -25,6 +25,7 @@ public enum E_FIELD_OBJECT
     PLAYER_02,      // プレイヤー02
     PLAYER_03,      // プレイヤー03
     BLOCK_NORMAL,   // 通常ブロック
+    BLOCK_TANK,     // 水を貯めるブロック
 }
 
 /*

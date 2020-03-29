@@ -89,7 +89,8 @@ public class Player : BaseObject {
             if (fieldCtrl.isCollisionToObject(_position))
             {
                 // ブロックと衝突
-                if (fieldCtrl.isCollisionToObject(_position, E_FIELD_OBJECT.BLOCK_NORMAL))
+                if (fieldCtrl.isCollisionToObject(_position, E_FIELD_OBJECT.BLOCK_NORMAL) || 
+                    fieldCtrl.isCollisionToObject(_position, E_FIELD_OBJECT.BLOCK_TANK))
                 {
                     // 上がる
                     _position = new Vector3Int(_position.x, _position.y + 1, _position.z);
@@ -151,6 +152,7 @@ public class Player : BaseObject {
         if (fieldCtrl.isCollisionToObject(targetPos))
         {
             if (fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y, targetPos.z), E_FIELD_OBJECT.BLOCK_NORMAL) &&
+                fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y, targetPos.z), E_FIELD_OBJECT.BLOCK_TANK) &&
                 fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y + 1, targetPos.z)))
             {
                 return;
