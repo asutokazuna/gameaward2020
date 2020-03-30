@@ -52,6 +52,19 @@ public class BlockNormal : BaseObject
     }
 
 
+    /*
+     * @brief 通常ブロックの動き
+     * @param1 ベクトル
+     * @return なし
+     */
+    override public void Move(Vector3Int movement)
+    {
+        //_oldPosition = _position;       //!< 座標の保持
+        //_position = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
+        //// 向いてる方向の補正
+        //offsetDirect();
+        //Debug.Log("ブロックが動いた");
+    }
 }
 
 // EOF
