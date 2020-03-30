@@ -104,7 +104,7 @@ public class Player : BaseObject {
 
         // フィールドアップデート
         fieldCtrl.UpdateField(this);
-        if (!_eHaveObj.Equals(E_FIELD_OBJECT.NONE))
+        if (!_haveObj.Equals(E_FIELD_OBJECT.NONE))
         {
             //Vector3Int pos = new Vector3Int(_oldPosition.x, _oldPosition.y + 1, _oldPosition.z);
             Debug.Log("通ってる");
@@ -141,18 +141,18 @@ public class Player : BaseObject {
             }
 
             // 持ち上げる
-            Debug.Log(name + " が" + fieldCtrl._aField[targetPos.x, targetPos.y, targetPos.z].name + " を持ち上げました");
-            _eHaveObj = fieldCtrl.LiftObject(_position, targetPos);
+            Debug.Log(name + " が" + fieldCtrl._field[targetPos.x, targetPos.y, targetPos.z].name + " を持ち上げました");
+            _haveObj = fieldCtrl.LiftObject(_position, targetPos);
 
             // 追従
-            GameObject.Find(fieldCtrl._aField[_position.x, _position.y + 1, _position.z].name).transform.parent = transform;
+            GameObject.Find(fieldCtrl._field[_position.x, _position.y + 1, _position.z].name).transform.parent = transform;
             _havePos = new Vector3Int(_position.x, _position.y + 1, _position.z);
 
             // もし既に何かを持っていたら
-            if (!fieldCtrl._aField[_position.x, _position.y + 1, _position.z]._eHaveObj.Equals(E_FIELD_OBJECT.NONE))
+            if (!fieldCtrl._field[_position.x, _position.y + 1, _position.z]._haveObj.Equals(E_FIELD_OBJECT.NONE))
             {
                 // もう一度持ち上げる
-                fieldCtrl._aField[_position.x, _position.y + 1, _position.z].Lift();
+                fieldCtrl._field[_position.x, _position.y + 1, _position.z].Lift();
                 Debug.Log("もう一度持ち上げるドン！");
             }
         }
@@ -167,18 +167,18 @@ public class Player : BaseObject {
             }
         
             // 持ち上げる
-            Debug.Log(name + " が" + fieldCtrl._aField[targetPos.x, targetPos.y, targetPos.z].name + " を持ち上げました");
-            _eHaveObj = fieldCtrl.LiftObject(_position, targetPos);
+            Debug.Log(name + " が" + fieldCtrl._field[targetPos.x, targetPos.y, targetPos.z].name + " を持ち上げました");
+            _haveObj = fieldCtrl.LiftObject(_position, targetPos);
         
             // 追従
-            GameObject.Find(fieldCtrl._aField[_position.x, _position.y + 1, _position.z].name).transform.parent = transform;
+            GameObject.Find(fieldCtrl._field[_position.x, _position.y + 1, _position.z].name).transform.parent = transform;
             _havePos = new Vector3Int(_position.x, _position.y + 1, _position.z);
         
             // もし既に何かを持っていたら
-            if (!fieldCtrl._aField[_position.x, _position.y + 1, _position.z]._eHaveObj.Equals(E_FIELD_OBJECT.NONE))
+            if (!fieldCtrl._field[_position.x, _position.y + 1, _position.z]._haveObj.Equals(E_FIELD_OBJECT.NONE))
             {
                 // もう一度持ち上げる
-                fieldCtrl._aField[_position.x, _position.y + 1, _position.z].Lift();
+                fieldCtrl._field[_position.x, _position.y + 1, _position.z].Lift();
                 Debug.Log("もう一度持ち上げるドン！");
             }
         }
@@ -203,14 +203,14 @@ public class Player : BaseObject {
         {
             Debug.Log(name + "離した");
             // 親子関係を解除
-            GameObject.Find(fieldCtrl._aField[_havePos.x, _havePos.y, _havePos.z].name).transform.parent = null;
+            GameObject.Find(fieldCtrl._field[_havePos.x, _havePos.y, _havePos.z].name).transform.parent = null;
             // オブジェクトを手放す
-            _eHaveObj = E_FIELD_OBJECT.NONE;
+            _haveObj = E_FIELD_OBJECT.NONE;
 
             // 置いたものがフィールド外の場合
             if (fieldCtrl.isFall(targetPos))
             {
-                GameOevr(fieldCtrl._aField[_havePos.x, _havePos.y, _havePos.z].gameObject);
+                GameOevr(fieldCtrl._field[_havePos.x, _havePos.y, _havePos.z].gameObject);
             }
             else
             {
@@ -218,13 +218,13 @@ public class Player : BaseObject {
             }
 
             // 置く処理
-            fieldCtrl._aField[_havePos.x, _havePos.y, _havePos.z].
+            fieldCtrl._field[_havePos.x, _havePos.y, _havePos.z].
                 Put(new Vector3Int(targetPos.x, targetPos.y, targetPos.z));
 
             // もし既に何かを持っていたら
-            if (!fieldCtrl._aField[targetPos.x, targetPos.y, targetPos.z]._eHaveObj.Equals(E_FIELD_OBJECT.NONE))
+            if (!fieldCtrl._field[targetPos.x, targetPos.y, targetPos.z]._haveObj.Equals(E_FIELD_OBJECT.NONE))
             {
-                fieldCtrl._aField[targetPos.x, targetPos.y, targetPos.z].LetDown();   // もう一度置く
+                fieldCtrl._field[targetPos.x, targetPos.y, targetPos.z].LetDown();   // もう一度置く
             }
         }
 

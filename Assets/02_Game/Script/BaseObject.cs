@@ -38,8 +38,8 @@ public class BaseObject : MonoBehaviour
     [SerializeField] public Vector3Int      _position;      //!< 現在フィールド座標
     [SerializeField] public Vector3Int      _oldPosition;   //!< 過去フィールド座標
     [SerializeField] public Vector3Int      _direct;        //!< 向いてる方向
-    [SerializeField] public E_FIELD_OBJECT  _eHaveObj;      //!< 持っているオブジェクト
-    [SerializeField] public bool            _bLifted;       //!< 何かに持ち上げられいる時 = true
+    [SerializeField] public E_FIELD_OBJECT  _haveObj;      //!< 持っているオブジェクト
+    [SerializeField] public bool            _lifted;       //!< 何かに持ち上げられいる時 = true
 
 
     /*
@@ -52,8 +52,8 @@ public class BaseObject : MonoBehaviour
         _position       = new Vector3Int();
         _oldPosition    = new Vector3Int();
         _direct         = new Vector3Int();
-        _eHaveObj       = E_FIELD_OBJECT.NONE;
-        _bLifted        = false;
+        _haveObj       = E_FIELD_OBJECT.NONE;
+        _lifted        = false;
     }
 
 
@@ -111,7 +111,7 @@ public class BaseObject : MonoBehaviour
         SceneManager.LoadScene("SampleScene");
         Debug.Log("落ちたよ " + name + "今のフィールド座標" + _position);
         GameObject.FindGameObjectWithTag("FieldController").GetComponent<FieldController>()
-            ._aField[_oldPosition.x, _oldPosition.y, _oldPosition.z] = new BaseObject();
+            ._field[_oldPosition.x, _oldPosition.y, _oldPosition.z] = new BaseObject();
         Destroy(gameObject);
     }
 
@@ -132,7 +132,7 @@ public class BaseObject : MonoBehaviour
      */
     virtual public void HandAction()
     {
-        if (_eHaveObj.Equals(E_FIELD_OBJECT.NONE))
+        if (_haveObj.Equals(E_FIELD_OBJECT.NONE))
         {// 物を持ち上げる
             Lift();
         }
@@ -166,7 +166,7 @@ public class BaseObject : MonoBehaviour
         _position           = pos;
         fieldCtrl.UpdateField(this);
         transform.position  = fieldCtrl.offsetPos(_myObject, _position);
-        _bLifted            = true;
+        _lifted            = true;
     }
 
 
@@ -193,7 +193,7 @@ public class BaseObject : MonoBehaviour
         _position = pos;
         fieldCtrl.UpdateField(this);
         transform.position = fieldCtrl.offsetPos(_myObject, _position);
-        _bLifted = false;
+        _lifted = false;
     }
 
     /*
