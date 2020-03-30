@@ -156,24 +156,24 @@ public class Player : BaseObject {
                 Debug.Log("もう一度持ち上げるドン！");
             }
         }
-        else
+        else if (fieldCtrl.isCollisionToObject(targetPos 
+            = new Vector3Int(_position.x + _direct.x, _position.y + _direct.y, _position.z + _direct.z)))
         {
-            targetPos = new Vector3Int(_position.x + _direct.x, _position.y + _direct.y, _position.z + _direct.z);
-
+        
             if (fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y, targetPos.z), E_FIELD_OBJECT.BLOCK_NORMAL) &&
                 fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y + 1, targetPos.z)))
             {// 上に物が置いてあったら
                 return;
             }
-
+        
             // 持ち上げる
             Debug.Log(name + " が" + fieldCtrl._aField[targetPos.x, targetPos.y, targetPos.z].name + " を持ち上げました");
             _eHaveObj = fieldCtrl.LiftObject(_position, targetPos);
-
+        
             // 追従
             GameObject.Find(fieldCtrl._aField[_position.x, _position.y + 1, _position.z].name).transform.parent = transform;
             _havePos = new Vector3Int(_position.x, _position.y + 1, _position.z);
-
+        
             // もし既に何かを持っていたら
             if (!fieldCtrl._aField[_position.x, _position.y + 1, _position.z]._eHaveObj.Equals(E_FIELD_OBJECT.NONE))
             {
