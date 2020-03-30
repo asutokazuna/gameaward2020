@@ -20,12 +20,12 @@ using UnityEngine.SceneManagement;
  */
 public enum E_FIELD_OBJECT
 {
-    NONE,           // 無
-    PLAYER_01,      // プレイヤー01
-    PLAYER_02,      // プレイヤー02
-    PLAYER_03,      // プレイヤー03
-    BLOCK_NORMAL,   // 通常ブロック
+    NONE,                   // 無
+    PLAYER_01,              // プレイヤー01
+    BLOCK_NORMAL,           // 通常ブロック
+    BLOCK_WATER_SOURCE,     // 水源ブロック
 }
+
 
 /*
  * @class BaseObject
@@ -200,10 +200,11 @@ public class BaseObject : MonoBehaviour
     /*
      * @brief オブジェクトの追従
      */
-    virtual public Vector3Int Follow(Vector3Int pos)
+    virtual public Vector3Int Follow(Vector3Int pos, Vector3Int direct)
     {
         _oldPosition = _position;
         _position = pos;
+        
         GameObject.FindGameObjectWithTag("FieldController").GetComponent<FieldController>().UpdateField(this);
         return _position;
         //if (!_haveObj.Equals(E_FIELD_OBJECT.NONE))
@@ -252,24 +253,19 @@ public class BaseObject : MonoBehaviour
      */
     public void InitDirect()
     {
-        // 脳死方向の設定プログラム
-        if (_direct.x > 0)
-        {// 右
-            transform.rotation = Quaternion.Euler(0f, 90f, 0f);
-        }
-        if (_direct.x < 0)
-        {// 左
-            transform.rotation = Quaternion.Euler(0f, -90f, 0f);
-        }
-        if (_direct.z > 0)
-        {// 奥
-            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        }
-        if (_direct.z < 0)
-        {// 手前
-            transform.rotation = Quaternion.Euler(0f, 180f, 0f);
-        }
+        // 後で変更
+        // 取り合えず全部正面を向いておく
+        _direct = new Vector3Int(0, 0, 1);
     }
+
+
+    //public void Rotate(Vector3Int direct)
+    //{
+    //    if (direct.x > 0)
+    //    {// 右に回転
+    //
+    //    }
+    //}
 }
 
 // EOF

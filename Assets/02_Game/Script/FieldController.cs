@@ -344,9 +344,26 @@ public class FieldController : MonoBehaviour {
 
 
     /*
-     * @brief フィールド上で当たったオブジェクトを検出
+     * @brief 上に登れるか
      * @param1 目的座標
-     * @return 当たってたら true を返す
+     * @return 登れるなら true を返す
+     */
+    public bool isGetup(Vector3Int targetPos)
+    {
+        if (!isUse(targetPos)) return false;
+        if (_field[targetPos.x, targetPos.y, targetPos.z]._myObject.Equals(E_FIELD_OBJECT.NONE) ||
+            _field[targetPos.x, targetPos.y, targetPos.z]._myObject.Equals(E_FIELD_OBJECT.PLAYER_01))
+        {
+            return false;
+        }
+        return true;
+    }
+
+
+    /*
+     * @brief 下に降りれるか
+     * @param1 目的座標
+     * @return 降りれるなら true を返す
      */
     public bool isGetoff(Vector3Int targetPos)
     {

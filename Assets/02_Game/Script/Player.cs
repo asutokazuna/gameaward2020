@@ -85,8 +85,8 @@ public class Player : BaseObject {
         // 衝突イベント
         if (fieldCtrl.isCollisionToObject(_position))
         {
-            // ブロックと衝突
-            if (fieldCtrl.isCollisionToObject(_position, E_FIELD_OBJECT.BLOCK_NORMAL))
+            // 登れるアイテムと衝突
+            if (fieldCtrl.isGetup(_position))
             {
                 // 上がる
                 _position = new Vector3Int(_position.x, _position.y + 1, _position.z);
@@ -107,7 +107,7 @@ public class Player : BaseObject {
         if (!_haveObj.Equals(E_FIELD_OBJECT.NONE))
         {
             _havePos = fieldCtrl._field[_havePos.x, _havePos.y, _havePos.z].Follow(
-               new Vector3Int(_position.x, _position.y + 1, _position.z));
+               new Vector3Int(_position.x, _position.y + 1, _position.z), _direct);
             Debug.Log("通ってる");
         }
 
@@ -183,7 +183,6 @@ public class Player : BaseObject {
                 Debug.Log("もう一度持ち上げるドン！");
             }
         }
-        //fieldCtrl._field[_position.x, _position.y + 1, _position.z] = new BaseObject();
 
         _isUpdate = true;
     }
