@@ -90,10 +90,16 @@ public class FieldController : MonoBehaviour {
      * @param1 オブジェクト情報
      * @return なし
      */
-    public void UpdateField(BaseObject _object)
+    public void UpdateField(BaseObject obj)
     {
-        _field[_object._oldPosition.x, _object._oldPosition.y, _object._oldPosition.z] = new BaseObject();
-        _field[_object._position.x, _object._position.y, _object._position.z]          = _object;
+        _field[obj._oldPosition.x, obj._oldPosition.y, obj._oldPosition.z] = new BaseObject();
+        _field[obj._position.x, obj._position.y, obj._position.z]          = obj;
+        //if (!obj._haveObj.Equals(E_FIELD_OBJECT.NONE))
+        //{// 何かを持っていたら
+        //    _field[obj._position.x, obj._position.y + 1, obj._position.z] =
+        //        _field[obj._oldPosition.x, obj._oldPosition.y + 1, obj._oldPosition.z];
+        //    _field[obj._oldPosition.x, obj._oldPosition.y + 1, obj._oldPosition.z] = new BaseObject();
+        //}
     }
 
 
@@ -186,8 +192,10 @@ public class FieldController : MonoBehaviour {
     public E_FIELD_OBJECT LiftObject(Vector3Int myPosition, Vector3Int targetPos)
     {
         E_FIELD_OBJECT var = _field[targetPos.x, targetPos.y, targetPos.z]._myObject;  // 変数の保持
+
         _field[targetPos.x, targetPos.y, targetPos.z].Lifted(
                 new Vector3Int(myPosition.x, myPosition.y + 1, myPosition.z));  // 持ち上げる処理
+
         return var;
     }
 
@@ -388,21 +396,6 @@ public class FieldController : MonoBehaviour {
             pos.y,
             pos.z - MAX_FIELD_OBJECT * 0.5f
             );
-    }
-
-
-    /*
-     * @brief オブジェクトが置けるかの判定
-     * @param1 目的座標
-     * @return 置けないなら true
-     */
-    public bool DontPut(Vector3Int target)
-    {
-        if (isUse(new Vector3Int(target.x, target.y + 1, target.z)) && isUse(new Vector3Int(target.x, target.y, target.z)))
-        {
-            return true;
-        }
-        return false;
     }
 
 

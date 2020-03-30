@@ -196,6 +196,23 @@ public class BaseObject : MonoBehaviour
         _lifted = false;
     }
 
+
+    /*
+     * @brief オブジェクトの追従
+     */
+    virtual public Vector3Int Follow(Vector3Int pos)
+    {
+        _oldPosition = _position;
+        _position = pos;
+        GameObject.FindGameObjectWithTag("FieldController").GetComponent<FieldController>().UpdateField(this);
+        return _position;
+        //if (!_haveObj.Equals(E_FIELD_OBJECT.NONE))
+        //{
+        //    Follow(new Vector3Int(_position))
+        //}
+    }
+
+
     /*
      * @brief 向いてる方向の設定
      * @param1 目的座標

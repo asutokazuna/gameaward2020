@@ -106,7 +106,8 @@ public class Player : BaseObject {
         fieldCtrl.UpdateField(this);
         if (!_haveObj.Equals(E_FIELD_OBJECT.NONE))
         {
-            //Vector3Int pos = new Vector3Int(_oldPosition.x, _oldPosition.y + 1, _oldPosition.z);
+            _havePos = fieldCtrl._field[_havePos.x, _havePos.y, _havePos.z].Follow(
+               new Vector3Int(_position.x, _position.y + 1, _position.z));
             Debug.Log("通ってる");
         }
 
@@ -156,24 +157,24 @@ public class Player : BaseObject {
                 Debug.Log("もう一度持ち上げるドン！");
             }
         }
-        else if (fieldCtrl.isCollisionToObject(targetPos 
+        else if (fieldCtrl.isCollisionToObject(targetPos
             = new Vector3Int(_position.x + _direct.x, _position.y + _direct.y, _position.z + _direct.z)))
         {
-        
+
             if (fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y, targetPos.z), E_FIELD_OBJECT.BLOCK_NORMAL) &&
                 fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y + 1, targetPos.z)))
             {// 上に物が置いてあったら
                 return;
             }
-        
+
             // 持ち上げる
             Debug.Log(name + " が" + fieldCtrl._field[targetPos.x, targetPos.y, targetPos.z].name + " を持ち上げました");
             _haveObj = fieldCtrl.LiftObject(_position, targetPos);
-        
+
             // 追従
             GameObject.Find(fieldCtrl._field[_position.x, _position.y + 1, _position.z].name).transform.parent = transform;
             _havePos = new Vector3Int(_position.x, _position.y + 1, _position.z);
-        
+
             // もし既に何かを持っていたら
             if (!fieldCtrl._field[_position.x, _position.y + 1, _position.z]._haveObj.Equals(E_FIELD_OBJECT.NONE))
             {
@@ -182,6 +183,7 @@ public class Player : BaseObject {
                 Debug.Log("もう一度持ち上げるドン！");
             }
         }
+        //fieldCtrl._field[_position.x, _position.y + 1, _position.z] = new BaseObject();
 
         _isUpdate = true;
     }
@@ -194,6 +196,7 @@ public class Player : BaseObject {
     override public void LetDown()
     {
         if (_isUpdate) return;
+        //return;
 
         FieldController fieldCtrl = GameObject.FindGameObjectWithTag("FieldController")
             .GetComponent<FieldController>();   //!< メインのフィールド保持
