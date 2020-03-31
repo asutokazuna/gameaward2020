@@ -20,12 +20,12 @@ using UnityEngine.SceneManagement;
  */
 public enum E_FIELD_OBJECT
 {
-    NONE,           // 無
-    PLAYER_01,      // プレイヤー01
-    PLAYER_02,      // プレイヤー02
-    PLAYER_03,      // プレイヤー03
-    BLOCK_NORMAL,   // 通常ブロック
+    NONE,                   // 無
+    PLAYER_01,              // プレイヤー01
+    BLOCK_NORMAL,           // 通常ブロック
+    BLOCK_WATER_SOURCE,     // 水源ブロック
 }
+
 
 /*
  * @class BaseObject
@@ -38,8 +38,8 @@ public class BaseObject : MonoBehaviour
     [SerializeField] public Vector3Int      _position;      //!< 現在フィールド座標
     [SerializeField] public Vector3Int      _oldPosition;   //!< 過去フィールド座標
     [SerializeField] public Vector3Int      _direct;        //!< 向いてる方向
-    [SerializeField] public E_FIELD_OBJECT  _eHaveObj;      //!< 持っているオブジェクト
-    [SerializeField] public bool            _bLifted;       //!< 何かに持ち上げられいる時 = true
+    [SerializeField] public E_FIELD_OBJECT  _haveObj;      //!< 持っているオブジェクト
+    [SerializeField] public bool            _lifted;       //!< 何かに持ち上げられいる時 = true
 
 
     /*
@@ -52,8 +52,8 @@ public class BaseObject : MonoBehaviour
         _position       = new Vector3Int();
         _oldPosition    = new Vector3Int();
         _direct         = new Vector3Int();
-        _eHaveObj       = E_FIELD_OBJECT.NONE;
-        _bLifted        = false;
+        _haveObj       = E_FIELD_OBJECT.NONE;
+        _lifted        = false;
     }
 
 
@@ -91,7 +91,7 @@ public class BaseObject : MonoBehaviour
      * @param1 FieldControllerのワールド座標
      * @return なし
      */
-    private void offSetArrayPos()
+    virtual protected void offSetArrayPos()
     {
         _oldPosition = _position = new Vector3Int(
             (int)(transform.position.x - GameObject.FindGameObjectWithTag("FieldController").transform.position.x),
@@ -111,7 +111,7 @@ public class BaseObject : MonoBehaviour
         SceneManager.LoadScene("SampleScene");
         Debug.Log("落ちたよ " + name + "今のフィールド座標" + _position);
         GameObject.FindGameObjectWithTag("FieldController").GetComponent<FieldController>()
-            ._aField[_oldPosition.x, _oldPosition.y, _oldPosition.z] = new BaseObject();
+            ._field[_oldPosition.x, _oldPosition.y, _oldPosition.z] = new BaseObject();
         Destroy(gameObject);
     }
 
@@ -132,7 +132,7 @@ public class BaseObject : MonoBehaviour
      */
     virtual public void HandAction()
     {
-        if (_eHaveObj.Equals(E_FIELD_OBJECT.NONE))
+        if (_haveObj.Equals(E_FIELD_OBJECT.NONE))
         {// 物を持ち上げる
             Lift();
         }
@@ -165,8 +165,8 @@ public class BaseObject : MonoBehaviour
         _oldPosition        = _position;
         _position           = pos;
         fieldCtrl.UpdateField(this);
-        transform.position  = fieldCtrl.offsetPos(_position);
-        _bLifted            = true;
+        transform.position  = fieldCtrl.offsetPos(_myObject, _position);
+        _lifted            = true;
     }
 
 
@@ -192,9 +192,27 @@ public class BaseObject : MonoBehaviour
         _oldPosition = _position;
         _position = pos;
         fieldCtrl.UpdateField(this);
-        transform.position = fieldCtrl.offsetPos(_position);
-        _bLifted = false;
+        transform.position = fieldCtrl.offsetPos(_myObject, _position);
+        _lifted = false;
     }
+
+
+    /*
+     * @brief オブジェクトの追従
+     */
+    virtual public Vector3Int Follow(Vector3Int pos, Vector3Int direct)
+    {
+        _oldPosition = _position;
+        _position = pos;
+        
+        GameObject.FindGameObjectWithTag("FieldController").GetComponent<FieldController>().UpdateField(this);
+        return _position;
+        //if (!_haveObj.Equals(E_FIELD_OBJECT.NONE))
+        //{
+        //    Follow(new Vector3Int(_position))
+        //}
+    }
+
 
     /*
      * @brief 向いてる方向の設定
@@ -235,24 +253,19 @@ public class BaseObject : MonoBehaviour
      */
     public void InitDirect()
     {
-        // 脳死方向の設定プログラム
-        if (_direct.x > 0)
-        {// 右
-            transform.rotation = Quaternion.Euler(0f, 90f, 0f);
-        }
-        if (_direct.x < 0)
-        {// 左
-            transform.rotation = Quaternion.Euler(0f, -90f, 0f);
-        }
-        if (_direct.z > 0)
-        {// 奥
-            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        }
-        if (_direct.z < 0)
-        {// 手前
-            transform.rotation = Quaternion.Euler(0f, 180f, 0f);
-        }
+        // 後で変更
+        // 取り合えず全部正面を向いておく
+        _direct = new Vector3Int(0, 0, 1);
     }
+
+
+    //public void Rotate(Vector3Int direct)
+    //{
+    //    if (direct.x > 0)
+    //    {// 右に回転
+    //
+    //    }
+    //}
 }
 
 // EOF

@@ -40,7 +40,7 @@ public class FieldController : MonoBehaviour {
     //! 変数宣言
     //[SerializeField] private int        _FieldAngle;        //!< マップ角度
     [SerializeField] private Vector3Int _direct;            //!< 方向
-    public BaseObject[ , , ] _aField = new BaseObject[MAX_FIELD_OBJECT + 1, MAX_FIELD_OBJECT + 1, MAX_FIELD_OBJECT + 1];   //! マップ配列
+    public BaseObject[ , , ] _field = new BaseObject[MAX_FIELD_OBJECT + 1, MAX_FIELD_OBJECT + 1, MAX_FIELD_OBJECT + 1];   //! マップ配列
 
 
     /*
@@ -56,7 +56,7 @@ public class FieldController : MonoBehaviour {
             {
                 for (int x = 0; x < MAX_FIELD_OBJECT; x++)
                 {
-                    _aField[x, y, z] = new BaseObject();
+                    _field[x, y, z] = new BaseObject();
                     //_aField[x, y, z].GetComponent<Kota.BaseObject>().Init();
                 }
             }
@@ -90,10 +90,16 @@ public class FieldController : MonoBehaviour {
      * @param1 オブジェクト情報
      * @return なし
      */
-    public void UpdateField(BaseObject _object)
+    public void UpdateField(BaseObject obj)
     {
-        _aField[_object._oldPosition.x, _object._oldPosition.y, _object._oldPosition.z] = new BaseObject();
-        _aField[_object._position.x, _object._position.y, _object._position.z]          = _object;
+        _field[obj._oldPosition.x, obj._oldPosition.y, obj._oldPosition.z] = new BaseObject();
+        _field[obj._position.x, obj._position.y, obj._position.z]          = obj;
+        //if (!obj._haveObj.Equals(E_FIELD_OBJECT.NONE))
+        //{// 何かを持っていたら
+        //    _field[obj._position.x, obj._position.y + 1, obj._position.z] =
+        //        _field[obj._oldPosition.x, obj._oldPosition.y + 1, obj._oldPosition.z];
+        //    _field[obj._oldPosition.x, obj._oldPosition.y + 1, obj._oldPosition.z] = new BaseObject();
+        //}
     }
 
 
@@ -135,7 +141,7 @@ public class FieldController : MonoBehaviour {
         {
             for (int y = 0; y <= MAX_FIELD_OBJECT; y++)
             {
-                foreach (BaseObject obj in _aField)
+                foreach (BaseObject obj in _field)
                 {
                     if (obj == null) continue;
                     isUpdate = this.isMoveObject(_direct, obj, x, y); // オブジェクトのソート
@@ -163,7 +169,7 @@ public class FieldController : MonoBehaviour {
         {
             for (int j = 0; j <= MAX_FIELD_OBJECT; j++)
             {
-                foreach (BaseObject obj in _aField)
+                foreach (BaseObject obj in _field)
                 {
                     if (obj == null) continue;
                     isUpdate = this.isMoveObject(_direct, obj, i, j); // オブジェクトのソート
@@ -185,9 +191,11 @@ public class FieldController : MonoBehaviour {
      */
     public E_FIELD_OBJECT LiftObject(Vector3Int myPosition, Vector3Int targetPos)
     {
-        E_FIELD_OBJECT var = _aField[targetPos.x, targetPos.y, targetPos.z]._myObject;  // 変数の保持
-        _aField[targetPos.x, targetPos.y, targetPos.z].Lifted(
+        E_FIELD_OBJECT var = _field[targetPos.x, targetPos.y, targetPos.z]._myObject;  // 変数の保持
+
+        _field[targetPos.x, targetPos.y, targetPos.z].Lifted(
                 new Vector3Int(myPosition.x, myPosition.y + 1, myPosition.z));  // 持ち上げる処理
+
         return var;
     }
 
@@ -274,7 +282,7 @@ public class FieldController : MonoBehaviour {
             return true;
         }
         // 何かに持ち上げられている時
-        if (!isLimitField(new Vector3Int(pos.x, pos.y, pos.z)) && _aField[pos.x, pos.y, pos.z]._bLifted.Equals(true))
+        if (!isLimitField(new Vector3Int(pos.x, pos.y, pos.z)) && _field[pos.x, pos.y, pos.z]._lifted.Equals(true))
         {
             return true;
         }
@@ -300,7 +308,7 @@ public class FieldController : MonoBehaviour {
      */
     public bool isUse(Vector3Int pos)
     {
-        if (!isLimitField(pos) && _aField[pos.x, pos.y, pos.z] == null)
+        if (!isLimitField(pos) && _field[pos.x, pos.y, pos.z] == null)
             return false;
         return true;
     }
@@ -314,7 +322,7 @@ public class FieldController : MonoBehaviour {
     public bool isCollisionToObject(Vector3Int targetPos)
     {
         if (!isLimitField(targetPos) && isUse(targetPos) &&
-            _aField[targetPos.x, targetPos.y, targetPos.z]._myObject != E_FIELD_OBJECT.NONE)
+            _field[targetPos.x, targetPos.y, targetPos.z]._myObject != E_FIELD_OBJECT.NONE)
         {
             return true;
         }
@@ -331,14 +339,31 @@ public class FieldController : MonoBehaviour {
     public bool isCollisionToObject(Vector3Int targetPos, E_FIELD_OBJECT obj)
     {
         if (!isUse(targetPos)) return false;
-        return _aField[targetPos.x, targetPos.y, targetPos.z]._myObject.Equals(obj);
+        return _field[targetPos.x, targetPos.y, targetPos.z]._myObject.Equals(obj);
     }
 
 
     /*
-     * @brief フィールド上で当たったオブジェクトを検出
+     * @brief 上に登れるか
      * @param1 目的座標
-     * @return 当たってたら true を返す
+     * @return 登れるなら true を返す
+     */
+    public bool isGetup(Vector3Int targetPos)
+    {
+        if (!isUse(targetPos)) return false;
+        if (_field[targetPos.x, targetPos.y, targetPos.z]._myObject.Equals(E_FIELD_OBJECT.NONE) ||
+            _field[targetPos.x, targetPos.y, targetPos.z]._myObject.Equals(E_FIELD_OBJECT.PLAYER_01))
+        {
+            return false;
+        }
+        return true;
+    }
+
+
+    /*
+     * @brief 下に降りれるか
+     * @param1 目的座標
+     * @return 降りれるなら true を返す
      */
     public bool isGetoff(Vector3Int targetPos)
     {
@@ -369,31 +394,25 @@ public class FieldController : MonoBehaviour {
      * @brief ワールド座標の補正
      *        とりあえずの処理
      *        更新処理の最後に呼び出す
-     * @param1 自身の
+     * @param1 自身のオブジェクト情報
+     * @param2 自身のフィールド座標
      * @return ワールド座標
      */
-    public Vector3 offsetPos(Vector3Int pos)
+    public Vector3 offsetPos(E_FIELD_OBJECT obj, Vector3Int pos)
     {
+        if (obj.Equals(E_FIELD_OBJECT.PLAYER_01))
+        {
+            return new Vector3(
+            pos.x - MAX_FIELD_OBJECT * 0.5f,
+            pos.y - 0.5f,
+            pos.z - MAX_FIELD_OBJECT * 0.5f
+            );
+        }
         return new Vector3(
             pos.x - MAX_FIELD_OBJECT * 0.5f,
             pos.y,
             pos.z - MAX_FIELD_OBJECT * 0.5f
             );
-    }
-
-
-    /*
-     * @brief オブジェクトが置けるかの判定
-     * @param1 目的座標
-     * @return 置けないなら true
-     */
-    public bool DontPut(Vector3Int target)
-    {
-        if (isUse(new Vector3Int(target.x, target.y + 1, target.z)) && isUse(new Vector3Int(target.x, target.y, target.z)))
-        {
-            return true;
-        }
-        return false;
     }
 
 
@@ -413,49 +432,6 @@ public class FieldController : MonoBehaviour {
         }
         return new Vector3Int();
     }
-    
-
-    // なし
-    // /*
-    //  * @brief カメラの回転
-    //  *        回転するのはカメラ
-    //  *        プレイヤーの移動などの為にフィールドの角度を算出
-    //  */
-    // private void FieldRotate()
-    // {
-    //     // 左回転
-    //     if (Input.GetKeyDown(KeyCode.Q))
-    //     {
-    //         if (_FieldAngle - VAL_FIELD_ROTATE < 0)
-    //         {
-    //             _FieldAngle += VAL_FIELD_ROTATE * (360 / VAL_FIELD_ROTATE - 1);
-    //         }
-    //         else
-    //         {
-    //             _FieldAngle -= VAL_FIELD_ROTATE;
-    //         }
-    //     }
-    //     // 右回転
-    //     if (Input.GetKeyDown(KeyCode.E))
-    //     {
-    //         if (_FieldAngle + VAL_FIELD_ROTATE > 360)
-    //         {
-    //             _FieldAngle -= VAL_FIELD_ROTATE * (360 / VAL_FIELD_ROTATE - 1);
-    //         }
-    //         else
-    //         {
-    //             _FieldAngle += VAL_FIELD_ROTATE;
-    //         }
-    //     }
-    // }
-    // 
-    // /*
-    //  * return マップを見る角度
-    //  */
-    // public int GetFieldAngle()
-    // {
-    //     return _FieldAngle;
-    // }
 }
 
 // EOF

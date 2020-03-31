@@ -1,5 +1,5 @@
 ﻿/*
- * @file	Player.cs
+ * @file	Player01.cs
  * @brief   プレイヤーの管理
  *
  * @author	Kota Nakagami
@@ -15,7 +15,7 @@ using UnityEngine;
 
 
 /*
- * @class Player
+ * @class Player01
  * @brief プレイヤーの動き
  */
 public class Player : BaseObject {
@@ -63,75 +63,60 @@ public class Player : BaseObject {
     {
         FieldController fieldCtrl = GameObject.FindGameObjectWithTag("FieldController")
             .GetComponent<FieldController>();   //!< メインのフィールド保持
-        _oldPosition    = _position;       //!< 座標の保持
-        _position       = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
+        _oldPosition = _position;       //!< 座標の保持
+        _position = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
 
         // 向いてる方向の補正
         offsetDirect();
 
-        // プレイヤー01の移動
-        if (_myObject.Equals(E_FIELD_OBJECT.PLAYER_01))
+        // フィールドから落ちる場合
+        if (fieldCtrl.isFall(_position) || fieldCtrl.isLimitField(_position))
         {
-            // フィールドから落ちる場合
-            if (fieldCtrl.isFall(_position) || fieldCtrl.isLimitField(_position))
-            {
-                GameOevr(gameObject);
-                return;
-            }
-            // 移動出来ない場合
-            if (fieldCtrl.isDontMovePlayer(_position,_oldPosition))
-            {
-                _position = _oldPosition;
-                return;
-            }
-
-            // 衝突イベント
-            if (fieldCtrl.isCollisionToObject(_position))
-            {
-                // ブロックと衝突
-                if (fieldCtrl.isCollisionToObject(_position, E_FIELD_OBJECT.BLOCK_NORMAL))
-                {
-                    // 上がる
-                    _position = new Vector3Int(_position.x, _position.y + 1, _position.z);
-                }
-            }
-            // 何とも衝突しない
-            else
-            {
-                // 下に降りる処理
-                if (fieldCtrl.isGetoff(_position))
-                {
-                    _position = new Vector3Int(_position.x, _position.y - 1, _position.z);
-                }
-            }
-
-            // フィールドアップデート
-            fieldCtrl.UpdateField(this);
-            if (!_eHaveObj.Equals(E_FIELD_OBJECT.NONE))
-            {
-                //Vector3Int pos = new Vector3Int(_oldPosition.x, _oldPosition.y + 1, _oldPosition.z);
-                Debug.Log("通ってる");
-            }
-            
-            // 瞬間移動やんけ
-            transform.position = fieldCtrl.offsetPos(_position);    // ワールド座標の補正
-
-            Debug.Log(name + " が処理されたよ");
-
+            GameOevr(gameObject);
+            return;
+        }
+        // 移動出来ない場合
+        if (fieldCtrl.isDontMovePlayer(_position, _oldPosition))
+        {
+            _position = _oldPosition;
             return;
         }
 
-        // プレイヤー02の移動
-        if (_myObject.Equals(E_FIELD_OBJECT.PLAYER_02))
+        // 衝突イベント
+        if (fieldCtrl.isCollisionToObject(_position))
         {
-
+            // 登れるアイテムと衝突
+            if (fieldCtrl.isGetup(_position))
+            {
+                // 上がる
+                _position = new Vector3Int(_position.x, _position.y + 1, _position.z);
+            }
+        }
+        // 何とも衝突しない
+        else
+        {
+            // 下に降りる処理
+            if (fieldCtrl.isGetoff(_position))
+            {
+                _position = new Vector3Int(_position.x, _position.y - 1, _position.z);
+            }
         }
 
-        // プレイヤー03の移動
-        if (_myObject.Equals(E_FIELD_OBJECT.PLAYER_03))
+        // フィールドアップデート
+        fieldCtrl.UpdateField(this);
+        if (!_haveObj.Equals(E_FIELD_OBJECT.NONE))
         {
-
+            _havePos = fieldCtrl._field[_havePos.x, _havePos.y, _havePos.z].Follow(
+               new Vector3Int(_position.x, _position.y + 1, _position.z), _direct);
+            Debug.Log("通ってる");
         }
+
+        // 瞬間移動やんけ
+        transform.position = fieldCtrl.offsetPos(_myObject, _position);    // ワールド座標の補正
+
+        Debug.Log(name + " が処理されたよ");
+
+        return;
     }
 
 
@@ -145,30 +130,56 @@ public class Player : BaseObject {
 
         FieldController fieldCtrl = GameObject.FindGameObjectWithTag("FieldController")
             .GetComponent<FieldController>();   //!< メインのフィールド保持
-        Vector3Int targetPos = new Vector3Int(_position.x + _direct.x, _position.y + _direct.y, _position.z + _direct.z);
+        Vector3Int targetPos = new Vector3Int(_position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z);
 
         // 前方に何かオブジェクトがあったら
         if (fieldCtrl.isCollisionToObject(targetPos))
         {
             if (fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y, targetPos.z), E_FIELD_OBJECT.BLOCK_NORMAL) &&
                 fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y + 1, targetPos.z)))
-            {
+            {// 上に物が置いてあったら
                 return;
             }
 
             // 持ち上げる
-            Debug.Log(name + " が" + fieldCtrl._aField[targetPos.x, targetPos.y, targetPos.z].name + " を持ち上げました");
-            _eHaveObj = fieldCtrl.LiftObject(_position, targetPos);
+            Debug.Log(name + " が" + fieldCtrl._field[targetPos.x, targetPos.y, targetPos.z].name + " を持ち上げました");
+            _haveObj = fieldCtrl.LiftObject(_position, targetPos);
 
             // 追従
-            GameObject.Find(fieldCtrl._aField[_position.x, _position.y + 1, _position.z].name).transform.parent = transform;
+            GameObject.Find(fieldCtrl._field[_position.x, _position.y + 1, _position.z].name).transform.parent = transform;
             _havePos = new Vector3Int(_position.x, _position.y + 1, _position.z);
 
             // もし既に何かを持っていたら
-            if (!fieldCtrl._aField[_position.x, _position.y + 1, _position.z]._eHaveObj.Equals(E_FIELD_OBJECT.NONE))
+            if (!fieldCtrl._field[_position.x, _position.y + 1, _position.z]._haveObj.Equals(E_FIELD_OBJECT.NONE))
             {
                 // もう一度持ち上げる
-                fieldCtrl._aField[_position.x, _position.y + 1, _position.z].Lift();
+                fieldCtrl._field[_position.x, _position.y + 1, _position.z].Lift();
+                Debug.Log("もう一度持ち上げるドン！");
+            }
+        }
+        else if (fieldCtrl.isCollisionToObject(targetPos
+            = new Vector3Int(_position.x + _direct.x, _position.y + _direct.y, _position.z + _direct.z)))
+        {
+
+            if (fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y, targetPos.z), E_FIELD_OBJECT.BLOCK_NORMAL) &&
+                fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y + 1, targetPos.z)))
+            {// 上に物が置いてあったら
+                return;
+            }
+
+            // 持ち上げる
+            Debug.Log(name + " が" + fieldCtrl._field[targetPos.x, targetPos.y, targetPos.z].name + " を持ち上げました");
+            _haveObj = fieldCtrl.LiftObject(_position, targetPos);
+
+            // 追従
+            GameObject.Find(fieldCtrl._field[_position.x, _position.y + 1, _position.z].name).transform.parent = transform;
+            _havePos = new Vector3Int(_position.x, _position.y + 1, _position.z);
+
+            // もし既に何かを持っていたら
+            if (!fieldCtrl._field[_position.x, _position.y + 1, _position.z]._haveObj.Equals(E_FIELD_OBJECT.NONE))
+            {
+                // もう一度持ち上げる
+                fieldCtrl._field[_position.x, _position.y + 1, _position.z].Lift();
                 Debug.Log("もう一度持ち上げるドン！");
             }
         }
@@ -184,6 +195,7 @@ public class Player : BaseObject {
     override public void LetDown()
     {
         if (_isUpdate) return;
+        //return;
 
         FieldController fieldCtrl = GameObject.FindGameObjectWithTag("FieldController")
             .GetComponent<FieldController>();   //!< メインのフィールド保持
@@ -193,14 +205,14 @@ public class Player : BaseObject {
         {
             Debug.Log(name + "離した");
             // 親子関係を解除
-            GameObject.Find(fieldCtrl._aField[_havePos.x, _havePos.y, _havePos.z].name).transform.parent = null;
+            GameObject.Find(fieldCtrl._field[_havePos.x, _havePos.y, _havePos.z].name).transform.parent = null;
             // オブジェクトを手放す
-            _eHaveObj = E_FIELD_OBJECT.NONE;
+            _haveObj = E_FIELD_OBJECT.NONE;
 
             // 置いたものがフィールド外の場合
             if (fieldCtrl.isFall(targetPos))
             {
-                GameOevr(fieldCtrl._aField[_havePos.x, _havePos.y, _havePos.z].gameObject);
+                GameOevr(fieldCtrl._field[_havePos.x, _havePos.y, _havePos.z].gameObject);
             }
             else
             {
@@ -208,17 +220,32 @@ public class Player : BaseObject {
             }
 
             // 置く処理
-            fieldCtrl._aField[_havePos.x, _havePos.y, _havePos.z].
+            fieldCtrl._field[_havePos.x, _havePos.y, _havePos.z].
                 Put(new Vector3Int(targetPos.x, targetPos.y, targetPos.z));
 
             // もし既に何かを持っていたら
-            if (!fieldCtrl._aField[targetPos.x, targetPos.y, targetPos.z]._eHaveObj.Equals(E_FIELD_OBJECT.NONE))
+            if (!fieldCtrl._field[targetPos.x, targetPos.y, targetPos.z]._haveObj.Equals(E_FIELD_OBJECT.NONE))
             {
-                fieldCtrl._aField[targetPos.x, targetPos.y, targetPos.z].LetDown();   // もう一度置く
+                fieldCtrl._field[targetPos.x, targetPos.y, targetPos.z].LetDown();   // もう一度置く
             }
         }
 
         _isUpdate = true;
+    }
+
+
+    /*
+     * @brief 配列座標の補正
+     * @param1 FieldControllerのワールド座標
+     * @return なし
+     */
+    override protected void offSetArrayPos()
+    {
+        _oldPosition = _position = new Vector3Int(
+            (int)(transform.position.x - GameObject.FindGameObjectWithTag("FieldController").transform.position.x),
+            (int)(transform.position.y + 0.5f),
+            (int)(transform.position.z - GameObject.FindGameObjectWithTag("FieldController").transform.position.z)
+            );
     }
 }
 
