@@ -21,7 +21,7 @@ using UnityEngine;
 public class Player : BaseObject {
 
     // 定数定義
-    [SerializeField] const int MAX_ANIM_WALK = 60 * 1;
+    [SerializeField] int MAX_ANIM_WALK = 60 * 1;
 
     //! 変数宣言
     [SerializeField] Vector3Int _havePos;   //!< 持ってるオブジェクトの座標の保持

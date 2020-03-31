@@ -14,11 +14,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
+/*
+ * @class 水源ブロック
+ * @brief 水が流れ出るブロックの制御
+ */
 public class WaterSourceBlock : BaseObject
 {
-
-    [SerializeField] private Vector3Int _waterDirect;   //!< 水の流れ出る方向
+    //! 変数宣言
+    //[SerializeField] private Vector3Int _waterDirect;   //!< 水の流れ出る方向
+    // 今は全方位に水が流れ出る
 
 
     /*

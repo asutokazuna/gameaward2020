@@ -24,6 +24,7 @@ public enum E_FIELD_OBJECT
     PLAYER_01,              // プレイヤー01
     BLOCK_NORMAL,           // 通常ブロック
     BLOCK_WATER_SOURCE,     // 水源ブロック
+    BLOCK_TANK,             // 水槽
 }
 
 
@@ -40,6 +41,7 @@ public class BaseObject : MonoBehaviour
     [SerializeField] public Vector3Int      _direct;        //!< 向いてる方向
     [SerializeField] public E_FIELD_OBJECT  _haveObj;       //!< 持っているオブジェクト
     [SerializeField] public bool            _lifted;        //!< 何かに持ち上げられいる時 = true
+    [SerializeField] protected bool         _fullWater;     //!< たまってるかのフラグ
                      public int             _animCnt;       //!< アニメーションカウント
 
 
@@ -55,6 +57,7 @@ public class BaseObject : MonoBehaviour
         _direct         = new Vector3Int();
         _haveObj        = E_FIELD_OBJECT.NONE;
         _lifted         = false;
+        _fullWater      = false;
         _animCnt        = 0;
     }
 
@@ -258,6 +261,16 @@ public class BaseObject : MonoBehaviour
         // 後で変更
         // 取り合えず全部正面を向いておく
         _direct = new Vector3Int(0, 0, 1);
+    }
+
+
+    /*
+     * @brief 満タンフラグの取得
+     * @return 満タンなら true
+     */
+    public bool GetFullWater()
+    {
+        return _fullWater;
     }
 
 
