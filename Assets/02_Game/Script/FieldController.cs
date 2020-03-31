@@ -33,14 +33,15 @@ public class FieldController : MonoBehaviour {
     //! 定数定義
     public const    int     MAX_FIELD_OBJECT    = 10;       // マップ1辺あたりに置けるオブジェクトの最大値
     [SerializeField]int     VAL_FIELD_MOVE      = 1;        // 一マス当たりの移動値
-    //private         int     VAL_FIELD_ROTATE    = 90;       // カメラの回転角度
     private const   int     MAX_FIELD_RIDE      = 1;        // プレイヤーやその他の上りの上限値
     private const   int     MAX_FIELD_FALL      = 1;        // プレイヤーやその他の下りの上限値
 
+
     //! 変数宣言
-    //[SerializeField] private int        _FieldAngle;        //!< マップ角度
     [SerializeField] private Vector3Int _direct;            //!< 方向
     public BaseObject[ , , ] _field = new BaseObject[MAX_FIELD_OBJECT + 1, MAX_FIELD_OBJECT + 1, MAX_FIELD_OBJECT + 1];   //! マップ配列
+    [SerializeField] private int _maxWaterBlock;
+    [SerializeField] private int _numWaterBlock;
 
 
     /*
@@ -80,8 +81,44 @@ public class FieldController : MonoBehaviour {
      */
     void Update()
     {
+        if (_maxWaterBlock == 0)
+        {// 初期化
+            InitWaterCnt();
+        }
+        else if (_numWaterBlock >= _maxWaterBlock)
+        {// 水が全て入った
+            Debug.Log("Clear !!!!!!!!!!!!!!!!!!!!!");
+            return;
+        }
+
         ObjectMovement();
         HandAction();
+    }
+
+
+    /*
+     * @brief 水ブロック数の初期化
+     */
+
+    private void InitWaterCnt()
+    {
+        // フィールドの初期化
+        for (int y = 0; y < MAX_FIELD_OBJECT; y++)
+        {
+            for (int z = 0; z < MAX_FIELD_OBJECT; z++)
+            {
+                for (int x = 0; x < MAX_FIELD_OBJECT; x++)
+                {
+                    if (isUse(new Vector3Int(x, y, z)))
+                    {
+                        if (_field[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_TANK))
+                        {
+                            _maxWaterBlock++;
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -181,7 +218,7 @@ public class FieldController : MonoBehaviour {
             }
         }
     }
-
+    
 
     /*
      * @brief 対象のオブジェクトを持ち上げる
@@ -201,6 +238,20 @@ public class FieldController : MonoBehaviour {
 
 
     /*
+     * @brief 水カウントの加算
+     * @param1 true = 加算  false = 減算
+     * @return なし
+     */
+    public void SetWaterCnt(bool add)
+    {
+        if (add.Equals(true))
+            _numWaterBlock++;
+        else
+            _numWaterBlock--;
+    }
+
+
+    /*
      * @brief 落下
      * @param1 移動先座標
      * @return フィールド外にでるなら true
@@ -213,6 +264,40 @@ public class FieldController : MonoBehaviour {
                 return false;
         }
         return true;
+    }
+
+
+    /*
+     * @brief 水が自身に入ってこれるか
+     * @param1 自身のフィールド座標
+     * @return 水を自身に入れれるのであればtrue
+     */
+    public bool isWater(Vector3Int pos)
+    {
+        // 水源ブロックが隣接してる場合
+        if (isCollisionToObject(new Vector3Int(pos.x + 1, pos.y, pos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE)
+         || isCollisionToObject(new Vector3Int(pos.x - 1, pos.y, pos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE)
+         || isCollisionToObject(new Vector3Int(pos.x, pos.y, pos.z + 1), E_FIELD_OBJECT.BLOCK_WATER_SOURCE)
+         || isCollisionToObject(new Vector3Int(pos.x, pos.y, pos.z - 1), E_FIELD_OBJECT.BLOCK_WATER_SOURCE)
+         || isCollisionToObject(new Vector3Int(pos.x, pos.y + 1, pos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE)
+         || isCollisionToObject(new Vector3Int(pos.x, pos.y - 1, pos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE))
+        {
+            Debug.Log("水源ブロックとあたったよ!!!!!!!");
+            return true;
+        }
+
+        // 満タンブロックが隣接してる場合
+        if (_field[pos.x + 1, pos.y, pos.z].GetFullWater()
+         || _field[pos.x - 1, pos.y, pos.z].GetFullWater()
+         || _field[pos.x, pos.y + 1, pos.z].GetFullWater()
+         || _field[pos.x, pos.y - 1, pos.z].GetFullWater()
+         || _field[pos.x, pos.y, pos.z + 1].GetFullWater()
+         || _field[pos.x, pos.y, pos.z - 1].GetFullWater())
+        {
+            return true;
+        }
+
+        return false;
     }
 
 
