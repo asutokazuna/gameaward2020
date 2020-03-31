@@ -42,6 +42,7 @@ public class FieldController : MonoBehaviour {
     public BaseObject[ , , ] _field = new BaseObject[MAX_FIELD_OBJECT + 1, MAX_FIELD_OBJECT + 1, MAX_FIELD_OBJECT + 1];   //! マップ配列
     [SerializeField] private int _maxWaterBlock;
     [SerializeField] private int _numWaterBlock;
+    [SerializeField] private bool _clear;
 
 
     /*
@@ -85,9 +86,14 @@ public class FieldController : MonoBehaviour {
         {// 初期化
             InitWaterCnt();
         }
-        else if (_numWaterBlock >= _maxWaterBlock)
+        else if (_numWaterBlock >= _maxWaterBlock && !_clear)
         {// 水が全て入った
-            Debug.Log("Clear !!!!!!!!!!!!!!!!!!!!!");
+            _clear = true;
+            Debug.Log("Clear !!");
+            return;
+        }
+        else if (_clear)
+        {
             return;
         }
 
@@ -119,6 +125,7 @@ public class FieldController : MonoBehaviour {
                 }
             }
         }
+        _clear = false;
     }
 
 
@@ -275,12 +282,12 @@ public class FieldController : MonoBehaviour {
     public bool isWater(Vector3Int pos)
     {
         // 水源ブロックが隣接してる場合
-        if (isCollisionToObject(new Vector3Int(pos.x + 1, pos.y, pos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE)
-         || isCollisionToObject(new Vector3Int(pos.x - 1, pos.y, pos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE)
-         || isCollisionToObject(new Vector3Int(pos.x, pos.y, pos.z + 1), E_FIELD_OBJECT.BLOCK_WATER_SOURCE)
-         || isCollisionToObject(new Vector3Int(pos.x, pos.y, pos.z - 1), E_FIELD_OBJECT.BLOCK_WATER_SOURCE)
-         || isCollisionToObject(new Vector3Int(pos.x, pos.y + 1, pos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE)
-         || isCollisionToObject(new Vector3Int(pos.x, pos.y - 1, pos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE))
+        if ((isCollisionToObject(new Vector3Int(pos.x + 1, pos.y, pos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE) && !_field[pos.x + 1, pos.y, pos.z]._lifted)
+         || (isCollisionToObject(new Vector3Int(pos.x - 1, pos.y, pos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE) && !_field[pos.x - 1, pos.y, pos.z]._lifted)
+         || (isCollisionToObject(new Vector3Int(pos.x, pos.y, pos.z + 1), E_FIELD_OBJECT.BLOCK_WATER_SOURCE) && !_field[pos.x, pos.y, pos.z + 1]._lifted)
+         || (isCollisionToObject(new Vector3Int(pos.x, pos.y, pos.z - 1), E_FIELD_OBJECT.BLOCK_WATER_SOURCE) && !_field[pos.x, pos.y, pos.z - 1]._lifted)
+         || (isCollisionToObject(new Vector3Int(pos.x, pos.y + 1, pos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE) && !_field[pos.x, pos.y + 1, pos.z]._lifted)
+         || (isCollisionToObject(new Vector3Int(pos.x, pos.y - 1, pos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE) && !_field[pos.x, pos.y - 1, pos.z]._lifted))
         {
             Debug.Log("水源ブロックとあたったよ!!!!!!!");
             return true;
