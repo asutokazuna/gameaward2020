@@ -524,6 +524,16 @@ public class FieldController : MonoBehaviour {
         }
         return new Vector3Int();
     }
+
+
+    /*
+     * @brief クリアフラグの取得
+     * @return ゲームクリアなら true
+     */
+    public bool GetCraer()
+    {
+        return _clear;
+    }
 }
 
 // EOF
