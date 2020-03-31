@@ -38,8 +38,9 @@ public class BaseObject : MonoBehaviour
     [SerializeField] public Vector3Int      _position;      //!< 現在フィールド座標
     [SerializeField] public Vector3Int      _oldPosition;   //!< 過去フィールド座標
     [SerializeField] public Vector3Int      _direct;        //!< 向いてる方向
-    [SerializeField] public E_FIELD_OBJECT  _haveObj;      //!< 持っているオブジェクト
-    [SerializeField] public bool            _lifted;       //!< 何かに持ち上げられいる時 = true
+    [SerializeField] public E_FIELD_OBJECT  _haveObj;       //!< 持っているオブジェクト
+    [SerializeField] public bool            _lifted;        //!< 何かに持ち上げられいる時 = true
+                     public int             _animCnt;       //!< アニメーションカウント
 
 
     /*
@@ -52,8 +53,9 @@ public class BaseObject : MonoBehaviour
         _position       = new Vector3Int();
         _oldPosition    = new Vector3Int();
         _direct         = new Vector3Int();
-        _haveObj       = E_FIELD_OBJECT.NONE;
-        _lifted        = false;
+        _haveObj        = E_FIELD_OBJECT.NONE;
+        _lifted         = false;
+        _animCnt        = 0;
     }
 
 
