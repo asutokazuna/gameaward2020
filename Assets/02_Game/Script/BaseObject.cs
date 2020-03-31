@@ -41,7 +41,7 @@ public class BaseObject : MonoBehaviour
     [SerializeField] public Vector3Int      _direct;        //!< 向いてる方向
     [SerializeField] public E_FIELD_OBJECT  _haveObj;       //!< 持っているオブジェクト
     [SerializeField] public bool            _lifted;        //!< 何かに持ち上げられいる時 = true
-    [SerializeField] protected bool         _fullWater;     //!< たまってるかのフラグ
+    [SerializeField] public bool         _fullWater;     //!< たまってるかのフラグ
                      public int             _animCnt;       //!< アニメーションカウント
 
 
