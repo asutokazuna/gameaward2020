@@ -28,6 +28,7 @@ public class Player : BaseObject {
     [SerializeField] Vector3    _nextPos;
     [SerializeField] Vector3    _addPos;    //!< 加算量
                      bool       _isUpdate;  //!< 更新flag
+                     bool       _nowMove;   //!< 移動フラグ
     FieldController _fieldCtrl;
     public PlayerAnimation _playerAnimation;
 
@@ -69,11 +70,14 @@ public class Player : BaseObject {
 
         if (_animCnt > 0)
         {
-            //transform.position =
-            //    new Vector3(transform.position.x + _addPos.x, transform.position.y + _addPos.y, transform.position.z + _addPos.z);
+            if (_nowMove)
+            {
+                transform.position =
+                    new Vector3(transform.position.x + _addPos.x, transform.position.y + _addPos.y, transform.position.z + _addPos.z);
+            }
             _animCnt--;
         }
-        else if (_animCnt <= 0)
+        else if (_animCnt == 0)
         {// 移動していないとき
 
             if (!_haveObj.Equals(E_FIELD_OBJECT.NONE))
@@ -82,16 +86,15 @@ public class Player : BaseObject {
                 Debug.Log("物をもった状態でのアニメーション");
             }
             else
-            {
+            {// 何も持ってない時
                 _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
             }
 
-            //transform.position = _fieldCtrl.offsetPos(_myObject, _position);
-            //Vector3Int pos = new Vector3Int((int)transform.position.x, (int)transform.position.y, (int)transform.position.z);
-            //transform.position = new Vector3((float)pos.x, (float)pos.y, (float)pos.z);
+            // 座標の補正
+            transform.position = _fieldCtrl.offsetPos(_myObject, _position);
+            _animCnt = -1;
+            _nowMove = false;
         }
-
-        if (Input.GetKeyDown(KeyCode.Space)) { Debug.Log("うんち"); }
     }
 
 
@@ -110,6 +113,8 @@ public class Player : BaseObject {
 
         _animCnt = MAX_ANIM_WALK;
 
+        _nowMove = true;
+
         _oldPosition = _position;       //!< 座標の保持
         _position = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
 
@@ -119,14 +124,17 @@ public class Player : BaseObject {
         // フィールドから落ちる場合
         if (_fieldCtrl.isFall(_position) || _fieldCtrl.isLimitField(_position))
         {
-            GameOevr(gameObject);
+            GameOevr(gameObject);   // ゲームオーバー
             return;
         }
         // 移動出来ない場合
         if (_fieldCtrl.isDontMovePlayer(_position, _oldPosition))
         {
-            Debug.Log("うんち");
             _position = _oldPosition;
+
+            // 移動しない
+            this.Move();
+
             return;
         }
 
@@ -172,17 +180,8 @@ public class Player : BaseObject {
         }
 
         // 移動
-        _nextPos = _fieldCtrl.offsetPos(_myObject, _position);
-        //_addPos = new Vector3(_nextPos.x - transform.position.x, _nextPos.y - transform.position.y, _nextPos.z - transform.position.z);
-        //_addPos = new Vector3(_addPos.x / _animCnt, _addPos.y / _animCnt, _addPos.z / _animCnt);
-        
-        transform.position = _nextPos;
+        this.Move();
 
-        //_nextPos = _fieldCtrl.offsetPos(_myObject, _position);    // ワールド座標の補正
-        //_addPos = new Vector3(_nextPos.x - transform.position.x, _nextPos.y - transform.position.y, _nextPos.z - transform.position.z);
-
-
-        //transform.position = _fieldCtrl.offsetPos(_myObject, _position);    // ワールド座標の補正
         Debug.Log(name + " が処理されたよ");
 
         return;
@@ -320,6 +319,15 @@ public class Player : BaseObject {
             }
         }
         _isUpdate = true;
+    }
+
+
+
+    private void Move()
+    {
+        _nextPos = _fieldCtrl.offsetPos(_myObject, _position);
+        _addPos = new Vector3(_nextPos.x - transform.position.x, _nextPos.y - transform.position.y, _nextPos.z - transform.position.z);
+        _addPos = new Vector3(_addPos.x / _animCnt, _addPos.y / _animCnt, _addPos.z / _animCnt);
     }
 
 
