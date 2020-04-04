@@ -69,8 +69,8 @@ public class Player : BaseObject {
 
         if (_animCnt > 0)
         {
-            //transform.position =
-            //    new Vector3(transform.position.x + _addPos.x, transform.position.y + _addPos.y, transform.position.z + _addPos.z);
+            transform.position =
+                new Vector3(transform.position.x + _addPos.x, transform.position.y + _addPos.y, transform.position.z + _addPos.z);
             _animCnt--;
         }
         else if (_animCnt <= 0)
@@ -82,13 +82,12 @@ public class Player : BaseObject {
                 Debug.Log("物をもった状態でのアニメーション");
             }
             else
-            {
+            {// 何も持ってない時
                 _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
             }
 
-            //transform.position = _fieldCtrl.offsetPos(_myObject, _position);
-            //Vector3Int pos = new Vector3Int((int)transform.position.x, (int)transform.position.y, (int)transform.position.z);
-            //transform.position = new Vector3((float)pos.x, (float)pos.y, (float)pos.z);
+            // 座標の補正
+            transform.position = _fieldCtrl.offsetPos(_myObject, _position);
         }
 
         if (Input.GetKeyDown(KeyCode.Space)) { Debug.Log("うんち"); }
@@ -119,14 +118,18 @@ public class Player : BaseObject {
         // フィールドから落ちる場合
         if (_fieldCtrl.isFall(_position) || _fieldCtrl.isLimitField(_position))
         {
-            GameOevr(gameObject);
+            GameOevr(gameObject);   // ゲームオーバー
             return;
         }
         // 移動出来ない場合
         if (_fieldCtrl.isDontMovePlayer(_position, _oldPosition))
         {
-            Debug.Log("うんち");
             _position = _oldPosition;
+
+            _nextPos = _fieldCtrl.offsetPos(_myObject, _position);
+            _addPos = new Vector3(_nextPos.x - transform.position.x, _nextPos.y - transform.position.y, _nextPos.z - transform.position.z);
+            _addPos = new Vector3(_addPos.x / _animCnt, _addPos.y / _animCnt, _addPos.z / _animCnt);
+
             return;
         }
 
@@ -173,16 +176,9 @@ public class Player : BaseObject {
 
         // 移動
         _nextPos = _fieldCtrl.offsetPos(_myObject, _position);
-        //_addPos = new Vector3(_nextPos.x - transform.position.x, _nextPos.y - transform.position.y, _nextPos.z - transform.position.z);
-        //_addPos = new Vector3(_addPos.x / _animCnt, _addPos.y / _animCnt, _addPos.z / _animCnt);
-        
-        transform.position = _nextPos;
+        _addPos = new Vector3(_nextPos.x - transform.position.x, _nextPos.y - transform.position.y, _nextPos.z - transform.position.z);
+        _addPos = new Vector3(_addPos.x / _animCnt, _addPos.y / _animCnt, _addPos.z / _animCnt);
 
-        //_nextPos = _fieldCtrl.offsetPos(_myObject, _position);    // ワールド座標の補正
-        //_addPos = new Vector3(_nextPos.x - transform.position.x, _nextPos.y - transform.position.y, _nextPos.z - transform.position.z);
-
-
-        //transform.position = _fieldCtrl.offsetPos(_myObject, _position);    // ワールド座標の補正
         Debug.Log(name + " が処理されたよ");
 
         return;
