@@ -34,6 +34,9 @@ public enum E_FIELD_OBJECT
  */
 public class BaseObject : MonoBehaviour
 {
+    // 定数定義
+    [SerializeField] public int MAX_ANIM_WALK = 60;
+
     //! 変数宣言
     [SerializeField] public E_FIELD_OBJECT  _myObject;      //!< 自身のオブジェクト情報
     [SerializeField] public Vector3Int      _position;      //!< 現在フィールド座標
@@ -41,8 +44,11 @@ public class BaseObject : MonoBehaviour
     [SerializeField] public Vector3Int      _direct;        //!< 向いてる方向
     [SerializeField] public E_FIELD_OBJECT  _haveObj;       //!< 持っているオブジェクト
     [SerializeField] public bool            _lifted;        //!< 何かに持ち上げられいる時 = true
-    [SerializeField] public bool         _fullWater;     //!< たまってるかのフラグ
-                     public int             _animCnt;       //!< アニメーションカウント
+    [SerializeField] public bool            _fullWater;     //!< たまってるかのフラグ
+    [SerializeField] public Vector3         _nextPos;       //!< 移動先の座標
+                     public bool            _nowMove;       //!< 移動フラグ
+    [SerializeField] public Vector3         _addPos;        //!< 加算量
+    public int             _animCnt;       //!< アニメーションカウント
 
 
     /*
@@ -64,6 +70,7 @@ public class BaseObject : MonoBehaviour
 
     /*
      * @brief 初期化
+     * @return なし
      */
     public void Init()
     {
@@ -75,6 +82,7 @@ public class BaseObject : MonoBehaviour
 
     /*
      * @brief 初期化
+     * @return なし
      */
     virtual public void Start()
     {
@@ -84,6 +92,7 @@ public class BaseObject : MonoBehaviour
 
     /*
      * @brief 更新処理
+     * @return なし
      */
     virtual public void Update()
     {
@@ -93,7 +102,6 @@ public class BaseObject : MonoBehaviour
 
     /*
      * @brief 配列座標の補正
-     * @param1 FieldControllerのワールド座標
      * @return なし
      */
     virtual protected void offSetArrayPos()
@@ -132,11 +140,46 @@ public class BaseObject : MonoBehaviour
 
 
     /*
+     * @brief 移動量の算出
+     * @return なし
+     */
+    protected void Move()
+    {
+        _nextPos = GameObject.FindGameObjectWithTag("FieldController").GetComponent<FieldController>()
+            .offsetPos(_myObject, _position);
+        _addPos = new Vector3(_nextPos.x - transform.position.x, _nextPos.y - transform.position.y, _nextPos.z - transform.position.z);
+        _addPos = new Vector3(_addPos.x / _animCnt, _addPos.y / _animCnt, _addPos.z / _animCnt);
+    }
+    
+
+    /*
+     * @brief オブジェクトが何かしらの行動をとれるか
+     * @return 行動できるのなら true
+     */
+    protected bool isAction()
+    {
+        if (_animCnt > 0)
+        {// 移動中
+            Debug.Log("移動できひんで");
+            return false;
+        }
+        _animCnt = MAX_ANIM_WALK;
+        _nowMove = true;
+        return true;
+    }
+
+
+    /*
      * @brief 物を持ち上げる、下す
      * @return なし
      */
     virtual public void HandAction()
     {
+        if (_animCnt > 0)
+        {
+            return;
+        }
+
         if (_haveObj.Equals(E_FIELD_OBJECT.NONE))
         {// 物を持ち上げる
             Lift();
@@ -170,8 +213,12 @@ public class BaseObject : MonoBehaviour
         _oldPosition        = _position;
         _position           = pos;
         fieldCtrl.UpdateField(this);
-        transform.position  = fieldCtrl.offsetPos(_myObject, _position);
-        _lifted            = true;
+
+        _animCnt = MAX_ANIM_WALK;   // 後で直す
+        Move();
+        _nowMove = true;
+
+        _lifted  = true;
     }
 
 
@@ -197,7 +244,11 @@ public class BaseObject : MonoBehaviour
         _oldPosition = _position;
         _position = pos;
         fieldCtrl.UpdateField(this);
-        transform.position = fieldCtrl.offsetPos(_myObject, _position);
+
+        _animCnt = MAX_ANIM_WALK;   // 後で直す
+        Move();
+        _nowMove = true;
+
         _lifted = false;
     }
 
