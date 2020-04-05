@@ -16,9 +16,10 @@ using UnityEngine;
  */
 public class ClearText : MonoBehaviour
 {
-    // クリアテキスト表示用
+    //! クリアテキスト表示用
     public GameObject _clearObject;
 
+    //! FieldController取得用
     public FieldController _fieldController;
 
     // Start is called before the first frame update
