@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -222,6 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47aa1f028b1004c40a64058a109337f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -229,6 +230,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
   _maxWater: 0
   _numWater: 0
@@ -291,6 +295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -298,6 +303,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &183080391
 BoxCollider:
@@ -405,6 +413,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -412,6 +421,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &322378692
 BoxCollider:
@@ -714,6 +726,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -721,6 +734,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &480042638
 BoxCollider:
@@ -806,6 +822,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a130fe2df69a644480f9eaab76571a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -813,11 +830,11 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
-  _animCnt: 0
-  MAX_ANIM_WALK: 60
-  _havePos: {x: 0, y: 0, z: 0}
   _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
   _addPos: {x: 0, y: 0, z: 0}
+  _animCnt: 0
+  _havePos: {x: 0, y: 0, z: 0}
   _playerAnimation: {fileID: 0}
 --- !u!95 &500040690
 Animator:
@@ -896,6 +913,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -903,6 +921,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &542181483
 BoxCollider:
@@ -1182,6 +1203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47aa1f028b1004c40a64058a109337f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -1189,6 +1211,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
   _maxWater: 0
   _numWater: 0
@@ -1238,6 +1263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -1245,6 +1271,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &847317109
 BoxCollider:
@@ -1352,6 +1381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -1359,6 +1389,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &899099947
 BoxCollider:
@@ -1570,6 +1603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -1577,6 +1611,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &1080335905
 BoxCollider:
@@ -1684,6 +1721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -1691,6 +1729,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &1126738697
 BoxCollider:
@@ -1798,6 +1839,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -1805,6 +1847,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &1168069542
 BoxCollider:
@@ -2004,6 +2049,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad92776c40ad1144590223d75215cef2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -2011,6 +2057,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &1272930497
 BoxCollider:
@@ -2071,6 +2120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -2078,6 +2128,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &1302333682
 BoxCollider:
@@ -2163,6 +2216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47aa1f028b1004c40a64058a109337f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -2170,6 +2224,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
   _maxWater: 0
   _numWater: 0
@@ -2299,6 +2356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47aa1f028b1004c40a64058a109337f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -2306,6 +2364,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
   _maxWater: 0
   _numWater: 0
@@ -2368,6 +2429,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -2375,6 +2437,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &1483834881
 BoxCollider:
@@ -2559,6 +2624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -2566,6 +2632,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &1571015250
 BoxCollider:
@@ -2708,6 +2777,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -2715,6 +2785,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &1690061930
 BoxCollider:
@@ -2822,6 +2895,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -2829,6 +2903,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &1704570417
 BoxCollider:
@@ -3005,6 +3082,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -3012,6 +3090,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &1780430729
 BoxCollider:
@@ -3208,6 +3289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03927de6dea1b7d4bbfa594dd6de662c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -3215,6 +3297,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
 --- !u!65 &2085796666
 BoxCollider:

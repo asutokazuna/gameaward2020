@@ -20,15 +20,9 @@ using UnityEngine;
  */
 public class Player : BaseObject {
 
-    // 定数定義
-    [SerializeField] int MAX_ANIM_WALK = 200;
-
     //! 変数宣言
     [SerializeField] Vector3Int _havePos;   //!< 持ってるオブジェクトの座標の保持
-    [SerializeField] Vector3    _nextPos;
-    [SerializeField] Vector3    _addPos;    //!< 加算量
                      bool       _isUpdate;  //!< 更新flag
-                     bool       _nowMove;   //!< 移動フラグ
     FieldController _fieldCtrl;
     public PlayerAnimation _playerAnimation;
 
@@ -69,7 +63,7 @@ public class Player : BaseObject {
         //playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
 
         if (_animCnt > 0)
-        {
+        {// 移動カウント
             if (_nowMove)
             {
                 transform.position =
@@ -105,15 +99,10 @@ public class Player : BaseObject {
      */
     override public void Move(Vector3Int movement)
     {
-        if (_animCnt > 0)
-        {// 移動中
-            Debug.Log("移動できひんで");
+        if (!isAction())
+        {// 移動出来ない場合
             return;
         }
-
-        _animCnt = MAX_ANIM_WALK;
-
-        _nowMove = true;
 
         _oldPosition = _position;       //!< 座標の保持
         _position = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
@@ -198,7 +187,6 @@ public class Player : BaseObject {
 
         if (_animCnt > 0)
         {// 移動中
-            Debug.Log("移動できひんで");
             return;
         }
 
@@ -208,65 +196,59 @@ public class Player : BaseObject {
         if (_fieldCtrl.isCollisionToObject(targetPos) &&
             !_fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y, targetPos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE))
         {
-            if (_fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y, targetPos.z), E_FIELD_OBJECT.BLOCK_TANK) &&
-                _fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y + 1, targetPos.z)))
-            {// 上に物が置いてあったら
+            if (!LiftObject(targetPos))
+            {// 持てなかったら更新flagをたてない
                 return;
             }
-
-            // 持ち上げる
-            Debug.Log(name + " が" + _fieldCtrl._field[targetPos.x, targetPos.y, targetPos.z].name + " を持ち上げました");
-            _haveObj = _fieldCtrl.LiftObject(_position, targetPos);
-
-            // 追従
-            GameObject.Find(_fieldCtrl._field[_position.x, _position.y + 1, _position.z].name).transform.parent = transform;
-            _havePos = new Vector3Int(_position.x, _position.y + 1, _position.z);
-
-            // もし既に何かを持っていたら
-            if (!_fieldCtrl._field[_position.x, _position.y + 1, _position.z]._haveObj.Equals(E_FIELD_OBJECT.NONE))
-            {
-                // もう一度持ち上げる
-                _fieldCtrl._field[_position.x, _position.y + 1, _position.z].Lift();
-                Debug.Log("もう一度持ち上げるドン！");
-            }
-
-            _animCnt = MAX_ANIM_WALK;
-            _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_BOX);
         }
-
-
         else if (_fieldCtrl.isCollisionToObject(targetPos
             = new Vector3Int(_position.x + _direct.x, _position.y + _direct.y, _position.z + _direct.z)) &&
             !_fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y, targetPos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE))
         {
-
-            if (_fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y, targetPos.z), E_FIELD_OBJECT.BLOCK_TANK) &&
-                _fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y + 1, targetPos.z)))
-            {// 上に物が置いてあったら
+            if (!LiftObject(targetPos))
+            {// 持てなかったら更新flagをたてない
                 return;
             }
-
-            // 持ち上げる
-            Debug.Log(name + " が" + _fieldCtrl._field[targetPos.x, targetPos.y, targetPos.z].name + " を持ち上げました");
-            _haveObj = _fieldCtrl.LiftObject(_position, targetPos);
-
-            // 追従
-            GameObject.Find(_fieldCtrl._field[_position.x, _position.y + 1, _position.z].name).transform.parent = transform;
-            _havePos = new Vector3Int(_position.x, _position.y + 1, _position.z);
-
-            // もし既に何かを持っていたら
-            if (!_fieldCtrl._field[_position.x, _position.y + 1, _position.z]._haveObj.Equals(E_FIELD_OBJECT.NONE))
-            {
-                // もう一度持ち上げる
-                _fieldCtrl._field[_position.x, _position.y + 1, _position.z].Lift();
-                Debug.Log("もう一度持ち上げるドン！");
-            }
-
-            _animCnt = MAX_ANIM_WALK;
-            _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_BOX);
         }
 
         _isUpdate = true;
+    }
+
+
+    /*
+     * @brief オブジェクトを持つ処理
+     * @param1 持ち上げる対象ぼフィールド座標
+     * @return オブジェクトを持つことができるなら true
+     */
+    private bool LiftObject(Vector3Int targetPos)
+    {
+        if (_fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y, targetPos.z), E_FIELD_OBJECT.BLOCK_TANK) &&
+                _fieldCtrl.isCollisionToObject(new Vector3Int(targetPos.x, targetPos.y + 1, targetPos.z)))
+        {// 上に物が置いてあったら
+            return false;
+        }
+
+        // 持ち上げる
+        Debug.Log(name + " が" + _fieldCtrl._field[targetPos.x, targetPos.y, targetPos.z].name + " を持ち上げました");
+        _haveObj = _fieldCtrl.LiftObject(_position, targetPos);
+
+        // 追従
+        GameObject.Find(_fieldCtrl._field[_position.x, _position.y + 1, _position.z].name).transform.parent = transform;
+        _havePos = new Vector3Int(_position.x, _position.y + 1, _position.z);
+
+        _animCnt = MAX_ANIM_WALK;
+        _nowMove = false;
+        _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_BOX);
+
+        // もし既に何かを持っていたら
+        if (!_fieldCtrl._field[_position.x, _position.y + 1, _position.z]._haveObj.Equals(E_FIELD_OBJECT.NONE))
+        {
+            // もう一度持ち上げる
+            _fieldCtrl._field[_position.x, _position.y + 1, _position.z].Lift();
+            Debug.Log("もう一度持ち上げるドン！");
+        }
+
+        return true;
     }
 
 
@@ -281,9 +263,11 @@ public class Player : BaseObject {
 
         if (_animCnt > 0)
         {// 移動中
-            Debug.Log("移動できひんで");
             return;
         }
+
+        _animCnt = MAX_ANIM_WALK;
+        _nowMove = false;
 
         Vector3Int targetPos = new Vector3Int(_position.x + _direct.x, _position.y + _direct.y, _position.z + _direct.z);
 
@@ -309,7 +293,9 @@ public class Player : BaseObject {
             _fieldCtrl._field[_havePos.x, _havePos.y, _havePos.z].
                 Put(new Vector3Int(targetPos.x, targetPos.y, targetPos.z));
 
+            // アニメーションカウント
             _animCnt = MAX_ANIM_WALK;
+            _nowMove = false;
             _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_BOX);
 
             // もし既に何かを持っていたら
@@ -322,18 +308,8 @@ public class Player : BaseObject {
     }
 
 
-
-    private void Move()
-    {
-        _nextPos = _fieldCtrl.offsetPos(_myObject, _position);
-        _addPos = new Vector3(_nextPos.x - transform.position.x, _nextPos.y - transform.position.y, _nextPos.z - transform.position.z);
-        _addPos = new Vector3(_addPos.x / _animCnt, _addPos.y / _animCnt, _addPos.z / _animCnt);
-    }
-
-
     /*
      * @brief 配列座標の補正
-     * @param1 FieldControllerのワールド座標
      * @return なし
      */
     override protected void offSetArrayPos()

@@ -17,6 +17,7 @@ public class BlockTank : BaseObject
     public int          _numWater;                  //!< 現在の中身
     FieldController     _fieldCtrl;
 
+
     private void Awake()
     {
         /*
@@ -40,6 +41,32 @@ public class BlockTank : BaseObject
     override public void Update()
     {
         AddWater();
+        //Move();
+
+        if (_animCnt > 0)
+        {// 移動カウント
+            if (_nowMove)
+            {
+                transform.position =
+                    new Vector3(transform.position.x + _addPos.x, transform.position.y + _addPos.y, transform.position.z + _addPos.z);
+            }
+            _animCnt--;
+        }
+        else if (_animCnt == 0)
+        {// 移動していないとき
+
+            if (!_haveObj.Equals(E_FIELD_OBJECT.NONE))
+            {// 何かを持っている時
+            }
+            else
+            {// 何も持ってない時
+            }
+
+            // 座標の補正
+            transform.position = _fieldCtrl.offsetPos(_myObject, _position);
+            _animCnt = -1;
+            _nowMove = false;
+        }
     }
 
 
@@ -93,7 +120,6 @@ public class BlockTank : BaseObject
         {
             return true;
         }
-
         return false;
     }
 }
