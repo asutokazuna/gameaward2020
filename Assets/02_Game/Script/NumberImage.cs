@@ -40,7 +40,7 @@ public class NumberImage : MonoBehaviour
 
     /**
     * @brief        値の加算
-    * @param[in]    int
+    * @param[in]    int 数値の増減量
     * @return       なし
     * @details      表示したい値の増減をセットする関数です
     */

@@ -4,6 +4,7 @@
  *
  * @author	Kota Nakagami
  * @date1	2020/02/20(木)
+ * @date1	2020/04/06(月)   水の入った箱の数を表示するUIのシステムを追加
  *
  * @version	1.00
  */
@@ -43,6 +44,9 @@ public class FieldController : MonoBehaviour {
     [SerializeField] private int _maxWaterBlock;
     [SerializeField] private int _numWaterBlock;
     [SerializeField] private bool _clear;
+
+
+    public CountBoxUI _countBoxUI;      //!< 水の入った箱の数をセットするための変数
 
 
     /*
@@ -252,9 +256,19 @@ public class FieldController : MonoBehaviour {
     public void SetWaterCnt(bool add)
     {
         if (add.Equals(true))
+        {
             _numWaterBlock++;
+
+            // 水の入った箱の数+1
+            _countBoxUI.AddFullBox(1);
+        }
         else
+        {
             _numWaterBlock--;
+
+            // 水の入った箱の数-1
+            _countBoxUI.AddFullBox(-1);
+        }
     }
 
 
