@@ -71,7 +71,6 @@ public class NumberImage : MonoBehaviour
 
     /**
     * @brief        値の描画
-    * @param[in]    なし
     * @return       なし
     * @details      表示したい値を描画する関数です
     */

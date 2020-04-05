@@ -22,13 +22,13 @@ public class FullBoxImage : MonoBehaviour
 
     // 画像管理用
     public Sprite[] _fullBoxImage;                                     //!< image画像対応
-    public List<int> _fullBoxDigitList = new List<int>();       //!< 値の各桁保存用
+    public List<int> _fullBoxDigitList = new List<int>();              //!< 値の各桁保存用
 
     // タグ指定用
-    public string _fullBoxImageTag;               //!< タグ名保存用
+    public string _fullBoxImageTag;                      //!< タグ名保存用
 
     // オブジェクト指定用
-    public string _fullBoxImageObject;            //!< オブジェクト名保存用
+    public string _fullBoxImageObject;                   //!< オブジェクト名保存用
 
     // Start is called before the first frame update
     void Start()
@@ -38,10 +38,10 @@ public class FullBoxImage : MonoBehaviour
     }
 
     /**
-    * @brief    値の加算
-    * @param    int
-    * @return   なし
-    * @details  表示したい値の増減をセットする関数です
+    * @brief        値の加算
+    * @param[in]    int
+    * @return       なし
+    * @details      表示したい値の増減をセットする関数です
     */
     public void AddFullBox(int num)
     {
@@ -70,14 +70,13 @@ public class FullBoxImage : MonoBehaviour
 
     /**
     * @brief    値の描画
-    * @param    なし
     * @return   なし
     * @details  表示したい値を描画する関数です
     */
     void ViewFullBox()
     {
         // 計算用  
-        int _fullBoxCount = _fullBoxNum;         //!< 値保存用
+        int _fullBoxCount = _fullBoxNum;                //!< 値保存用
         var _fullBoxDigit = _fullBoxCount;              //!< 桁管理用
         _fullBoxDigitList = new List<int>();
 
@@ -103,11 +102,11 @@ public class FullBoxImage : MonoBehaviour
         for (int i = 1; i < _fullBoxDigitList.Count; i++)
         {
             RectTransform _fullImage = (RectTransform)Instantiate(GameObject.Find(_fullBoxImageObject)).transform;      // 初期ポジション
-            _fullImage.SetParent(this.transform, false);                                                          // 親の選択
-            _fullImage.localPosition = new Vector2(                                                               // ポジション指定
-                _fullImage.localPosition.x - _fullImage.sizeDelta.x * i / 2,                                    // X
-                _fullImage.localPosition.y);                                                                      // Y
-            _fullImage.GetComponent<Image>().sprite = _fullBoxImage[_fullBoxDigitList[i]];                                   // 対応数値の選択
+            _fullImage.SetParent(this.transform, false);                                                                // 親の選択
+            _fullImage.localPosition = new Vector2(                                                                     // ポジション指定
+                _fullImage.localPosition.x - _fullImage.sizeDelta.x * i / 2,                                            // X
+                _fullImage.localPosition.y);                                                                            // Y
+            _fullImage.GetComponent<Image>().sprite = _fullBoxImage[_fullBoxDigitList[i]];                              // 対応数値の選択
         }
     }
 }

@@ -5,7 +5,6 @@
  * @date    2020/03/30(月)  作成
  */
 
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,10 +30,11 @@ public class PlayerAnimation : MonoBehaviour
         E_PUT_BOX
     };
 
-    Animator _playerAnimator;       // アニメーター取得用
-    PlayerState _playerState;       // プレイヤーの状態管理用
-    PlayerState _playerNextState;   // プレイヤーの状態管理用
-    bool _changeState;              // アニメーション変更フラグ
+    // アニメーション管理用
+    Animator _playerAnimator;       //!< アニメーター取得用
+    PlayerState _playerState;       //!< プレイヤーの状態管理用
+    PlayerState _playerNextState;   //!< プレイヤーの状態管理用
+    bool _changeState;              //!< アニメーション変更フラグ
     int _stateNo;
 
     // Start is called before the first frame update
@@ -96,10 +96,10 @@ public class PlayerAnimation : MonoBehaviour
     }
 
     /**
-    * @brief    プレイヤーの状態のセット
-    * @param    PlayerState プレイヤーの状態
-    * @return   なし
-    * @details  プレイヤーの状態をセットする関数です
+    * @brief        プレイヤーの状態のセット
+    * @param[in]    PlayerState プレイヤーの状態
+    * @return       なし
+    * @details      プレイヤーの状態をセットする関数です
     */
     public void SetPlayerState(PlayerState state)
     {
