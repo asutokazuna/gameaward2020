@@ -23,16 +23,16 @@ public class BulbCreate : MonoBehaviour
         {
             bFirst = false;
 
-            if(nOldWater > 0)
-            {
-                GameObject obj = (GameObject)Resources.Load("WaterBulb_out");
+            //if(nOldWater > 0)
+            //{
+            //    GameObject obj = (GameObject)Resources.Load("WaterBulb_out");
 
-                Vector3 pos = this.transform.position;
-                pos.y += 0.4f;
+            //    Vector3 pos = this.transform.position;
+            //    pos.y += 0.4f;
 
 
-                Instantiate(obj, pos, Quaternion.identity);
-            }
+            //    Instantiate(obj, pos, Quaternion.identity);
+            //}
         }
 
         if (script._numWater > 0)
