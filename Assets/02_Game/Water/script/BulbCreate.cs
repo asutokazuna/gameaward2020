@@ -9,6 +9,8 @@ public class BulbCreate : MonoBehaviour
 
     private int nOldWater;
 
+    public int nTargetCnt;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,7 +37,7 @@ public class BulbCreate : MonoBehaviour
             //}
         }
 
-        if (script._numWater > 0)
+        if (script._numWater > nTargetCnt)
         {
             if(!bFirst)
             {
