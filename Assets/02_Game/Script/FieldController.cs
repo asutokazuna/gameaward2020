@@ -32,7 +32,7 @@ public enum E_FIELD_MODE
 public class FieldController : MonoBehaviour {
 
     //! 定数定義
-    public const    int     MAX_FIELD_OBJECT    = 10;       // マップ1辺あたりに置けるオブジェクトの最大値
+    [SerializeField]int     MAX_FIELD_OBJECT    = 10;       // マップ1辺あたりに置けるオブジェクトの最大値
     [SerializeField]int     VAL_FIELD_MOVE      = 1;        // 一マス当たりの移動値
     private const   int     MAX_FIELD_RIDE      = 1;        // プレイヤーやその他の上りの上限値
     private const   int     MAX_FIELD_FALL      = 1;        // プレイヤーやその他の下りの上限値
@@ -40,10 +40,10 @@ public class FieldController : MonoBehaviour {
 
     //! 変数宣言
     [SerializeField] private Vector3Int _direct;            //!< 方向
-    public BaseObject[ , , ] _field = new BaseObject[MAX_FIELD_OBJECT + 1, MAX_FIELD_OBJECT + 1, MAX_FIELD_OBJECT + 1];   //! マップ配列
-    [SerializeField] private int _maxWaterBlock;
-    [SerializeField] private int _numWaterBlock;
-    [SerializeField] private bool _clear;
+    public BaseObject[,,]               _field;             //! マップ配列
+    [SerializeField] private int        _maxWaterBlock;
+    [SerializeField] private int        _numWaterBlock;
+    [SerializeField] private bool       _clear;
 
 
     public CountBoxUI _countBoxUI;      //!< 水の入った箱の数をセットするための変数
@@ -56,6 +56,7 @@ public class FieldController : MonoBehaviour {
     void Awake()
     {
         // フィールドの初期化
+        _field = new BaseObject[MAX_FIELD_OBJECT + 1, MAX_FIELD_OBJECT + 1, MAX_FIELD_OBJECT + 1];
         for (int y = 0; y < MAX_FIELD_OBJECT; y++)
         {
             for (int z = 0; z < MAX_FIELD_OBJECT; z++)

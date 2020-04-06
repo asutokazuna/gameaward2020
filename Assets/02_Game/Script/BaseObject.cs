@@ -16,19 +16,6 @@ using UnityEngine.SceneManagement;
 
 
 /*
- * @enum オブジェクト情報
- */
-public enum E_FIELD_OBJECT
-{
-    NONE,                   // 無
-    PLAYER_01,              // プレイヤー01
-    BLOCK_NORMAL,           // 通常ブロック
-    BLOCK_WATER_SOURCE,     // 水源ブロック
-    BLOCK_TANK,             // 水槽
-}
-
-
-/*
  * @class BaseObject
  * @brief フィールドに置かれるオブジェクトの抽象クラス
  */
@@ -77,6 +64,8 @@ public class BaseObject : MonoBehaviour
         offSetArrayPos();
         InitDirect();
         GameObject.FindGameObjectWithTag("FieldController").GetComponent<FieldController>().UpdateField(this);
+        // 新しいBase
+        //GameObject.FindGameObjectWithTag("Map").GetComponent<Map>().SetObject(this);
     }
 
 

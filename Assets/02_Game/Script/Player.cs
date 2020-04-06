@@ -47,7 +47,6 @@ public class Player : BaseObject {
         _fieldCtrl = GameObject.FindGameObjectWithTag("FieldController")
             .GetComponent<FieldController>();   //!< メインのフィールド保持
         Init();
-
         //_playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK);
     }
 
@@ -319,6 +318,17 @@ public class Player : BaseObject {
             (int)(transform.position.y + 0.5f),
             (int)(transform.position.z - GameObject.FindGameObjectWithTag("FieldController").transform.position.z)
             );
+    }
+
+    
+    /*
+     * @brief デバッグ用関数
+     * @param1 表示したい文字列
+     * @return なし
+     */
+    public void CallDebug(object message)
+    {
+        Debug.Log(message);
     }
 }
 
