@@ -163,6 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47aa1f028b1004c40a64058a109337f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_ANIM_WALK: 60
   _myObject: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
@@ -170,6 +171,9 @@ MonoBehaviour:
   _haveObj: 0
   _lifted: 0
   _fullWater: 0
+  _nextPos: {x: 0, y: 0, z: 0}
+  _nowMove: 0
+  _addPos: {x: 0, y: 0, z: 0}
   _animCnt: 0
   _maxWater: 0
   _numWater: 0
@@ -185,3 +189,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ed8799aaf0df64bbbb6163567c5f49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nTargetCnt: 60
