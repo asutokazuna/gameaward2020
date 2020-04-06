@@ -74,6 +74,7 @@ public class Map : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // 今はコメントアウト
         //MoveObject();
     }
 
@@ -176,6 +177,8 @@ public class Map : MonoBehaviour
             SetObject(_box[n], n);
         }
     }
+
+
 }
 
 
