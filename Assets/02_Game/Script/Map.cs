@@ -9,7 +9,7 @@
  */
 
 
- //#define MODE_MAP
+ #define MODE_MAP
 
 
 using System.Collections;
@@ -217,6 +217,22 @@ public class Map : MonoBehaviour
     {
         if (_map[targetPos.x, targetPos.y - 1, targetPos.z]._myObject == E_FIELD_OBJECT.NONE)
         {// 下に何もない
+            return true;
+        }
+        return false;
+    }
+
+
+    /*
+     * @brief プレイヤーがオブジェクトを持てるかの判定
+     * @param1 目的座標
+     * @return オブジェクトを持てるなら true を返す
+     */
+    public bool isLift(Vector3Int pos)
+    {
+        if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.BLOCK_TANK && // 水槽ブロックの場合
+            !_waterblock[_map[pos.x, pos.y, pos.z]._number]._lifted)            // 何かに持たれてない
+        {
             return true;
         }
         return false;

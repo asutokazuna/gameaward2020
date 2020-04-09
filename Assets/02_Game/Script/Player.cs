@@ -9,7 +9,7 @@
  */
 
 
-//#define MODE_MAP    // 扱うスクリプト
+#define MODE_MAP    // 扱うスクリプト
 
 
 using System.Collections;
@@ -187,7 +187,23 @@ public class Player : BaseObject {
      */
     override public void Lift()
     {
-
+        Vector3Int toObj;           //!< 持ち上げるオブジェクトを探索するための座標
+        toObj = new Vector3Int(     // 向いてる方向の一段上から
+            _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z
+            );
+        for (int n = 0; n < 2; n++, toObj.y -= n)
+        {// 一段上から一段下まで、探索をする
+            if (_map.isLimitField(toObj))
+            {// マップ配列へ参照できない値の場合
+                Debug.Log("エラー : " + name + " はマップ配列外への参照をしようとした");
+                continue;
+            }
+            else if (_map.isLift(toObj))
+            {// 何かのオブジェクトを持てる場合
+                Debug.Log(name + " はオブジェクトを持った");
+                break;
+            }
+        }
     }
 
 
