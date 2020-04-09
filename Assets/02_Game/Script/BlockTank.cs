@@ -10,7 +10,7 @@ using UnityEngine;
 public class BlockTank : BaseObject
 {
     // 定数定義
-    private int MAX_FRAME_WATER = 60 * 8;
+    public int TargetCnt;
 
     //! 変数宣言
     public int          _maxWater;                  //!< 貯める最大値
@@ -33,7 +33,7 @@ public class BlockTank : BaseObject
         _fieldCtrl = GameObject.FindGameObjectWithTag("FieldController")
             .GetComponent<FieldController>();   //!< メインのフィールド保持
         Init();
-        _maxWater = MAX_FRAME_WATER;
+        _maxWater = TargetCnt;
         _numWater = 0;
     }
 
@@ -100,7 +100,7 @@ public class BlockTank : BaseObject
             }
             else if (_numWater > 0)
             {
-                _numWater--;
+                _numWater = 0;
                 Debug.Log(name + "空になりました");
             }
         }

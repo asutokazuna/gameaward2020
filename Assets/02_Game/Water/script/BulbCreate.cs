@@ -6,6 +6,9 @@ public class BulbCreate : MonoBehaviour
 {
     private BlockTank script;
     private bool bFirst;
+    private bool bFill;
+    private float fTimer;
+    public float WAIT_TIME;
 
     private int nOldWater;
 
@@ -15,7 +18,9 @@ public class BulbCreate : MonoBehaviour
     void Start()
     {
         bFirst = false;
+        bFill = false;
         script = this.GetComponent<BlockTank>();
+        this.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
     // Update is called once per frame
@@ -24,17 +29,31 @@ public class BulbCreate : MonoBehaviour
         if(script._numWater == 0)
         {
             bFirst = false;
+            bFill = false;
+            this.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            this.GetComponent<ParticleSystem>().Clear(true);
 
-            //if(nOldWater > 0)
-            //{
-            //    GameObject obj = (GameObject)Resources.Load("WaterBulb_out");
+            if (nOldWater > 0)
+            {
+                fTimer = WAIT_TIME;
+               
+            }
 
-            //    Vector3 pos = this.transform.position;
-            //    pos.y += 0.4f;
+            if(fTimer > 0.0f)
+            {
+                fTimer -= Time.deltaTime;
+                if(fTimer <= 0.0f)
+                {
+                    fTimer = -1.0f;
+                    GameObject obj = (GameObject)Resources.Load("WaterCube");
+
+                    Vector3 pos = this.transform.position;
+                    pos.y += 0.0f;
 
 
-            //    Instantiate(obj, pos, Quaternion.identity);
-            //}
+                    Instantiate(obj, pos, Quaternion.Euler(-90, 0, 0));
+                }
+            }
         }
 
         if (script._numWater > nTargetCnt)
@@ -46,10 +65,21 @@ public class BulbCreate : MonoBehaviour
                 GameObject obj = (GameObject)Resources.Load("WaterBulb_in");
 
                 Vector3 pos = this.transform.position;
-                pos.y -= 0.4f;
+                pos.y -= 0.2f;
 
 
-                Instantiate(obj, pos, Quaternion.identity);
+                Instantiate(obj, pos, Quaternion.Euler(-90, 0, 0));
+            }
+        }
+
+        if (script._fullWater)
+        {
+            if (!bFill)
+            {
+                bFill = true;
+                this.GetComponent<ParticleSystem>().Play(true);
+                
+
             }
         }
 
