@@ -9,6 +9,9 @@
  */
 
 
+#define MODE_MAP    // 扱うスクリプト
+
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -165,31 +168,34 @@ public class BaseObject : MonoBehaviour
 
 
     /*
+     * @brief  持ち上げられる
+     * @param1 ターゲット座標
+     * @return なし
+     */
+    virtual public void Lifted(Vector3Int pos)
+    {
+        _oldPosition = _position;
+        _position = pos;
+
+        // 後で変更
+        GameObject.FindGameObjectWithTag("FieldController")
+            .GetComponent<FieldController>().UpdateField(this);   //!< メインのフィールド保持
+        transform.position = GameObject.FindGameObjectWithTag("FieldController")
+            .GetComponent<FieldController>().offsetPos(_myObject, _position);
+
+        _lifted = true;
+    }
+
+#if !MODE_MAP
+
+    /*
      * @brief 物を持ち上げる
      * @return なし
      */
     virtual public void Lift()
     {
-
+    
     }
-
-
-    /*
-     * @brief  持ち上げられる
-     * @param1 ターゲット座標
-     * @return なし
-     */
-    //virtual public void Lifted(Vector3Int pos)
-    //{
-    //    _oldPosition = _position;
-    //    _position = pos;
-    //
-    //    _animCnt = MAX_ANIM_WALK;   // 後で直す
-    //    Move();
-    //    _nowMove = true;
-    //
-    //    _lifted = true;
-    //}
 
 
     /*
@@ -246,6 +252,7 @@ public class BaseObject : MonoBehaviour
 
     /*
      * @brief オブジェクトの追従
+     * @return なし
      */
     virtual public Vector3Int Follow(Vector3Int pos, Vector3Int direct)
     {
@@ -259,6 +266,8 @@ public class BaseObject : MonoBehaviour
         //    Follow(new Vector3Int(_position))
         //}
     }
+
+#endif
 
 
     /*

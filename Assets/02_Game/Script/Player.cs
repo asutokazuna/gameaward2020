@@ -177,6 +177,8 @@ public class Player : BaseObject {
         {// 正面への移動
             Debug.Log(name + " はそのまま移動した");
         }
+
+        // 後で修正
         transform.position = _fieldCtrl.offsetPos(_myObject, _position);
     }
 
@@ -185,9 +187,10 @@ public class Player : BaseObject {
      * @brief 物を持ち上げる
      * @return なし
      */
-    override public void Lift()
+    public void Lift()
     {
-        Vector3Int toObj;           //!< 持ち上げるオブジェクトを探索するための座標
+        Vector3Int  toObj;      //!< 持ち上げるオブジェクトを探索するための座標
+        BaseObject  obj;        //!< 持つオブジェクトの名前
         toObj = new Vector3Int(     // 向いてる方向の一段上から
             _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z
             );
@@ -200,7 +203,10 @@ public class Player : BaseObject {
             }
             else if (_map.isLift(toObj))
             {// 何かのオブジェクトを持てる場合
-                Debug.Log(name + " はオブジェクトを持った");
+                obj         = _map.LiftToObject(_position, toObj);
+                _haveObj    = obj._myObject;
+                GameObject.Find(obj.name).transform.parent = transform; // 追従
+                Debug.Log(name + " は " + obj.name +" を持った");
                 break;
             }
         }
@@ -211,7 +217,7 @@ public class Player : BaseObject {
      * @brief 物を下す
      * @return なし
      */
-    override public void LetDown()
+    public void LetDown()
     {
 
     }

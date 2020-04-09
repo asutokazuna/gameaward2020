@@ -61,20 +61,20 @@ public class Map : MonoBehaviour
         "水源ブロック",
         "水槽ブロック",
         })]  // オブジェクトが増えたら随時追加
-    [SerializeField] string[] _objectName = new string[(int)E_FIELD_OBJECT.MAX];
+    [SerializeField] string[] _objectTag = new string[(int)E_FIELD_OBJECT.MAX];
+    public SquareInfo[,,]       _map;               //!< マップ情報
+    public Player[]             _player;            //!< プレイヤーオブジェクト
+    public BlockTank[]          _waterBlock;        //!< 水槽オブジェクト
+    public BlockNormal[]        _ground;            //!< 地面ブロック
+    public WaterSourceBlock[]   _waterSource;       //!< 水源ブロック
+    [SerializeField] int        _playerCnt;         //!< プレイヤーカウント
+    [SerializeField] int        _waterBlockCnt;     //!< 水槽カウント
+    [SerializeField] int        _groundCnt;         //!< 地面カウント
+    [SerializeField] int        _waterSourceCnt;    //!< 水源カウント
+    [SerializeField] Vector3Int _direct;            //!< 全プレイヤーが向いてる方向
+    bool                        _start;             //!< 最初の一回だけ関数を呼ぶため(後で消す)
+    [SerializeField] bool       _gameOver;          //!< ゲームオーバーフラグ
 
-    public SquareInfo[,,]       _map;           //!< マップ情報
-    public Player[]             _player;        //!< プレイヤーオブジェクト
-    public BlockTank[]          _box;           //!< 箱オブジェクト
-    public BlockNormal[]        _ground;        //!< 地面ブロック
-    public WaterSourceBlock[]   _waterblock;    //!< 水源ブロック
-    [SerializeField] int        _playerCnt;     //!< プレイヤーカウント
-    [SerializeField] int        _boxCnt;        //!< 箱カウント
-    [SerializeField] int        _groundCnt;     //!< 地面カウント
-    [SerializeField] int        _waterblockCnt; //!< 水源カウント
-    [SerializeField] Vector3Int _direct;        //!< 全プレイヤーが向いてる方向
-    bool                        _start;         //!< 最初の一回だけ関数を呼ぶため(後で消す)
-    [SerializeField] bool       _gameOver;      //!< ゲームオーバーフラグ
 
     /*
      * @brief Awake
@@ -167,6 +167,27 @@ public class Map : MonoBehaviour
 
 
     /*
+     * @brief オブジェクトを持ち上げる
+     * @param1 自身の座標
+     * @param2 持ち上げるオブジェクトの座標
+     * @return オブジェクト情報
+     */
+    public BaseObject LiftToObject(Vector3Int pos, Vector3Int target)
+    {
+        if (_map[target.x, target.y, target.z]._myObject == E_FIELD_OBJECT.BLOCK_TANK)
+        {
+            _waterBlock[_map[target.x, target.y, target.z]._number].Lifted(new Vector3Int(pos.x, pos.y + 1, pos.z));
+
+            SetObject(_waterBlock[_map[target.x, target.y, target.z]._number], _map[target.x, target.y, target.z]._number);
+            DeleteObject(_waterBlock[_map[target.x, target.y, target.z]._number]._oldPosition);
+
+            return _waterBlock[_map[target.x, target.y, target.z]._number];
+        }
+        return null;
+    }
+
+
+    /*
      * @brief ゲームオーバー判定
      * @param1 移動先座標
      * @return ゲームオーバーなら true
@@ -241,10 +262,9 @@ public class Map : MonoBehaviour
      */
     public bool isLift(Vector3Int pos)
     {
-        if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.BLOCK_TANK && // 水槽ブロックの場合
-            !_box[_map[pos.x, pos.y, pos.z]._number]._lifted)                   // 何かに持たれてない
+        if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.BLOCK_TANK &&     // 水槽ブロックの場合
+            !_waterBlock[_map[pos.x, pos.y, pos.z]._number]._lifted)                // 何かに持たれてない
         {
-            //_box[_map[pos.x, pos.y, pos.z]._number]
             return true;
         }
         return false;
@@ -323,7 +343,7 @@ public class Map : MonoBehaviour
      */
     private void InitPlayerObj()
     {
-        GameObject[] player = GameObject.FindGameObjectsWithTag(_objectName[(int)E_FIELD_OBJECT.PLAYER_01]);
+        GameObject[] player = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_FIELD_OBJECT.PLAYER_01]);
         _playerCnt = player.Length;
         _player = new Player[_playerCnt];
         for (int n = 0; n < _playerCnt; n++)
@@ -342,14 +362,14 @@ public class Map : MonoBehaviour
      */
     private void InitBlockTankObj()
     {
-        GameObject[] box = GameObject.FindGameObjectsWithTag(_objectName[(int)E_FIELD_OBJECT.BLOCK_TANK]);
-        _boxCnt = box.Length;
-        _box = new BlockTank[_boxCnt];
-        for (int n = 0; n < _boxCnt; n++)
+        GameObject[] box = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_FIELD_OBJECT.BLOCK_TANK]);
+        _waterBlockCnt = box.Length;
+        _waterBlock = new BlockTank[_waterBlockCnt];
+        for (int n = 0; n < _waterBlockCnt; n++)
         {
-            _box[n] = new BlockTank();
-            _box[n] = box[n].GetComponent<BlockTank>();
-            SetObject(_box[n], n);
+            _waterBlock[n] = new BlockTank();
+            _waterBlock[n] = box[n].GetComponent<BlockTank>();
+            SetObject(_waterBlock[n], n);
         }
     }
 
@@ -360,7 +380,7 @@ public class Map : MonoBehaviour
      */
     private void InitGroundObj()
     {
-        GameObject[] ground = GameObject.FindGameObjectsWithTag(_objectName[(int)E_FIELD_OBJECT.BLOCK_GROUND]);
+        GameObject[] ground = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_FIELD_OBJECT.BLOCK_GROUND]);
         _groundCnt = ground.Length;
         _ground = new BlockNormal[_groundCnt];
         for (int n = 0; n < _groundCnt; n++)
@@ -378,14 +398,14 @@ public class Map : MonoBehaviour
      */
     private void InitWaterblockObj()
     {
-        GameObject[] waterblock = GameObject.FindGameObjectsWithTag(_objectName[(int)E_FIELD_OBJECT.BLOCK_WATER_SOURCE]);
-        _waterblockCnt = waterblock.Length;
-        _waterblock = new WaterSourceBlock[_waterblockCnt];
-        for (int n = 0; n < _waterblockCnt; n++)
+        GameObject[] waterblock = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_FIELD_OBJECT.BLOCK_WATER_SOURCE]);
+        _waterSourceCnt = waterblock.Length;
+        _waterSource = new WaterSourceBlock[_waterSourceCnt];
+        for (int n = 0; n < _waterSourceCnt; n++)
         {
-            _waterblock[n] = new WaterSourceBlock();
-            _waterblock[n] = waterblock[n].GetComponent<WaterSourceBlock>();
-            SetObject(_waterblock[n], n);
+            _waterSource[n] = new WaterSourceBlock();
+            _waterSource[n] = waterblock[n].GetComponent<WaterSourceBlock>();
+            SetObject(_waterSource[n], n);
         }
     }
 
