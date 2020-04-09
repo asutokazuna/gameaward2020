@@ -35,7 +35,7 @@ public class BaseObject : MonoBehaviour
     [SerializeField] public Vector3         _nextPos;       //!< 移動先の座標
                      public bool            _nowMove;       //!< 移動フラグ
     [SerializeField] public Vector3         _addPos;        //!< 加算量
-    public int             _animCnt;       //!< アニメーションカウント
+                     public int             _animCnt;       //!< アニメーションカウント
 
 
     /*
@@ -122,7 +122,13 @@ public class BaseObject : MonoBehaviour
      * @brief オブジェクトを動かす
      * @return なし
      */
-    virtual public void Move(Vector3Int vector3Int = new Vector3Int())
+    virtual public void Move(Vector3Int vector3Int)
+    {
+
+    }
+
+
+    virtual public void HandAction()
     {
 
     }
@@ -159,28 +165,6 @@ public class BaseObject : MonoBehaviour
 
 
     /*
-     * @brief 物を持ち上げる、下す
-     * @return なし
-     */
-    virtual public void HandAction()
-    {
-        if (_animCnt > 0)
-        {
-            return;
-        }
-
-        if (_haveObj.Equals(E_FIELD_OBJECT.NONE))
-        {// 物を持ち上げる
-            Lift();
-        }
-        else
-        {// 物を下す
-            LetDown();
-        }
-    }
-
-
-    /*
      * @brief 物を持ち上げる
      * @return なし
      */
@@ -195,6 +179,24 @@ public class BaseObject : MonoBehaviour
      * @param1 ターゲット座標
      * @return なし
      */
+    //virtual public void Lifted(Vector3Int pos)
+    //{
+    //    _oldPosition = _position;
+    //    _position = pos;
+    //
+    //    _animCnt = MAX_ANIM_WALK;   // 後で直す
+    //    Move();
+    //    _nowMove = true;
+    //
+    //    _lifted = true;
+    //}
+
+
+    /*
+     * @brief  持ち上げられる
+     * @param1 ターゲット座標
+     * @return なし
+     */
     virtual public void Lifted(Vector3Int pos)
     {
         FieldController fieldCtrl = GameObject.FindGameObjectWithTag("FieldController")
@@ -202,11 +204,11 @@ public class BaseObject : MonoBehaviour
         _oldPosition        = _position;
         _position           = pos;
         fieldCtrl.UpdateField(this);
-
+    
         _animCnt = MAX_ANIM_WALK;   // 後で直す
         Move();
         _nowMove = true;
-
+    
         _lifted  = true;
     }
 

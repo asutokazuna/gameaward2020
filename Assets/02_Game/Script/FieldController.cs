@@ -10,6 +10,9 @@
  */
 
 
+ #define MODE_FIELD
+
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -102,8 +105,12 @@ public class FieldController : MonoBehaviour {
             return;
         }
 
+
+#if MODE_FIELD
         ObjectMovement();
         HandAction();
+#endif
+
     }
 
 
@@ -143,12 +150,6 @@ public class FieldController : MonoBehaviour {
     {
         _field[obj._oldPosition.x, obj._oldPosition.y, obj._oldPosition.z] = new BaseObject();
         _field[obj._position.x, obj._position.y, obj._position.z]          = obj;
-        //if (!obj._haveObj.Equals(E_FIELD_OBJECT.NONE))
-        //{// 何かを持っていたら
-        //    _field[obj._position.x, obj._position.y + 1, obj._position.z] =
-        //        _field[obj._oldPosition.x, obj._oldPosition.y + 1, obj._oldPosition.z];
-        //    _field[obj._oldPosition.x, obj._oldPosition.y + 1, obj._oldPosition.z] = new BaseObject();
-        //}
     }
 
 
@@ -211,7 +212,7 @@ public class FieldController : MonoBehaviour {
     public void HandAction()
     {
         if (!Input.GetKeyDown(KeyCode.Space)) return;
-
+        
         bool isUpdate       = false;            //!< 更新フラグ
         
         for (int i = 0; i <= MAX_FIELD_OBJECT; i++)
@@ -241,11 +242,12 @@ public class FieldController : MonoBehaviour {
     public E_FIELD_OBJECT LiftObject(Vector3Int myPosition, Vector3Int targetPos)
     {
         E_FIELD_OBJECT var = _field[targetPos.x, targetPos.y, targetPos.z]._myObject;  // 変数の保持
-
+        
         _field[targetPos.x, targetPos.y, targetPos.z].Lifted(
                 new Vector3Int(myPosition.x, myPosition.y + 1, myPosition.z));  // 持ち上げる処理
-
+        
         return var;
+        //return E_FIELD_OBJECT.NONE;
     }
 
 
