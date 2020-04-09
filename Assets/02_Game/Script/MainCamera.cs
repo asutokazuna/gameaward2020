@@ -27,6 +27,7 @@ public class MainCamera : MonoBehaviour
     public float _rotateFlame = 60.0f; //!<回転時間
     public Vector3 _setCameraPos; //!<カメラ座標設定
     public Vector3 _setCameraRot; //!<カメラ注視点設定
+    public bool _manualSetCamera; //!<カメラの位置を手動設定
     Vector3 _fieldPos; //!<フィールド中心座標
     int _cnt = 0;　//!<フレーム数カウンター
 
@@ -87,7 +88,10 @@ public class MainCamera : MonoBehaviour
     {
         Transform myTransform = this.transform;//変数に取得
         myTransform.position = _setCameraPos;  // 座標を設定
-        myTransform.LookAt(_setCameraRot);  // 向きを設定
+        if (!_manualSetCamera)
+        {
+            myTransform.LookAt(_setCameraRot);  // 向きを設定
+        }
     }
     /**
      * @brief 関数概要　フィールド中心座標取得
