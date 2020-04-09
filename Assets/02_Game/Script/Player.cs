@@ -208,17 +208,6 @@ public class Player : BaseObject {
 
 
     /*
-     * @brief オブジェクトを持つ処理
-     * @param1 持ち上げる対象ぼフィールド座標
-     * @return オブジェクトを持つことができるなら true
-     */
-    private bool LiftObject(Vector3Int targetPos)
-    {
-        return false;
-    }
-
-
-    /*
      * @brief 物を下す
      * @return なし
      */
@@ -226,6 +215,7 @@ public class Player : BaseObject {
     {
 
     }
+
 
 #else
     /*

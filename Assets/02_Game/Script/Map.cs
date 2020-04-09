@@ -25,8 +25,10 @@ public enum E_FIELD_OBJECT
     NONE,                   // 無
     PLAYER_01,              // プレイヤー01
     BLOCK_NORMAL,           // 通常ブロック
+    BLOCK_GROUND,           // 地面
     BLOCK_WATER_SOURCE,     // 水源ブロック
     BLOCK_TANK,             // 水槽
+    MAX,                    // 最大値
 }
 
 
@@ -51,6 +53,16 @@ public class Map : MonoBehaviour
     [SerializeField] int VAL_FALL           = 2;        // 落下死判定になるマス数
 
     //! 変数宣言
+    [NamedArrayAttribute(new string[] {
+        "オブジェクトなし",
+        "プレイヤー01",
+        "通常ブロック",
+        "地面ブロック",
+        "水源ブロック",
+        "水槽ブロック",
+        })]  // オブジェクトが増えたら随時追加
+    [SerializeField] string[] _objectName = new string[(int)E_FIELD_OBJECT.MAX];
+
     public SquareInfo[,,]       _map;           //!< マップ情報
     public Player[]             _player;        //!< プレイヤーオブジェクト
     public BlockTank[]          _box;           //!< 箱オブジェクト
@@ -64,14 +76,13 @@ public class Map : MonoBehaviour
     bool                        _start;         //!< 最初の一回だけ関数を呼ぶため(後で消す)
     [SerializeField] bool       _gameOver;      //!< ゲームオーバーフラグ
 
-
     /*
      * @brief Awake
      * @return なし
      */
     void Awake()
     {
-        _map     = new SquareInfo[MAX_FIELD_OBJECT, MAX_FIELD_OBJECT, MAX_FIELD_OBJECT];
+        _map        = new SquareInfo[MAX_FIELD_OBJECT, MAX_FIELD_OBJECT, MAX_FIELD_OBJECT];
         _start      = true;
         _gameOver   = false;
     }
@@ -231,9 +242,9 @@ public class Map : MonoBehaviour
     public bool isLift(Vector3Int pos)
     {
         if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.BLOCK_TANK && // 水槽ブロックの場合
-            !_box[_map[pos.x, pos.y, pos.z]._number]._lifted)            // 何かに持たれてない
+            !_box[_map[pos.x, pos.y, pos.z]._number]._lifted)                   // 何かに持たれてない
         {
-            Debug.Log("配列の参照値 = " + _map[pos.x, pos.y, pos.z]._number);
+            //_box[_map[pos.x, pos.y, pos.z]._number]
             return true;
         }
         return false;
@@ -312,7 +323,7 @@ public class Map : MonoBehaviour
      */
     private void InitPlayerObj()
     {
-        GameObject[] player = GameObject.FindGameObjectsWithTag("Player");
+        GameObject[] player = GameObject.FindGameObjectsWithTag(_objectName[(int)E_FIELD_OBJECT.PLAYER_01]);
         _playerCnt = player.Length;
         _player = new Player[_playerCnt];
         for (int n = 0; n < _playerCnt; n++)
@@ -331,7 +342,7 @@ public class Map : MonoBehaviour
      */
     private void InitBlockTankObj()
     {
-        GameObject[] box = GameObject.FindGameObjectsWithTag("Box");
+        GameObject[] box = GameObject.FindGameObjectsWithTag(_objectName[(int)E_FIELD_OBJECT.BLOCK_TANK]);
         _boxCnt = box.Length;
         _box = new BlockTank[_boxCnt];
         for (int n = 0; n < _boxCnt; n++)
@@ -344,12 +355,12 @@ public class Map : MonoBehaviour
 
 
     /*
-     * @brief 箱情報の初期化
+     * @brief 地面情報の初期化
      * @return なし
      */
     private void InitGroundObj()
     {
-        GameObject[] ground = GameObject.FindGameObjectsWithTag("Ground");
+        GameObject[] ground = GameObject.FindGameObjectsWithTag(_objectName[(int)E_FIELD_OBJECT.BLOCK_GROUND]);
         _groundCnt = ground.Length;
         _ground = new BlockNormal[_groundCnt];
         for (int n = 0; n < _groundCnt; n++)
@@ -362,12 +373,12 @@ public class Map : MonoBehaviour
 
 
     /*
-     * @brief 箱情報の初期化
+     * @brief 水源情報の初期化
      * @return なし
      */
     private void InitWaterblockObj()
     {
-        GameObject[] waterblock = GameObject.FindGameObjectsWithTag("WaterBlock");
+        GameObject[] waterblock = GameObject.FindGameObjectsWithTag(_objectName[(int)E_FIELD_OBJECT.BLOCK_WATER_SOURCE]);
         _waterblockCnt = waterblock.Length;
         _waterblock = new WaterSourceBlock[_waterblockCnt];
         for (int n = 0; n < _waterblockCnt; n++)
