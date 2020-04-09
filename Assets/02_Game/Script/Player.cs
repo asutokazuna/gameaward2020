@@ -191,7 +191,7 @@ public class Player : BaseObject {
         toObj = new Vector3Int(     // 向いてる方向の一段上から
             _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z
             );
-        for (int n = 0; n < 2; n++, toObj.y -= n)
+        for (int n = 0; n <= 2; n++, toObj.y -= 1)
         {// 一段上から一段下まで、探索をする
             if (_map.isLimitField(toObj))
             {// マップ配列へ参照できない値の場合

@@ -231,8 +231,9 @@ public class Map : MonoBehaviour
     public bool isLift(Vector3Int pos)
     {
         if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.BLOCK_TANK && // 水槽ブロックの場合
-            !_waterblock[_map[pos.x, pos.y, pos.z]._number]._lifted)            // 何かに持たれてない
+            !_box[_map[pos.x, pos.y, pos.z]._number]._lifted)            // 何かに持たれてない
         {
+            Debug.Log("配列の参照値 = " + _map[pos.x, pos.y, pos.z]._number);
             return true;
         }
         return false;
