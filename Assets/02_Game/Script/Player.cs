@@ -96,7 +96,7 @@ public class Player : BaseObject {
         _fieldCtrl = GameObject.FindGameObjectWithTag("FieldController")
             .GetComponent<FieldController>();   //!< メインのフィールド保持
         Init();
-        //_playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK);
+        _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
 #else
         _map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
 #endif
@@ -301,6 +301,7 @@ public class Player : BaseObject {
             else
             {// 何も持ってない時
                 _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
+                //_playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
             }
         
             // 座標の補正
@@ -354,6 +355,10 @@ public class Player : BaseObject {
             {
                 // 上がる
                 _position = new Vector3Int(_position.x, _position.y + 1, _position.z);
+                if (!_haveObj.Equals(E_FIELD_OBJECT.NONE))
+                    _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
+                else
+                    _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP);
             }
         }
         // 何とも衝突しない
@@ -363,6 +368,10 @@ public class Player : BaseObject {
             if (_fieldCtrl.isGetoff(_position))
             {
                 _position = new Vector3Int(_position.x, _position.y - 1, _position.z);
+                if (!_haveObj.Equals(E_FIELD_OBJECT.NONE))
+                    _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
+                else
+                    _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP);
             }
             // 直進
             else
