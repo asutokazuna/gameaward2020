@@ -250,10 +250,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -443,10 +439,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -838,10 +830,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -957,10 +945,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -1024,6 +1008,80 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 542181480}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &585391062
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1669559577}
+    m_Modifications:
+    - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3101731945036875728, guid: 55c6b561e919daa4b810ef92cc2a9bea,
+        type: 3}
+      propertyPath: m_Name
+      value: WaterBlock
+      objectReference: {fileID: 0}
+    - target: {fileID: 3101731945036875728, guid: 55c6b561e919daa4b810ef92cc2a9bea,
+        type: 3}
+      propertyPath: m_TagString
+      value: WaterBlock
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 55c6b561e919daa4b810ef92cc2a9bea, type: 3}
 --- !u!1001 &596578164
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1069,7 +1127,7 @@ PrefabInstance:
     - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
         type: 3}
@@ -1235,7 +1293,7 @@ PrefabInstance:
     - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
         type: 3}
@@ -1316,10 +1374,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -1385,9 +1439,9 @@ MeshFilter:
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &848385674 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 765248821630199617, guid: 92fb1e0291c00344b8e267b71569461d,
+  m_CorrespondingSourceObject: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
     type: 3}
-  m_PrefabInstance: {fileID: 1715445544561199444}
+  m_PrefabInstance: {fileID: 585391062}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &899099944
 GameObject:
@@ -1441,10 +1495,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -1665,10 +1715,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -1784,10 +1830,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -1903,10 +1945,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -2187,10 +2225,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -2259,10 +2293,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -2452,10 +2482,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -2648,10 +2674,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -2743,10 +2765,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1272930495}
+  - {fileID: 848385674}
   - {fileID: 1793007951}
   - {fileID: 2078401961}
   - {fileID: 1743348632}
-  - {fileID: 848385674}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2802,10 +2824,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -2921,10 +2939,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -3026,6 +3040,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 891ac8714569d9d498971bd414d91172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MAX_FIELD_OBJECT: 10
+  VAL_FIELD_MOVE: 1
+  VAL_FALL: 2
+  _objectTag:
+  - None
+  - Player
+  - NormalBlock
+  - Ground
+  - WaterSourceBlock
+  - WaterBlock
+  _player: []
+  _waterBlock: []
+  _ground: []
+  _waterSource: []
+  _playerCnt: 0
+  _waterBlockCnt: 0
+  _groundCnt: 0
+  _waterSourceCnt: 0
+  _direct: {x: 0, y: 0, z: 0}
+  _offsetPos: {x: 0, y: 0, z: 0}
+  _gameOver: 0
 --- !u!65 &1767045566
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3152,10 +3187,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -3270,7 +3301,7 @@ PrefabInstance:
     - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2112409355318031811, guid: 55c6b561e919daa4b810ef92cc2a9bea,
         type: 3}
@@ -3357,10 +3388,6 @@ MonoBehaviour:
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _nextPos: {x: 0, y: 0, z: 0}
   _lifted: 0
   _fullWater: 0
   _animCnt: 0
@@ -3424,75 +3451,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2085796663}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1001 &1715445544561199444
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1669559577}
-    m_Modifications:
-    - target: {fileID: 765248821630199617, guid: 92fb1e0291c00344b8e267b71569461d,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -4
-      objectReference: {fileID: 0}
-    - target: {fileID: 765248821630199617, guid: 92fb1e0291c00344b8e267b71569461d,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 765248821630199617, guid: 92fb1e0291c00344b8e267b71569461d,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -3
-      objectReference: {fileID: 0}
-    - target: {fileID: 765248821630199617, guid: 92fb1e0291c00344b8e267b71569461d,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 765248821630199617, guid: 92fb1e0291c00344b8e267b71569461d,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 765248821630199617, guid: 92fb1e0291c00344b8e267b71569461d,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 765248821630199617, guid: 92fb1e0291c00344b8e267b71569461d,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 765248821630199617, guid: 92fb1e0291c00344b8e267b71569461d,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 765248821630199617, guid: 92fb1e0291c00344b8e267b71569461d,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 765248821630199617, guid: 92fb1e0291c00344b8e267b71569461d,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 765248821630199617, guid: 92fb1e0291c00344b8e267b71569461d,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4379166141383906642, guid: 92fb1e0291c00344b8e267b71569461d,
-        type: 3}
-      propertyPath: m_Name
-      value: WaterBlock
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 92fb1e0291c00344b8e267b71569461d, type: 3}
 --- !u!4 &1929133353076361811 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6433375576992791653, guid: 43074db5db4376c409b29ef8582001ed,
