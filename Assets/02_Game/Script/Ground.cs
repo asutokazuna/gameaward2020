@@ -1,9 +1,10 @@
 ﻿/*
- * @file	WaterSourceBlock.cs
- * @brief   水源のブロック
+ * @file	Ground.cs
+ * @brief   プレイヤーの管理
  *
  * @author	Kota Nakagami
- * @date1	2020/03/30(月)
+ * @date1	2020/02/21(金)
+ * @data2   2020/03/06(金)
  *
  * @version	1.00
  */
@@ -15,11 +16,21 @@ using UnityEngine;
 
 
 /*
- * @class 水源ブロック
- * @brief 水が流れ出るブロックの制御
+ * @class Ground
+ * @brief 地面
  */
-public class WaterSourceBlock : BaseObject
+public class Ground : BaseObject
 {
+
+    /*
+     * @brief 初期化処理
+     * @return なし
+     */
+    public void Awake()
+    {
+        
+    }
+
 
     /*
      * @brief 初期化
@@ -28,13 +39,13 @@ public class WaterSourceBlock : BaseObject
     override public void Init(int number)
     {
         Map map     = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
-        _myObject   = E_FIELD_OBJECT.BLOCK_WATER_SOURCE;
+        _myObject   = E_FIELD_OBJECT.BLOCK_GROUND;
         _myNumber   = number;
 
         // 座標の補正
         _position = _oldPosition = new Vector3Int(
             (int)(transform.position.x - map._offsetPos.x),
-            (int)(transform.position.y - map._offsetPos.y),
+            (int)((transform.position.y + 0.5f) - map._offsetPos.y),
             (int)(transform.position.z - map._offsetPos.z)
             );
 
@@ -61,7 +72,7 @@ public class WaterSourceBlock : BaseObject
      */
     override public void Update()
     {
-
+        
     }
 
 
@@ -72,6 +83,8 @@ public class WaterSourceBlock : BaseObject
      */
     override public void Move(Vector3Int movement)
     {
-
+        
     }
 }
+
+// EOF

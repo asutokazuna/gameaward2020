@@ -10,7 +10,7 @@
  */
 
 
-#define MODE_FIELD
+//#define MODE_FIELD
 
 
 using System.Collections;
@@ -303,6 +303,7 @@ public class FieldController : MonoBehaviour {
      */
     public bool isWater(Vector3Int pos)
     {
+#if MODE_FIELD
         // 水源ブロックが隣接してる場合
         if ((isCollisionToObject(new Vector3Int(pos.x + 1, pos.y, pos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE) && !_field[pos.x + 1, pos.y, pos.z]._lifted)
          || (isCollisionToObject(new Vector3Int(pos.x - 1, pos.y, pos.z), E_FIELD_OBJECT.BLOCK_WATER_SOURCE) && !_field[pos.x - 1, pos.y, pos.z]._lifted)
@@ -325,7 +326,7 @@ public class FieldController : MonoBehaviour {
         {
             return true;
         }
-
+#endif
         return false;
     }
 
@@ -441,8 +442,9 @@ public class FieldController : MonoBehaviour {
         {
             return true;
         }
-#endif
+#else
         return false;
+#endif
     }
 
 
@@ -454,8 +456,12 @@ public class FieldController : MonoBehaviour {
      */
     public bool isCollisionToObject(Vector3Int targetPos, E_FIELD_OBJECT obj)
     {
+#if MODE_FIELD
         if (!isUse(targetPos)) return false;
         return _field[targetPos.x, targetPos.y, targetPos.z]._myObject.Equals(obj);
+#else
+        return false;
+#endif
     }
 
 

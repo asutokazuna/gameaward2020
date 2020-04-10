@@ -10,7 +10,7 @@
  */
 
 
-//#define MODE_MAP    // 扱うスクリプト
+#define MODE_MAP    // 扱うスクリプト
 
 
 using System.Collections;
@@ -44,9 +44,9 @@ public class Player : BaseObject {
                      bool           _isUpdate;          //!< 更新flag
     FieldController _fieldCtrl;
 #endif
-    [SerializeField] SquareInfo     _haveObject;        //!< 持っているオブジェクト情報
-                     Map            _map;               //!< マップ
-    public PlayerAnimation          _playerAnimation;   //!< プレイヤーのアニメーション
+    [SerializeField] SquareInfo     _haveObject;    //!< 持っているオブジェクト情報
+                     Map            _map;           //!< マップ
+    public PlayerAnimation          _animation;     //!< プレイヤーのアニメーション
 
 
     /*
@@ -55,9 +55,7 @@ public class Player : BaseObject {
      */
     public void Awake()
     {// プレイヤーの設定を後で変更しなきゃ
-        _myObject   = E_FIELD_OBJECT.PLAYER_01;   // とりあえず
-        _haveObject = new SquareInfo();
-        _playerAnimation = GameObject.Find(name).GetComponent<PlayerAnimation>();
+        _animation = GameObject.Find(name).GetComponent<PlayerAnimation>();
     }
 
 #if MODE_MAP
@@ -65,11 +63,12 @@ public class Player : BaseObject {
      * @brief 初期化
      * @return なし
      */
-    public void Init(int number)
+    override public void Init(int number)
     {
         _myObject   = E_FIELD_OBJECT.PLAYER_01;
         _myNumber   = number;
         _haveObject = new SquareInfo();
+        _map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
 
         // 座標の補正
         _position = _oldPosition = new Vector3Int(
@@ -98,7 +97,7 @@ public class Player : BaseObject {
         Init();
         _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
 #else
-        _map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
+        
 #endif
     }
 
@@ -142,7 +141,7 @@ public class Player : BaseObject {
         _position = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
     
         offsetDirect(); // 向いてる方向の補正
-    
+        Debug.Log(_position);
         if (_map.isLimitField(_position))
         {// マップ配列へ参照できない値の場合
             _position = _oldPosition;
@@ -205,10 +204,11 @@ public class Player : BaseObject {
             }
             else if (_map.isLift(havePos))
             {// 何かのオブジェクトを持てる場合
-                obj = _map.LiftToObject(_position, havePos);    // これから持つオブジェクトの情報取得
-                _haveObject._myObject   = obj._myObject;        // オブジェクト情報のセット
-                _haveObject._number     = obj._myNumber;        // オブジェクトナンバーセット
+                obj = _map.LiftToObject(_position, havePos);            // これから持つオブジェクトの情報取得
+                _haveObject._myObject   = obj._myObject;                // オブジェクト情報のセット
+                _haveObject._number     = obj._myNumber;                // オブジェクトナンバーセット
                 GameObject.Find(obj.name).transform.parent = transform; // 追従
+                Debug.Log("これから持ち上げます" + havePos + "オブジェクト番号" + obj._myNumber);
                 Debug.Log(name + " は " + obj.name +" を持った");
                 break;
             }
@@ -260,11 +260,11 @@ public class Player : BaseObject {
      * @brief 移動後の座標の調整
      * @return なし
      */
-    private void offSetTransform()
+    override public void offSetTransform()
     {
         transform.position = new Vector3(
             (float)(_position.x + _map._offsetPos.x),
-            (float)(_position.y + _map._offsetPos.y) + 0.5f,
+            (float)(_position.y + _map._offsetPos.y) - 0.5f,
             (float)(_position.z + _map._offsetPos.z)
             );
     }
@@ -301,7 +301,6 @@ public class Player : BaseObject {
             else
             {// 何も持ってない時
                 _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
-                //_playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
             }
         
             // 座標の補正

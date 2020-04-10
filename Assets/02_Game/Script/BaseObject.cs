@@ -9,7 +9,7 @@
  */
 
 
-//#define MODE_MAP    // 扱うスクリプト
+#define MODE_MAP    // 扱うスクリプト
 
 
 using System.Collections;
@@ -65,16 +65,21 @@ public class BaseObject : MonoBehaviour
 #if MODE_MAP
     /*
      * @brief オブジェクト情報の初期化
-     * @param1 オブジェクト情報
+     * @param1 オブジェクト番号
      * @return なし
      */
-    virtual public void Init()
+    virtual public void Init(int number)
     {
-#if !MODE_MAP
-        offSetArrayPos();
-        InitDirect();
-        GameObject.FindGameObjectWithTag("FieldController").GetComponent<FieldController>().UpdateField(this);
-#endif
+        _myObject   = E_FIELD_OBJECT.NONE;
+        _myNumber   = number;
+
+        // 座標の補正
+        _position = _oldPosition = new Vector3Int(0, 0, 0);
+
+        _lifted     = false;
+        _fullWater  = false;
+        _animCnt    = 0;
+        _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
     }
 
 
@@ -107,7 +112,6 @@ public class BaseObject : MonoBehaviour
     {
         _oldPosition    = _position;
         _position       = pos;
-        //GameObject.FindGameObjectWithTag("Map").GetComponent<Map>().
     }
 
 
@@ -121,11 +125,8 @@ public class BaseObject : MonoBehaviour
         _oldPosition    = _position;
         _position       = pos;
 
-        // 後で変更
-        GameObject.FindGameObjectWithTag("FieldController")
-            .GetComponent<FieldController>().UpdateField(this);   //!< メインのフィールド保持
-        transform.position = GameObject.FindGameObjectWithTag("FieldController")
-            .GetComponent<FieldController>().offsetPos(_myObject, _position);
+        // 瞬間移動
+        offSetTransform();
 
         _lifted = true;
     }
@@ -141,13 +142,25 @@ public class BaseObject : MonoBehaviour
         _oldPosition    = _position;
         _position       = pos;
 
-        // 後で変更
-        GameObject.FindGameObjectWithTag("FieldController")
-            .GetComponent<FieldController>().UpdateField(this);   //!< メインのフィールド保持
-        transform.position = GameObject.FindGameObjectWithTag("FieldController")
-            .GetComponent<FieldController>().offsetPos(_myObject, _position);
+        // 瞬間移動
+        offSetTransform();
 
         _lifted = false;
+    }
+
+
+    /*
+     * @brief 移動後の座標の調整
+     * @return なし
+     */
+    virtual public void offSetTransform()
+    {
+        Map map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
+        transform.position = new Vector3(
+            (float)(_position.x + map._offsetPos.x),
+            (float)(_position.y + map._offsetPos.y),
+            (float)(_position.z + map._offsetPos.z)
+            );
     }
 
 
