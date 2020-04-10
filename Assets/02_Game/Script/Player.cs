@@ -208,8 +208,6 @@ public class Player : BaseObject {
                 _haveObject._myObject   = obj._myObject;                // オブジェクト情報のセット
                 _haveObject._number     = obj._myNumber;                // オブジェクトナンバーセット
                 GameObject.Find(obj.name).transform.parent = transform; // 追従
-                Debug.Log("これから持ち上げます" + havePos + "オブジェクト番号" + obj._myNumber);
-                Debug.Log(name + " は " + obj.name +" を持った");
                 break;
             }
         }
@@ -235,7 +233,6 @@ public class Player : BaseObject {
             }
             else if (_map.isPut(putPos))
             {// 置くことができる
-                Debug.Log(name + " はオブジェクトを離した");
                 _map.PutToObject(_haveObject, putPos);
                 // オブジェクトを手放す
                 _haveObject = new SquareInfo();

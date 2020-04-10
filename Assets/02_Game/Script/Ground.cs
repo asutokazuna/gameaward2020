@@ -5,6 +5,7 @@
  * @author	Kota Nakagami
  * @date1	2020/02/21(金)
  * @data2   2020/03/06(金)
+ * @data2   2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
  *
  * @version	1.00
  */
