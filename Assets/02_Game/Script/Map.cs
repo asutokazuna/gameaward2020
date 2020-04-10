@@ -9,7 +9,7 @@
  */
 
 
- #define MODE_MAP
+//#define MODE_MAP
 
 
 using System.Collections;
@@ -47,6 +47,7 @@ public struct SquareInfo {
  */
 public class Map : MonoBehaviour
 {
+#if MODE_MAP
     // 定数定義
     [SerializeField] int MAX_FIELD_OBJECT   = 10;       // マップ1辺あたりに置けるオブジェクトの最大値
     [SerializeField] int VAL_FIELD_MOVE     = 1;        // 一マス当たりの移動値
@@ -72,6 +73,7 @@ public class Map : MonoBehaviour
     [SerializeField] int        _groundCnt;         //!< 地面カウント
     [SerializeField] int        _waterSourceCnt;    //!< 水源カウント
     [SerializeField] Vector3Int _direct;            //!< 全プレイヤーが向いてる方向
+    public Vector3Int           _offsetPos;         //!< 配列座標補正用変数
     bool                        _start;             //!< 最初の一回だけ関数を呼ぶため(後で消す)
     [SerializeField] bool       _gameOver;          //!< ゲームオーバーフラグ
 
@@ -144,8 +146,7 @@ public class Map : MonoBehaviour
         {// 取り合えずソートはなし
             //PlayerMove(_player[n], _direct);
             _player[n].Move(_direct);
-            SetObject(_player[n], n);
-            DeleteObject(_player[n]._oldPosition);
+            UpdateMap(_player[n]);
         }
         CallDebug();
     }
@@ -175,15 +176,48 @@ public class Map : MonoBehaviour
     public BaseObject LiftToObject(Vector3Int pos, Vector3Int target)
     {
         if (_map[target.x, target.y, target.z]._myObject == E_FIELD_OBJECT.BLOCK_TANK)
-        {
+        {// これから持つオブジェクトが水槽だった場合
             _waterBlock[_map[target.x, target.y, target.z]._number].Lifted(new Vector3Int(pos.x, pos.y + 1, pos.z));
 
-            SetObject(_waterBlock[_map[target.x, target.y, target.z]._number], _map[target.x, target.y, target.z]._number);
+            SetObject(_waterBlock[_map[target.x, target.y, target.z]._number]);
             DeleteObject(_waterBlock[_map[target.x, target.y, target.z]._number]._oldPosition);
 
             return _waterBlock[_map[target.x, target.y, target.z]._number];
         }
         return null;
+    }
+
+
+    /*
+     * @brief オブジェクトを置く
+     * @param1 持っているオブジェクト情報
+     * @param2 置かれる座標
+     * @return なし
+     */
+    public void PutToObject(SquareInfo haveObj, Vector3Int targetPos)
+    {
+        if (haveObj._myObject == E_FIELD_OBJECT.BLOCK_TANK)
+        {// 水槽の場合
+            _waterBlock[haveObj._number].transform.parent = null;   // 親子関係を話す
+            _waterBlock[haveObj._number].Puted(targetPos);
+            UpdateMap(_waterBlock[haveObj._number]);
+        }
+    }
+
+
+    /*
+     * @brief プレイヤーへ追従
+     * @param1 プレイヤーが所持しているオブジェクト情報
+     * @param2 プレイヤーのオブジェクト座標
+     * @return なし
+     */
+    public void Follow(SquareInfo haveObj, Vector3Int playerPos)
+    {
+        if (haveObj._myObject == E_FIELD_OBJECT.BLOCK_TANK)
+        {// 水槽の場合
+            _waterBlock[haveObj._number].Move(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
+            UpdateMap(_waterBlock[haveObj._number]);
+        }
     }
 
 
@@ -257,7 +291,7 @@ public class Map : MonoBehaviour
 
     /*
      * @brief プレイヤーがオブジェクトを持てるかの判定
-     * @param1 目的座標
+     * @param1 これから持つオブジェクト座標
      * @return オブジェクトを持てるなら true を返す
      */
     public bool isLift(Vector3Int pos)
@@ -268,6 +302,46 @@ public class Map : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+
+    /*
+     * @brief プレイヤーがオブジェクトを置けるかの判定
+     * @param1 これから置くオブジェクト座標
+     * @return オブジェクトを置けるなら true を返す
+     */
+    public bool isPut(Vector3Int pos)
+    {
+        if (isLimitField(new Vector3Int(pos.x, pos.y - 1, pos.z)))
+        {// ここのif分入ったら多分ゲームオーバー
+            return false;
+        }
+        if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.NONE &&
+            isRideon(new Vector3Int(pos.x, pos.y - 1, pos.z)))
+        {// 一個下に置ける
+            return true;
+        }
+        return false;
+    }
+
+
+    /*
+     * @brief オブジェクトの上判定
+     * @param1 座標
+     * @return 上に行けるなら true を返す
+     * @details 与えられた座標にオブジェクトがあり、
+     *          かつその上に乗せれるかの判定
+     */
+    private bool isRideon(Vector3Int pos)
+    {
+        if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.NONE      ||
+            _map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.MAX       ||
+            _map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.PLAYER_01
+            )
+        {
+            return false;
+        }
+        return true;
     }
 
 
@@ -300,14 +374,26 @@ public class Map : MonoBehaviour
 
 
     /*
+     * @brief マップの更新
+     * @param1 BaseObject obj
+     * return なし
+     */
+    public void UpdateMap(BaseObject obj)
+    {
+        SetObject(obj);
+        DeleteObject(obj._oldPosition);
+    }
+
+
+    /*
      * @brief オブジェクト情報のセット
      * @param1 BaseObject obj, int number
      * @return なし
      */
-    private void SetObject(BaseObject obj, int number)
+    private void SetObject(BaseObject obj)
     {
         _map[obj._position.x, obj._position.y, obj._position.z]._myObject    = obj._myObject;
-        _map[obj._position.x, obj._position.y, obj._position.z]._number      = number;
+        _map[obj._position.x, obj._position.y, obj._position.z]._number      = obj._myNumber;
         _map[obj._position.x, obj._position.y, obj._position.z]._isUpdate    = false;
     }
 
@@ -330,6 +416,7 @@ public class Map : MonoBehaviour
      */
     private void InitObject()
     {
+        SetOffsetPos();         // 配列座標補正値の初期化
         InitPlayerObj();        // プレイヤーの初期化
         InitBlockTankObj();     // 箱の初期化
         InitGroundObj();        // 地面の初期化
@@ -344,14 +431,14 @@ public class Map : MonoBehaviour
     private void InitPlayerObj()
     {
         GameObject[] player = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_FIELD_OBJECT.PLAYER_01]);
-        _playerCnt = player.Length;
-        _player = new Player[_playerCnt];
+        _playerCnt          = player.Length;
+        _player             = new Player[_playerCnt];
         for (int n = 0; n < _playerCnt; n++)
         {
             _player[n] = new Player();
             _player[n] = player[n].GetComponent<Player>();
-            //_player[n].Init();    // ここで初期化をしたいです
-            SetObject(_player[n], n);
+            _player[n].Init(n);         // プレイヤーコンポーネントの初期化
+            SetObject(_player[n]);      // マップ情報にプレイヤー情報をセット
         }
     }
 
@@ -369,7 +456,7 @@ public class Map : MonoBehaviour
         {
             _waterBlock[n] = new BlockTank();
             _waterBlock[n] = box[n].GetComponent<BlockTank>();
-            SetObject(_waterBlock[n], n);
+            SetObject(_waterBlock[n]);
         }
     }
 
@@ -387,7 +474,7 @@ public class Map : MonoBehaviour
         {
             _ground[n] = new BlockNormal();
             _ground[n] = ground[n].GetComponent<BlockNormal>();
-            SetObject(_ground[n], n);
+            SetObject(_ground[n]);
         }
     }
 
@@ -405,8 +492,16 @@ public class Map : MonoBehaviour
         {
             _waterSource[n] = new WaterSourceBlock();
             _waterSource[n] = waterblock[n].GetComponent<WaterSourceBlock>();
-            SetObject(_waterSource[n], n);
+            SetObject(_waterSource[n]);
         }
+    }
+
+
+    private void SetOffsetPos()
+    {
+        // 取り合えずの処理
+        // 一番左下のオブジェクト取得で補正したい
+        _offsetPos = new Vector3Int(-5, -1, -5);
     }
 
 
@@ -444,6 +539,7 @@ public class Map : MonoBehaviour
     {
         _gameOver = true;
     }
+#endif
 }
 
 // EOF

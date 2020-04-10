@@ -4,12 +4,13 @@
  *
  * @author	Kota Nakagami
  * @date1	2020/02/21(金)
+ * @data2   2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
  *
  * @version	1.00
  */
 
 
-#define MODE_MAP    // 扱うスクリプト
+//#define MODE_MAP    // 扱うスクリプト
 
 
 using System.Collections;
@@ -38,11 +39,14 @@ public enum E_PLAYER_MODE
 public class Player : BaseObject {
 
     //! 変数宣言
-    [SerializeField] Vector3Int _havePos;       //!< 持ってるオブジェクトの座標の保持
-                     Map        _map;           //!< マップ
-                     bool       _isUpdate;      //!< 更新flag
-    public PlayerAnimation _playerAnimation;    //!< プレイヤーのアニメーション
+#if !MODE_MAP
+    [SerializeField] Vector3Int     _havePos;           //!< 持ってるオブジェクトの座標の保持
+                     bool           _isUpdate;          //!< 更新flag
     FieldController _fieldCtrl;
+#endif
+    [SerializeField] SquareInfo     _haveObject;        //!< 持っているオブジェクト情報
+                     Map            _map;               //!< マップ
+    public PlayerAnimation          _playerAnimation;   //!< プレイヤーのアニメーション
 
 
     /*
@@ -51,9 +55,35 @@ public class Player : BaseObject {
      */
     public void Awake()
     {// プレイヤーの設定を後で変更しなきゃ
-        _myObject = E_FIELD_OBJECT.PLAYER_01;   // とりあえず
+        _myObject   = E_FIELD_OBJECT.PLAYER_01;   // とりあえず
+        _haveObject = new SquareInfo();
         _playerAnimation = GameObject.Find(name).GetComponent<PlayerAnimation>();
     }
+
+#if MODE_MAP
+    /*
+     * @brief 初期化
+     * @return なし
+     */
+    public void Init(int number)
+    {
+        _myObject   = E_FIELD_OBJECT.PLAYER_01;
+        _myNumber   = number;
+        _haveObject = new SquareInfo();
+
+        // 座標の補正
+        _position = _oldPosition = new Vector3Int(
+            (int)(transform.position.x - _map._offsetPos.x),
+            (int)((transform.position.y + 0.5f) - _map._offsetPos.y),
+            (int)(transform.position.z - _map._offsetPos.z)
+            );
+
+        _lifted     = false;
+        _fullWater  = false;
+        _animCnt    = 0;
+        _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
+    }
+#endif
 
 
     /*
@@ -62,53 +92,25 @@ public class Player : BaseObject {
      */
     override public void Start()
     {
+#if !MODE_MAP
         _fieldCtrl = GameObject.FindGameObjectWithTag("FieldController")
             .GetComponent<FieldController>();   //!< メインのフィールド保持
-        _map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
         Init();
         //_playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK);
+#else
+        _map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
+#endif
     }
 
 
+#if MODE_MAP
     /*
      * @brief 更新処理
      * @return なし
      */
     override public void Update()
     {
-#if !MODE_MAP
-        _isUpdate = false;
-        
-        //playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
-        
-        if (_animCnt > 0)
-        {// 移動カウント
-            if (_nowMove)
-            {
-                transform.position =
-                    new Vector3(transform.position.x + _addPos.x, transform.position.y + _addPos.y, transform.position.z + _addPos.z);
-            }
-            _animCnt--;
-        }
-        else if (_animCnt == 0)
-        {// 移動していないとき
-        
-            if (!_haveObj.Equals(E_FIELD_OBJECT.NONE))
-            {// 何かを持っている時
-                _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT_BOX);
-                Debug.Log("物をもった状態でのアニメーション");
-            }
-            else
-            {// 何も持ってない時
-                _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
-            }
-        
-            // 座標の補正
-            transform.position = _fieldCtrl.offsetPos(_myObject, _position);
-            _animCnt = -1;
-            _nowMove = false;
-        }
-#endif
+
     }
 
 
@@ -116,25 +118,19 @@ public class Player : BaseObject {
      * @brief 物を持ち上げる、下す
      * @return なし
      */
-    override public void HandAction()
+    public void HandAction()
     {
-        if (_animCnt > 0)
-        {
-            return;
-        }
-
-        if (_haveObj.Equals(E_FIELD_OBJECT.NONE))
+        if (_haveObject._myObject == E_FIELD_OBJECT.NONE)
         {// 物を持ち上げる
             Lift();
         }
         else
         {// 物を下す
-            LetDown();
+            Put();
         }
     }
 
 
-#if MODE_MAP
     /*
      * @brief 通常ブロックの動き
      * @param1 ベクトル
@@ -177,9 +173,15 @@ public class Player : BaseObject {
         {// 正面への移動
             Debug.Log(name + " はそのまま移動した");
         }
-
+        
         // 後で修正
-        transform.position = _fieldCtrl.offsetPos(_myObject, _position);
+        offSetTransform();
+        //transform.position = _fieldCtrl.offsetPos(_myObject, _position);
+
+        if (_haveObject._myObject != E_FIELD_OBJECT.NONE)
+        {// 何か持っている時
+            _map.Follow(_haveObject, _position);    // 追従させる
+        }
     }
 
 
@@ -189,22 +191,23 @@ public class Player : BaseObject {
      */
     public void Lift()
     {
-        Vector3Int  toObj;      //!< 持ち上げるオブジェクトを探索するための座標
-        BaseObject  obj;        //!< 持つオブジェクトの名前
-        toObj = new Vector3Int(     // 向いてる方向の一段上から
+        Vector3Int havePos;                 //!< 持ち上げるオブジェクトを探索するための座標
+        BaseObject obj = new BaseObject();  //!< 持っているオブジェクト情報
+        havePos = new Vector3Int(     // 向いてる方向の一段上から
             _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z
             );
-        for (int n = 0; n <= 2; n++, toObj.y -= 1)
+        for (int n = 0; n <= 2; n++, havePos.y -= 1)
         {// 一段上から一段下まで、探索をする
-            if (_map.isLimitField(toObj))
+            if (_map.isLimitField(havePos))
             {// マップ配列へ参照できない値の場合
                 Debug.Log("エラー : " + name + " はマップ配列外への参照をしようとした");
                 continue;
             }
-            else if (_map.isLift(toObj))
+            else if (_map.isLift(havePos))
             {// 何かのオブジェクトを持てる場合
-                obj         = _map.LiftToObject(_position, toObj);
-                _haveObj    = obj._myObject;
+                obj = _map.LiftToObject(_position, havePos);    // これから持つオブジェクトの情報取得
+                _haveObject._myObject   = obj._myObject;        // オブジェクト情報のセット
+                _haveObject._number     = obj._myNumber;        // オブジェクトナンバーセット
                 GameObject.Find(obj.name).transform.parent = transform; // 追従
                 Debug.Log(name + " は " + obj.name +" を持った");
                 break;
@@ -217,13 +220,97 @@ public class Player : BaseObject {
      * @brief 物を下す
      * @return なし
      */
-    public void LetDown()
+    public void Put()
     {
+        Vector3Int putPos;              //!< 持ち上げるオブジェクトを探索するための座標
+        putPos = new Vector3Int(        // 向いてる方向の一段上から
+            _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z
+            );
+        for (int n = 0; n <= 2; n++, putPos.y -= 1)
+        {// 一段上から一段下まで、探索をする
+            if (_map.isLimitField(putPos))
+            {// マップ配列へ参照できない値の場合
+                Debug.Log("エラー : " + name + " はマップ配列外への参照をしようとした");
+                continue;
+            }
+            else if (_map.isPut(putPos))
+            {// 置くことができる
+                Debug.Log(name + " はオブジェクトを離した");
+                _map.PutToObject(_haveObject, putPos);
+                // オブジェクトを手放す
+                _haveObject = new SquareInfo();
+                break;
+            }
+        }
+    }
 
+
+    /*
+     * @brief デバッグ用関数
+     * @param1 表示したい文字列
+     * @return なし
+     */
+    public void CallDebug(object message)
+    {
+        Debug.Log(message);
+    }
+
+
+    /*
+     * @brief 移動後の座標の調整
+     * @return なし
+     */
+    private void offSetTransform()
+    {
+        transform.position = new Vector3(
+            (float)(_position.x + _map._offsetPos.x),
+            (float)(_position.y + _map._offsetPos.y) + 0.5f,
+            (float)(_position.z + _map._offsetPos.z)
+            );
     }
 
 
 #else
+    /*
+     * @brief 更新処理
+     * @return なし
+     */
+    override public void Update()
+    {
+        _isUpdate = false;
+        
+        //playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
+        
+        if (_animCnt > 0)
+        {// 移動カウント
+            if (_nowMove)
+            {
+                transform.position =
+                    new Vector3(transform.position.x + _addPos.x, transform.position.y + _addPos.y, transform.position.z + _addPos.z);
+            }
+            _animCnt--;
+        }
+        else if (_animCnt == 0)
+        {// 移動していないとき
+        
+            if (!_haveObj.Equals(E_FIELD_OBJECT.NONE))
+            {// 何かを持っている時
+                _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT_BOX);
+                Debug.Log("物をもった状態でのアニメーション");
+            }
+            else
+            {// 何も持ってない時
+                _playerAnimation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
+            }
+        
+            // 座標の補正
+            transform.position = _fieldCtrl.offsetPos(_myObject, _position);
+            _animCnt = -1;
+            _nowMove = false;
+        }
+    }
+
+
     /*
      * @brief 通常ブロックの動き
      * @param1 ベクトル
@@ -437,7 +524,6 @@ public class Player : BaseObject {
         }
         _isUpdate = true;
     }
-#endif
 
 
     /*
@@ -452,17 +538,7 @@ public class Player : BaseObject {
             (int)(transform.position.z - GameObject.FindGameObjectWithTag("FieldController").transform.position.z)
             );
     }
-
-    
-    /*
-     * @brief デバッグ用関数
-     * @param1 表示したい文字列
-     * @return なし
-     */
-    public void CallDebug(object message)
-    {
-        Debug.Log(message);
-    }
+#endif
 }
 
 // EOF

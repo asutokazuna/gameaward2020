@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿
+
+//#define MODE_MAP
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,6 +48,7 @@ public class BlockTank : BaseObject
         AddWater();
         //Move();
 
+#if !MODE_MAP
         if (_animCnt > 0)
         {// 移動カウント
             if (_nowMove)
@@ -54,7 +60,6 @@ public class BlockTank : BaseObject
         }
         else if (_animCnt == 0)
         {// 移動していないとき
-
             if (!_haveObj.Equals(E_FIELD_OBJECT.NONE))
             {// 何かを持っている時
             }
@@ -67,6 +72,7 @@ public class BlockTank : BaseObject
             _animCnt = -1;
             _nowMove = false;
         }
+#endif
     }
 
 

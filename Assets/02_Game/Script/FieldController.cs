@@ -10,7 +10,7 @@
  */
 
 
-//#define MODE_FIELD
+#define MODE_FIELD
 
 
 using System.Collections;
@@ -225,7 +225,9 @@ public class FieldController : MonoBehaviour {
                     isUpdate = this.isMoveObject(_direct, obj, i, j); // オブジェクトのソート
                     if (isUpdate)
                     { // 移動可能なら実行
+#if MODE_FIELD
                         obj.HandAction();
+#endif
                     }
                 }
             }
@@ -241,13 +243,16 @@ public class FieldController : MonoBehaviour {
      */
     public E_FIELD_OBJECT LiftObject(Vector3Int myPosition, Vector3Int targetPos)
     {
+#if MODE_FIELD
         E_FIELD_OBJECT var = _field[targetPos.x, targetPos.y, targetPos.z]._myObject;  // 変数の保持
         
         _field[targetPos.x, targetPos.y, targetPos.z].Lifted(
                 new Vector3Int(myPosition.x, myPosition.y + 1, myPosition.z));  // 持ち上げる処理
         
         return var;
-        //return E_FIELD_OBJECT.NONE;
+#else
+        return E_FIELD_OBJECT.NONE;
+#endif
     }
 
 
@@ -430,11 +435,13 @@ public class FieldController : MonoBehaviour {
      */
     public bool isCollisionToObject(Vector3Int targetPos)
     {
+#if MODE_FIELD
         if (!isLimitField(targetPos) && isUse(targetPos) &&
             _field[targetPos.x, targetPos.y, targetPos.z]._myObject != E_FIELD_OBJECT.NONE)
         {
             return true;
         }
+#endif
         return false;
     }
 
