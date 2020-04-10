@@ -1,4 +1,13 @@
-﻿
+﻿/*
+ * @file	BlockTank.cs
+ * @brief   水槽ブロックの管理
+ *
+ * @author
+ * @data1   2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
+ *
+ * @version	1.00
+ */
+
 
 #define MODE_MAP
 
@@ -58,9 +67,9 @@ public class BlockTank : BaseObject
     // Start is called before the first frame update
     override public void Start()
     {
+#if !MODE_MAP
         _fieldCtrl = GameObject.FindGameObjectWithTag("FieldController")
             .GetComponent<FieldController>();   //!< メインのフィールド保持
-#if !MODE_MAP
         Init();
         _maxWater = TargetCnt;
         _numWater = 0;
@@ -107,6 +116,7 @@ public class BlockTank : BaseObject
      */
     public void AddWater()
     {
+#if !MODE_MAP
         if (isCollisitionBox())
         {// ブロックとあたってたら
             if (_numWater >= _maxWater && _fullWater.Equals(false))
@@ -135,6 +145,7 @@ public class BlockTank : BaseObject
                 Debug.Log(name + "空になりました");
             }
         }
+#endif
     }
 
 
@@ -145,12 +156,13 @@ public class BlockTank : BaseObject
     public bool isCollisitionBox()
     {
 
+#if !MODE_MAP
         Vector3Int targetPos = new Vector3Int(_position.x, _position.y, _position.z);
-
         if (_fieldCtrl.isWater(_position))
         {
             return true;
         }
+#endif
         return false;
     }
 }

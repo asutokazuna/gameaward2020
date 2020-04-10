@@ -2,8 +2,12 @@
  * @file    CleatText.cs
  * @brief   クリアテキスト表示用
  * @author  Risa Ito
- * @date    2020/03/31(月)  作成
+ * @date    2020/03/31(月)   作成
+ * @data    2020/04/10(金)   マクロによるFieldControllerへの参照をブロック
  */
+
+
+#define MODE_MAP
 
 
 using System.Collections;
@@ -31,6 +35,11 @@ public class ClearText : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+#if !MODE_MAP
         _clearObject.SetActive(_fieldController.GetCraer());
+#endif
     }
 }
+
+
+// EOF

@@ -5,6 +5,7 @@
  * @author	Kota Nakagami
  * @date1	2020/02/20(木)
  * @date1	2020/04/06(月)   水の入った箱の数を表示するUIのシステムを追加
+ * @data2   2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
  *
  * @version	1.00
  */
@@ -33,7 +34,7 @@ public enum E_FIELD_MODE
  * @brief フィールドの全体管理
  */
 public class FieldController : MonoBehaviour {
-
+#if MODE_FIELD
     //! 定数定義
     [SerializeField]int     MAX_FIELD_OBJECT    = 10;       // マップ1辺あたりに置けるオブジェクトの最大値
     [SerializeField]int     VAL_FIELD_MOVE      = 1;        // 一マス当たりの移動値
@@ -564,6 +565,7 @@ public class FieldController : MonoBehaviour {
     {
         return _clear;
     }
+#endif
 }
 
 // EOF
