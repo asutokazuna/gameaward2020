@@ -4,42 +4,42 @@ using UnityEngine;
 
 public class meshUV : MonoBehaviour
 {
-    private Mesh myMesh;
-    private Mesh Imesh;
-    private MeshRenderer mr;
-    public bool fadeSwitch = false;
-    public float TargetTime;
-    private Color color;
-    private float fTime;
+    private Mesh _myMesh;       //UV操作用
+    private MeshRenderer _mr;       //カラー操作用
+    private GameObject _parent;     //親情報取得用
+    private BlockTank _myScript;        //コンポーネント取得用
+    private Color _color;        //色保存用
 
     // Start is called before the first frame update
     void Start()
     {
-        myMesh = gameObject.GetComponent<MeshFilter>().mesh;
-        Imesh = Instantiate(myMesh);
-        gameObject.GetComponent<MeshFilter>().mesh = Imesh;
-        mr = GetComponent<MeshRenderer>();
-        color = mr.material.color;
-        mr.material.color = new Color(color.r, color.g, color.b, 0);
-        fTime = TargetTime;
+        _myMesh = gameObject.GetComponent<MeshFilter>().mesh;
+        _mr = GetComponent<MeshRenderer>();
+        _parent = transform.parent.gameObject;
+        _myScript = _parent.GetComponent<BlockTank>();
+        _color = _mr.material.color;
+        _mr.material.color = new Color(_color.r, _color.g, _color.b, 0);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector2[] nUV = Imesh.uv;
-        for (int i = 0; i < Imesh.uv.Length; i++)
+        Vector2[] nUV = _myMesh.uv;
+        nUV = _myMesh.uv;
+        for (int i = 0; i < _myMesh.uv.Length; i++)
         {
             nUV[i].x += 0.0001f;
             //nUV[i].y += 0.0001f;
         }
-        Imesh.uv = nUV;
+        _myMesh.uv = nUV;
 
-        fTime -= Time.deltaTime;
-
-        if(fTime <= 0.0f)
+        if (_myScript._numWater >= _myScript._maxWater && _mr.material.color.a < _color.a)
         {
-            mr.material.color += new Color(color.r, color.g, color.b, 0.0f);
+            _mr.material.color += new Color(0, 0, 0, 0.0001f);
+        }
+        else if (_myScript._numWater <= 0 && _mr.material.color.a >= _color.a)
+        {
+            _mr.material.color = new Color(_color.r, _color.g, _color.b, 0);
         }
     }
 }
