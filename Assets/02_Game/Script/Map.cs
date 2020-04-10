@@ -9,7 +9,7 @@
  */
 
 
-//#define MODE_MAP
+#define MODE_MAP
 
 
 using System.Collections;
@@ -66,7 +66,7 @@ public class Map : MonoBehaviour
     public SquareInfo[,,]       _map;               //!< マップ情報
     public Player[]             _player;            //!< プレイヤーオブジェクト
     public BlockTank[]          _waterBlock;        //!< 水槽オブジェクト
-    public BlockNormal[]        _ground;            //!< 地面ブロック
+    public Ground[]             _ground;            //!< 地面ブロック
     public WaterSourceBlock[]   _waterSource;       //!< 水源ブロック
     [SerializeField] int        _playerCnt;         //!< プレイヤーカウント
     [SerializeField] int        _waterBlockCnt;     //!< 水槽カウント
@@ -175,14 +175,13 @@ public class Map : MonoBehaviour
      */
     public BaseObject LiftToObject(Vector3Int pos, Vector3Int target)
     {
+        int num = 0;
         if (_map[target.x, target.y, target.z]._myObject == E_FIELD_OBJECT.BLOCK_TANK)
         {// これから持つオブジェクトが水槽だった場合
-            _waterBlock[_map[target.x, target.y, target.z]._number].Lifted(new Vector3Int(pos.x, pos.y + 1, pos.z));
-
-            SetObject(_waterBlock[_map[target.x, target.y, target.z]._number]);
-            DeleteObject(_waterBlock[_map[target.x, target.y, target.z]._number]._oldPosition);
-
-            return _waterBlock[_map[target.x, target.y, target.z]._number];
+            num = _map[target.x, target.y, target.z]._number;
+            _waterBlock[num].Lifted(new Vector3Int(pos.x, pos.y + 1, pos.z));
+            UpdateMap(_waterBlock[num]);
+            return _waterBlock[num];
         }
         return null;
     }
@@ -228,9 +227,9 @@ public class Map : MonoBehaviour
      */
     public bool isGameOver(Vector3Int pos)
     {
-        for (int y = pos.y; y >= 0 && y >= pos.y - VAL_FALL; y--)
+        for (int n = 0; n <= VAL_FALL; n++, pos.y--)
         {// 2マス以上落下した場合
-            if (isUse(new Vector3Int(pos.x, y, pos.z)))
+            if (isUse(pos))
                 return false;
         }
         return true;
@@ -456,6 +455,7 @@ public class Map : MonoBehaviour
         {
             _waterBlock[n] = new BlockTank();
             _waterBlock[n] = box[n].GetComponent<BlockTank>();
+            _waterBlock[n].Init(n);
             SetObject(_waterBlock[n]);
         }
     }
@@ -469,11 +469,12 @@ public class Map : MonoBehaviour
     {
         GameObject[] ground = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_FIELD_OBJECT.BLOCK_GROUND]);
         _groundCnt = ground.Length;
-        _ground = new BlockNormal[_groundCnt];
+        _ground = new Ground[_groundCnt];
         for (int n = 0; n < _groundCnt; n++)
         {
-            _ground[n] = new BlockNormal();
-            _ground[n] = ground[n].GetComponent<BlockNormal>();
+            _ground[n] = new Ground();
+            _ground[n] = ground[n].GetComponent<Ground>();
+            _ground[n].Init(n);
             SetObject(_ground[n]);
         }
     }
@@ -492,6 +493,7 @@ public class Map : MonoBehaviour
         {
             _waterSource[n] = new WaterSourceBlock();
             _waterSource[n] = waterblock[n].GetComponent<WaterSourceBlock>();
+            _waterSource[n].Init(n);
             SetObject(_waterSource[n]);
         }
     }
@@ -519,11 +521,15 @@ public class Map : MonoBehaviour
                 {
                     if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.PLAYER_01))
                     {
-                        Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " にプレイヤーがいます");
+                        Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " にプレイヤーがいます" + _map[x, y, z]._number);
                     }
                     if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_TANK))
                     {
-                        Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に水槽があります");
+                        Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に水槽があります" + _map[x, y, z]._number);
+                    }
+                    if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_GROUND))
+                    {
+                        Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に地面があります" + _map[x, y, z]._number);
                     }
                 }
             }
