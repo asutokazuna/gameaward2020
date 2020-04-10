@@ -3,6 +3,7 @@
  * @brief   プレイヤーアニメーションの管理
  * @author  Risa Ito
  * @date    2020/03/30(月)  作成
+ * @date    2020/04/10(金)  ジャンプアニメーション追加・アニメーションのセットの仕方を変更
  */
 
 using System.Collections;
@@ -27,7 +28,10 @@ public class PlayerAnimation : MonoBehaviour
         E_LIFT_BOX,
         E_WAIT_BOX,
         E_WALK_BOX,
-        E_PUT_BOX
+        E_PUT_BOX,
+        E_JUMP,
+        E_JUMP_CHARA,
+        E_JUMP_BOX,
     };
 
     // アニメーション管理用
@@ -35,11 +39,11 @@ public class PlayerAnimation : MonoBehaviour
     PlayerState _playerState;       //!< プレイヤーの状態管理用
     PlayerState _playerNextState;   //!< プレイヤーの状態管理用
     bool _changeState;              //!< アニメーション変更フラグ
-    int _stateNo;
 
     // Start is called before the first frame update
     void Start()
     {
+        // 初期化
         _playerAnimator = GetComponent<Animator>();
         _playerState = PlayerState.E_WAIT;
         _changeState = false;
@@ -51,46 +55,17 @@ public class PlayerAnimation : MonoBehaviour
         // 状態の変更
         if (_changeState)
         {
+            // ひとつ前の状態をログで確認
             Debug.Log("Old : " + _playerState);
+
+            // 次の状態をセット
             _playerState = _playerNextState;
 
-            switch (_playerState)
-            {
-                case PlayerState.E_WAIT:
-                    _stateNo = 0;
-                    break;
-                case PlayerState.E_WALK:
-                    _stateNo = 1;
-                    break;
-                case PlayerState.E_LIFT_CHARA:
-                    _stateNo = 2;
-                    break;
-                case PlayerState.E_WAIT_CHARA:
-                    _stateNo = 3;
-                    break;
-                case PlayerState.E_WALK_CHARA:
-                    _stateNo = 4;
-                    break;
-                case PlayerState.E_PUT_CHARA:
-                    _stateNo = 5;
-                    break;
-                case PlayerState.E_LIFT_BOX:
-                    _stateNo = 6;
-                    break;
-                case PlayerState.E_WAIT_BOX:
-                    _stateNo = 7;
-                    break;
-                case PlayerState.E_WALK_BOX:
-                    _stateNo = 8;
-                    break;
-                case PlayerState.E_PUT_BOX:
-                    _stateNo = 9;
-                    break;
-            }
-
             // アニメータにセット
-            _playerAnimator.SetInteger("PlayerState", _stateNo);
+            _playerAnimator.SetInteger("PlayerState", (int)_playerState);
             _changeState = false;
+
+            // 現在の状態をログで確認
             Debug.Log(_playerState);
         }
     }
