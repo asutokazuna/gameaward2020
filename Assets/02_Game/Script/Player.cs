@@ -68,7 +68,7 @@ public class Player : BaseObject {
         _myObject   = E_FIELD_OBJECT.PLAYER_01;
         _myNumber   = number;
         _haveObject = new SquareInfo();
-        _map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
+        _map        = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
 
         // 座標の補正
         _position = _oldPosition = new Vector3Int(
@@ -147,10 +147,9 @@ public class Player : BaseObject {
             _position = _oldPosition;
             Debug.Log("エラー : " + name + " はマップ配列外へ移動した");
         }
-        else if (_map.isGameOver(_position))
+        else if (_map.isGameOver(_position, E_PLAYER_MODE.MOVE))
         {// ゲームオーバー
             _position = _oldPosition;
-            _map.SetGameOver();
             Debug.Log(name + " は落下した");
         }
         else if (_map.isDontMove(_position, _oldPosition) || _lifted == true)
@@ -221,9 +220,12 @@ public class Player : BaseObject {
     public void Put()
     {
         Vector3Int putPos;              //!< 持ち上げるオブジェクトを探索するための座標
-        putPos = new Vector3Int(        // 向いてる方向の一段上から
-            _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z
-            );
+        putPos = new Vector3Int( _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z);
+        if (_map.isGameOver(putPos, E_PLAYER_MODE.PUT))
+        {// ゲームオーバー
+            Debug.Log(name + " は 物を落とした");
+            return;
+        }
         for (int n = 0; n <= 2; n++, putPos.y -= 1)
         {// 一段上から一段下まで、探索をする
             if (_map.isLimitField(putPos))
