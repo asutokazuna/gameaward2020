@@ -74,7 +74,6 @@ public class Map : MonoBehaviour
     [SerializeField] int        _waterSourceCnt;    //!< 水源カウント
     [SerializeField] Vector3Int _direct;            //!< 全プレイヤーが向いてる方向
     public Vector3Int           _offsetPos;         //!< 配列座標補正用変数
-    bool                        _start;             //!< 最初の一回だけ関数を呼ぶため(後で消す)
     [SerializeField] bool       _gameOver;          //!< ゲームオーバーフラグ
 
 
@@ -85,7 +84,6 @@ public class Map : MonoBehaviour
     void Awake()
     {
         _map        = new SquareInfo[MAX_FIELD_OBJECT, MAX_FIELD_OBJECT, MAX_FIELD_OBJECT];
-        _start      = true;
         _gameOver   = false;
     }
 
@@ -93,17 +91,14 @@ public class Map : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // マップとオブジェクト情報の初期化
+        InitObject();
     }
 
     // Update is called once per frame
     void Update()
     {
 #if MODE_MAP
-        if (_start)
-        {
-            InitObject();
-            _start ^= _start;
-        }
         MoveObject();
         HandAction();
 #endif
@@ -223,16 +218,29 @@ public class Map : MonoBehaviour
     /*
      * @brief ゲームオーバー判定
      * @param1 移動先座標
+     * @param2 プレイヤーの状態
      * @return ゲームオーバーなら true
      */
-    public bool isGameOver(Vector3Int pos)
+    public bool isGameOver(Vector3Int pos, E_PLAYER_MODE mode)
     {
-        for (int n = 0; n <= VAL_FALL; n++, pos.y--)
-        {// 2マス以上落下した場合
-            if (isUse(pos))
-                return false;
+        if (mode == E_PLAYER_MODE.MOVE)
+        {// 移動時
+            for (int n = 0; n <= VAL_FALL; n++, pos.y--)
+            {// 2マス以上落下した場合
+                if (isUse(pos))
+                    return false;
+            }
         }
-        return true;
+        if (mode == E_PLAYER_MODE.PUT)
+        {// 物を置くとき
+            for (int n = 0; n <= VAL_FALL + 1; n++, pos.y--)
+            {// 2マス以上落下した場合
+                if (isUse(pos))
+                    return false;
+            }
+        }
+        // ゲームオーバー
+        return _gameOver = true;
     }
 
 
@@ -499,6 +507,16 @@ public class Map : MonoBehaviour
     }
 
 
+    /*
+     * @brief ゲームオーバーフラグの取得
+     * @return ゲームオーバーなら true を返す
+     */
+    public bool isGameOver()
+    {
+        return _gameOver;
+    }
+
+
     private void SetOffsetPos()
     {
         // 取り合えずの処理
@@ -536,15 +554,6 @@ public class Map : MonoBehaviour
         }
     }
 
-
-    /*
-     * @brief ゲームオーバーフラグのセット
-     * return ゲームオーバーなら true
-     */
-    public void SetGameOver()
-    {
-        _gameOver = true;
-    }
 #endif
 }
 
