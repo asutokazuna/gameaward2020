@@ -507,6 +507,16 @@ public class Map : MonoBehaviour
     }
 
 
+    /*
+     * @brief ゲームオーバーフラグの取得
+     * @return ゲームオーバーなら true を返す
+     */
+    public bool isGameOver()
+    {
+        return _gameOver;
+    }
+
+
     private void SetOffsetPos()
     {
         // 取り合えずの処理
@@ -543,6 +553,7 @@ public class Map : MonoBehaviour
             }
         }
     }
+
 #endif
 }
 
