@@ -23,12 +23,14 @@ using DG.Tweening;
  */
 public enum E_PLAYER_MODE
 {
-    WAIT,   // 待機
-    ROTATE, // 回転
-    MOVE,   // 移動
-    LIFT,   // 持ち上げる
-    PUT,    // 置く
-    FALL,   // 落下
+    WAIT,       // 待機
+    ROTATE,     // 回転
+    MOVE,       // 移動
+    GET_UP,     // 上に登る
+    GET_OFF,    // 下に降りる場合
+    LIFT,       // 持ち上げる
+    PUT,        // 置く
+    FALL,       // 落下
 }
 
 
@@ -50,6 +52,8 @@ public class Player : BaseObject {
    // [SerializeField] AnimationCurve _moveCurve;     //!< アニメーションカーブ(移動)
     [SerializeField] Vector3        _nextPos;       //!< 移動先の座標
     [SerializeField] bool           _isFinMove;     //!< 移動が終了したかどうか
+    [SerializeField] E_PLAYER_MODE  _mode;          //!< プレイヤーの状態
+
 
 #if MODE_MAP
     /*
@@ -75,6 +79,7 @@ public class Player : BaseObject {
         _fullWater  = false;
         _animCnt    = 0;
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
+        _mode       = E_PLAYER_MODE.WAIT;
 
         _animation = GameObject.Find(name).GetComponent<PlayerAnimation>();
         _isFinMove = true;
@@ -106,12 +111,30 @@ public class Player : BaseObject {
      */
     override public void Update()
     {
-                                //                              移動先座標, 移動時間(秒)
-        transform.DOLocalMove(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),        1)
-            .OnComplete(() => // 動きが終わったら
+        if (_mode == E_PLAYER_MODE.MOVE)
+        {// 移動
+            //                              移動先座標, 移動時間(秒)
+            transform.DOLocalMove(_nextPos, 1)
+                .OnComplete(() => // 動きが終わったら
             {   // フラグをtrueにする
-                _isFinMove = true; 
+                _isFinMove = true;
+                });
+        }
+        else if (_mode == E_PLAYER_MODE.GET_UP)
+        {// ジャンプで登る
+            //transform.DOJump(endValue, jumpPower, numJumps, duration)
+            transform.DOJump(_nextPos, 0, 1, 1, false).OnComplete(() =>
+            {
+                _isFinMove = true;
             });
+        }
+        else if(_mode == E_PLAYER_MODE.GET_OFF)
+        {// ジャンプで降りる
+            transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z), 0, 1, 1, false).OnComplete(() =>
+            {
+                _isFinMove = true;
+            });
+        }
     }
 
 
@@ -139,12 +162,12 @@ public class Player : BaseObject {
      */
     override public void Move(Vector3Int movement)
     {
-        _oldPosition = _position;      //!< 座標の保持
-        _position = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
-        _isFinMove = false;
+        _oldPosition    = _position;      //!< 座標の保持
+        _position       = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
+        _isFinMove      = false;
 
         offsetDirect(); // 向いてる方向の補正
-        Debug.Log(_position);
+
         if (_map.isLimitField(_position))
         {// マップ配列へ参照できない値の場合
             _position = _oldPosition;
@@ -164,14 +187,17 @@ public class Player : BaseObject {
         {// 何かの上に上る時
             _position = new Vector3Int(_position.x, _position.y + 1, _position.z);
             Debug.Log(name + " は登った");
+            _mode = E_PLAYER_MODE.GET_UP;
         }
         else if (_map.isGetoff(_position))
         {// 一段下に降りる時
             _position = new Vector3Int(_position.x, _position.y - 1, _position.z);
             Debug.Log(name + " は降りた");
+            _mode = E_PLAYER_MODE.GET_OFF;
         }
         else
         {// 正面への移動
+            _mode = E_PLAYER_MODE.MOVE;
             Debug.Log(name + " はそのまま移動した");
         }
         
