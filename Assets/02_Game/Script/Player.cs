@@ -117,7 +117,7 @@ public class Player : BaseObject {
             transform.DOLocalMove(_nextPos, 1)
                 .OnComplete(() => // 動きが終わったら
             {   // フラグをtrueにする
-                _isFinMove = true;
+                WaitMode();
                 });
         }
         else if (_mode == E_PLAYER_MODE.GET_UP)
@@ -125,14 +125,14 @@ public class Player : BaseObject {
             //transform.DOJump(endValue, jumpPower, numJumps, duration)
             transform.DOJump(_nextPos, 0, 1, 1, false).OnComplete(() =>
             {
-                _isFinMove = true;
+                WaitMode();
             });
         }
         else if(_mode == E_PLAYER_MODE.GET_OFF)
         {// ジャンプで降りる
-            transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z), 0, 1, 1, false).OnComplete(() =>
+            transform.DOJump(_nextPos, 0, 1, 1, false).OnComplete(() =>
             {
-                _isFinMove = true;
+                WaitMode();
             });
         }
     }
@@ -284,6 +284,17 @@ public class Player : BaseObject {
             (float)(_position.y + _map._offsetPos.y) - 0.5f,
             (float)(_position.z + _map._offsetPos.z)
             );
+    }
+
+
+    /*
+     * @brief 待機モード
+     * @return なし
+     */
+    private void WaitMode()
+    {
+        _isFinMove  = true;
+        _mode       = E_PLAYER_MODE.WAIT;
     }
 
 
