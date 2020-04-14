@@ -47,16 +47,8 @@ public class Player : BaseObject {
     [SerializeField] SquareInfo     _haveObject;    //!< 持っているオブジェクト情報
                      Map            _map;           //!< マップ
     public PlayerAnimation          _animation;     //!< プレイヤーのアニメーション
-
-
-    /*
-     * @brief 初期化処理
-     * @return なし
-     */
-    public void Awake()
-    {// プレイヤーの設定を後で変更しなきゃ
-        _animation = GameObject.Find(name).GetComponent<PlayerAnimation>();
-    }
+    [SerializeField] AnimationCurve _moveCurve;     //!< アニメーションカーブ(移動)
+    [SerializeField] Vector3        _nextPos;       //!< 移動先の座標
 
 #if MODE_MAP
     /*
@@ -76,11 +68,14 @@ public class Player : BaseObject {
             (int)((transform.position.y + 0.5f) - _map._offsetPos.y),
             (int)(transform.position.z - _map._offsetPos.z)
             );
+        _nextPos = transform.position;
 
         _lifted     = false;
         _fullWater  = false;
         _animCnt    = 0;
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
+
+        _animation = GameObject.Find(name).GetComponent<PlayerAnimation>();
     }
 #endif
 
@@ -109,7 +104,7 @@ public class Player : BaseObject {
      */
     override public void Update()
     {
-
+        transform.position = new Vector3(_nextPos.x, _nextPos.y, _nextPos.z) * _moveCurve.Evaluate(Time.timeSinceLevelLoad);
     }
 
 
@@ -245,6 +240,20 @@ public class Player : BaseObject {
 
 
     /*
+     * @brief 移動後の座標の調整
+     * @return なし
+     */
+    override public void offSetTransform()
+    {
+        _nextPos = new Vector3(
+            (float)(_position.x + _map._offsetPos.x),
+            (float)(_position.y + _map._offsetPos.y) - 0.5f,
+            (float)(_position.z + _map._offsetPos.z)
+            );
+    }
+
+
+    /*
      * @brief デバッグ用関数
      * @param1 表示したい文字列
      * @return なし
@@ -253,21 +262,6 @@ public class Player : BaseObject {
     {
         Debug.Log(message);
     }
-
-
-    /*
-     * @brief 移動後の座標の調整
-     * @return なし
-     */
-    override public void offSetTransform()
-    {
-        transform.position = new Vector3(
-            (float)(_position.x + _map._offsetPos.x),
-            (float)(_position.y + _map._offsetPos.y) - 0.5f,
-            (float)(_position.z + _map._offsetPos.z)
-            );
-    }
-
 
 #else
     /*
