@@ -42,7 +42,6 @@ public class BaseObject : MonoBehaviour
 #endif
     [SerializeField] public bool            _lifted;        //!< 何かに持ち上げられいる時 = true
     [SerializeField] public bool            _fullWater;     //!< たまってるかのフラグ
-                     public int             _animCnt;       //!< アニメーションカウント
 
 
     /*
@@ -60,7 +59,6 @@ public class BaseObject : MonoBehaviour
 #endif
         _lifted         = false;
         _fullWater      = false;
-        _animCnt        = 0;
     }
 
 #if MODE_MAP
@@ -79,7 +77,6 @@ public class BaseObject : MonoBehaviour
 
         _lifted     = false;
         _fullWater  = false;
-        _animCnt    = 0;
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
     }
 
