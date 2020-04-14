@@ -82,7 +82,7 @@ public class Player : BaseObject {
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
         _mode       = E_PLAYER_MODE.WAIT;
         _isMove     = false;
-        if (_moveTime < 0)
+        if (_moveTime <= 0)
         {// 移動時間が0を下回った状態でセットされていたら
             _moveTime = 1;  // デフォルトタイムにセット
         }
