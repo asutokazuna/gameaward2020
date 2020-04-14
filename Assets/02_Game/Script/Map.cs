@@ -114,7 +114,8 @@ public class Map : MonoBehaviour
     {
         // 移動キーを何も押してなかったら
         if (!Input.GetKeyDown(KeyCode.D) && !Input.GetKeyDown(KeyCode.A) &&
-            !Input.GetKeyDown(KeyCode.W) && !Input.GetKeyDown(KeyCode.S))
+            !Input.GetKeyDown(KeyCode.W) && !Input.GetKeyDown(KeyCode.S) ||
+            Input.GetKey(KeyCode.LeftShift))
         {
             return;
         }
