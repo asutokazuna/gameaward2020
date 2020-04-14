@@ -49,10 +49,9 @@ public class Player : BaseObject {
     [SerializeField] SquareInfo     _haveObject;    //!< 持っているオブジェクト情報
                      Map            _map;           //!< マップ
     public PlayerAnimation          _animation;     //!< プレイヤーのアニメーション
-   // [SerializeField] AnimationCurve _moveCurve;     //!< アニメーションカーブ(移動)
     [SerializeField] Vector3        _nextPos;       //!< 移動先の座標
-    [SerializeField] bool           _isFinMove;     //!< 移動が終了したかどうか
     [SerializeField] E_PLAYER_MODE  _mode;          //!< プレイヤーの状態
+    bool                            _isMove;        //!< 移動フラグ
 
 
 #if MODE_MAP
@@ -80,9 +79,10 @@ public class Player : BaseObject {
         _animCnt    = 0;
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
         _mode       = E_PLAYER_MODE.WAIT;
+        _isMove     = false;
 
         _animation = GameObject.Find(name).GetComponent<PlayerAnimation>();
-        _isFinMove = true;
+        _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
     }
 #endif
 
@@ -111,30 +111,7 @@ public class Player : BaseObject {
      */
     override public void Update()
     {
-        if (_mode == E_PLAYER_MODE.MOVE)
-        {// 移動
-            //                              移動先座標, 移動時間(秒)
-            transform.DOLocalMove(_nextPos, 1)
-                .OnComplete(() => // 動きが終わったら
-            {   // フラグをtrueにする
-                WaitMode();
-                });
-        }
-        else if (_mode == E_PLAYER_MODE.GET_UP)
-        {// ジャンプで登る
-            //transform.DOJump(endValue, jumpPower, numJumps, duration)
-            transform.DOJump(_nextPos, 0, 1, 1, false).OnComplete(() =>
-            {
-                WaitMode();
-            });
-        }
-        else if(_mode == E_PLAYER_MODE.GET_OFF)
-        {// ジャンプで降りる
-            transform.DOJump(_nextPos, 0, 1, 1, false).OnComplete(() =>
-            {
-                WaitMode();
-            });
-        }
+
     }
 
 
@@ -162,9 +139,15 @@ public class Player : BaseObject {
      */
     override public void Move(Vector3Int movement)
     {
+        // 取り合えずここに書き込む
+        if (_isMove)
+        {
+            return;
+        }
+
         _oldPosition    = _position;      //!< 座標の保持
         _position       = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
-        _isFinMove      = false;
+        _isMove         = true;
 
         offsetDirect(); // 向いてる方向の補正
 
@@ -203,11 +186,44 @@ public class Player : BaseObject {
         
         // 後で修正
         offSetTransform();
-        //transform.position = _fieldCtrl.offsetPos(_myObject, _position);
 
+        // 持っているオブジェクトの追従
         if (_haveObject._myObject != E_FIELD_OBJECT.NONE)
         {// 何か持っている時
             _map.Follow(_haveObject, _position);    // 追従させる
+        }
+
+        // 座標移動
+        if (_mode == E_PLAYER_MODE.MOVE)
+        {// 移動
+            if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+                _haveObject._myObject == E_FIELD_OBJECT.MAX)
+            {// 何も持っていない時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK);
+            }
+            else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+            {// プレイヤーを持っている時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK_CHARA);
+            }
+            else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+            {// プレイヤー以外を持っている時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK);
+            }
+            //                              移動先座標, 移動時間(秒)
+            transform.DOLocalMove(_nextPos, 1).OnComplete(() =>
+            {
+                WaitMode();
+            });
+        }
+        else if (_mode == E_PLAYER_MODE.GET_UP)
+        {// ジャンプで登る
+         //transform.DOJump(endValue, jumpPower, numJumps, duration)
+            JumpMode();
+
+        }
+        else if (_mode == E_PLAYER_MODE.GET_OFF)
+        {// ジャンプで降りる
+            JumpMode();
         }
     }
 
@@ -293,8 +309,58 @@ public class Player : BaseObject {
      */
     private void WaitMode()
     {
-        _isFinMove  = true;
         _mode       = E_PLAYER_MODE.WAIT;
+        _isMove     = false;
+        if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+            _haveObject._myObject == E_FIELD_OBJECT.MAX)
+        {// 何も持っていない時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
+        }
+        else
+        {// 何かを持っている時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT_BOX);
+        }
+    }
+
+
+    /*
+     * @brief 待機モード
+     * @return なし
+     */
+    private void JumpMode()
+    {
+        if (_mode == E_PLAYER_MODE.GET_UP)
+        {// 登りのジャンプ
+            if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+                _haveObject._myObject == E_FIELD_OBJECT.MAX)
+            {// 何も持っていない時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP);
+            }
+            else
+            {// 何かを持っている時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
+            }
+            transform.DOJump(_nextPos, 1, 1, 1, false).OnComplete(() =>
+            {
+                WaitMode();
+            });
+        }
+        else if(_mode == E_PLAYER_MODE.GET_OFF)
+        {// 降りのジャンプ
+            if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+                _haveObject._myObject == E_FIELD_OBJECT.MAX)
+            {// 何も持っていない時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP);
+            }
+            else
+            {// 何かを持っている時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
+            }
+            transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z), 1, 1, 1, false).OnComplete(() =>
+            {
+                WaitMode();
+            });
+        }
     }
 
 
