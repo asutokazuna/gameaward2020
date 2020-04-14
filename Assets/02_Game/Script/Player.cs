@@ -252,6 +252,7 @@ public class Player : BaseObject {
                 _haveObject._myObject   = obj._myObject;                // オブジェクト情報のセット
                 _haveObject._number     = obj._myNumber;                // オブジェクトナンバーセット
                 GameObject.Find(obj.name).transform.parent = transform; // 追従
+                LiftMode();
                 break;
             }
         }
@@ -281,6 +282,7 @@ public class Player : BaseObject {
             else if (_map.isPut(putPos))
             {// 置くことができる
                 _map.PutToObject(_haveObject, putPos);
+                PutMode();
                 // オブジェクトを手放す
                 _haveObject = new SquareInfo();
                 break;
@@ -324,7 +326,7 @@ public class Player : BaseObject {
 
 
     /*
-     * @brief 待機モード
+     * @brief ジャンプモード
      * @return なし
      */
     private void JumpMode()
@@ -360,6 +362,50 @@ public class Player : BaseObject {
             {
                 WaitMode();
             });
+        }
+    }
+
+
+    /*
+     * @brief 持ち上げるモード
+     * @return なし
+     */
+    private void LiftMode()
+    {
+        if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+            _haveObject._myObject == E_FIELD_OBJECT.MAX)
+        {// 何も持っていない時(呼び出し場所の間違えかエラー)
+            return;
+        }
+        if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// プレイヤーを持つとき
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_CHARA);
+        }
+        else
+        {// プレイヤー以外を持つ時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_BOX);
+        }
+    }
+
+
+    /*
+     * @brief 置くモード
+     * @return なし
+     */
+    private void PutMode()
+    {
+        if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+            _haveObject._myObject == E_FIELD_OBJECT.MAX)
+        {// 何も持っていない時(呼び出し場所の間違えかエラー)
+            return;
+        }
+        else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// プレイヤーを持つとき
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_CHARA);
+        }
+        else
+        {// プレイヤー以外を持つ時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_BOX);
         }
     }
 
