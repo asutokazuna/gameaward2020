@@ -5,7 +5,7 @@
  * @author	Kota Nakagami
  * @date1	2020/02/21(金)
  * @data2   2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
- *
+ * @deta3   2020/04/14(火)   DoTweenによる動きの追加
  * @version	1.00
  */
 
@@ -16,7 +16,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using DG.Tweening;
 
 /*
  * @enum オブジェクト情報
@@ -47,8 +47,9 @@ public class Player : BaseObject {
     [SerializeField] SquareInfo     _haveObject;    //!< 持っているオブジェクト情報
                      Map            _map;           //!< マップ
     public PlayerAnimation          _animation;     //!< プレイヤーのアニメーション
-    [SerializeField] AnimationCurve _moveCurve;     //!< アニメーションカーブ(移動)
+   // [SerializeField] AnimationCurve _moveCurve;     //!< アニメーションカーブ(移動)
     [SerializeField] Vector3        _nextPos;       //!< 移動先の座標
+    [SerializeField] bool           _isFinMove;     //!< 移動が終了したかどうか
 
 #if MODE_MAP
     /*
@@ -76,6 +77,7 @@ public class Player : BaseObject {
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
 
         _animation = GameObject.Find(name).GetComponent<PlayerAnimation>();
+        _isFinMove = true;
     }
 #endif
 
@@ -104,7 +106,12 @@ public class Player : BaseObject {
      */
     override public void Update()
     {
-        transform.position = new Vector3(_nextPos.x, _nextPos.y, _nextPos.z) * _moveCurve.Evaluate(Time.timeSinceLevelLoad);
+                                //                              移動先座標, 移動時間(秒)
+        transform.DOLocalMove(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),        1)
+            .OnComplete(() => // 動きが終わったら
+            {   // フラグをtrueにする
+                _isFinMove = true; 
+            });
     }
 
 
@@ -134,7 +141,8 @@ public class Player : BaseObject {
     {
         _oldPosition = _position;      //!< 座標の保持
         _position = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
-    
+        _isFinMove = false;
+
         offsetDirect(); // 向いてる方向の補正
         Debug.Log(_position);
         if (_map.isLimitField(_position))
