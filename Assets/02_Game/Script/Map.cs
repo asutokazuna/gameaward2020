@@ -101,6 +101,7 @@ public class Map : MonoBehaviour
 #if MODE_MAP
         MoveObject();
         HandAction();
+        RotateObject();
 #endif
     }
 
@@ -144,6 +145,21 @@ public class Map : MonoBehaviour
             UpdateMap(_player[n]);
         }
         CallDebug();
+    }
+
+
+    /*
+    * @brief プレイヤーの回転
+    * @return なし
+    */
+    private void RotateObject()
+    {
+        if (!Input.GetKey(KeyCode.LeftShift)) return;
+
+        for (int n = 0; n < _playerCnt; n++)
+        {
+            _player[n].Rotate();
+        }
     }
 
 
