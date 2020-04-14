@@ -122,6 +122,35 @@ public class Player : BaseObject {
 
 
     /*
+    * @brief 回転の動き
+    * @return なし
+    */
+    public void Rotate()
+    {
+        if (Input.GetKey(KeyCode.D))
+        {// 右
+            _direct = new Vector3Int(1, 0, 0);
+            transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+        }
+        if (Input.GetKey(KeyCode.A))
+        {// 左
+            _direct = new Vector3Int(-1, 0, 0);
+            transform.rotation = Quaternion.Euler(0f, -90f, 0f);
+        }
+        if (Input.GetKey(KeyCode.W))
+        {// 奥
+            _direct = new Vector3Int(0, 0, 1);
+            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {// 手前
+            _direct = new Vector3Int(0, 0, -1);
+            transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+        }
+    }
+
+
+    /*
      * @brief 物を持ち上げる、下す
      * @return なし
      */

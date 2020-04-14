@@ -104,6 +104,7 @@ public class Map : MonoBehaviour
 #if MODE_MAP
         MoveObject();
         HandAction();
+        RotateObject();
 #endif
     }
 
@@ -116,7 +117,8 @@ public class Map : MonoBehaviour
     {
         // 移動キーを何も押してなかったら
         if (!Input.GetKeyDown(KeyCode.D) && !Input.GetKeyDown(KeyCode.A) &&
-            !Input.GetKeyDown(KeyCode.W) && !Input.GetKeyDown(KeyCode.S))
+            !Input.GetKeyDown(KeyCode.W) && !Input.GetKeyDown(KeyCode.S) ||
+            Input.GetKey(KeyCode.LeftShift))
         {
             return;
         }
@@ -147,6 +149,21 @@ public class Map : MonoBehaviour
             UpdateMap(_player[n]);
         }
         CallDebug();
+    }
+
+
+    /*
+    * @brief プレイヤーの回転
+    * @return なし
+    */
+    private void RotateObject()
+    {
+        if (!Input.GetKey(KeyCode.LeftShift)) return;
+
+        for (int n = 0; n < _playerCnt; n++)
+        {
+            _player[n].Rotate();
+        }
     }
 
 
