@@ -40,6 +40,9 @@ public enum E_PLAYER_MODE
  */
 public class Player : BaseObject {
 
+    // 定数定義
+    [SerializeField] float _moveTime;   // 移動時間
+
     //! 変数宣言
 #if !MODE_MAP
     [SerializeField] Vector3Int     _havePos;           //!< 持ってるオブジェクトの座標の保持
@@ -76,10 +79,13 @@ public class Player : BaseObject {
 
         _lifted     = false;
         _fullWater  = false;
-        _animCnt    = 0;
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
         _mode       = E_PLAYER_MODE.WAIT;
         _isMove     = false;
+        if (_moveTime < 0)
+        {// 移動時間が0を下回った状態でセットされていたら
+            _moveTime = 1;  // デフォルトタイムにセット
+        }
 
         _animation = GameObject.Find(name).GetComponent<PlayerAnimation>();
         _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
@@ -210,7 +216,7 @@ public class Player : BaseObject {
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK);
             }
             //                              移動先座標, 移動時間(秒)
-            transform.DOLocalMove(_nextPos, 1).OnComplete(() =>
+            transform.DOLocalMove(_nextPos, _moveTime).OnComplete(() =>
             {
                 WaitMode();
             });
@@ -218,12 +224,12 @@ public class Player : BaseObject {
         else if (_mode == E_PLAYER_MODE.GET_UP)
         {// ジャンプで登る
          //transform.DOJump(endValue, jumpPower, numJumps, duration)
-            JumpMode();
+            JumpMode(); // アニメーションのセット
 
         }
         else if (_mode == E_PLAYER_MODE.GET_OFF)
         {// ジャンプで降りる
-            JumpMode();
+            JumpMode(); // アニメーションのセット
         }
     }
 
@@ -252,7 +258,7 @@ public class Player : BaseObject {
                 _haveObject._myObject   = obj._myObject;                // オブジェクト情報のセット
                 _haveObject._number     = obj._myNumber;                // オブジェクトナンバーセット
                 GameObject.Find(obj.name).transform.parent = transform; // 追従
-                LiftMode();
+                LiftMode();                                             // アニメーションのセット
                 break;
             }
         }
@@ -281,10 +287,9 @@ public class Player : BaseObject {
             }
             else if (_map.isPut(putPos))
             {// 置くことができる
-                _map.PutToObject(_haveObject, putPos);
-                PutMode();
-                // オブジェクトを手放す
-                _haveObject = new SquareInfo();
+                _map.PutToObject(_haveObject, putPos);  // 置く処理
+                PutMode();                              // アニメーションのセット
+                _haveObject = new SquareInfo();         // オブジェクトを手放す
                 break;
             }
         }
@@ -342,7 +347,7 @@ public class Player : BaseObject {
             {// 何かを持っている時
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
             }
-            transform.DOJump(_nextPos, 1, 1, 1, false).OnComplete(() =>
+            transform.DOJump(_nextPos, 1, 1, _moveTime, false).OnComplete(() =>
             {
                 WaitMode();
             });
@@ -358,7 +363,7 @@ public class Player : BaseObject {
             {// 何かを持っている時
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
             }
-            transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z), 1, 1, 1, false).OnComplete(() =>
+            transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z), 1, 1, _moveTime, false).OnComplete(() =>
             {
                 WaitMode();
             });
