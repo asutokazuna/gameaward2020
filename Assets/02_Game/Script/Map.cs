@@ -96,6 +96,7 @@ public class Map : MonoBehaviour
     {
         // マップとオブジェクト情報の初期化
         InitObject();
+        CallDebug();
     }
 
     // Update is called once per frame
@@ -148,7 +149,6 @@ public class Map : MonoBehaviour
             _player[n].Move(_direct);
             UpdateMap(_player[n]);
         }
-        CallDebug();
     }
 
 
