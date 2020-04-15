@@ -126,27 +126,25 @@ public class Map : MonoBehaviour
         else
         {
             _direct = new Vector3Int();
-            GameObject[] player = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_FIELD_OBJECT.PLAYER_01]);
         }
         if (Input.GetKeyDown(KeyCode.D))
-        {
+        {// 右方
             _direct.x = VAL_FIELD_MOVE;
+
         }
         else if (Input.GetKeyDown(KeyCode.A))
-        {
+        {// 左方
             _direct.x = -VAL_FIELD_MOVE;
         }
         else if (Input.GetKeyDown(KeyCode.W))
-        {
+        {// 前方
             _direct.z = VAL_FIELD_MOVE;
         }
         else if (Input.GetKeyDown(KeyCode.S))
-        {
+        {// 後方
             _direct.z = -VAL_FIELD_MOVE;
         }
-        {// オブジェクトのソート
-
-        }
+        PlayerSort();   // ソート
         for (int n = 0; n < _playerCnt; n++)
         {
             _player[n].Move(_direct);
@@ -167,6 +165,7 @@ public class Map : MonoBehaviour
         {
             _player[n].Rotate();
         }
+        PlayerSort();   // ソート
     }
 
 
@@ -527,6 +526,58 @@ public class Map : MonoBehaviour
             _waterSource[n].Init(n);
             SetObject(_waterSource[n]);
         }
+    }
+
+
+    /*
+     * @brief プレイヤーのソート
+     * @return なし
+     */
+    private void PlayerSort()
+    {
+        if (_playerCnt <= 1)
+        {// プレイヤーが一体しかいない場合
+            return;
+        }
+        Player work = new Player();
+        for (int i = _playerCnt - 1; i > 0; i--)
+        {
+            for (int j = 0; j < i; j++)
+            {
+                if (isSort(_player[j], _player[j + 1]))
+                {
+                    work            = _player[j];
+                    _player[j]      = _player[j + 1];
+                    _player[j + 1]  = work;
+                }
+            }
+        }
+    }
+
+
+    /*
+     * @brief 入れ替えができるかの判定
+     * @return 入れ替えが行われるなら true
+     */
+    private bool isSort(Player i, Player j)
+    {
+        if (_direct.x > 0 && i._position.x < j._position.x)
+        {// 右方
+            return true;
+        }
+        else if (_direct.x < 0 && i._position.x > j._position.x)
+        {// 左方
+            return true;
+        }
+        else if (_direct.z > 0 && i._position.z < j._position.z)
+        {// 前方
+            return true;
+        }
+        else if (_direct.z < 0 && i._position.z > j._position.z)
+        {// 後方
+            return true;
+        }
+        return false;
     }
 
 
