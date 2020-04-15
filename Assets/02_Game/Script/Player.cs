@@ -188,12 +188,14 @@ public class Player : BaseObject {
 
         if (_map.isLimitField(_position))
         {// マップ配列へ参照できない値の場合
-            _position = _oldPosition;
+            _position   = _oldPosition;
+            _isMove     = false;    // 取り合えずの処理
             Debug.Log("エラー : " + name + " はマップ配列外へ移動した");
         }
         else if (_map.isGameOver(_position, E_PLAYER_MODE.MOVE))
         {// ゲームオーバー
-            _position = _oldPosition;
+            _position   = _oldPosition;
+            _isMove     = false;    // 取り合えずの処理
             Debug.Log(name + " は落下した");
         }
         else if (_map.isDontMove(_position, _oldPosition) || _lifted == true)
