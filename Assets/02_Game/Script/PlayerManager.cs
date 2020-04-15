@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    // 定数定義
-    [SerializeField] float _moveTime;   // 移動時間
+    //! 変数宣言
+    [SerializeField] float _moveTime;   //!< 移動時間
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +22,9 @@ public class PlayerManager : MonoBehaviour
         
     }
 
+    /*
+     * @brief 移動時間変数の取得
+     */
     public float MoveTime
     {
         get { return _moveTime; }

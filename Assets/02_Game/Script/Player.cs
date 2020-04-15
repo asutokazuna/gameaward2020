@@ -491,6 +491,16 @@ public class Player : BaseObject
 
 
     /*
+     * @brief 移動中かどうかの判定
+     */
+    public bool isMove
+    {
+        get { return _isMove; }
+    }
+
+
+
+    /*
      * @brief デバッグ用関数
      * @param1 表示したい文字列
      * @return なし

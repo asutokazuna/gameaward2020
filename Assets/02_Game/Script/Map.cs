@@ -103,6 +103,13 @@ public class Map : MonoBehaviour
     void Update()
     {
 #if MODE_MAP
+        for (int n = 0; n < _playerCnt; n++)
+        {
+            if (_player[n].isMove)
+            {// まだ移動中のプレイヤーがいれば、操作を受け付けない
+                return;
+            }
+        }
         MoveObject();
         HandAction();
         RotateObject();
