@@ -117,7 +117,7 @@ public class Player : BaseObject {
      */
     override public void Update()
     {
-
+        
     }
 
 
@@ -127,6 +127,11 @@ public class Player : BaseObject {
     */
     public void Rotate()
     {
+        if (_isMove)
+        {// 取り合えずここに書き込む
+            return;
+        }
+
         if (Input.GetKey(KeyCode.D))
         {// 右
             _direct = new Vector3Int(1, 0, 0);
@@ -156,6 +161,11 @@ public class Player : BaseObject {
      */
     public void HandAction()
     {
+        if (_isMove)
+        {// 取り合えずここに書き込む
+            return;
+        }
+
         if (_haveObject._myObject == E_FIELD_OBJECT.NONE)
         {// 物を持ち上げる
             Lift();
@@ -174,9 +184,8 @@ public class Player : BaseObject {
      */
     override public void Move(Vector3Int movement)
     {
-        // 取り合えずここに書き込む
         if (_isMove)
-        {
+        {// 取り合えずここに書き込む
             return;
         }
 
@@ -233,24 +242,7 @@ public class Player : BaseObject {
         // 座標移動
         if (_mode == E_PLAYER_MODE.MOVE)
         {// 移動
-            if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
-                _haveObject._myObject == E_FIELD_OBJECT.MAX)
-            {// 何も持っていない時
-                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK);
-            }
-            else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
-            {// プレイヤーを持っている時
-                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK_CHARA);
-            }
-            else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
-            {// プレイヤー以外を持っている時
-                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK);
-            }
-            //                              移動先座標, 移動時間(秒)
-            transform.DOLocalMove(_nextPos, _moveTime).OnComplete(() =>
-            {
-                WaitMode();
-            });
+            MoveMode(); // アニメーションのセット
         }
         else if (_mode == E_PLAYER_MODE.GET_UP)
         {// ジャンプで登る
@@ -354,10 +346,43 @@ public class Player : BaseObject {
         {// 何も持っていない時
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
         }
+        else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// プレイヤーを持ち上げたとき
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT_CHARA);
+        }
         else
         {// 何かを持っている時
+            Debug.Log("持った状態での待機");
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT_BOX);
         }
+    }
+
+
+    /*
+     * @brief 移動モード
+     * @return なし
+     */
+    private void MoveMode()
+    {
+        if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+            _haveObject._myObject == E_FIELD_OBJECT.MAX)
+        {// 何も持っていない時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK);
+        }
+        else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// プレイヤーを持っている時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK_CHARA);
+        }
+        else
+        {// プレイヤー以外を持っている時
+            Debug.Log("持った状態での移動");
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK_BOX);
+        }
+        //                              移動先座標, 移動時間(秒)
+        transform.DOLocalMove(_nextPos, _moveTime).OnComplete(() =>
+        {
+            WaitMode();
+        });
     }
 
 
@@ -374,6 +399,10 @@ public class Player : BaseObject {
             {// 何も持っていない時
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP);
             }
+            else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+            {// プレイヤーを持っている時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_CHARA);
+            }
             else
             {// 何かを持っている時
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
@@ -389,6 +418,10 @@ public class Player : BaseObject {
                 _haveObject._myObject == E_FIELD_OBJECT.MAX)
             {// 何も持っていない時
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP);
+            }
+            else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+            {// プレイヤーを持っている時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_CHARA);
             }
             else
             {// 何かを持っている時
@@ -413,13 +446,21 @@ public class Player : BaseObject {
         {// 何も持っていない時(呼び出し場所の間違えかエラー)
             return;
         }
-        if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+        else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
         {// プレイヤーを持つとき
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_CHARA);
+            transform.DOLocalMove(transform.position, _moveTime).OnComplete(() =>
+            {//　取り合えずこれで行く
+                WaitMode();
+            });
         }
         else
         {// プレイヤー以外を持つ時
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_BOX);
+            transform.DOLocalMove(transform.position, _moveTime).OnComplete(() =>
+            {//　取り合えずこれで行く
+                WaitMode();
+            });
         }
     }
 
@@ -438,10 +479,18 @@ public class Player : BaseObject {
         else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
         {// プレイヤーを持つとき
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_CHARA);
+            transform.DOLocalMove(transform.position, _moveTime).OnComplete(() =>
+            {//　取り合えずこれで行く
+                WaitMode();
+            });
         }
         else
         {// プレイヤー以外を持つ時
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_BOX);
+            transform.DOLocalMove(transform.position, _moveTime).OnComplete(() =>
+            {//　取り合えずこれで行く
+                WaitMode();
+            });
         }
     }
 

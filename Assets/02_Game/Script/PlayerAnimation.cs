@@ -35,10 +35,10 @@ public class PlayerAnimation : MonoBehaviour
     };
 
     // アニメーション管理用
-    Animator _playerAnimator;       //!< アニメーター取得用
-    PlayerState _playerState;       //!< プレイヤーの状態管理用
-    PlayerState _playerNextState;   //!< プレイヤーの状態管理用
-    bool _changeState;              //!< アニメーション変更フラグ
+    Animator                        _playerAnimator;    //!< アニメーター取得用
+    [SerializeField] PlayerState    _playerState;       //!< プレイヤーの状態管理用
+    PlayerState                     _playerNextState;   //!< プレイヤーの状態管理用
+    bool                            _changeState;       //!< アニメーション変更フラグ
 
     // Start is called before the first frame update
     void Start()

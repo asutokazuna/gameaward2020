@@ -126,6 +126,7 @@ public class Map : MonoBehaviour
         else
         {
             _direct = new Vector3Int();
+            GameObject[] player = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_FIELD_OBJECT.PLAYER_01]);
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -143,9 +144,11 @@ public class Map : MonoBehaviour
         {
             _direct.z = -VAL_FIELD_MOVE;
         }
+        {// オブジェクトのソート
+
+        }
         for (int n = 0; n < _playerCnt; n++)
-        {// 取り合えずソートはなし
-            //PlayerMove(_player[n], _direct);
+        {
             _player[n].Move(_direct);
             UpdateMap(_player[n]);
         }
