@@ -209,7 +209,8 @@ public class Player : BaseObject {
         }
         else if (_map.isDontMove(_position, _oldPosition) || _lifted == true)
         {// 移動出来ない場合
-            _position = _oldPosition;
+            _position   = _oldPosition;
+            _isMove     = false;    // 取り合えずの処理
             Debug.Log(name + " は動けない");
         }
         else if (_map.isGetup(_position))
@@ -352,7 +353,6 @@ public class Player : BaseObject {
         }
         else
         {// 何かを持っている時
-            Debug.Log("持った状態での待機");
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT_BOX);
         }
     }
@@ -375,7 +375,6 @@ public class Player : BaseObject {
         }
         else
         {// プレイヤー以外を持っている時
-            Debug.Log("持った状態での移動");
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK_BOX);
         }
         //                              移動先座標, 移動時間(秒)

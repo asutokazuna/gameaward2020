@@ -123,27 +123,8 @@ public class Map : MonoBehaviour
         {
             return;
         }
-        else
-        {
-            _direct = new Vector3Int();
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {// 右方
-            _direct.x = VAL_FIELD_MOVE;
-
-        }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {// 左方
-            _direct.x = -VAL_FIELD_MOVE;
-        }
-        else if (Input.GetKeyDown(KeyCode.W))
-        {// 前方
-            _direct.z = VAL_FIELD_MOVE;
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {// 後方
-            _direct.z = -VAL_FIELD_MOVE;
-        }
+        _direct = new Vector3Int();
+        offsetDirect();
         PlayerSort();   // ソート
         for (int n = 0; n < _playerCnt; n++)
         {
@@ -165,6 +146,7 @@ public class Map : MonoBehaviour
         {
             _player[n].Rotate();
         }
+        offsetDirect();
         PlayerSort();   // ソート
     }
 
@@ -273,14 +255,16 @@ public class Map : MonoBehaviour
      */
     public bool isDontMove(Vector3Int targetPos, Vector3Int oldPos)
     {
-        // 二段以上積み上げている時
         if (isUse(new Vector3Int(oldPos.x, oldPos.y + 1, oldPos.z)) && isUse(new Vector3Int(oldPos.x, oldPos.y + 2, oldPos.z)))
-        {
+        {// 二段以上積み上げている時
             return true;
         }
-        // 二段以上で登れない
         if (isUse(targetPos) && isUse(new Vector3Int(targetPos.x, targetPos.y + 1, targetPos.z)))
-        {
+        {// 二段以上で登れない
+            return true;
+        }
+        if (_map[targetPos.x, targetPos.y, targetPos.z]._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// 移動先にプレイヤーがいる場合
             return true;
         }
         return false;
@@ -409,8 +393,8 @@ public class Map : MonoBehaviour
      */
     public void UpdateMap(BaseObject obj)
     {
-        SetObject(obj);
         DeleteObject(obj._oldPosition);
+        SetObject(obj);
     }
 
 
@@ -578,6 +562,31 @@ public class Map : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+
+    /*
+     * @brief 方向の修正
+     * @return なし
+     */
+    private void offsetDirect()
+    {
+        if (Input.GetKeyDown(KeyCode.D))
+        {// 右方
+            _direct.x = VAL_FIELD_MOVE;
+        }
+        else if (Input.GetKeyDown(KeyCode.A))
+        {// 左方
+            _direct.x = -VAL_FIELD_MOVE;
+        }
+        else if (Input.GetKeyDown(KeyCode.W))
+        {// 前方
+            _direct.z = VAL_FIELD_MOVE;
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {// 後方
+            _direct.z = -VAL_FIELD_MOVE;
+        }
     }
 
 
