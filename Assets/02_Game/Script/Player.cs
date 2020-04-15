@@ -38,10 +38,8 @@ public enum E_PLAYER_MODE
  * @class Player01
  * @brief プレイヤーの動き
  */
-public class Player : BaseObject {
-
-    // 定数定義
-    [SerializeField] float _moveTime;   // 移動時間
+public class Player : BaseObject
+{
 
     //! 変数宣言
 #if !MODE_MAP
@@ -55,6 +53,7 @@ public class Player : BaseObject {
     [SerializeField] Vector3        _nextPos;       //!< 移動先の座標
     [SerializeField] E_PLAYER_MODE  _mode;          //!< プレイヤーの状態
     bool                            _isMove;        //!< 移動フラグ
+    PlayerManager                   _mgr;           //!< プレイヤー管理スクリプト
 
 
 #if MODE_MAP
@@ -67,7 +66,8 @@ public class Player : BaseObject {
         _myObject   = E_FIELD_OBJECT.PLAYER_01;
         _myNumber   = number;
         _haveObject = new SquareInfo();
-        _map        = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
+        _map        = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>();                      // コンポーネントの取得
+        _mgr        = GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>();  // コンポーネントの取得
 
         // 座標の補正
         _position = _oldPosition = new Vector3Int(
@@ -82,10 +82,6 @@ public class Player : BaseObject {
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
         _mode       = E_PLAYER_MODE.WAIT;
         _isMove     = false;
-        if (_moveTime <= 0)
-        {// 移動時間が0を下回った状態でセットされていたら
-            _moveTime = 1;  // デフォルトタイムにセット
-        }
 
         _animation = GameObject.Find(name).GetComponent<PlayerAnimation>();
         _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
@@ -182,7 +178,7 @@ public class Player : BaseObject {
      * @param1 ベクトル
      * @return なし
      */
-    override public void Move(Vector3Int movement)
+    override public void Follow(Vector3Int movement)
     {
         if (_isMove)
         {// 取り合えずここに書き込む
@@ -378,7 +374,7 @@ public class Player : BaseObject {
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK_BOX);
         }
         //                              移動先座標, 移動時間(秒)
-        transform.DOLocalMove(_nextPos, _moveTime).OnComplete(() =>
+        transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
         {
             WaitMode();
         });
@@ -406,7 +402,7 @@ public class Player : BaseObject {
             {// 何かを持っている時
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
             }
-            transform.DOJump(_nextPos, 1, 1, _moveTime, false).OnComplete(() =>
+            transform.DOJump(_nextPos, 1, 1, _mgr.MoveTime, false).OnComplete(() =>
             {
                 WaitMode();
             });
@@ -426,7 +422,7 @@ public class Player : BaseObject {
             {// 何かを持っている時
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
             }
-            transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z), 1, 1, _moveTime, false).OnComplete(() =>
+            transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z), 1, 1, _mgr.MoveTime, false).OnComplete(() =>
             {
                 WaitMode();
             });
@@ -448,7 +444,7 @@ public class Player : BaseObject {
         else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
         {// プレイヤーを持つとき
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_CHARA);
-            transform.DOLocalMove(transform.position, _moveTime).OnComplete(() =>
+            transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
                 WaitMode();
             });
@@ -456,7 +452,7 @@ public class Player : BaseObject {
         else
         {// プレイヤー以外を持つ時
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_BOX);
-            transform.DOLocalMove(transform.position, _moveTime).OnComplete(() =>
+            transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
                 WaitMode();
             });
@@ -478,7 +474,7 @@ public class Player : BaseObject {
         else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
         {// プレイヤーを持つとき
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_CHARA);
-            transform.DOLocalMove(transform.position, _moveTime).OnComplete(() =>
+            transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
                 WaitMode();
             });
@@ -486,7 +482,7 @@ public class Player : BaseObject {
         else
         {// プレイヤー以外を持つ時
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_BOX);
-            transform.DOLocalMove(transform.position, _moveTime).OnComplete(() =>
+            transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
                 WaitMode();
             });

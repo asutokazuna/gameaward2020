@@ -128,7 +128,7 @@ public class Map : MonoBehaviour
         PlayerSort();   // ソート
         for (int n = 0; n < _playerCnt; n++)
         {
-            _player[n].Move(_direct);
+            _player[n].Follow(_direct);
             UpdateMap(_player[n]);
         }
     }
@@ -213,7 +213,7 @@ public class Map : MonoBehaviour
     {
         if (haveObj._myObject == E_FIELD_OBJECT.BLOCK_TANK)
         {// 水槽の場合
-            _waterBlock[haveObj._number].Move(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
+            _waterBlock[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
             UpdateMap(_waterBlock[haveObj._number]);
         }
     }

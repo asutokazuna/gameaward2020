@@ -81,7 +81,7 @@ public class Ground : BaseObject
      * @param1 ベクトル
      * @return なし
      */
-    override public void Move(Vector3Int movement)
+    override public void Follow(Vector3Int movement)
     {
         
     }

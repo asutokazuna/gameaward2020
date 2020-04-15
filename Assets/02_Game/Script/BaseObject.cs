@@ -25,8 +25,6 @@ using UnityEngine.SceneManagement;
  */
 public class BaseObject : MonoBehaviour
 {
-    // 定数定義
-    [SerializeField] public int MAX_ANIM_WALK = 60;
 
     //! 変数宣言
     [SerializeField] public E_FIELD_OBJECT  _myObject;      //!< 自身のオブジェクト情報
@@ -106,7 +104,7 @@ public class BaseObject : MonoBehaviour
      * @param1 目的座標
      * @return なし
      */
-    virtual public void Move(Vector3Int pos)
+    virtual public void Follow(Vector3Int pos)
     {
         _oldPosition    = _position;
         _position       = pos;
