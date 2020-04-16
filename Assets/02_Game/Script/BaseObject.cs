@@ -5,6 +5,7 @@
  * @author	Kota Nakagami
  * @date1	2020/03/05(木)
  * @data2   2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
+ * @data3   2020/04/16(木)   コンストラクタの削除
  *
  * @version	1.00
  */
@@ -39,23 +40,6 @@ public class BaseObject : MonoBehaviour
     [SerializeField] public Vector3         _nextPos;       //!< 移動先の座標
 #endif
     [SerializeField] public bool            _lifted;        //!< 何かに持ち上げられいる時 = true
-
-
-    /*
-     * @brief コンストラクタ
-     * @return なし
-     */
-    public BaseObject()
-    {
-        _myObject       = E_FIELD_OBJECT.NONE;
-        _position       = new Vector3Int();
-        _oldPosition    = new Vector3Int();
-        _direct         = new Vector3Int();
-        _lifted         = false;
-#if !MODE_MAP
-        _haveObj        = E_FIELD_OBJECT.NONE;
-#endif
-    }
 
 #if MODE_MAP
     /*
@@ -97,7 +81,18 @@ public class BaseObject : MonoBehaviour
 
 
     /*
-     * @brief オブジェクトを動かす
+     * @brief オブジェクトの移動
+     * @param1 ベクトル
+     * @return なし
+     */
+    virtual public void Move(Vector3Int vec)
+    {
+
+    }
+
+
+    /*
+     * @brief オブジェクトの追従
      * @param1 目的座標
      * @return なし
      */
@@ -113,10 +108,12 @@ public class BaseObject : MonoBehaviour
      * @param1 ターゲット座標
      * @return なし
      */
-    public void Lifted(Vector3Int pos)
+    virtual public void Lifted(Vector3Int pos)
     {
         _oldPosition    = _position;
         _position       = pos;
+
+        Debug.Log(name + " は " + _position + " の所まで持ち上げられた");
 
         // 瞬間移動
         offSetTransform();
@@ -130,7 +127,7 @@ public class BaseObject : MonoBehaviour
      * @param1 ターゲット座標
      * @return なし
      */
-    public void Puted(Vector3Int pos)
+    virtual public void Puted(Vector3Int pos)
     {
         _oldPosition    = _position;
         _position       = pos;

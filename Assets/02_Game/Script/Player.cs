@@ -29,9 +29,11 @@ public enum E_PLAYER_MODE
     ROTATE,     // 回転
     MOVE,       // 移動
     GET_UP,     // 上に登る
-    GET_OFF,    // 下に降りる場合
+    GET_OFF,    // 下に降りる
     LIFT,       // 持ち上げる
+    LIFTED,     // 持ち上げられる
     PUT,        // 置く
+    PUTED,      // 置かれる
     FALL,       // 落下
 }
 
@@ -54,8 +56,18 @@ public class Player : BaseObject
     public PlayerAnimation          _animation;     //!< プレイヤーのアニメーション
     [SerializeField] Vector3        _nextPos;       //!< 移動先の座標
     [SerializeField] E_PLAYER_MODE  _mode;          //!< プレイヤーの状態
-    bool                            _isMove;        //!< 移動フラグ
     PlayerManager                   _mgr;           //!< プレイヤー管理スクリプト
+    BaseObject                      _obj;           //!< 後で改善するから許して
+
+
+    /*
+     * @brief 移動中かどうかの判定
+     */
+    public bool _isMove //!< 移動フラグ
+    {
+        get;            // ゲッター
+        private set;    // セッターはこのクラス内でのみ
+    }
 
 
 #if MODE_MAP
@@ -179,7 +191,7 @@ public class Player : BaseObject
      * @param1 ベクトル
      * @return なし
      */
-    override public void Follow(Vector3Int movement)
+    override public void Move(Vector3Int movement)
     {
         if (_isMove)
         {// 取り合えずここに書き込む
@@ -202,30 +214,25 @@ public class Player : BaseObject
         {// ゲームオーバー
             _position   = _oldPosition;
             _isMove     = false;    // 取り合えずの処理
-            Debug.Log(name + " は落下した");
         }
         else if (_map.isDontMove(_position, _oldPosition) || _lifted == true)
         {// 移動出来ない場合
             _position   = _oldPosition;
             _isMove     = false;    // 取り合えずの処理
-            Debug.Log(name + " は動けない");
         }
         else if (_map.isGetup(_position))
         {// 何かの上に上る時
             _position = new Vector3Int(_position.x, _position.y + 1, _position.z);
-            Debug.Log(name + " は登った");
             _mode = E_PLAYER_MODE.GET_UP;
         }
         else if (_map.isGetoff(_position))
         {// 一段下に降りる時
             _position = new Vector3Int(_position.x, _position.y - 1, _position.z);
-            Debug.Log(name + " は降りた");
             _mode = E_PLAYER_MODE.GET_OFF;
         }
         else
         {// 正面への移動
             _mode = E_PLAYER_MODE.MOVE;
-            Debug.Log(name + " はそのまま移動した");
         }
         
         // 後で修正
@@ -256,14 +263,45 @@ public class Player : BaseObject
 
 
     /*
+     * @brief  持ち上げられる
+     * @param1 ターゲット座標
+     * @return なし
+     */
+    override public void Lifted(Vector3Int pos)
+    {
+        _oldPosition    = _position;
+        _position       = pos;
+        _lifted         = true;
+        _mode           = E_PLAYER_MODE.LIFTED;
+        offSetTransform();
+        LiftedMode();   // 持ち上げられる
+    }
+
+
+    /*
+     * @brief  置かれる
+     * @param1 ターゲット座標
+     * @return なし
+     */
+    override public void Puted(Vector3Int pos)
+    {
+        _oldPosition    = _position;
+        _position       = pos;
+        _lifted         = false;
+        _mode           = E_PLAYER_MODE.PUTED;
+        offSetTransform();
+        PutedMode();
+    }
+
+
+    /*
      * @brief 物を持ち上げる
      * @return なし
      */
     public void Lift()
     {
-        Vector3Int havePos; //!< 持ち上げるオブジェクトを探索するための座標
-        BaseObject obj;     //!< 持っているオブジェクト情報
-        havePos = new Vector3Int(     // 向いてる方向の一段上から
+        Vector3Int havePos;             //!< 持ち上げるオブジェクトを探索するための座標
+        havePos = new Vector3Int(       // 向いてる方向の一段上から
             _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z
             );
         for (int n = 0; n <= 2; n++, havePos.y -= 1)
@@ -275,10 +313,16 @@ public class Player : BaseObject
             }
             else if (_map.isLift(havePos))
             {// 何かのオブジェクトを持てる場合
-                obj = _map.LiftToObject(_position, havePos);            // これから持つオブジェクトの情報取得
-                _haveObject._myObject   = obj._myObject;                // オブジェクト情報のセット
-                _haveObject._number     = obj._myNumber;                // オブジェクトナンバーセット
-                GameObject.Find(obj.name).transform.parent = transform; // 追従
+                _obj = _map.LiftToObject(_position, havePos);            // これから持つオブジェクトの情報取得
+                if (_obj)
+                {// メモ(mapのプレイヤー配列にソートがかかるため持ち上げにバグがでた)
+                    _haveObject._myObject   = _obj._myObject;                // オブジェクト情報のセット
+                    _haveObject._number     = _obj._myNumber;                // オブジェクトナンバーセット
+                }
+                else
+                {
+                    Debug.Log(name + " 持ち上げるオブジェクトが参照できないよ？");
+                }
                 LiftMode();                                             // アニメーションのセット
                 break;
             }
@@ -296,7 +340,6 @@ public class Player : BaseObject
         putPos = new Vector3Int( _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z);
         if (_map.isGameOver(putPos, E_PLAYER_MODE.PUT))
         {// ゲームオーバー
-            Debug.Log(name + " は 物を落とした");
             return;
         }
         for (int n = 0; n <= 2; n++, putPos.y -= 1)
@@ -432,6 +475,41 @@ public class Player : BaseObject
 
 
     /*
+     * @brief 持ち上げられるモード
+     * @return なし
+     */
+    private void LiftedMode()
+    {
+        if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+            _haveObject._myObject == E_FIELD_OBJECT.MAX)
+        {// 何も持っていなかったら
+            transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
+            {//　取り合えずこれで行く
+                GameObject.Find(_obj.name).transform.parent = transform; // 追従
+                WaitMode();
+            });
+        }
+    }
+
+
+    /*
+     * @brief 置かれるモード
+     * @return なし
+     */
+    private void PutedMode()
+    {
+        if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+            _haveObject._myObject == E_FIELD_OBJECT.MAX)
+        {// 何も持っていなかったら
+            transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
+            {//　取り合えずこれで行く
+                WaitMode();
+            });
+        }
+    }
+
+
+    /*
      * @brief 持ち上げるモード
      * @return なし
      */
@@ -489,16 +567,6 @@ public class Player : BaseObject
             });
         }
     }
-
-
-    /*
-     * @brief 移動中かどうかの判定
-     */
-    public bool isMove
-    {
-        get { return _isMove; }
-    }
-
 
 
     /*
@@ -713,7 +781,6 @@ public class Player : BaseObject
         {
             // もう一度持ち上げる
             _fieldCtrl._field[_position.x, _position.y + 1, _position.z].Lift();
-            Debug.Log("もう一度持ち上げるドン！");
         }
         return true;
     }
