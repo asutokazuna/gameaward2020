@@ -5,6 +5,7 @@
  * @author	Kota Nakagami
  * @date1	2020/04/06(月)   クラスの作成
  * @data2   2020/04/15(水)   プレイヤーの操作ソート
+ * @data3   2020/04/16(木)   警告文の解決
  *
  * @version	1.00
  */
@@ -95,7 +96,7 @@ public class Map : MonoBehaviour
     {
         // マップとオブジェクト情報の初期化
         InitObject();
-        CallDebug();
+        //CallDebug();
     }
 
     // Update is called once per frame
@@ -104,7 +105,7 @@ public class Map : MonoBehaviour
 #if MODE_MAP
         for (int n = 0; n < _playerCnt; n++)
         {
-            if (_player[n].isMove)
+            if (_player[n]._isMove)
             {// まだ移動中のプレイヤーがいれば、操作を受け付けない
                 return;
             }
@@ -131,10 +132,10 @@ public class Map : MonoBehaviour
         }
         _direct = new Vector3Int();
         offsetDirect();
-        PlayerSort();   // ソート
+        PlayerSort();   // ソートと更新
         for (int n = 0; n < _playerCnt; n++)
         {
-            _player[n].Follow(_direct);
+            _player[n].Move(_direct);
             UpdateMap(_player[n]);
         }
     }
@@ -153,7 +154,7 @@ public class Map : MonoBehaviour
             _player[n].Rotate();
         }
         offsetDirect();
-        PlayerSort();   // ソート
+        PlayerSort();   // ソートと更新
     }
 
 
@@ -164,7 +165,7 @@ public class Map : MonoBehaviour
     public void HandAction()
     {
         if (!Input.GetKeyDown(KeyCode.Space)) return;
-
+        PlayerSort();   // ソートと更新
         for (int n = 0; n < _playerCnt; n++)
         {// 取り合えずソートはなし
             _player[n].HandAction();
@@ -188,6 +189,14 @@ public class Map : MonoBehaviour
             UpdateMap(_waterBlock[num]);
             return _waterBlock[num];
         }
+        else if (_map[target.x, target.y, target.z]._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// これから持つオブジェクトがプレイヤーだった場合
+            num = _map[target.x, target.y, target.z]._number;
+            _player[num].Lifted(new Vector3Int(pos.x, pos.y + 1, pos.z));
+            UpdateMap(_player[num]);
+            Debug.Log(_player[num].name + num + " が持たれた");
+            return _player[num];
+        }
         return null;
     }
 
@@ -206,6 +215,12 @@ public class Map : MonoBehaviour
             _waterBlock[haveObj._number].Puted(targetPos);
             UpdateMap(_waterBlock[haveObj._number]);
         }
+        else if (haveObj._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// プレイヤーの場合
+            _player[haveObj._number].transform.parent = null;   // 親子関係を話す
+            _player[haveObj._number].Puted(targetPos);
+            UpdateMap(_player[haveObj._number]);
+        }
     }
 
 
@@ -221,6 +236,11 @@ public class Map : MonoBehaviour
         {// 水槽の場合
             _waterBlock[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
             UpdateMap(_waterBlock[haveObj._number]);
+        }
+        else if (haveObj._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// 水槽の場合
+            _player[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
+            UpdateMap(_player[haveObj._number]);
         }
     }
 
@@ -319,6 +339,13 @@ public class Map : MonoBehaviour
             pos.y + 1 < MAX_OBJECT && _map[pos.x, pos.y + 1, pos.z]._myObject == E_FIELD_OBJECT.NONE && // 上に何も積まれてない
             !_waterBlock[_map[pos.x, pos.y, pos.z]._number]._lifted)                                    // 何かに持たれてない
         {
+            return true;
+        }
+        else if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.PLAYER_01 &&                     // プレイヤーの場合
+            pos.y + 1 < MAX_OBJECT && _map[pos.x, pos.y + 1, pos.z]._myObject == E_FIELD_OBJECT.NONE && // 上に何も積まれてない
+            !_player[_map[pos.x, pos.y, pos.z]._number]._lifted)                                        // 何かに持たれてない
+        {
+            Debug.Log(_player[_map[pos.x, pos.y, pos.z]._number].name + _map[pos.x, pos.y, pos.z]._number + " が持たれた");
             return true;
         }
         return false;
@@ -455,7 +482,6 @@ public class Map : MonoBehaviour
         _player             = new Player[_playerCnt];
         for (int n = 0; n < _playerCnt; n++)
         {
-            _player[n] = new Player();
             _player[n] = player[n].GetComponent<Player>();
             _player[n].Init(n);         // プレイヤーコンポーネントの初期化
             SetObject(_player[n]);      // マップ情報にプレイヤー情報をセット
@@ -474,7 +500,6 @@ public class Map : MonoBehaviour
         _waterBlock = new BlockTank[_waterBlockCnt];
         for (int n = 0; n < _waterBlockCnt; n++)
         {
-            _waterBlock[n] = new BlockTank();
             _waterBlock[n] = box[n].GetComponent<BlockTank>();
             _waterBlock[n].Init(n);
             SetObject(_waterBlock[n]);
@@ -493,7 +518,6 @@ public class Map : MonoBehaviour
         _ground = new Ground[_groundCnt];
         for (int n = 0; n < _groundCnt; n++)
         {
-            _ground[n] = new Ground();
             _ground[n] = ground[n].GetComponent<Ground>();
             _ground[n].Init(n);
             SetObject(_ground[n]);
@@ -512,7 +536,6 @@ public class Map : MonoBehaviour
         _waterSource = new WaterSourceBlock[_waterSourceCnt];
         for (int n = 0; n < _waterSourceCnt; n++)
         {
-            _waterSource[n] = new WaterSourceBlock();
             _waterSource[n] = waterblock[n].GetComponent<WaterSourceBlock>();
             _waterSource[n].Init(n);
             SetObject(_waterSource[n]);
@@ -530,7 +553,7 @@ public class Map : MonoBehaviour
         {// プレイヤーが一体しかいない場合
             return;
         }
-        Player work = new Player();
+        Player work;
         for (int i = _playerCnt - 1; i > 0; i--)
         {
             for (int j = 0; j < i; j++)
@@ -542,6 +565,11 @@ public class Map : MonoBehaviour
                     _player[j + 1]  = work;
                 }
             }
+        }
+        for (int n = 0; n < _playerCnt; n++)
+        {
+            _player[n]._myNumber = n;
+            UpdateMap(_player[n]);
         }
     }
 
@@ -629,16 +657,19 @@ public class Map : MonoBehaviour
                 {
                     if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.PLAYER_01))
                     {
-                        Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " にプレイヤーがいます" + _map[x, y, z]._number);
+                        Debug.Log(
+                            "座標 x =" + x + " y =" + y + " z =" + z +  " に " +
+                            _player[_map[x, y, z]._number].name + _map[x, y, z]._number + " がいます"
+                            );
                     }
-                    if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_TANK))
-                    {
-                        Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に水槽があります" + _map[x, y, z]._number);
-                    }
-                    if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_GROUND))
-                    {
-                        Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に地面があります" + _map[x, y, z]._number);
-                    }
+                    //if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_TANK))
+                    //{
+                    //    Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に水槽があります" + _map[x, y, z]._number);
+                    //}
+                    //if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_GROUND))
+                    //{
+                    //    Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に地面があります" + _map[x, y, z]._number);
+                    //}
                 }
             }
         }
