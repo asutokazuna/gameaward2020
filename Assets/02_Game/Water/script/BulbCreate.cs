@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BulbCreate : MonoBehaviour
 {
-    private BlockTank script;
+    private WaterFlow script;
     private bool bFirst;
     private bool bFill;
     private float fTimer;
@@ -19,14 +19,14 @@ public class BulbCreate : MonoBehaviour
     {
         bFirst = false;
         bFill = false;
-        script = this.GetComponent<BlockTank>();
+        script = this.GetComponent<WaterFlow>();
         this.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(script._numWater == 0)
+        if(script._currentWater == 0)
         {
             bFirst = false;
             bFill = false;
@@ -56,9 +56,9 @@ public class BulbCreate : MonoBehaviour
             }
         }
 
-        if (script._numWater > nTargetCnt)
+        if (script._currentWater > nTargetCnt)
         {
-            if(!bFirst)
+            if(!bFirst && gameObject.tag == "WaterBlock")
             {
                 bFirst = true;
 
@@ -72,7 +72,7 @@ public class BulbCreate : MonoBehaviour
             }
         }
 
-        if (script._fullWater)
+        if (script._isFullWater)
         {
             if (!bFill)
             {
@@ -84,6 +84,6 @@ public class BulbCreate : MonoBehaviour
         }
 
 
-        nOldWater = script._numWater;
+        nOldWater = script._currentWater;
     }
 }
