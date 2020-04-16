@@ -84,7 +84,7 @@ public class MainCamera : MonoBehaviour
      * @details 　publicで設定した値を設定する
      */
 
-    void SetCamera()
+   public void SetCamera()
     {
         Transform myTransform = this.transform;//変数に取得
         myTransform.position = _setCameraPos;  // 座標を設定
