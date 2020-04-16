@@ -51,7 +51,7 @@ public class Map : MonoBehaviour
 {
 #if MODE_MAP
     // 定数定義
-    [SerializeField] int MAX_FIELD_OBJECT   = 10;       // マップ1辺あたりに置けるオブジェクトの最大値
+    [SerializeField] int MAX_OBJECT         = 10;       // マップ1辺あたりに置けるオブジェクトの最大値
     [SerializeField] int VAL_FIELD_MOVE     = 1;        // 一マス当たりの移動値
     [SerializeField] int VAL_FALL           = 2;        // 落下死判定になるマス数
 
@@ -85,7 +85,7 @@ public class Map : MonoBehaviour
      */
     void Awake()
     {
-        _map        = new SquareInfo[MAX_FIELD_OBJECT, MAX_FIELD_OBJECT, MAX_FIELD_OBJECT];
+        _map        = new SquareInfo[MAX_OBJECT, MAX_OBJECT, MAX_OBJECT];
         _gameOver   = false;
     }
 
@@ -315,8 +315,9 @@ public class Map : MonoBehaviour
      */
     public bool isLift(Vector3Int pos)
     {
-        if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.BLOCK_TANK &&     // 水槽ブロックの場合
-            !_waterBlock[_map[pos.x, pos.y, pos.z]._number]._lifted)                // 何かに持たれてない
+        if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.BLOCK_TANK &&                         // 水槽ブロックの場合
+            pos.y + 1 < MAX_OBJECT && _map[pos.x, pos.y + 1, pos.z]._myObject == E_FIELD_OBJECT.NONE && // 上に何も積まれてない
+            !_waterBlock[_map[pos.x, pos.y, pos.z]._number]._lifted)                                    // 何かに持たれてない
         {
             return true;
         }
@@ -384,9 +385,9 @@ public class Map : MonoBehaviour
      */
     public bool isLimitField(Vector3Int pos)
     {
-        if (pos.x >= MAX_FIELD_OBJECT || pos.x < 0 ||
-            pos.y >= MAX_FIELD_OBJECT || pos.y < 0 ||
-            pos.z >= MAX_FIELD_OBJECT || pos.z < 0)
+        if (pos.x >= MAX_OBJECT || pos.x < 0 ||
+            pos.y >= MAX_OBJECT || pos.y < 0 ||
+            pos.z >= MAX_OBJECT || pos.z < 0)
             return true;
         return false;
     }
@@ -620,11 +621,11 @@ public class Map : MonoBehaviour
      */
     private void CallDebug()
     {
-        for (int y = 0; y < MAX_FIELD_OBJECT; y++)
+        for (int y = 0; y < MAX_OBJECT; y++)
         {
-            for (int z = 0; z < MAX_FIELD_OBJECT; z++)
+            for (int z = 0; z < MAX_OBJECT; z++)
             {
-                for (int x = 0; x < MAX_FIELD_OBJECT; x++)
+                for (int x = 0; x < MAX_OBJECT; x++)
                 {
                     if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.PLAYER_01))
                     {
