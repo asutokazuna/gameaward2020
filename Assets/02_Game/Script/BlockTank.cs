@@ -56,7 +56,6 @@ public class BlockTank : BaseObject
             );
 
         _lifted     = false;
-        _fullWater  = false;
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
 
         _maxWater   = TargetCnt;
@@ -165,3 +164,6 @@ public class BlockTank : BaseObject
         return false;
     }
 }
+
+
+// EOF

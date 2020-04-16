@@ -40,7 +40,6 @@ public class WaterSourceBlock : BaseObject
             );
 
         _lifted     = false;
-        _fullWater  = false;
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
     }
 
@@ -70,8 +69,11 @@ public class WaterSourceBlock : BaseObject
      * @param1 ベクトル
      * @return なし
      */
-    override public void Move(Vector3Int movement)
+    override public void Follow(Vector3Int movement)
     {
 
     }
 }
+
+
+// EOF

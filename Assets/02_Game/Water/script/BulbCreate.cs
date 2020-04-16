@@ -72,7 +72,12 @@ public class BulbCreate : MonoBehaviour
             }
         }
 
-        if (script._fullWater)
+
+        /*
+         * 中上メモ
+         * 変数削除にともない、ここの処理を一時的に飛ばします
+         */
+        if (false)
         {
             if (!bFill)
             {
