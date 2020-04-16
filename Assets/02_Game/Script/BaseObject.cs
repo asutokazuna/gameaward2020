@@ -52,11 +52,11 @@ public class BaseObject : MonoBehaviour
         _position       = new Vector3Int();
         _oldPosition    = new Vector3Int();
         _direct         = new Vector3Int();
+        _lifted         = false;
+        _fullWater      = false;
 #if !MODE_MAP
         _haveObj        = E_FIELD_OBJECT.NONE;
 #endif
-        _lifted         = false;
-        _fullWater      = false;
     }
 
 #if MODE_MAP
