@@ -261,8 +261,8 @@ public class Player : BaseObject
      */
     public void Lift()
     {
-        Vector3Int havePos;                 //!< 持ち上げるオブジェクトを探索するための座標
-        BaseObject obj = new BaseObject();  //!< 持っているオブジェクト情報
+        Vector3Int havePos; //!< 持ち上げるオブジェクトを探索するための座標
+        BaseObject obj;     //!< 持っているオブジェクト情報
         havePos = new Vector3Int(     // 向いてる方向の一段上から
             _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z
             );

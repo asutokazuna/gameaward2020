@@ -455,7 +455,6 @@ public class Map : MonoBehaviour
         _player             = new Player[_playerCnt];
         for (int n = 0; n < _playerCnt; n++)
         {
-            _player[n] = new Player();
             _player[n] = player[n].GetComponent<Player>();
             _player[n].Init(n);         // プレイヤーコンポーネントの初期化
             SetObject(_player[n]);      // マップ情報にプレイヤー情報をセット
@@ -474,7 +473,6 @@ public class Map : MonoBehaviour
         _waterBlock = new BlockTank[_waterBlockCnt];
         for (int n = 0; n < _waterBlockCnt; n++)
         {
-            _waterBlock[n] = new BlockTank();
             _waterBlock[n] = box[n].GetComponent<BlockTank>();
             _waterBlock[n].Init(n);
             SetObject(_waterBlock[n]);
@@ -493,7 +491,6 @@ public class Map : MonoBehaviour
         _ground = new Ground[_groundCnt];
         for (int n = 0; n < _groundCnt; n++)
         {
-            _ground[n] = new Ground();
             _ground[n] = ground[n].GetComponent<Ground>();
             _ground[n].Init(n);
             SetObject(_ground[n]);
@@ -512,7 +509,6 @@ public class Map : MonoBehaviour
         _waterSource = new WaterSourceBlock[_waterSourceCnt];
         for (int n = 0; n < _waterSourceCnt; n++)
         {
-            _waterSource[n] = new WaterSourceBlock();
             _waterSource[n] = waterblock[n].GetComponent<WaterSourceBlock>();
             _waterSource[n].Init(n);
             SetObject(_waterSource[n]);
@@ -530,7 +526,7 @@ public class Map : MonoBehaviour
         {// プレイヤーが一体しかいない場合
             return;
         }
-        Player work = new Player();
+        Player work;
         for (int i = _playerCnt - 1; i > 0; i--)
         {
             for (int j = 0; j < i; j++)
