@@ -1,6 +1,19 @@
-﻿using System.Collections;
+﻿/*
+ * @file	PlayerManager.cs
+ * @brief   プレイヤーの共通機能の統括
+ *
+ * @author	Kota Nakagami
+ * @data1   2020/04/15(水)   クラス作成
+ *                           移動時間の統一化   
+ *
+ * @version	1.00
+ */
+
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 public class PlayerManager : MonoBehaviour
 {
@@ -30,3 +43,6 @@ public class PlayerManager : MonoBehaviour
         get { return _moveTime; }
     }
 }
+
+
+// EOF

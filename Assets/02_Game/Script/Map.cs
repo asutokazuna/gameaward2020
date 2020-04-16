@@ -3,7 +3,8 @@
  * @brief   フィールドのマップ情報
  *
  * @author	Kota Nakagami
- * @date1	2020/04/06(月)
+ * @date1	2020/04/06(月)   クラスの作成
+ * @data2   2020/04/15(水)   プレイヤーの操作ソート
  *
  * @version	1.00
  */
@@ -16,8 +17,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-// テスト
 
 
 /*
