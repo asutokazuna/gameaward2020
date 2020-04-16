@@ -662,33 +662,13 @@ GameObject:
   - component: {fileID: 421140231}
   - component: {fileID: 421140230}
   - component: {fileID: 421140229}
-  - component: {fileID: 421140228}
   m_Layer: 0
-  m_Name: 4
+  m_Name: 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &421140228
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 421140227}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3ae0042a2648584a81d52ec031a287f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _stageSelectManager: {fileID: 2052093434}
-  _planetObject: {fileID: 421140227}
-  rotateSpeed: 2
-  _angle: 90
-  _rotateFlame: 60
-  _setPlanetPos: {x: -8, y: 2, z: -8}
-  _setPlanetRot: {x: 0, y: 0, z: 0}
 --- !u!65 &421140229
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -783,33 +763,13 @@ GameObject:
   - component: {fileID: 500703558}
   - component: {fileID: 500703557}
   - component: {fileID: 500703556}
-  - component: {fileID: 500703555}
   m_Layer: 0
-  m_Name: 3
+  m_Name: 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &500703555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 500703554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3ae0042a2648584a81d52ec031a287f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _stageSelectManager: {fileID: 2052093434}
-  _planetObject: {fileID: 500703554}
-  rotateSpeed: 2
-  _angle: 90
-  _rotateFlame: 60
-  _setPlanetPos: {x: -8, y: 2, z: 8}
-  _setPlanetRot: {x: 0, y: 0, z: 0}
 --- !u!65 &500703556
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1002,7 +962,6 @@ GameObject:
   - component: {fileID: 552536312}
   - component: {fileID: 552536311}
   - component: {fileID: 552536310}
-  - component: {fileID: 552536309}
   m_Layer: 0
   m_Name: 2
   m_TagString: Untagged
@@ -1010,25 +969,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &552536309
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 552536308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3ae0042a2648584a81d52ec031a287f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _stageSelectManager: {fileID: 2052093434}
-  _planetObject: {fileID: 552536308}
-  rotateSpeed: 2
-  _angle: 90
-  _rotateFlame: 60
-  _setPlanetPos: {x: 8, y: 2, z: -8}
-  _setPlanetRot: {x: 0, y: 0, z: 0}
 --- !u!65 &552536310
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2297,25 +2237,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1014428632}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1143683574
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1143683573}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3ae0042a2648584a81d52ec031a287f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _stageSelectManager: {fileID: 2052093434}
-  _planetObject: {fileID: 1143683573}
-  rotateSpeed: 2
-  _angle: 90
-  _rotateFlame: 60
-  _setPlanetPos: {x: 8, y: 2, z: 8}
-  _setPlanetRot: {x: 0, y: 0, z: 0}
 --- !u!1 &1152896393
 GameObject:
   m_ObjectHideFlags: 0
@@ -3714,6 +3635,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2052093435}
+  - component: {fileID: 2052093436}
   m_Layer: 0
   m_Name: StageSelectManager
   m_TagString: Untagged
@@ -3735,6 +3657,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2052093436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052093434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3ae0042a2648584a81d52ec031a287f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stageSelectManager: {fileID: 2052093434}
+  _planetObject1: {fileID: 1143683573}
+  _planetObject2: {fileID: 552536308}
+  _planetObject3: {fileID: 421140227}
+  _planetObject4: {fileID: 500703554}
+  rotateSpeed: 4
+  _angle: 90
+  _rotateFlame: 60
+  _setPlanetPos: {x: 8, y: 2, z: 8}
+  _setPlanetRot: {x: 0, y: 0, z: 0}
 --- !u!1001 &2052408705
 PrefabInstance:
   m_ObjectHideFlags: 0
