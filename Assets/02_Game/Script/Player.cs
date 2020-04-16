@@ -5,7 +5,9 @@
  * @author	Kota Nakagami
  * @date1	2020/02/21(金)
  * @data2   2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
- *
+ * @deta3   2020/04/14(火)   DoTweenによる動きの追加
+ * @data4   2020/04/15(水)   複数プレイヤーでの移動処理の追加
+ * 
  * @version	1.00
  */
 
@@ -16,19 +18,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using DG.Tweening;
 
 /*
  * @enum オブジェクト情報
  */
 public enum E_PLAYER_MODE
 {
-    WAIT,   // 待機
-    ROTATE, // 回転
-    MOVE,   // 移動
-    LIFT,   // 持ち上げる
-    PUT,    // 置く
-    FALL,   // 落下
+    WAIT,       // 待機
+    ROTATE,     // 回転
+    MOVE,       // 移動
+    GET_UP,     // 上に登る
+    GET_OFF,    // 下に降りる場合
+    LIFT,       // 持ち上げる
+    PUT,        // 置く
+    FALL,       // 落下
 }
 
 
@@ -36,7 +40,8 @@ public enum E_PLAYER_MODE
  * @class Player01
  * @brief プレイヤーの動き
  */
-public class Player : BaseObject {
+public class Player : BaseObject
+{
 
     //! 変数宣言
 #if !MODE_MAP
@@ -47,16 +52,11 @@ public class Player : BaseObject {
     [SerializeField] SquareInfo     _haveObject;    //!< 持っているオブジェクト情報
                      Map            _map;           //!< マップ
     public PlayerAnimation          _animation;     //!< プレイヤーのアニメーション
+    [SerializeField] Vector3        _nextPos;       //!< 移動先の座標
+    [SerializeField] E_PLAYER_MODE  _mode;          //!< プレイヤーの状態
+    bool                            _isMove;        //!< 移動フラグ
+    PlayerManager                   _mgr;           //!< プレイヤー管理スクリプト
 
-
-    /*
-     * @brief 初期化処理
-     * @return なし
-     */
-    public void Awake()
-    {// プレイヤーの設定を後で変更しなきゃ
-        _animation = GameObject.Find(name).GetComponent<PlayerAnimation>();
-    }
 
 #if MODE_MAP
     /*
@@ -68,7 +68,8 @@ public class Player : BaseObject {
         _myObject   = E_FIELD_OBJECT.PLAYER_01;
         _myNumber   = number;
         _haveObject = new SquareInfo();
-        _map        = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
+        _map        = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>();                      // コンポーネントの取得
+        _mgr        = GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>();  // コンポーネントの取得
 
         // 座標の補正
         _position = _oldPosition = new Vector3Int(
@@ -76,11 +77,15 @@ public class Player : BaseObject {
             (int)((transform.position.y + 0.5f) - _map._offsetPos.y),
             (int)(transform.position.z - _map._offsetPos.z)
             );
+        _nextPos = transform.position;
 
         _lifted     = false;
-        _fullWater  = false;
-        _animCnt    = 0;
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
+        _mode       = E_PLAYER_MODE.WAIT;
+        _isMove     = false;
+
+        _animation = GameObject.Find(name).GetComponent<PlayerAnimation>();
+        _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
     }
 #endif
 
@@ -109,7 +114,41 @@ public class Player : BaseObject {
      */
     override public void Update()
     {
+        
+    }
 
+
+    /*
+    * @brief 回転の動き
+    * @return なし
+    */
+    public void Rotate()
+    {
+        if (_isMove)
+        {// 取り合えずここに書き込む
+            return;
+        }
+
+        if (Input.GetKey(KeyCode.D))
+        {// 右
+            _direct = new Vector3Int(1, 0, 0);
+            transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+        }
+        if (Input.GetKey(KeyCode.A))
+        {// 左
+            _direct = new Vector3Int(-1, 0, 0);
+            transform.rotation = Quaternion.Euler(0f, -90f, 0f);
+        }
+        if (Input.GetKey(KeyCode.W))
+        {// 奥
+            _direct = new Vector3Int(0, 0, 1);
+            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {// 手前
+            _direct = new Vector3Int(0, 0, -1);
+            transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+        }
     }
 
 
@@ -119,6 +158,11 @@ public class Player : BaseObject {
      */
     public void HandAction()
     {
+        if (_isMove)
+        {// 取り合えずここに書き込む
+            return;
+        }
+
         if (_haveObject._myObject == E_FIELD_OBJECT.NONE)
         {// 物を持ち上げる
             Lift();
@@ -135,50 +179,78 @@ public class Player : BaseObject {
      * @param1 ベクトル
      * @return なし
      */
-    override public void Move(Vector3Int movement)
+    override public void Follow(Vector3Int movement)
     {
-        _oldPosition = _position;      //!< 座標の保持
-        _position = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
-    
+        if (_isMove)
+        {// 取り合えずここに書き込む
+            return;
+        }
+
+        _oldPosition    = _position;      //!< 座標の保持
+        _position       = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
+        _isMove         = true;
+
         offsetDirect(); // 向いてる方向の補正
-        Debug.Log(_position);
+
         if (_map.isLimitField(_position))
         {// マップ配列へ参照できない値の場合
-            _position = _oldPosition;
+            _position   = _oldPosition;
+            _isMove     = false;    // 取り合えずの処理
             Debug.Log("エラー : " + name + " はマップ配列外へ移動した");
         }
         else if (_map.isGameOver(_position, E_PLAYER_MODE.MOVE))
         {// ゲームオーバー
-            _position = _oldPosition;
+            _position   = _oldPosition;
+            _isMove     = false;    // 取り合えずの処理
             Debug.Log(name + " は落下した");
         }
         else if (_map.isDontMove(_position, _oldPosition) || _lifted == true)
         {// 移動出来ない場合
-            _position = _oldPosition;
+            _position   = _oldPosition;
+            _isMove     = false;    // 取り合えずの処理
             Debug.Log(name + " は動けない");
         }
         else if (_map.isGetup(_position))
         {// 何かの上に上る時
             _position = new Vector3Int(_position.x, _position.y + 1, _position.z);
             Debug.Log(name + " は登った");
+            _mode = E_PLAYER_MODE.GET_UP;
         }
         else if (_map.isGetoff(_position))
         {// 一段下に降りる時
             _position = new Vector3Int(_position.x, _position.y - 1, _position.z);
             Debug.Log(name + " は降りた");
+            _mode = E_PLAYER_MODE.GET_OFF;
         }
         else
         {// 正面への移動
+            _mode = E_PLAYER_MODE.MOVE;
             Debug.Log(name + " はそのまま移動した");
         }
         
         // 後で修正
         offSetTransform();
-        //transform.position = _fieldCtrl.offsetPos(_myObject, _position);
 
+        // 持っているオブジェクトの追従
         if (_haveObject._myObject != E_FIELD_OBJECT.NONE)
         {// 何か持っている時
             _map.Follow(_haveObject, _position);    // 追従させる
+        }
+
+        // 座標移動
+        if (_mode == E_PLAYER_MODE.MOVE)
+        {// 移動
+            MoveMode(); // アニメーションのセット
+        }
+        else if (_mode == E_PLAYER_MODE.GET_UP)
+        {// ジャンプで登る
+         //transform.DOJump(endValue, jumpPower, numJumps, duration)
+            JumpMode(); // アニメーションのセット
+
+        }
+        else if (_mode == E_PLAYER_MODE.GET_OFF)
+        {// ジャンプで降りる
+            JumpMode(); // アニメーションのセット
         }
     }
 
@@ -207,6 +279,7 @@ public class Player : BaseObject {
                 _haveObject._myObject   = obj._myObject;                // オブジェクト情報のセット
                 _haveObject._number     = obj._myNumber;                // オブジェクトナンバーセット
                 GameObject.Find(obj.name).transform.parent = transform; // 追従
+                LiftMode();                                             // アニメーションのセット
                 break;
             }
         }
@@ -235,13 +308,197 @@ public class Player : BaseObject {
             }
             else if (_map.isPut(putPos))
             {// 置くことができる
-                _map.PutToObject(_haveObject, putPos);
-                // オブジェクトを手放す
-                _haveObject = new SquareInfo();
+                _map.PutToObject(_haveObject, putPos);  // 置く処理
+                PutMode();                              // アニメーションのセット
+                _haveObject = new SquareInfo();         // オブジェクトを手放す
                 break;
             }
         }
     }
+
+
+    /*
+     * @brief 移動後の座標の調整
+     * @return なし
+     */
+    override public void offSetTransform()
+    {
+        _nextPos = new Vector3(
+            (float)(_position.x + _map._offsetPos.x),
+            (float)(_position.y + _map._offsetPos.y) - 0.5f,
+            (float)(_position.z + _map._offsetPos.z)
+            );
+    }
+
+
+    /*
+     * @brief 待機モード
+     * @return なし
+     */
+    private void WaitMode()
+    {
+        _mode       = E_PLAYER_MODE.WAIT;
+        _isMove     = false;
+        if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+            _haveObject._myObject == E_FIELD_OBJECT.MAX)
+        {// 何も持っていない時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
+        }
+        else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// プレイヤーを持ち上げたとき
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT_CHARA);
+        }
+        else
+        {// 何かを持っている時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT_BOX);
+        }
+    }
+
+
+    /*
+     * @brief 移動モード
+     * @return なし
+     */
+    private void MoveMode()
+    {
+        if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+            _haveObject._myObject == E_FIELD_OBJECT.MAX)
+        {// 何も持っていない時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK);
+        }
+        else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// プレイヤーを持っている時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK_CHARA);
+        }
+        else
+        {// プレイヤー以外を持っている時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK_BOX);
+        }
+        //                              移動先座標, 移動時間(秒)
+        transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
+        {
+            WaitMode();
+        });
+    }
+
+
+    /*
+     * @brief ジャンプモード
+     * @return なし
+     */
+    private void JumpMode()
+    {
+        if (_mode == E_PLAYER_MODE.GET_UP)
+        {// 登りのジャンプ
+            if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+                _haveObject._myObject == E_FIELD_OBJECT.MAX)
+            {// 何も持っていない時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP);
+            }
+            else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+            {// プレイヤーを持っている時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_CHARA);
+            }
+            else
+            {// 何かを持っている時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
+            }
+            transform.DOJump(_nextPos, 1, 1, _mgr.MoveTime, false).OnComplete(() =>
+            {
+                WaitMode();
+            });
+        }
+        else if(_mode == E_PLAYER_MODE.GET_OFF)
+        {// 降りのジャンプ
+            if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+                _haveObject._myObject == E_FIELD_OBJECT.MAX)
+            {// 何も持っていない時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP);
+            }
+            else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+            {// プレイヤーを持っている時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_CHARA);
+            }
+            else
+            {// 何かを持っている時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
+            }
+            transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z), 1, 1, _mgr.MoveTime, false).OnComplete(() =>
+            {
+                WaitMode();
+            });
+        }
+    }
+
+
+    /*
+     * @brief 持ち上げるモード
+     * @return なし
+     */
+    private void LiftMode()
+    {
+        if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+            _haveObject._myObject == E_FIELD_OBJECT.MAX)
+        {// 何も持っていない時(呼び出し場所の間違えかエラー)
+            return;
+        }
+        else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// プレイヤーを持つとき
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_CHARA);
+            transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
+            {//　取り合えずこれで行く
+                WaitMode();
+            });
+        }
+        else
+        {// プレイヤー以外を持つ時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_BOX);
+            transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
+            {//　取り合えずこれで行く
+                WaitMode();
+            });
+        }
+    }
+
+
+    /*
+     * @brief 置くモード
+     * @return なし
+     */
+    private void PutMode()
+    {
+        if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+            _haveObject._myObject == E_FIELD_OBJECT.MAX)
+        {// 何も持っていない時(呼び出し場所の間違えかエラー)
+            return;
+        }
+        else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// プレイヤーを持つとき
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_CHARA);
+            transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
+            {//　取り合えずこれで行く
+                WaitMode();
+            });
+        }
+        else
+        {// プレイヤー以外を持つ時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_BOX);
+            transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
+            {//　取り合えずこれで行く
+                WaitMode();
+            });
+        }
+    }
+
+
+    /*
+     * @brief 移動中かどうかの判定
+     */
+    public bool isMove
+    {
+        get { return _isMove; }
+    }
+
 
 
     /*
@@ -253,21 +510,6 @@ public class Player : BaseObject {
     {
         Debug.Log(message);
     }
-
-
-    /*
-     * @brief 移動後の座標の調整
-     * @return なし
-     */
-    override public void offSetTransform()
-    {
-        transform.position = new Vector3(
-            (float)(_position.x + _map._offsetPos.x),
-            (float)(_position.y + _map._offsetPos.y) - 0.5f,
-            (float)(_position.z + _map._offsetPos.z)
-            );
-    }
-
 
 #else
     /*

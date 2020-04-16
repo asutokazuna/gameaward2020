@@ -12,8 +12,7 @@ public class MainCameraSS: MonoBehaviour
     public Vector3 _setCameraPos; //!<カメラ座標設定
     public Vector3 _setCameraRot; //!<カメラ注視点設定
     Vector3 _fieldPos; //!<フィールド中心座標
-    int _cnt = 0;　//!<フレーム数カウンター
-
+    
     // Use this for initialization
     // @details 　publicで設定した値を設定する
     void Start()
@@ -25,40 +24,7 @@ public class MainCameraSS: MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //カウンター初期化
-        if (_cnt == 0 && _angle == 0.0f)
-        {
-            _cnt = (int)_rotateFlame / 1;
-        }
-/*
-        //左右矢印キーで回転
-        if (_cnt == (int)_rotateFlame / 1)//回転中じゃなければ
-        {
-            if (Input.GetKeyUp(KeyCode.LeftArrow))
-            {
-                _angle = 90.0f / _rotateFlame;
-            }
-            else if (Input.GetKeyUp(KeyCode.RightArrow))
-            {
-                _angle = -90.0f / _rotateFlame;
-            }
-        }*/
-
-        //カウント中は回転
-        if (_cnt > 0 && _angle != 0)
-        {
-            //カメラを回転させる
-            transform.RotateAround(_fieldPos, Vector3.up, _angle);
-
-            _cnt -= 1;//カウンター減算
-        }
-        //回転フレーム数終了で初期化
-        else if (_cnt <= 0 && _angle != 0)
-        {
-            _cnt = (int)_rotateFlame / 1;//カウンター初期化
-            _angle = 0.0f;
-        }
-        //  Debug.Log(_cnt);
+       
     }
     /**
      * @brief 関数概要　カメラの初期値設定

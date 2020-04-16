@@ -3,7 +3,8 @@
  * @brief   フィールドのマップ情報
  *
  * @author	Kota Nakagami
- * @date1	2020/04/06(月)
+ * @date1	2020/04/06(月)   クラスの作成
+ * @data2   2020/04/15(水)   プレイヤーの操作ソート
  *
  * @version	1.00
  */
@@ -15,6 +16,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 
 /*
@@ -49,7 +51,7 @@ public class Map : MonoBehaviour
 {
 #if MODE_MAP
     // 定数定義
-    [SerializeField] int MAX_FIELD_OBJECT   = 10;       // マップ1辺あたりに置けるオブジェクトの最大値
+    [SerializeField] int MAX_OBJECT         = 10;       // マップ1辺あたりに置けるオブジェクトの最大値
     [SerializeField] int VAL_FIELD_MOVE     = 1;        // 一マス当たりの移動値
     [SerializeField] int VAL_FALL           = 2;        // 落下死判定になるマス数
 
@@ -83,7 +85,7 @@ public class Map : MonoBehaviour
      */
     void Awake()
     {
-        _map        = new SquareInfo[MAX_FIELD_OBJECT, MAX_FIELD_OBJECT, MAX_FIELD_OBJECT];
+        _map        = new SquareInfo[MAX_OBJECT, MAX_OBJECT, MAX_OBJECT];
         _gameOver   = false;
     }
 
@@ -93,14 +95,23 @@ public class Map : MonoBehaviour
     {
         // マップとオブジェクト情報の初期化
         InitObject();
+        CallDebug();
     }
 
     // Update is called once per frame
     void Update()
     {
 #if MODE_MAP
+        for (int n = 0; n < _playerCnt; n++)
+        {
+            if (_player[n].isMove)
+            {// まだ移動中のプレイヤーがいれば、操作を受け付けない
+                return;
+            }
+        }
         MoveObject();
         HandAction();
+        RotateObject();
 #endif
     }
 
@@ -113,37 +124,36 @@ public class Map : MonoBehaviour
     {
         // 移動キーを何も押してなかったら
         if (!Input.GetKeyDown(KeyCode.D) && !Input.GetKeyDown(KeyCode.A) &&
-            !Input.GetKeyDown(KeyCode.W) && !Input.GetKeyDown(KeyCode.S))
+            !Input.GetKeyDown(KeyCode.W) && !Input.GetKeyDown(KeyCode.S) ||
+            Input.GetKey(KeyCode.LeftShift))
         {
             return;
         }
-        else
-        {
-            _direct = new Vector3Int();
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            _direct.x = VAL_FIELD_MOVE;
-        }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            _direct.x = -VAL_FIELD_MOVE;
-        }
-        else if (Input.GetKeyDown(KeyCode.W))
-        {
-            _direct.z = VAL_FIELD_MOVE;
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            _direct.z = -VAL_FIELD_MOVE;
-        }
+        _direct = new Vector3Int();
+        offsetDirect();
+        PlayerSort();   // ソート
         for (int n = 0; n < _playerCnt; n++)
-        {// 取り合えずソートはなし
-            //PlayerMove(_player[n], _direct);
-            _player[n].Move(_direct);
+        {
+            _player[n].Follow(_direct);
             UpdateMap(_player[n]);
         }
-        CallDebug();
+    }
+
+
+    /*
+    * @brief プレイヤーの回転
+    * @return なし
+    */
+    private void RotateObject()
+    {
+        if (!Input.GetKey(KeyCode.LeftShift)) return;
+
+        for (int n = 0; n < _playerCnt; n++)
+        {
+            _player[n].Rotate();
+        }
+        offsetDirect();
+        PlayerSort();   // ソート
     }
 
 
@@ -209,7 +219,7 @@ public class Map : MonoBehaviour
     {
         if (haveObj._myObject == E_FIELD_OBJECT.BLOCK_TANK)
         {// 水槽の場合
-            _waterBlock[haveObj._number].Move(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
+            _waterBlock[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
             UpdateMap(_waterBlock[haveObj._number]);
         }
     }
@@ -251,14 +261,16 @@ public class Map : MonoBehaviour
      */
     public bool isDontMove(Vector3Int targetPos, Vector3Int oldPos)
     {
-        // 二段以上積み上げている時
         if (isUse(new Vector3Int(oldPos.x, oldPos.y + 1, oldPos.z)) && isUse(new Vector3Int(oldPos.x, oldPos.y + 2, oldPos.z)))
-        {
+        {// 二段以上積み上げている時
             return true;
         }
-        // 二段以上で登れない
         if (isUse(targetPos) && isUse(new Vector3Int(targetPos.x, targetPos.y + 1, targetPos.z)))
-        {
+        {// 二段以上で登れない
+            return true;
+        }
+        if (_map[targetPos.x, targetPos.y, targetPos.z]._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// 移動先にプレイヤーがいる場合
             return true;
         }
         return false;
@@ -303,8 +315,9 @@ public class Map : MonoBehaviour
      */
     public bool isLift(Vector3Int pos)
     {
-        if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.BLOCK_TANK &&     // 水槽ブロックの場合
-            !_waterBlock[_map[pos.x, pos.y, pos.z]._number]._lifted)                // 何かに持たれてない
+        if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.BLOCK_TANK &&                         // 水槽ブロックの場合
+            pos.y + 1 < MAX_OBJECT && _map[pos.x, pos.y + 1, pos.z]._myObject == E_FIELD_OBJECT.NONE && // 上に何も積まれてない
+            !_waterBlock[_map[pos.x, pos.y, pos.z]._number]._lifted)                                    // 何かに持たれてない
         {
             return true;
         }
@@ -372,9 +385,9 @@ public class Map : MonoBehaviour
      */
     public bool isLimitField(Vector3Int pos)
     {
-        if (pos.x >= MAX_FIELD_OBJECT || pos.x < 0 ||
-            pos.y >= MAX_FIELD_OBJECT || pos.y < 0 ||
-            pos.z >= MAX_FIELD_OBJECT || pos.z < 0)
+        if (pos.x >= MAX_OBJECT || pos.x < 0 ||
+            pos.y >= MAX_OBJECT || pos.y < 0 ||
+            pos.z >= MAX_OBJECT || pos.z < 0)
             return true;
         return false;
     }
@@ -387,8 +400,8 @@ public class Map : MonoBehaviour
      */
     public void UpdateMap(BaseObject obj)
     {
-        SetObject(obj);
         DeleteObject(obj._oldPosition);
+        SetObject(obj);
     }
 
 
@@ -508,6 +521,83 @@ public class Map : MonoBehaviour
 
 
     /*
+     * @brief プレイヤーのソート
+     * @return なし
+     */
+    private void PlayerSort()
+    {
+        if (_playerCnt <= 1)
+        {// プレイヤーが一体しかいない場合
+            return;
+        }
+        Player work = new Player();
+        for (int i = _playerCnt - 1; i > 0; i--)
+        {
+            for (int j = 0; j < i; j++)
+            {
+                if (isSort(_player[j], _player[j + 1]))
+                {
+                    work            = _player[j];
+                    _player[j]      = _player[j + 1];
+                    _player[j + 1]  = work;
+                }
+            }
+        }
+    }
+
+
+    /*
+     * @brief 入れ替えができるかの判定
+     * @return 入れ替えが行われるなら true
+     */
+    private bool isSort(Player i, Player j)
+    {
+        if (_direct.x > 0 && i._position.x < j._position.x)
+        {// 右方
+            return true;
+        }
+        else if (_direct.x < 0 && i._position.x > j._position.x)
+        {// 左方
+            return true;
+        }
+        else if (_direct.z > 0 && i._position.z < j._position.z)
+        {// 前方
+            return true;
+        }
+        else if (_direct.z < 0 && i._position.z > j._position.z)
+        {// 後方
+            return true;
+        }
+        return false;
+    }
+
+
+    /*
+     * @brief 方向の修正
+     * @return なし
+     */
+    private void offsetDirect()
+    {
+        if (Input.GetKeyDown(KeyCode.D))
+        {// 右方
+            _direct.x = VAL_FIELD_MOVE;
+        }
+        else if (Input.GetKeyDown(KeyCode.A))
+        {// 左方
+            _direct.x = -VAL_FIELD_MOVE;
+        }
+        else if (Input.GetKeyDown(KeyCode.W))
+        {// 前方
+            _direct.z = VAL_FIELD_MOVE;
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {// 後方
+            _direct.z = -VAL_FIELD_MOVE;
+        }
+    }
+
+
+    /*
      * @brief ゲームオーバーフラグの取得
      * @return ゲームオーバーなら true を返す
      */
@@ -531,11 +621,11 @@ public class Map : MonoBehaviour
      */
     private void CallDebug()
     {
-        for (int y = 0; y < MAX_FIELD_OBJECT; y++)
+        for (int y = 0; y < MAX_OBJECT; y++)
         {
-            for (int z = 0; z < MAX_FIELD_OBJECT; z++)
+            for (int z = 0; z < MAX_OBJECT; z++)
             {
-                for (int x = 0; x < MAX_FIELD_OBJECT; x++)
+                for (int x = 0; x < MAX_OBJECT; x++)
                 {
                     if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.PLAYER_01))
                     {

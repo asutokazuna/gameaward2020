@@ -25,8 +25,6 @@ using UnityEngine.SceneManagement;
  */
 public class BaseObject : MonoBehaviour
 {
-    // 定数定義
-    [SerializeField] public int MAX_ANIM_WALK = 60;
 
     //! 変数宣言
     [SerializeField] public E_FIELD_OBJECT  _myObject;      //!< 自身のオブジェクト情報
@@ -41,8 +39,6 @@ public class BaseObject : MonoBehaviour
     [SerializeField] public Vector3         _nextPos;       //!< 移動先の座標
 #endif
     [SerializeField] public bool            _lifted;        //!< 何かに持ち上げられいる時 = true
-    [SerializeField] public bool            _fullWater;     //!< たまってるかのフラグ
-                     public int             _animCnt;       //!< アニメーションカウント
 
 
     /*
@@ -55,12 +51,10 @@ public class BaseObject : MonoBehaviour
         _position       = new Vector3Int();
         _oldPosition    = new Vector3Int();
         _direct         = new Vector3Int();
+        _lifted         = false;
 #if !MODE_MAP
         _haveObj        = E_FIELD_OBJECT.NONE;
 #endif
-        _lifted         = false;
-        _fullWater      = false;
-        _animCnt        = 0;
     }
 
 #if MODE_MAP
@@ -78,8 +72,6 @@ public class BaseObject : MonoBehaviour
         _position = _oldPosition = new Vector3Int(0, 0, 0);
 
         _lifted     = false;
-        _fullWater  = false;
-        _animCnt    = 0;
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
     }
 
@@ -109,7 +101,7 @@ public class BaseObject : MonoBehaviour
      * @param1 目的座標
      * @return なし
      */
-    virtual public void Move(Vector3Int pos)
+    virtual public void Follow(Vector3Int pos)
     {
         _oldPosition    = _position;
         _position       = pos;
@@ -414,16 +406,6 @@ public class BaseObject : MonoBehaviour
         // 後で変更
         // 取り合えず全部正面を向いておく
         _direct = new Vector3Int(0, 0, 1);
-    }
-
-
-    /*
-     * @brief 満タンフラグの取得
-     * @return 満タンなら true
-     */
-    public bool GetFullWater()
-    {
-        return _fullWater;
     }
 
 
