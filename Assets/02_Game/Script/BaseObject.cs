@@ -39,7 +39,6 @@ public class BaseObject : MonoBehaviour
     [SerializeField] public Vector3         _nextPos;       //!< 移動先の座標
 #endif
     [SerializeField] public bool            _lifted;        //!< 何かに持ち上げられいる時 = true
-    [SerializeField] public bool            _fullWater;     //!< たまってるかのフラグ
 
 
     /*
@@ -53,7 +52,6 @@ public class BaseObject : MonoBehaviour
         _oldPosition    = new Vector3Int();
         _direct         = new Vector3Int();
         _lifted         = false;
-        _fullWater      = false;
 #if !MODE_MAP
         _haveObj        = E_FIELD_OBJECT.NONE;
 #endif
@@ -74,7 +72,6 @@ public class BaseObject : MonoBehaviour
         _position = _oldPosition = new Vector3Int(0, 0, 0);
 
         _lifted     = false;
-        _fullWater  = false;
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
     }
 
@@ -409,16 +406,6 @@ public class BaseObject : MonoBehaviour
         // 後で変更
         // 取り合えず全部正面を向いておく
         _direct = new Vector3Int(0, 0, 1);
-    }
-
-
-    /*
-     * @brief 満タンフラグの取得
-     * @return 満タンなら true
-     */
-    public bool GetFullWater()
-    {
-        return _fullWater;
     }
 
 

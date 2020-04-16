@@ -78,7 +78,6 @@ public class Player : BaseObject
         _nextPos = transform.position;
 
         _lifted     = false;
-        _fullWater  = false;
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
         _mode       = E_PLAYER_MODE.WAIT;
         _isMove     = false;
