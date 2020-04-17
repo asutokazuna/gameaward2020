@@ -136,10 +136,6 @@ public class Player : BaseObject
     */
     public void Rotate()
     {
-        if (_isMove)
-        {// 取り合えずここに書き込む
-            return;
-        }
 
         if (Input.GetKey(KeyCode.LeftShift))
         {// 回転モードかのチェック
@@ -156,7 +152,7 @@ public class Player : BaseObject
                 WaitMode();
             });
         }
-        if (Input.GetKeyDown(KeyCode.A))
+        else if (Input.GetKeyDown(KeyCode.A))
         {// 左
             _direct = new Vector3Int(-1, 0, 0);
             _isMove = true;
@@ -166,7 +162,7 @@ public class Player : BaseObject
                 WaitMode();
             });
         }
-        if (Input.GetKeyDown(KeyCode.W))
+        else if (Input.GetKeyDown(KeyCode.W))
         {// 奥
             _direct = new Vector3Int(0, 0, 1);
             _isMove = true;
@@ -176,7 +172,7 @@ public class Player : BaseObject
                 WaitMode();
             });
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKeyDown(KeyCode.S))
         {// 手前
             _direct = new Vector3Int(0, 0, -1);
             _isMove = true;
