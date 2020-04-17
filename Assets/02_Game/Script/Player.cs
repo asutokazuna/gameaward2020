@@ -20,23 +20,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-/*
- * @enum オブジェクト情報
- */
-public enum E_PLAYER_MODE
-{
-    WAIT,       // 待機
-    ROTATE,     // 回転
-    MOVE,       // 移動
-    GET_UP,     // 上に登る
-    GET_OFF,    // 下に降りる
-    LIFT,       // 持ち上げる
-    LIFTED,     // 持ち上げられる
-    PUT,        // 置く
-    PUTED,      // 置かれる
-    FALL,       // 落下
-}
-
 
 /*
  * @class Player01
@@ -54,8 +37,6 @@ public class Player : BaseObject
     [SerializeField] SquareInfo     _haveObject;    //!< 持っているオブジェクト情報
                      Map            _map;           //!< マップ
     public PlayerAnimation          _animation;     //!< プレイヤーのアニメーション
-    [SerializeField] Vector3        _nextPos;       //!< 移動先の座標
-    [SerializeField] E_PLAYER_MODE  _mode;          //!< プレイヤーの状態
     PlayerManager                   _mgr;           //!< プレイヤー管理スクリプト
     BaseObject                      _obj;           //!< 後で改善するから許して
 
@@ -93,7 +74,7 @@ public class Player : BaseObject
 
         _lifted     = false;
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
-        _mode       = E_PLAYER_MODE.WAIT;
+        _mode       = E_OBJECT_MODE.WAIT;
         _isMove     = false;
 
         _animation = GameObject.Find(name).GetComponent<PlayerAnimation>();
@@ -136,7 +117,7 @@ public class Player : BaseObject
     */
     public void Rotate()
     {
-        if (_isMove)
+        if (_isMove || _lifted)
         {// 取り合えずここに書き込む
             return;
         }
@@ -170,7 +151,7 @@ public class Player : BaseObject
      */
     public void HandAction()
     {
-        if (_isMove)
+        if (_isMove || _lifted)
         {// 取り合えずここに書き込む
             return;
         }
@@ -193,7 +174,7 @@ public class Player : BaseObject
      */
     override public void Move(Vector3Int movement)
     {
-        if (_isMove)
+        if (_isMove || _lifted)
         {// 取り合えずここに書き込む
             return;
         }
@@ -210,7 +191,7 @@ public class Player : BaseObject
             _isMove     = false;    // 取り合えずの処理
             Debug.Log("エラー : " + name + " はマップ配列外へ移動した");
         }
-        else if (_map.isGameOver(_position, E_PLAYER_MODE.MOVE))
+        else if (_map.isGameOver(_position, E_OBJECT_MODE.MOVE))
         {// ゲームオーバー
             _position   = _oldPosition;
             _isMove     = false;    // 取り合えずの処理
@@ -223,16 +204,16 @@ public class Player : BaseObject
         else if (_map.isGetup(_position))
         {// 何かの上に上る時
             _position = new Vector3Int(_position.x, _position.y + 1, _position.z);
-            _mode = E_PLAYER_MODE.GET_UP;
+            _mode = E_OBJECT_MODE.GET_UP;
         }
         else if (_map.isGetoff(_position))
         {// 一段下に降りる時
             _position = new Vector3Int(_position.x, _position.y - 1, _position.z);
-            _mode = E_PLAYER_MODE.GET_OFF;
+            _mode = E_OBJECT_MODE.GET_OFF;
         }
         else
         {// 正面への移動
-            _mode = E_PLAYER_MODE.MOVE;
+            _mode = E_OBJECT_MODE.MOVE;
         }
         
         // 後で修正
@@ -245,17 +226,17 @@ public class Player : BaseObject
         }
 
         // 座標移動
-        if (_mode == E_PLAYER_MODE.MOVE)
+        if (_mode == E_OBJECT_MODE.MOVE)
         {// 移動
             MoveMode(); // アニメーションのセット
         }
-        else if (_mode == E_PLAYER_MODE.GET_UP)
+        else if (_mode == E_OBJECT_MODE.GET_UP)
         {// ジャンプで登る
          //transform.DOJump(endValue, jumpPower, numJumps, duration)
             JumpMode(); // アニメーションのセット
 
         }
-        else if (_mode == E_PLAYER_MODE.GET_OFF)
+        else if (_mode == E_OBJECT_MODE.GET_OFF)
         {// ジャンプで降りる
             JumpMode(); // アニメーションのセット
         }
@@ -272,7 +253,7 @@ public class Player : BaseObject
         _oldPosition    = _position;
         _position       = pos;
         _lifted         = true;
-        _mode           = E_PLAYER_MODE.LIFTED;
+        _mode           = E_OBJECT_MODE.LIFTED;
         offSetTransform();
         LiftedMode();   // 持ち上げられる
     }
@@ -288,7 +269,7 @@ public class Player : BaseObject
         _oldPosition    = _position;
         _position       = pos;
         _lifted         = false;
-        _mode           = E_PLAYER_MODE.PUTED;
+        _mode           = E_OBJECT_MODE.PUTED;
         offSetTransform();
         PutedMode();
     }
@@ -318,10 +299,6 @@ public class Player : BaseObject
                 {// メモ(mapのプレイヤー配列にソートがかかるため持ち上げにバグがでた)
                     _haveObject._myObject   = _obj._myObject;                // オブジェクト情報のセット
                     _haveObject._number     = _obj._myNumber;                // オブジェクトナンバーセット
-                    if (_haveObject._myObject != E_FIELD_OBJECT.PLAYER_01)
-                    {// 取り合えずの処理
-                        GameObject.Find(_obj.name).transform.parent = transform; // 追従
-                    }
                 }
                 else
                 {
@@ -342,7 +319,7 @@ public class Player : BaseObject
     {
         Vector3Int putPos;              //!< 持ち上げるオブジェクトを探索するための座標
         putPos = new Vector3Int( _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z);
-        if (_map.isGameOver(putPos, E_PLAYER_MODE.PUT))
+        if (_map.isGameOver(putPos, E_OBJECT_MODE.PUT))
         {// ゲームオーバー
             return;
         }
@@ -371,9 +348,9 @@ public class Player : BaseObject
     override public void offSetTransform()
     {
         _nextPos = new Vector3(
-            (float)(_position.x + _map._offsetPos.x),
-            (float)(_position.y + _map._offsetPos.y) - 0.5f,
-            (float)(_position.z + _map._offsetPos.z)
+            (_position.x + _map._offsetPos.x),
+            (_position.y + _map._offsetPos.y) - 0.5f,
+            (_position.z + _map._offsetPos.z)
             );
     }
 
@@ -382,9 +359,9 @@ public class Player : BaseObject
      * @brief 待機モード
      * @return なし
      */
-    private void WaitMode()
+    override protected void WaitMode()
     {
-        _mode       = E_PLAYER_MODE.WAIT;
+        _mode       = E_OBJECT_MODE.WAIT;
         _isMove     = false;
         if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
             _haveObject._myObject == E_FIELD_OBJECT.MAX)
@@ -435,7 +412,7 @@ public class Player : BaseObject
      */
     private void JumpMode()
     {
-        if (_mode == E_PLAYER_MODE.GET_UP)
+        if (_mode == E_OBJECT_MODE.GET_UP)
         {// 登りのジャンプ
             if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
                 _haveObject._myObject == E_FIELD_OBJECT.MAX)
@@ -455,7 +432,7 @@ public class Player : BaseObject
                 WaitMode();
             });
         }
-        else if(_mode == E_PLAYER_MODE.GET_OFF)
+        else if(_mode == E_OBJECT_MODE.GET_OFF)
         {// 降りのジャンプ
             if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
                 _haveObject._myObject == E_FIELD_OBJECT.MAX)
@@ -482,17 +459,12 @@ public class Player : BaseObject
      * @brief 持ち上げられるモード
      * @return なし
      */
-    private void LiftedMode()
+    override protected void LiftedMode()
     {
-        if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
-            _haveObject._myObject == E_FIELD_OBJECT.MAX)
-        {// 何も持っていなかったら
-            transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
-            {//　取り合えずこれで行く
-                GameObject.Find(_obj.name).transform.parent = transform; // 追従
-                WaitMode();
-            });
-        }
+        transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
+        {//　取り合えずこれで行く
+            WaitMode();
+        });
     }
 
 
@@ -500,16 +472,12 @@ public class Player : BaseObject
      * @brief 置かれるモード
      * @return なし
      */
-    private void PutedMode()
+    override protected void PutedMode()
     {
-        if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
-            _haveObject._myObject == E_FIELD_OBJECT.MAX)
-        {// 何も持っていなかったら
-            transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
-            {//　取り合えずこれで行く
-                WaitMode();
-            });
-        }
+        transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
+        {//　取り合えずこれで行く
+            WaitMode();
+        });
     }
 
 
@@ -529,6 +497,7 @@ public class Player : BaseObject
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_CHARA);
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
+                GameObject.Find(_obj.name).transform.parent = transform; // 追従
                 WaitMode();
             });
         }
@@ -537,6 +506,7 @@ public class Player : BaseObject
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_BOX);
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
+                GameObject.Find(_obj.name).transform.parent = transform; // 追従
                 WaitMode();
             });
         }

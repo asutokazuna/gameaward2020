@@ -17,7 +17,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using DG.Tweening;
+
+
+/*
+ * @enum オブジェクト情報
+ */
+public enum E_OBJECT_MODE
+{
+    WAIT,       // 待機
+    ROTATE,     // 回転
+    MOVE,       // 移動
+    GET_UP,     // 上に登る
+    GET_OFF,    // 下に降りる
+    LIFT,       // 持ち上げる
+    LIFTED,     // 持ち上げられる
+    PUT,        // 置く
+    PUTED,      // 置かれる
+    FALL,       // 落下
+}
 
 
 /*
@@ -26,20 +44,21 @@ using UnityEngine.SceneManagement;
  */
 public class BaseObject : MonoBehaviour
 {
-
     //! 変数宣言
-    [SerializeField] public E_FIELD_OBJECT  _myObject;      //!< 自身のオブジェクト情報
-    [SerializeField] public int             _myNumber;      //!< 自身のオブジェクト番号
-    [SerializeField] public Vector3Int      _position;      //!< 現在フィールド座標
-    [SerializeField] public Vector3Int      _oldPosition;   //!< 過去フィールド座標
-    [SerializeField] public Vector3Int      _direct;        //!< 向いてる方向
+    [SerializeField] public E_FIELD_OBJECT      _myObject;      //!< 自身のオブジェクト情報
+    [SerializeField] public int                 _myNumber;      //!< 自身のオブジェクト番号
+    [SerializeField] public Vector3Int          _position;      //!< 現在フィールド座標
+    [SerializeField] public Vector3Int          _oldPosition;   //!< 過去フィールド座標
+    [SerializeField] protected Vector3          _nextPos;       //!< 次の座標
+    [SerializeField] public Vector3Int          _direct;        //!< 向いてる方向
+    [SerializeField] public bool                _lifted;        //!< 何かに持ち上げられいる時 = true
+    [SerializeField] protected E_OBJECT_MODE    _mode;          //!< オブジェクトの状態
 #if !MODE_MAP
     [SerializeField] public E_FIELD_OBJECT  _haveObj;       //!< 持っているオブジェクト
     [SerializeField] public Vector3         _addPos;        //!< 加算量
                      public bool            _nowMove;       //!< 移動フラグ
     [SerializeField] public Vector3         _nextPos;       //!< 移動先の座標
 #endif
-    [SerializeField] public bool            _lifted;        //!< 何かに持ち上げられいる時 = true
 
 #if MODE_MAP
     /*
@@ -56,6 +75,7 @@ public class BaseObject : MonoBehaviour
         _position = _oldPosition = new Vector3Int(0, 0, 0);
 
         _lifted     = false;
+        _mode       = E_OBJECT_MODE.WAIT;
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
     }
 
@@ -112,13 +132,10 @@ public class BaseObject : MonoBehaviour
     {
         _oldPosition    = _position;
         _position       = pos;
-
-        Debug.Log(name + " は " + _position + " の所まで持ち上げられた");
-
-        // 瞬間移動
+        _lifted         = true;
+        _mode           = E_OBJECT_MODE.LIFTED;
         offSetTransform();
-
-        _lifted = true;
+        LiftedMode();   // 持ち上げられる
     }
 
 
@@ -129,13 +146,52 @@ public class BaseObject : MonoBehaviour
      */
     virtual public void Puted(Vector3Int pos)
     {
-        _oldPosition    = _position;
-        _position       = pos;
-
-        // 瞬間移動
-        offSetTransform();
-
+        _oldPosition = _position;
+        _position = pos;
         _lifted = false;
+        _mode = E_OBJECT_MODE.PUTED;
+        offSetTransform();
+        PutedMode();
+    }
+
+
+    /*
+     * @brief 待機モード
+     * @return なし
+     */
+    virtual protected void WaitMode()
+    {
+        _mode       = E_OBJECT_MODE.WAIT;
+    }
+
+
+    /*
+     * @brief 持ち上げられるモード
+     * @return なし
+     */
+    virtual protected void LiftedMode()
+    {
+        transform.DOLocalMove(
+            _nextPos, GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime
+            ).OnComplete(() =>
+        {//　取り合えずこれで行く
+            WaitMode();
+        });
+    }
+
+
+    /*
+     * @brief 置かれるモード
+     * @return なし
+     */
+    virtual protected void PutedMode()
+    {
+        transform.DOLocalMove(
+            _nextPos, GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime
+            ).OnComplete(() =>
+        {//　取り合えずこれで行く
+            WaitMode();
+        });
     }
 
 
@@ -146,7 +202,7 @@ public class BaseObject : MonoBehaviour
     virtual public void offSetTransform()
     {
         Map map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
-        transform.position = new Vector3(
+        _nextPos = new Vector3(
             (float)(_position.x + map._offsetPos.x),
             (float)(_position.y + map._offsetPos.y),
             (float)(_position.z + map._offsetPos.z)

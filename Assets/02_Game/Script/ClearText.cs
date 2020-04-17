@@ -23,8 +23,10 @@ public class ClearText : MonoBehaviour
     //! クリアテキスト表示用
     public GameObject _clearObject;
 
+#if !MODE_MAP
     //! FieldController取得用
     public FieldController _fieldController;
+#endif
 
     // Start is called before the first frame update
     void Start()

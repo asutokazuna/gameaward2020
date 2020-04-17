@@ -51,6 +51,7 @@ public class Ground : BaseObject
             );
 
         _lifted     = false;
+        _mode       = E_OBJECT_MODE.WAIT;
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
     }
 

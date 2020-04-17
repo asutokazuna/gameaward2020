@@ -251,9 +251,9 @@ public class Map : MonoBehaviour
      * @param2 プレイヤーの状態
      * @return ゲームオーバーなら true
      */
-    public bool isGameOver(Vector3Int pos, E_PLAYER_MODE mode)
+    public bool isGameOver(Vector3Int pos, E_OBJECT_MODE mode)
     {
-        if (mode == E_PLAYER_MODE.MOVE)
+        if (mode == E_OBJECT_MODE.MOVE)
         {// 移動時
             for (int n = 0; n <= VAL_FALL; n++, pos.y--)
             {// 2マス以上落下した場合
@@ -261,7 +261,7 @@ public class Map : MonoBehaviour
                     return false;
             }
         }
-        if (mode == E_PLAYER_MODE.PUT)
+        if (mode == E_OBJECT_MODE.PUT)
         {// 物を置くとき
             for (int n = 0; n <= VAL_FALL + 1; n++, pos.y--)
             {// 2マス以上落下した場合
@@ -289,7 +289,8 @@ public class Map : MonoBehaviour
         {// 二段以上で登れない
             return true;
         }
-        if (_map[targetPos.x, targetPos.y, targetPos.z]._myObject == E_FIELD_OBJECT.PLAYER_01)
+        if (_map[targetPos.x, targetPos.y, targetPos.z]._myObject == E_FIELD_OBJECT.PLAYER_01 ||
+            (targetPos.y - 1 >= 0 && _map[targetPos.x, targetPos.y - 1, targetPos.z]._myObject == E_FIELD_OBJECT.PLAYER_01))
         {// 移動先にプレイヤーがいる場合
             return true;
         }
@@ -320,7 +321,8 @@ public class Map : MonoBehaviour
      */
     public bool isGetoff(Vector3Int targetPos)
     {
-        if (_map[targetPos.x, targetPos.y - 1, targetPos.z]._myObject == E_FIELD_OBJECT.NONE)
+        if (_map[targetPos.x, targetPos.y - 1, targetPos.z]._myObject == E_FIELD_OBJECT.NONE &&
+            _map[targetPos.x, targetPos.y - 1, targetPos.z]._myObject != E_FIELD_OBJECT.PLAYER_01)
         {// 下に何もない
             return true;
         }

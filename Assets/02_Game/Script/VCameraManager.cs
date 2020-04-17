@@ -9,9 +9,10 @@ public class VCameraManager : MonoBehaviour
     public CinemachineVirtualCamera vcamera;
 
     GameObject gameObject;
+
     void Start()
     {
-        gameObject = GameObject.Find("Peacock_Blue");
+        gameObject = GameObject.FindGameObjectWithTag("Player");
     }
     void Update()
     {

@@ -29,7 +29,9 @@ public class BlockTank : BaseObject
     //! 変数宣言
     public int          _maxWater;                  //!< 貯める最大値
     public int          _numWater;                  //!< 現在の中身
+#if !MODE_MAP
     FieldController     _fieldCtrl;
+#endif
 
 
     private void Awake()
@@ -56,6 +58,7 @@ public class BlockTank : BaseObject
             );
 
         _lifted     = false;
+        _mode       = E_OBJECT_MODE.WAIT;
         _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
 
         _maxWater   = TargetCnt;

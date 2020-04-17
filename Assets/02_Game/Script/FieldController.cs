@@ -11,8 +11,9 @@
  */
 
 
-//#define MODE_FIELD
+#define MODE_MAP
 
+#if !MODE_MAP
 
 using System.Collections;
 using System.Collections.Generic;
@@ -34,7 +35,6 @@ public enum E_FIELD_MODE
  * @brief フィールドの全体管理
  */
 public class FieldController : MonoBehaviour {
-#if MODE_FIELD
     //! 定数定義
     [SerializeField]int     MAX_FIELD_OBJECT    = 10;       // マップ1辺あたりに置けるオブジェクトの最大値
     [SerializeField]int     VAL_FIELD_MOVE      = 1;        // 一マス当たりの移動値
@@ -565,7 +565,7 @@ public class FieldController : MonoBehaviour {
     {
         return _clear;
     }
-#endif
 }
+#endif
 
 // EOF
