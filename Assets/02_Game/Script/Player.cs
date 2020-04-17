@@ -151,7 +151,7 @@ public class Player : BaseObject
             _direct = new Vector3Int(1, 0, 0);
             _isMove = true;
             //                                    目標向き, 移動時間(秒)
-            transform.DORotate(new Vector3(0f, 90f, 0f), _moveTime).OnComplete(() =>
+            transform.DORotate(new Vector3(0f, 90f, 0f), _mgr.MoveTime).OnComplete(() =>
             {
                 WaitMode();
             });
@@ -161,7 +161,7 @@ public class Player : BaseObject
             _direct = new Vector3Int(-1, 0, 0);
             _isMove = true;
             //                                    目標向き, 移動時間(秒)
-            transform.DORotate(new Vector3(0f, -90f, 0f), _moveTime).OnComplete(() =>
+            transform.DORotate(new Vector3(0f, -90f, 0f), _mgr.MoveTime).OnComplete(() =>
             {
                 WaitMode();
             });
@@ -171,7 +171,7 @@ public class Player : BaseObject
             _direct = new Vector3Int(0, 0, 1);
             _isMove = true;
             //                                    目標向き, 移動時間(秒)
-            transform.DORotate(new Vector3(0f, 0f, 0f), _moveTime).OnComplete(() =>
+            transform.DORotate(new Vector3(0f, 0f, 0f), _mgr.MoveTime).OnComplete(() =>
             {
                 WaitMode();
             });
@@ -181,7 +181,7 @@ public class Player : BaseObject
             _direct = new Vector3Int(0, 0, -1);
             _isMove = true;
             //                                    目標向き, 移動時間(秒)
-            transform.DORotate(new Vector3(0f, 180f, 0f), _moveTime).OnComplete(() =>
+            transform.DORotate(new Vector3(0f, 180f, 0f), _mgr.MoveTime).OnComplete(() =>
             {
                 WaitMode();
             });
