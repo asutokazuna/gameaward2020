@@ -318,10 +318,6 @@ public class Player : BaseObject
                 {// メモ(mapのプレイヤー配列にソートがかかるため持ち上げにバグがでた)
                     _haveObject._myObject   = _obj._myObject;                // オブジェクト情報のセット
                     _haveObject._number     = _obj._myNumber;                // オブジェクトナンバーセット
-                    if (_haveObject._myObject != E_FIELD_OBJECT.PLAYER_01)
-                    {// 取り合えずの処理
-                        GameObject.Find(_obj.name).transform.parent = transform; // 追従
-                    }
                 }
                 else
                 {
