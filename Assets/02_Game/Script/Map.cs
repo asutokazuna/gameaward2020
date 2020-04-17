@@ -179,37 +179,25 @@ public class Map : MonoBehaviour
      * @param2 持ち上げるオブジェクトの座標
      * @return オブジェクト情報
      */
-    public BaseObject GetLiftedObject(Vector3Int pos, Vector3Int target)
+    public BaseObject LiftToObject(Vector3Int pos, Vector3Int target)
     {
+        int num = 0;
         if (_map[target.x, target.y, target.z]._myObject == E_FIELD_OBJECT.BLOCK_TANK)
         {// これから持つオブジェクトが水槽だった場合
-            return _waterBlock[_map[target.x, target.y, target.z]._number];
+            num = _map[target.x, target.y, target.z]._number;
+            _waterBlock[num].Lifted(new Vector3Int(pos.x, pos.y + 1, pos.z));
+            UpdateMap(_waterBlock[num]);
+            return _waterBlock[num];
         }
         else if (_map[target.x, target.y, target.z]._myObject == E_FIELD_OBJECT.PLAYER_01)
         {// これから持つオブジェクトがプレイヤーだった場合
-            return _player[_map[target.x, target.y, target.z]._number];
+            num = _map[target.x, target.y, target.z]._number;
+            _player[num].Lifted(new Vector3Int(pos.x, pos.y + 1, pos.z));
+            UpdateMap(_player[num]);
+            Debug.Log(_player[num].name + num + " が持たれた");
+            return _player[num];
         }
         return null;
-    }
-
-
-    /*
-     * @brief 持ち上げられた
-     * @param1 オブジェクト情報
-     */
-    public void Lifted(BaseObject obj, Vector3Int pos)
-    {
-        Debug.Log(obj.name + " が持たれる");
-        if (obj._myObject == E_FIELD_OBJECT.BLOCK_TANK)
-        {// 水槽の場合
-            _waterBlock[obj._myNumber].Lifted(new Vector3Int(pos.x, pos.y + 1, pos.z));
-            UpdateMap(_waterBlock[obj._myNumber]);
-        }
-        if (obj._myObject == E_FIELD_OBJECT.PLAYER_01)
-        {// プレイヤーの場合
-            _player[obj._myNumber].Lifted(new Vector3Int(pos.x, pos.y + 1, pos.z));
-            UpdateMap(_player[obj._myNumber]);
-        }
     }
 
 
