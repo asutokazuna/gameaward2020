@@ -131,7 +131,7 @@ public class Player : BaseObject
 
 
     /*
-    * @brief 回転の動き
+    * @brief 向きを変える
     * @return なし
     */
     public void Rotate()
@@ -141,25 +141,54 @@ public class Player : BaseObject
             return;
         }
 
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.LeftShift))
+        {// 回転モードかのチェック
+            _mode = E_PLAYER_MODE.ROTATE;
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
         {// 右
             _direct = new Vector3Int(1, 0, 0);
-            transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+            _isMove = true;
+            //                                    目標向き, 移動時間(秒)
+            transform.DORotate(new Vector3(0f, 90f, 0f), _moveTime).OnComplete(() =>
+            {
+                WaitMode();
+            });
         }
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.A))
         {// 左
             _direct = new Vector3Int(-1, 0, 0);
-            transform.rotation = Quaternion.Euler(0f, -90f, 0f);
+            _isMove = true;
+            //                                    目標向き, 移動時間(秒)
+            transform.DORotate(new Vector3(0f, -90f, 0f), _moveTime).OnComplete(() =>
+            {
+                WaitMode();
+            });
         }
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W))
         {// 奥
             _direct = new Vector3Int(0, 0, 1);
-            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            _isMove = true;
+            //                                    目標向き, 移動時間(秒)
+            transform.DORotate(new Vector3(0f, 0f, 0f), _moveTime).OnComplete(() =>
+            {
+                WaitMode();
+            });
         }
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S))
         {// 手前
             _direct = new Vector3Int(0, 0, -1);
-            transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+            _isMove = true;
+            //                                    目標向き, 移動時間(秒)
+            transform.DORotate(new Vector3(0f, 180f, 0f), _moveTime).OnComplete(() =>
+            {
+                WaitMode();
+            });
+        }
+        if (_mode == E_PLAYER_MODE.ROTATE)
+        {// 回転の動き
+            RotateMove();
         }
     }
 
@@ -202,7 +231,8 @@ public class Player : BaseObject
         _position       = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
         _isMove         = true;
 
-        offsetDirect(); // 向いてる方向の補正
+        //offsetDirect(); // 向いてる方向の補正
+        Rotate();       // 向きたいほうに回転
 
         if (_map.isLimitField(_position))
         {// マップ配列へ参照できない値の場合
@@ -375,6 +405,28 @@ public class Player : BaseObject
             (float)(_position.y + _map._offsetPos.y) - 0.5f,
             (float)(_position.z + _map._offsetPos.z)
             );
+    }
+
+
+    /*
+    * @brief 向き変えた時の足踏み
+    * @return なし
+    */
+    private void RotateMove()
+    {
+        if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+            _haveObject._myObject == E_FIELD_OBJECT.MAX)
+        {// 何も持っていない時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK);
+        }
+        else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// プレイヤーを持っている時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK_CHARA);
+        }
+        else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// プレイヤー以外を持っている時
+            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK);
+        }
     }
 
 
