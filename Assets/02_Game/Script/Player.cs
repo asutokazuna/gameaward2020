@@ -136,7 +136,7 @@ public class Player : BaseObject
     */
     public void Rotate()
     {
-        if (_isMove)
+        if (_isMove || _lifted)
         {// 取り合えずここに書き込む
             return;
         }
@@ -170,7 +170,7 @@ public class Player : BaseObject
      */
     public void HandAction()
     {
-        if (_isMove)
+        if (_isMove || _lifted)
         {// 取り合えずここに書き込む
             return;
         }
@@ -193,7 +193,7 @@ public class Player : BaseObject
      */
     override public void Move(Vector3Int movement)
     {
-        if (_isMove)
+        if (_isMove || _lifted)
         {// 取り合えずここに書き込む
             return;
         }

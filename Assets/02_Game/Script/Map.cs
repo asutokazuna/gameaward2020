@@ -289,7 +289,8 @@ public class Map : MonoBehaviour
         {// 二段以上で登れない
             return true;
         }
-        if (_map[targetPos.x, targetPos.y, targetPos.z]._myObject == E_FIELD_OBJECT.PLAYER_01)
+        if (_map[targetPos.x, targetPos.y, targetPos.z]._myObject == E_FIELD_OBJECT.PLAYER_01 ||
+            (targetPos.y - 1 >= 0 && _map[targetPos.x, targetPos.y - 1, targetPos.z]._myObject == E_FIELD_OBJECT.PLAYER_01))
         {// 移動先にプレイヤーがいる場合
             return true;
         }
@@ -320,7 +321,8 @@ public class Map : MonoBehaviour
      */
     public bool isGetoff(Vector3Int targetPos)
     {
-        if (_map[targetPos.x, targetPos.y - 1, targetPos.z]._myObject == E_FIELD_OBJECT.NONE)
+        if (_map[targetPos.x, targetPos.y - 1, targetPos.z]._myObject == E_FIELD_OBJECT.NONE &&
+            _map[targetPos.x, targetPos.y - 1, targetPos.z]._myObject != E_FIELD_OBJECT.PLAYER_01)
         {// 下に何もない
             return true;
         }
