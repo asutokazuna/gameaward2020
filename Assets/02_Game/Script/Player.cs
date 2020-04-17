@@ -313,21 +313,18 @@ public class Player : BaseObject
             }
             else if (_map.isLift(havePos))
             {// 何かのオブジェクトを持てる場合
-                _obj = _map.LiftToObject(_position, havePos);            // これから持つオブジェクトの情報取得
+                _obj = _map.GetLiftedObject(_position, havePos);            // これから持つオブジェクトの情報取得
                 if (_obj)
                 {// メモ(mapのプレイヤー配列にソートがかかるため持ち上げにバグがでた)
                     _haveObject._myObject   = _obj._myObject;                // オブジェクト情報のセット
                     _haveObject._number     = _obj._myNumber;                // オブジェクトナンバーセット
-                    if (_haveObject._myObject != E_FIELD_OBJECT.PLAYER_01)
-                    {// 取り合えずの処理
-                        GameObject.Find(_obj.name).transform.parent = transform; // 追従
-                    }
                 }
                 else
                 {
                     Debug.Log(name + " 持ち上げるオブジェクトが参照できないよ？");
                 }
-                LiftMode();                                             // アニメーションのセット
+                LiftMode();                     // アニメーションのセット
+                _map.Lifted(_obj, _position);
                 break;
             }
         }
@@ -371,9 +368,9 @@ public class Player : BaseObject
     override public void offSetTransform()
     {
         _nextPos = new Vector3(
-            (float)(_position.x + _map._offsetPos.x),
-            (float)(_position.y + _map._offsetPos.y) - 0.5f,
-            (float)(_position.z + _map._offsetPos.z)
+            (_position.x + _map._offsetPos.x),
+            (_position.y + _map._offsetPos.y) - 0.5f,
+            (_position.z + _map._offsetPos.z)
             );
     }
 
@@ -484,15 +481,10 @@ public class Player : BaseObject
      */
     private void LiftedMode()
     {
-        if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
-            _haveObject._myObject == E_FIELD_OBJECT.MAX)
-        {// 何も持っていなかったら
-            transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
-            {//　取り合えずこれで行く
-                GameObject.Find(_obj.name).transform.parent = transform; // 追従
-                WaitMode();
-            });
-        }
+        transform.DOMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
+        {//　取り合えずこれで行く
+            WaitMode();
+        });
     }
 
 
@@ -502,14 +494,10 @@ public class Player : BaseObject
      */
     private void PutedMode()
     {
-        if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
-            _haveObject._myObject == E_FIELD_OBJECT.MAX)
-        {// 何も持っていなかったら
-            transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
-            {//　取り合えずこれで行く
-                WaitMode();
-            });
-        }
+        transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
+        {//　取り合えずこれで行く
+            WaitMode();
+        });
     }
 
 
@@ -529,6 +517,7 @@ public class Player : BaseObject
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_CHARA);
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
+                GameObject.Find(_obj.name).transform.parent = transform; // 追従
                 WaitMode();
             });
         }
@@ -537,6 +526,7 @@ public class Player : BaseObject
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_BOX);
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
+                GameObject.Find(_obj.name).transform.parent = transform; // 追従
                 WaitMode();
             });
         }
