@@ -123,6 +123,17 @@ public class BaseObject : MonoBehaviour
     }
 
 
+    virtual public void Fall(Vector3Int pos)
+    {
+        _oldPosition    = _position;
+        _position       = pos;
+        _lifted         = false;
+        _mode           = E_OBJECT_MODE.FALL;
+        offSetTransform();
+        JumpMode();
+    }
+
+
     /*
      * @brief  持ち上げられる
      * @param1 ターゲット座標
@@ -135,7 +146,7 @@ public class BaseObject : MonoBehaviour
         _lifted         = true;
         _mode           = E_OBJECT_MODE.LIFTED;
         offSetTransform();
-        LiftedMode();   // 持ち上げられる
+        JumpMode();   // 持ち上げられる
     }
 
 
@@ -146,12 +157,12 @@ public class BaseObject : MonoBehaviour
      */
     virtual public void Puted(Vector3Int pos)
     {
-        _oldPosition = _position;
-        _position = pos;
-        _lifted = false;
-        _mode = E_OBJECT_MODE.PUTED;
+        _oldPosition    = _position;
+        _position       = pos;
+        _lifted         = false;
+        _mode           = E_OBJECT_MODE.PUTED;
         offSetTransform();
-        PutedMode();
+        JumpMode();
     }
 
 
@@ -161,37 +172,61 @@ public class BaseObject : MonoBehaviour
      */
     virtual protected void WaitMode()
     {
-        _mode       = E_OBJECT_MODE.WAIT;
+        _mode = E_OBJECT_MODE.WAIT;
     }
 
 
     /*
-     * @brief 持ち上げられるモード
+     * @brief ジャンプモード
      * @return なし
      */
-    virtual protected void LiftedMode()
+    virtual protected void JumpMode()
     {
-        transform.DOLocalMove(
-            _nextPos, GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime
+        float power;
+        if (_mode == E_OBJECT_MODE.LIFTED)
+        {// 持ち上げられる時
+            power = _position.y - _oldPosition.y;
+            if (power == 0) power = 0.5f;
+            transform.DOJump(
+                new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
+                power, // ジャンプパワー
+                1,  // ジャンプ回数
+                GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime,   // 時間
+                false
             ).OnComplete(() =>
-        {//　取り合えずこれで行く
-            WaitMode();
-        });
-    }
-
-
-    /*
-     * @brief 置かれるモード
-     * @return なし
-     */
-    virtual protected void PutedMode()
-    {
-        transform.DOLocalMove(
-            _nextPos, GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime
+            {
+                WaitMode();
+            });
+        }
+        else if (_mode == E_OBJECT_MODE.PUTED)
+        {// 置かれる時
+            power = _oldPosition.y - _position.y;
+            if (power == 0) power = 0.5f;
+            transform.DOJump(
+                new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
+                power, // ジャンプパワー
+                1,  // ジャンプ回数
+                GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime,   // 時間
+                false
             ).OnComplete(() =>
-        {//　取り合えずこれで行く
-            WaitMode();
-        });
+            {
+                WaitMode();
+            });
+        }
+        else if (_mode == E_OBJECT_MODE.FALL)
+        {// 落ちる時
+            transform.DOJump(
+                new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
+                (_oldPosition.y - _position.y), // ジャンプパワー
+                1,  // ジャンプ回数
+                GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime,   // 時間
+                false
+                ).OnComplete(() =>
+            {
+                WaitMode();
+                GameObject.FindGameObjectWithTag("Map").GetComponent<Map>()._gameOver = true;  // ゲームオーバーやで
+            });
+        }
     }
 
 
