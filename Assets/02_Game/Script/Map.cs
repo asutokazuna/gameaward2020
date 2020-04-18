@@ -140,7 +140,7 @@ public class Map : MonoBehaviour
         PlayerSort();   // ソートと更新
         for (int n = 0; n < _playerCnt; n++)
         {
-            _player[n].Move(_direct);
+            _player[n].Move();
             UpdateMap(_player[n]);
         }
     }
