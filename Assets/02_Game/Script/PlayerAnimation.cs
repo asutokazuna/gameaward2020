@@ -4,6 +4,7 @@
  * @author  Risa Ito
  * @date    2020/03/30(月)  作成
  * @date    2020/04/10(金)  ジャンプアニメーション追加・アニメーションのセットの仕方を変更
+ * @date    2020/04/18(土)  アニメーションの終了検知用の関数追加・アニメーションの遷移の仕様を変更
  */
 
 using System.Collections;
@@ -32,13 +33,21 @@ public class PlayerAnimation : MonoBehaviour
         E_JUMP,
         E_JUMP_CHARA,
         E_JUMP_BOX,
+
+        E_NONE
     };
 
     // アニメーション管理用
     Animator                        _playerAnimator;    //!< アニメーター取得用
     [SerializeField] PlayerState    _playerState;       //!< プレイヤーの状態管理用
     PlayerState                     _playerNextState;   //!< プレイヤーの状態管理用
-    bool                            _changeState;       //!< アニメーション変更フラグ
+    bool _animFinish;               //!< アニメーション変更フラグ
+
+    //!< アニメーション変更フラグ参照用
+    public bool AnimFinish
+    {
+        get { return _animFinish; }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -46,27 +55,31 @@ public class PlayerAnimation : MonoBehaviour
         // 初期化
         _playerAnimator = GetComponent<Animator>();
         _playerState = PlayerState.E_WAIT;
-        _changeState = false;
+        _playerNextState = PlayerState.E_NONE;
+        _animFinish = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // 状態の変更
-        if (_changeState)
+        // アニメーションの変更を受け付けたか確認
+        if (_playerNextState != PlayerState.E_NONE)
         {
-            // ひとつ前の状態をログで確認
-            Debug.Log("Old : " + _playerState);
+            // ひとつ前のアニメーションが終了していればアニメーションを変更
+            if (_animFinish)
+            {
+                Debug.Log("Old : " + _playerState);     // ひとつ前の状態をログで確認
 
-            // 次の状態をセット
-            _playerState = _playerNextState;
+                // アニメーションを更新
+                _playerState = _playerNextState;                                // 次のアニメーションをセット
+                _playerAnimator.SetInteger("PlayerState", (int)_playerState);   // アニメータにセット
+                _animFinish = false;                                            // アニメーション開始
 
-            // アニメータにセット
-            _playerAnimator.SetInteger("PlayerState", (int)_playerState);
-            _changeState = false;
+                Debug.Log(_playerState);    // 現在の状態をログで確認
 
-            // 現在の状態をログで確認
-            Debug.Log(_playerState);
+                // アニメーションをリセット
+                _playerNextState = PlayerState.E_NONE;
+            }
         }
     }
 
@@ -78,7 +91,16 @@ public class PlayerAnimation : MonoBehaviour
     */
     public void SetPlayerState(PlayerState state)
     {
-        _playerNextState = state;
-        _changeState = true;
+        _playerNextState = state;       // 次のアニメーションをセット
+    }
+
+    /**
+    * @brief        アニメーションの終了をセット
+    * @return       なし
+    * @details      アニメーションの終了をセットするアニメーションイベントの関数です
+    */
+    public void SetAnimFinish()
+    {
+        _animFinish = true;        // アニメーション終了
     }
 }

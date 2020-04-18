@@ -1699,7 +1699,7 @@ GameObject:
   - component: {fileID: 1184877088}
   - component: {fileID: 1184877087}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: UICanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1718,7 +1718,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _clearObject: {fileID: 1550993861}
-  _fieldController: {fileID: 378579910}
 --- !u!114 &1184877083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2060,8 +2059,10 @@ MonoBehaviour:
   _myNumber: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
+  _nextPos: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
   _lifted: 0
+  _mode: 0
 --- !u!65 &1272930497
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2712,7 +2713,7 @@ GameObject:
   - component: {fileID: 1773148119}
   - component: {fileID: 1773148118}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: BGCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
