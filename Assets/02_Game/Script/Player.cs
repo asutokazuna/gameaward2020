@@ -221,9 +221,9 @@ public class Player : BaseObject
             Debug.Log("エラー : " + name + " はマップ配列外へ移動した");
         }
         else if (_map.isGameOver(_position, E_OBJECT_MODE.MOVE))
-        {// ゲームオーバー
-            _position   = _oldPosition;
-            _isMove     = false;    // 取り合えずの処理
+        {// ゲームオーバー(落下)
+            _position   = _map.GetFallPos(_position);
+            _mode       = E_OBJECT_MODE.FALL;
         }
         else if (_map.isDontMove(_position, _oldPosition) || _lifted == true)
         {// 移動出来ない場合
@@ -267,6 +267,10 @@ public class Player : BaseObject
         }
         else if (_mode == E_OBJECT_MODE.GET_OFF)
         {// ジャンプで降りる
+            JumpMode(); // アニメーションのセット
+        }
+        else if (_mode == E_OBJECT_MODE.FALL)
+        {// ジャンプで落ちる
             JumpMode(); // アニメーションのセット
         }
     }
@@ -501,6 +505,30 @@ public class Player : BaseObject
             transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z), 1, 1, _mgr.MoveTime, false).OnComplete(() =>
             {
                 WaitMode();
+            });
+        }
+        else if (_mode == E_OBJECT_MODE.FALL)
+        {// 降りのジャンプ
+            if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+                _haveObject._myObject == E_FIELD_OBJECT.MAX)
+            {// 何も持っていない時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP);
+            }
+            else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+            {// プレイヤーを持っている時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_CHARA);
+            }
+            else
+            {// 何かを持っている時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
+            }
+            transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
+                (_oldPosition.y - _position.y), // ジャンプパワー
+                1,  // ジャンプ回数
+                _mgr.MoveTime, false).OnComplete(() =>
+            {
+                WaitMode();
+                _map._gameOver = true;  // ゲームオーバーやで
             });
         }
     }

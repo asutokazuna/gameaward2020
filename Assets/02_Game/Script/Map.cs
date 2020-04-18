@@ -66,18 +66,18 @@ public class Map : MonoBehaviour
         "水槽ブロック",
         })]  // オブジェクトが増えたら随時追加
     [SerializeField] string[] _objectTag = new string[(int)E_FIELD_OBJECT.MAX];
-    public SquareInfo[,,]       _map;               //!< マップ情報
-    public Player[]             _player;            //!< プレイヤーオブジェクト
-    public BlockTank[]          _waterBlock;        //!< 水槽オブジェクト
-    public Ground[]             _ground;            //!< 地面ブロック
-    public WaterSourceBlock[]   _waterSource;       //!< 水源ブロック
-    [SerializeField] int        _playerCnt;         //!< プレイヤーカウント
-    [SerializeField] int        _waterBlockCnt;     //!< 水槽カウント
-    [SerializeField] int        _groundCnt;         //!< 地面カウント
-    [SerializeField] int        _waterSourceCnt;    //!< 水源カウント
-    [SerializeField] Vector3Int _direct;            //!< 全プレイヤーが向いてる方向
-    public Vector3Int           _offsetPos;         //!< 配列座標補正用変数
-    [SerializeField] bool       _gameOver;          //!< ゲームオーバーフラグ
+    public SquareInfo[,,]       _map;                   //!< マップ情報
+    public Player[]             _player;                //!< プレイヤーオブジェクト
+    public BlockTank[]          _waterBlock;            //!< 水槽オブジェクト
+    public Ground[]             _ground;                //!< 地面ブロック
+    public WaterSourceBlock[]   _waterSource;           //!< 水源ブロック
+    [SerializeField] int        _playerCnt;             //!< プレイヤーカウント
+    [SerializeField] int        _waterBlockCnt;         //!< 水槽カウント
+    [SerializeField] int        _groundCnt;             //!< 地面カウント
+    [SerializeField] int        _waterSourceCnt;        //!< 水源カウント
+    [SerializeField] Vector3Int _direct;                //!< 全プレイヤーが向いてる方向
+    public Vector3Int           _offsetPos;             //!< 配列座標補正用変数
+    public bool                 _gameOver { get; set; } //!< ゲームオーバーフラグ
 
 
     /*
@@ -142,9 +142,9 @@ public class Map : MonoBehaviour
 
 
     /*
-    * @brief プレイヤーの回転
-    * @return なし
-    */
+     * @brief プレイヤーの回転
+     * @return なし
+     */
     private void RotateObject()
     {
         if (!Input.GetKey(KeyCode.LeftShift)) return;
@@ -242,6 +242,24 @@ public class Map : MonoBehaviour
             _player[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
             UpdateMap(_player[haveObj._number]);
         }
+    }
+
+
+    /*
+     * @brief 落下ゲームオーバー時のプレイヤーが落ちるまでの座標
+     * @param1 プレイヤーの座標
+     * @return 落下地点
+     */
+    public Vector3Int GetFallPos(Vector3Int pos)
+    {
+        for (; pos.y > 0; pos.y--)
+        {
+            if (isUse(pos))
+            {// 落下地点の一個上
+                return new Vector3Int(pos.x, pos.y + 1, pos.z);
+            }
+        }
+        return pos;    // エリア外への落下
     }
 
 
@@ -427,7 +445,7 @@ public class Map : MonoBehaviour
      * @param1 BaseObject obj
      * return なし
      */
-    public void UpdateMap(BaseObject obj)
+    private void UpdateMap(BaseObject obj)
     {
         DeleteObject(obj._oldPosition);
         SetObject(obj);
@@ -441,6 +459,7 @@ public class Map : MonoBehaviour
      */
     private void SetObject(BaseObject obj)
     {
+        Debug.Log(obj._position);
         _map[obj._position.x, obj._position.y, obj._position.z]._myObject    = obj._myObject;
         _map[obj._position.x, obj._position.y, obj._position.z]._number      = obj._myNumber;
         _map[obj._position.x, obj._position.y, obj._position.z]._isUpdate    = false;
@@ -628,15 +647,9 @@ public class Map : MonoBehaviour
 
 
     /*
-     * @brief ゲームオーバーフラグの取得
-     * @return ゲームオーバーなら true を返す
+     * @brief 座補補正用
+     * @return なし
      */
-    public bool isGameOver()
-    {
-        return _gameOver;
-    }
-
-
     private void SetOffsetPos()
     {
         // 取り合えずの処理
