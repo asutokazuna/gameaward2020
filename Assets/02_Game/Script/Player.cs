@@ -113,62 +113,84 @@ public class Player : BaseObject
 
     /*
     * @brief 向きを変える
-    * @return なし
+    * @return ベクトル
     */
-    public void Rotate()
+    public Vector3Int Rotate()
     {
         if (_lifted)
         {// 取り合えずここに書き込む
-            return;
+            return _direct;
         }
+
         if (Input.GetKey(KeyCode.LeftShift))
         {// 回転モードかのチェック
             _mode = E_OBJECT_MODE.ROTATE;
         }
 
+        float y = GameObject.FindGameObjectWithTag("MainCamera").transform.localEulerAngles.y;
+        Debug.Log(y);
+
         if (Input.GetKeyDown(KeyCode.D))
         {// 右
-            _direct = new Vector3Int(1, 0, 0);
+            if (y > -30 && y < 30)          _direct = new Vector3Int(  1, 0,  0);   //  90
+            else if (y > 240 && y < 300)    _direct = new Vector3Int(  0, 0,  1);   //   0
+            else if (y > 150 && y < 210)    _direct = new Vector3Int( -1, 0,  0);   // -90
+            else if (y > 60 && y < 120)     _direct = new Vector3Int(  0, 0, -1);   // 180
             _isMove = true;
-            //                                    目標向き, 移動時間(秒)
-            transform.DORotate(new Vector3(0f, 90f, 0f), _mgr.MoveTime).OnComplete(() =>
-            {
-                WaitMode();
-            });
+            offsetRotate(_direct);
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {// 左
-            _direct = new Vector3Int(-1, 0, 0);
+            if (y > -30 && y < 30)          _direct = new Vector3Int( -1, 0,  0);   // -90
+            else if (y > 240 && y < 300)    _direct = new Vector3Int(  0, 0, -1);   // 180
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(  1, 0,  0);   //  90
+            else if (y > 60 && y < 120)     _direct = new Vector3Int(  0, 0,  1);   //   0
             _isMove = true;
-            //                                    目標向き, 移動時間(秒)
-            transform.DORotate(new Vector3(0f, -90f, 0f), _mgr.MoveTime).OnComplete(() =>
-            {
-                WaitMode();
-            });
+            offsetRotate(_direct);
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {// 奥
-            _direct = new Vector3Int(0, 0, 1);
+            if (y > -30 && y < 30)          _direct = new Vector3Int(  0, 0,  1);   //   0
+            else if (y > 240 && y < 300)    _direct = new Vector3Int( -1, 0,  0);   // -90
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(  0, 0, -1);   // 180
+            else if (y > 60 && y < 120)     _direct = new Vector3Int(  1, 0,  0);   //  90
             _isMove = true;
-            //                                    目標向き, 移動時間(秒)
-            transform.DORotate(new Vector3(0f, 0f, 0f), _mgr.MoveTime).OnComplete(() =>
-            {
-                WaitMode();
-            });
+            offsetRotate(_direct);
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {// 手前
-            _direct = new Vector3Int(0, 0, -1);
+            if (y > -30 && y < 30)          _direct = new Vector3Int(  0, 0, -1);   // 180
+            else if (y > 240 && y < 300)    _direct = new Vector3Int(  1, 0,  0);   //  90
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(  0, 0,  1);   //   0
+            else if (y > 60 && y < 120)     _direct = new Vector3Int( -1, 0,  0);   // -90
             _isMove = true;
-            //                                    目標向き, 移動時間(秒)
-            transform.DORotate(new Vector3(0f, 180f, 0f), _mgr.MoveTime).OnComplete(() =>
-            {
-                WaitMode();
-            });
+            offsetRotate(_direct);
         }
         if (_mode == E_OBJECT_MODE.ROTATE)
         {// 回転の動き
             RotateMove();
+        }
+
+        return _direct;
+    }
+
+
+    private void offsetRotate(Vector3Int pos)
+    {
+        if (pos.z == -1)
+        {
+            Debug.Log("こっちを通ったよ");
+            transform.DORotate(new Vector3(0f, 180, 0f), _mgr.MoveTime).OnComplete(() =>
+            {
+                WaitMode();
+            });
+        }
+        else
+        {
+            transform.DORotate(new Vector3(0f, 90f * pos.x, 0f), _mgr.MoveTime).OnComplete(() =>
+            {
+                WaitMode();
+            });
         }
     }
 
@@ -207,12 +229,14 @@ public class Player : BaseObject
             return;
         }
 
+        Rotate();       // 向きたいほうに回転
+
+
         _oldPosition    = _position;      //!< 座標の保持
         _position       = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
         _isMove         = true;
 
         //offsetDirect(); // 向いてる方向の補正
-        Rotate();       // 向きたいほうに回転
 
         if (_map.isLimitField(_position))
         {// マップ配列へ参照できない値の場合
