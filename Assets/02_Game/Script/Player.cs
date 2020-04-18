@@ -304,7 +304,7 @@ public class Player : BaseObject
         _lifted         = false;
         _mode           = E_OBJECT_MODE.PUTED;
         offSetTransform();
-        PutedMode();
+        PutedMode();    // 置かれる
     }
 
 
@@ -354,6 +354,7 @@ public class Player : BaseObject
         putPos = new Vector3Int( _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z);
         if (_map.isGameOver(putPos, E_OBJECT_MODE.PUT))
         {// ゲームオーバー
+            _map.PutToObject(_haveObject, _map.GetFallPos(putPos));  // 置く処理
             return;
         }
         for (int n = 0; n <= 2; n++, putPos.y -= 1)
@@ -465,7 +466,7 @@ public class Player : BaseObject
      * @brief ジャンプモード
      * @return なし
      */
-    private void JumpMode()
+    override protected void JumpMode()
     {
         if (_mode == E_OBJECT_MODE.GET_UP)
         {// 登りのジャンプ
@@ -525,7 +526,9 @@ public class Player : BaseObject
             transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
                 (_oldPosition.y - _position.y), // ジャンプパワー
                 1,  // ジャンプ回数
-                _mgr.MoveTime, false).OnComplete(() =>
+                _mgr.MoveTime, // 時間
+                false
+                ).OnComplete(() =>
             {
                 WaitMode();
                 _map._gameOver = true;  // ゲームオーバーやで

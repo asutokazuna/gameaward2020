@@ -196,6 +196,27 @@ public class BaseObject : MonoBehaviour
 
 
     /*
+     * @brief ジャンプモード
+     * @return なし
+     */
+    virtual protected void JumpMode()
+    {
+        if (_mode == E_OBJECT_MODE.FALL)
+        {// 降りのジャンプ
+            transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
+                (_oldPosition.y - _position.y), // ジャンプパワー
+                1,  // ジャンプ回数
+                GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime,   // 時間
+                false).OnComplete(() =>
+            {
+                WaitMode();
+                GameObject.FindGameObjectWithTag("Map").GetComponent<Map>()._gameOver = true;  // ゲームオーバーやで
+            });
+        }
+    }
+
+
+    /*
      * @brief 移動後の座標の調整
      * @return なし
      */

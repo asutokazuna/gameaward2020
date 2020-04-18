@@ -459,7 +459,6 @@ public class Map : MonoBehaviour
      */
     private void SetObject(BaseObject obj)
     {
-        Debug.Log(obj._position);
         _map[obj._position.x, obj._position.y, obj._position.z]._myObject    = obj._myObject;
         _map[obj._position.x, obj._position.y, obj._position.z]._number      = obj._myNumber;
         _map[obj._position.x, obj._position.y, obj._position.z]._isUpdate    = false;
