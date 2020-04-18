@@ -3,10 +3,13 @@
  * @brief   プレイヤーの管理
  *
  * @author	Kota Nakagami
- * @date1	2020/02/21(金)
- * @data2   2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
- * @deta3   2020/04/14(火)   DoTweenによる動きの追加
- * @data4   2020/04/15(水)   複数プレイヤーでの移動処理の追加
+ * @date	2020/02/21(金)   作成
+ * @data    2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
+ * @deta    2020/04/14(火)   DoTweenによる動きの追加
+ * @data    2020/04/15(水)   複数プレイヤーでの移動処理の追加
+ * @data    2020/04/18(土)   落下移動の追加
+                             箱を落とす処理の追加
+                             カメラの向きに合わせて回転、移動を行うようになった
  * 
  * @version	1.00
  */
@@ -171,26 +174,6 @@ public class Player : BaseObject
         }
 
         return _direct;
-    }
-
-
-    private void offsetRotate(Vector3Int pos)
-    {
-        if (pos.z == -1)
-        {
-            Debug.Log("こっちを通ったよ");
-            transform.DORotate(new Vector3(0f, 180, 0f), _mgr.MoveTime).OnComplete(() =>
-            {
-                WaitMode();
-            });
-        }
-        else
-        {
-            transform.DORotate(new Vector3(0f, 90f * pos.x, 0f), _mgr.MoveTime).OnComplete(() =>
-            {
-                WaitMode();
-            });
-        }
     }
 
 
@@ -393,6 +376,30 @@ public class Player : BaseObject
                 _haveObject = new SquareInfo();         // オブジェクトを手放す
                 break;
             }
+        }
+    }
+
+
+    /*
+     * @brief 向きの調整
+     * @param1 向き
+     * @return なし
+     */
+    private void offsetRotate(Vector3Int direct)
+    {
+        if (direct.z == -1)
+        {
+            transform.DORotate(new Vector3(0f, 180, 0f), _mgr.MoveTime).OnComplete(() =>
+            {
+                WaitMode();
+            });
+        }
+        else
+        {
+            transform.DORotate(new Vector3(0f, 90f * direct.x, 0f), _mgr.MoveTime).OnComplete(() =>
+            {
+                WaitMode();
+            });
         }
     }
 

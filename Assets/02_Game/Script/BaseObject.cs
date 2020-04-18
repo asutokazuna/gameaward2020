@@ -3,9 +3,10 @@
  * @brief   フィールドに置かれるオブジェクトの基底クラス
  *
  * @author	Kota Nakagami
- * @date1	2020/03/05(木)
- * @data2   2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
- * @data3   2020/04/16(木)   コンストラクタの削除
+ * @date	2020/03/05(木)
+ * @data    2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
+ * @data    2020/04/16(木)   コンストラクタの削除
+ * @data    2020/04/18(土)   箱を落とす処理の追加
  *
  * @version	1.00
  */

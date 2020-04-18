@@ -3,8 +3,8 @@
  * @brief   水源のブロック
  *
  * @author	Kota Nakagami
- * @date1	2020/03/30(月)
- * @data2   2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
+ * @date	2020/03/30(月)
+ * @data    2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
  *
  * @version	1.00
  */

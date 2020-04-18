@@ -3,7 +3,7 @@
  * @brief   水槽ブロックの管理
  *
  * @author
- * @data1   2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
+ * @data    2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
  *
  * @version	1.00
  */

@@ -3,9 +3,10 @@
  * @brief   フィールドのマップ情報
  *
  * @author	Kota Nakagami
- * @date1	2020/04/06(月)   クラスの作成
- * @data2   2020/04/15(水)   プレイヤーの操作ソート
- * @data3   2020/04/16(木)   警告文の解決
+ * @date	2020/04/06(月)   クラスの作成
+ * @data    2020/04/15(水)   プレイヤーの操作ソート
+ * @data    2020/04/16(木)   警告文の解決
+ * @data    2020/04/18(土)   カメラの向きに合わせたプレイヤーのソート
  *
  * @version	1.00
  */
@@ -658,31 +659,31 @@ public class Map : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.D))
         {// 右方
-            if (y > -30 && y < 30)          _direct = new Vector3Int(  1, 0,  0);
-            else if (y > 240 && y < 300)    _direct = new Vector3Int(  0, 0,  1);
-            else if (y > 150 && y < 210)    _direct = new Vector3Int( -1, 0,  0);
-            else if (y > 60 && y < 120)     _direct = new Vector3Int(  0, 0, -1);
+            if (y > -30 && y < 30)          _direct = new Vector3Int(VAL_FIELD_MOVE, 0,  0);
+            else if (y > 240 && y < 300)    _direct = new Vector3Int(  0, 0, VAL_FIELD_MOVE);
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(-VAL_FIELD_MOVE, 0,  0);
+            else if (y > 60 && y < 120)     _direct = new Vector3Int(  0, 0, -VAL_FIELD_MOVE);
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {// 左方
-            if (y > -30 && y < 30)          _direct = new Vector3Int( -1, 0,  0);
-            else if (y > 240 && y < 300)    _direct = new Vector3Int(  0, 0, -1);
-            else if (y > 150 && y < 210)    _direct = new Vector3Int(  1, 0,  0);
-            else if (y > 60 && y < 120)     _direct = new Vector3Int(  0, 0,  1);
+            if (y > -30 && y < 30)          _direct = new Vector3Int(-VAL_FIELD_MOVE, 0,  0);
+            else if (y > 240 && y < 300)    _direct = new Vector3Int(  0, 0, -VAL_FIELD_MOVE);
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(VAL_FIELD_MOVE, 0,  0);
+            else if (y > 60 && y < 120)     _direct = new Vector3Int(  0, 0, VAL_FIELD_MOVE);
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {// 前方
-            if (y > -30 && y < 30)          _direct = new Vector3Int(  0, 0,  1);
-            else if (y > 240 && y < 300)    _direct = new Vector3Int( -1, 0,  0);
-            else if (y > 150 && y < 210)    _direct = new Vector3Int(  0, 0, -1);
-            else if (y > 60 && y < 120)     _direct = new Vector3Int(  1, 0,  0);
+            if (y > -30 && y < 30)          _direct = new Vector3Int(  0, 0, VAL_FIELD_MOVE);
+            else if (y > 240 && y < 300)    _direct = new Vector3Int( -VAL_FIELD_MOVE, 0,  0);
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(  0, 0, -VAL_FIELD_MOVE);
+            else if (y > 60 && y < 120)     _direct = new Vector3Int(VAL_FIELD_MOVE, 0,  0);
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {// 後方
-            if (y > -30 && y < 30)          _direct = new Vector3Int(  0, 0, -1);
-            else if (y > 240 && y < 300)    _direct = new Vector3Int(  1, 0,  0);
-            else if (y > 150 && y < 210)    _direct = new Vector3Int(  0, 0,  1);
-            else if (y > 60 && y < 120)     _direct = new Vector3Int( -1, 0,  0);
+            if (y > -30 && y < 30)          _direct = new Vector3Int(  0, 0, -VAL_FIELD_MOVE);
+            else if (y > 240 && y < 300)    _direct = new Vector3Int(VAL_FIELD_MOVE, 0,  0);
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(  0, 0, VAL_FIELD_MOVE);
+            else if (y > 60 && y < 120)     _direct = new Vector3Int( -VAL_FIELD_MOVE, 0,  0);
         }
     }
 

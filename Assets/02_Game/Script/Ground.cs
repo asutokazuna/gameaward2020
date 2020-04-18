@@ -3,9 +3,9 @@
  * @brief   プレイヤーの管理
  *
  * @author	Kota Nakagami
- * @date1	2020/02/21(金)
- * @data2   2020/03/06(金)
- * @data2   2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
+ * @date	2020/02/21(金)
+ * @data    2020/03/06(金)
+ * @data    2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
  *
  * @version	1.00
  */
@@ -71,17 +71,6 @@ public class Ground : BaseObject
      * @return なし
      */
     override public void Update()
-    {
-        
-    }
-
-
-    /*
-     * @brief 通常ブロックの動き
-     * @param1 ベクトル
-     * @return なし
-     */
-    override public void Follow(Vector3Int movement)
     {
         
     }
