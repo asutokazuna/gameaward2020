@@ -128,7 +128,6 @@ public class Player : BaseObject
         }
 
         float y = GameObject.FindGameObjectWithTag("MainCamera").transform.localEulerAngles.y;
-        Debug.Log(y);
 
         if (Input.GetKeyDown(KeyCode.D))
         {// 右

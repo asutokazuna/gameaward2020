@@ -654,21 +654,35 @@ public class Map : MonoBehaviour
      */
     private void offsetDirect()
     {
+        float y = GameObject.FindGameObjectWithTag("MainCamera").transform.localEulerAngles.y;
+
         if (Input.GetKeyDown(KeyCode.D))
         {// 右方
-            _direct.x = VAL_FIELD_MOVE;
+            if (y > -30 && y < 30)          _direct = new Vector3Int(  1, 0,  0);
+            else if (y > 240 && y < 300)    _direct = new Vector3Int(  0, 0,  1);
+            else if (y > 150 && y < 210)    _direct = new Vector3Int( -1, 0,  0);
+            else if (y > 60 && y < 120)     _direct = new Vector3Int(  0, 0, -1);
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {// 左方
-            _direct.x = -VAL_FIELD_MOVE;
+            if (y > -30 && y < 30)          _direct = new Vector3Int( -1, 0,  0);
+            else if (y > 240 && y < 300)    _direct = new Vector3Int(  0, 0, -1);
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(  1, 0,  0);
+            else if (y > 60 && y < 120)     _direct = new Vector3Int(  0, 0,  1);
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {// 前方
-            _direct.z = VAL_FIELD_MOVE;
+            if (y > -30 && y < 30)          _direct = new Vector3Int(  0, 0,  1);
+            else if (y > 240 && y < 300)    _direct = new Vector3Int( -1, 0,  0);
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(  0, 0, -1);
+            else if (y > 60 && y < 120)     _direct = new Vector3Int(  1, 0,  0);
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {// 後方
-            _direct.z = -VAL_FIELD_MOVE;
+            if (y > -30 && y < 30)          _direct = new Vector3Int(  0, 0, -1);
+            else if (y > 240 && y < 300)    _direct = new Vector3Int(  1, 0,  0);
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(  0, 0,  1);
+            else if (y > 60 && y < 120)     _direct = new Vector3Int( -1, 0,  0);
         }
     }
 
