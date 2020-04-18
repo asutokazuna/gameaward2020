@@ -17,6 +17,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 
@@ -109,6 +110,10 @@ public class Map : MonoBehaviour
             {// まだ移動中のプレイヤーがいれば、操作を受け付けない
                 return;
             }
+        }
+        if (_gameOver)
+        {// 取り合えずここでゲームオーバーの実装
+            SceneManager.LoadScene("SampleScene");
         }
         MoveObject();
         HandAction();
@@ -225,6 +230,29 @@ public class Map : MonoBehaviour
 
 
     /*
+     * @brief オブジェクトを落とす
+     * @param1 持っているオブジェクト情報
+     * @param2 落下座標
+     * @return なし
+     */
+    public void FallToObject(SquareInfo haveObj, Vector3Int targetPos)
+    {
+        if (haveObj._myObject == E_FIELD_OBJECT.BLOCK_TANK)
+        {// 水槽の場合
+            _waterBlock[haveObj._number].transform.parent = null;   // 親子関係を話す
+            _waterBlock[haveObj._number].Fall(targetPos);
+            UpdateMap(_waterBlock[haveObj._number]);
+        }
+        else if (haveObj._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// プレイヤーの場合
+            _player[haveObj._number].transform.parent = null;   // 親子関係を話す
+            _player[haveObj._number].Fall(targetPos);
+            UpdateMap(_player[haveObj._number]);
+        }
+    }
+
+
+    /*
      * @brief プレイヤーへ追従
      * @param1 プレイヤーが所持しているオブジェクト情報
      * @param2 プレイヤーのオブジェクト座標
@@ -247,7 +275,7 @@ public class Map : MonoBehaviour
 
     /*
      * @brief 落下ゲームオーバー時のプレイヤーが落ちるまでの座標
-     * @param1 プレイヤーの座標
+     * @param1 座標
      * @return 落下地点
      */
     public Vector3Int GetFallPos(Vector3Int pos)
@@ -288,7 +316,7 @@ public class Map : MonoBehaviour
             }
         }
         // ゲームオーバー
-        return _gameOver = true;
+        return true;
     }
 
 

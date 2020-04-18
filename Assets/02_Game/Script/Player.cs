@@ -354,7 +354,7 @@ public class Player : BaseObject
         putPos = new Vector3Int( _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z);
         if (_map.isGameOver(putPos, E_OBJECT_MODE.PUT))
         {// ゲームオーバー
-            _map.PutToObject(_haveObject, _map.GetFallPos(putPos));  // 置く処理
+            _map.FallToObject(_haveObject, _map.GetFallPos(putPos));  // 置く処理
             return;
         }
         for (int n = 0; n <= 2; n++, putPos.y -= 1)
@@ -541,7 +541,7 @@ public class Player : BaseObject
      * @brief 持ち上げられるモード
      * @return なし
      */
-    override protected void LiftedMode()
+    void LiftedMode()
     {
         transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
         {//　取り合えずこれで行く
@@ -554,7 +554,7 @@ public class Player : BaseObject
      * @brief 置かれるモード
      * @return なし
      */
-    override protected void PutedMode()
+    void PutedMode()
     {
         transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
         {//　取り合えずこれで行く
