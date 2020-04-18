@@ -222,15 +222,14 @@ public class Player : BaseObject
      * @param1 ベクトル
      * @return なし
      */
-    override public void Move(Vector3Int movement)
+    override public void Move()
     {
         if (_isMove || _lifted)
         {// 取り合えずここに書き込む
             return;
         }
 
-        Rotate();       // 向きたいほうに回転
-
+        Vector3Int movement = Rotate();       // 向きたいほうに回転
 
         _oldPosition    = _position;      //!< 座標の保持
         _position       = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);

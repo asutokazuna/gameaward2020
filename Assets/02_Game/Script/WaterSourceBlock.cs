@@ -63,17 +63,6 @@ public class WaterSourceBlock : BaseObject
     {
 
     }
-
-
-    /*
-     * @brief 通常ブロックの動き
-     * @param1 ベクトル
-     * @return なし
-     */
-    override public void Follow(Vector3Int movement)
-    {
-
-    }
 }
 
 

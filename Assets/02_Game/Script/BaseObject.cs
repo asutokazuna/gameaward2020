@@ -102,10 +102,9 @@ public class BaseObject : MonoBehaviour
 
     /*
      * @brief オブジェクトの移動
-     * @param1 ベクトル
      * @return なし
      */
-    virtual public void Move(Vector3Int vec)
+    virtual public void Move()
     {
 
     }
