@@ -53,7 +53,7 @@ public class WaterFlow : MonoBehaviour
     [SerializeField]
     int TargetDirection;
 
-    public GameObject CountBoxCtrl;
+    private GameObject CountBoxCtrl;
     private CountBoxUI C_CountBox;
     
     public int  _currentWater;
@@ -86,6 +86,8 @@ public class WaterFlow : MonoBehaviour
         add = 0;
         minus = 0;
 
+
+        CountBoxCtrl = GameObject.Find("UICanvas");
         C_CountBox = CountBoxCtrl.GetComponent<CountBoxUI>();
     }
 
