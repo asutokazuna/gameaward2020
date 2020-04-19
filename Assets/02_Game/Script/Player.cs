@@ -3,10 +3,13 @@
  * @brief   プレイヤーの管理
  *
  * @author	Kota Nakagami
- * @date1	2020/02/21(金)
- * @data2   2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
- * @deta3   2020/04/14(火)   DoTweenによる動きの追加
- * @data4   2020/04/15(水)   複数プレイヤーでの移動処理の追加
+ * @date	2020/02/21(金)   作成
+ * @data    2020/04/10(金)   マップ配列の参照を FieldController.cs から Map.cs に変更した
+ * @deta    2020/04/14(火)   DoTweenによる動きの追加
+ * @data    2020/04/15(水)   複数プレイヤーでの移動処理の追加
+ * @data    2020/04/18(土)   落下移動の追加
+                             箱を落とす処理の追加
+                             カメラの向きに合わせて回転、移動を行うようになった
  * 
  * @version	1.00
  */
@@ -113,63 +116,64 @@ public class Player : BaseObject
 
     /*
     * @brief 向きを変える
-    * @return なし
+    * @return ベクトル
     */
-    public void Rotate()
+    public Vector3Int Rotate()
     {
         if (_lifted)
         {// 取り合えずここに書き込む
-            return;
+            return _direct;
         }
+
         if (Input.GetKey(KeyCode.LeftShift))
         {// 回転モードかのチェック
             _mode = E_OBJECT_MODE.ROTATE;
         }
 
+        float y = GameObject.FindGameObjectWithTag("MainCamera").transform.localEulerAngles.y;
+
         if (Input.GetKeyDown(KeyCode.D))
         {// 右
-            _direct = new Vector3Int(1, 0, 0);
+            if (y > -30 && y < 30)          _direct = new Vector3Int(  1, 0,  0);   //  90
+            else if (y > 240 && y < 300)    _direct = new Vector3Int(  0, 0,  1);   //   0
+            else if (y > 150 && y < 210)    _direct = new Vector3Int( -1, 0,  0);   // -90
+            else if (y > 60 && y < 120)     _direct = new Vector3Int(  0, 0, -1);   // 180
             _isMove = true;
-            //                                    目標向き, 移動時間(秒)
-            transform.DORotate(new Vector3(0f, 90f, 0f), _mgr.MoveTime).OnComplete(() =>
-            {
-                WaitMode();
-            });
+            offsetRotate(_direct);
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {// 左
-            _direct = new Vector3Int(-1, 0, 0);
+            if (y > -30 && y < 30)          _direct = new Vector3Int( -1, 0,  0);   // -90
+            else if (y > 240 && y < 300)    _direct = new Vector3Int(  0, 0, -1);   // 180
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(  1, 0,  0);   //  90
+            else if (y > 60 && y < 120)     _direct = new Vector3Int(  0, 0,  1);   //   0
             _isMove = true;
-            //                                    目標向き, 移動時間(秒)
-            transform.DORotate(new Vector3(0f, -90f, 0f), _mgr.MoveTime).OnComplete(() =>
-            {
-                WaitMode();
-            });
+            offsetRotate(_direct);
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {// 奥
-            _direct = new Vector3Int(0, 0, 1);
+            if (y > -30 && y < 30)          _direct = new Vector3Int(  0, 0,  1);   //   0
+            else if (y > 240 && y < 300)    _direct = new Vector3Int( -1, 0,  0);   // -90
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(  0, 0, -1);   // 180
+            else if (y > 60 && y < 120)     _direct = new Vector3Int(  1, 0,  0);   //  90
             _isMove = true;
-            //                                    目標向き, 移動時間(秒)
-            transform.DORotate(new Vector3(0f, 0f, 0f), _mgr.MoveTime).OnComplete(() =>
-            {
-                WaitMode();
-            });
+            offsetRotate(_direct);
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {// 手前
-            _direct = new Vector3Int(0, 0, -1);
+            if (y > -30 && y < 30)          _direct = new Vector3Int(  0, 0, -1);   // 180
+            else if (y > 240 && y < 300)    _direct = new Vector3Int(  1, 0,  0);   //  90
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(  0, 0,  1);   //   0
+            else if (y > 60 && y < 120)     _direct = new Vector3Int( -1, 0,  0);   // -90
             _isMove = true;
-            //                                    目標向き, 移動時間(秒)
-            transform.DORotate(new Vector3(0f, 180f, 0f), _mgr.MoveTime).OnComplete(() =>
-            {
-                WaitMode();
-            });
+            offsetRotate(_direct);
         }
         if (_mode == E_OBJECT_MODE.ROTATE)
         {// 回転の動き
             RotateMove();
         }
+
+        return _direct;
     }
 
 
@@ -200,19 +204,20 @@ public class Player : BaseObject
      * @param1 ベクトル
      * @return なし
      */
-    override public void Move(Vector3Int movement)
+    override public void Move()
     {
         if (_isMove || _lifted)
         {// 取り合えずここに書き込む
             return;
         }
 
+        Vector3Int movement = Rotate();       // 向きたいほうに回転
+
         _oldPosition    = _position;      //!< 座標の保持
         _position       = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
         _isMove         = true;
 
         //offsetDirect(); // 向いてる方向の補正
-        Rotate();       // 向きたいほうに回転
 
         if (_map.isLimitField(_position))
         {// マップ配列へ参照できない値の場合
@@ -221,9 +226,9 @@ public class Player : BaseObject
             Debug.Log("エラー : " + name + " はマップ配列外へ移動した");
         }
         else if (_map.isGameOver(_position, E_OBJECT_MODE.MOVE))
-        {// ゲームオーバー
-            _position   = _oldPosition;
-            _isMove     = false;    // 取り合えずの処理
+        {// ゲームオーバー(落下)
+            _position   = _map.GetFallPos(_position);
+            _mode       = E_OBJECT_MODE.FALL;
         }
         else if (_map.isDontMove(_position, _oldPosition) || _lifted == true)
         {// 移動出来ない場合
@@ -269,6 +274,10 @@ public class Player : BaseObject
         {// ジャンプで降りる
             JumpMode(); // アニメーションのセット
         }
+        else if (_mode == E_OBJECT_MODE.FALL)
+        {// ジャンプで落ちる
+            JumpMode(); // アニメーションのセット
+        }
     }
 
 
@@ -300,7 +309,7 @@ public class Player : BaseObject
         _lifted         = false;
         _mode           = E_OBJECT_MODE.PUTED;
         offSetTransform();
-        PutedMode();
+        PutedMode();    // 置かれる
     }
 
 
@@ -350,6 +359,7 @@ public class Player : BaseObject
         putPos = new Vector3Int( _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z);
         if (_map.isGameOver(putPos, E_OBJECT_MODE.PUT))
         {// ゲームオーバー
+            _map.FallToObject(_haveObject, _map.GetFallPos(putPos));  // 置く処理
             return;
         }
         for (int n = 0; n <= 2; n++, putPos.y -= 1)
@@ -366,6 +376,30 @@ public class Player : BaseObject
                 _haveObject = new SquareInfo();         // オブジェクトを手放す
                 break;
             }
+        }
+    }
+
+
+    /*
+     * @brief 向きの調整
+     * @param1 向き
+     * @return なし
+     */
+    private void offsetRotate(Vector3Int direct)
+    {
+        if (direct.z == -1)
+        {
+            transform.DORotate(new Vector3(0f, 180, 0f), _mgr.MoveTime).OnComplete(() =>
+            {
+                WaitMode();
+            });
+        }
+        else
+        {
+            transform.DORotate(new Vector3(0f, 90f * direct.x, 0f), _mgr.MoveTime).OnComplete(() =>
+            {
+                WaitMode();
+            });
         }
     }
 
@@ -461,7 +495,7 @@ public class Player : BaseObject
      * @brief ジャンプモード
      * @return なし
      */
-    private void JumpMode()
+    override protected void JumpMode()
     {
         if (_mode == E_OBJECT_MODE.GET_UP)
         {// 登りのジャンプ
@@ -503,6 +537,32 @@ public class Player : BaseObject
                 WaitMode();
             });
         }
+        else if (_mode == E_OBJECT_MODE.FALL)
+        {// 降りのジャンプ
+            if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+                _haveObject._myObject == E_FIELD_OBJECT.MAX)
+            {// 何も持っていない時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP);
+            }
+            else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+            {// プレイヤーを持っている時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_CHARA);
+            }
+            else
+            {// 何かを持っている時
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
+            }
+            transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
+                (_oldPosition.y - _position.y), // ジャンプパワー
+                1,  // ジャンプ回数
+                _mgr.MoveTime, // 時間
+                false
+                ).OnComplete(() =>
+            {
+                WaitMode();
+                _map._gameOver = true;  // ゲームオーバーやで
+            });
+        }
     }
 
 
@@ -510,7 +570,7 @@ public class Player : BaseObject
      * @brief 持ち上げられるモード
      * @return なし
      */
-    override protected void LiftedMode()
+    void LiftedMode()
     {
         transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
         {//　取り合えずこれで行く
@@ -523,7 +583,7 @@ public class Player : BaseObject
      * @brief 置かれるモード
      * @return なし
      */
-    override protected void PutedMode()
+    void PutedMode()
     {
         transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
         {//　取り合えずこれで行く

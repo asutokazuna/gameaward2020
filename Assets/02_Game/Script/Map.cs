@@ -3,9 +3,10 @@
  * @brief   フィールドのマップ情報
  *
  * @author	Kota Nakagami
- * @date1	2020/04/06(月)   クラスの作成
- * @data2   2020/04/15(水)   プレイヤーの操作ソート
- * @data3   2020/04/16(木)   警告文の解決
+ * @date	2020/04/06(月)   クラスの作成
+ * @data    2020/04/15(水)   プレイヤーの操作ソート
+ * @data    2020/04/16(木)   警告文の解決
+ * @data    2020/04/18(土)   カメラの向きに合わせたプレイヤーのソート
  *
  * @version	1.00
  */
@@ -17,6 +18,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 
@@ -66,18 +68,18 @@ public class Map : MonoBehaviour
         "水槽ブロック",
         })]  // オブジェクトが増えたら随時追加
     [SerializeField] string[] _objectTag = new string[(int)E_FIELD_OBJECT.MAX];
-    public SquareInfo[,,]       _map;               //!< マップ情報
-    public Player[]             _player;            //!< プレイヤーオブジェクト
-    public BlockTank[]          _waterBlock;        //!< 水槽オブジェクト
-    public Ground[]             _ground;            //!< 地面ブロック
-    public WaterSourceBlock[]   _waterSource;       //!< 水源ブロック
-    [SerializeField] int        _playerCnt;         //!< プレイヤーカウント
-    [SerializeField] int        _waterBlockCnt;     //!< 水槽カウント
-    [SerializeField] int        _groundCnt;         //!< 地面カウント
-    [SerializeField] int        _waterSourceCnt;    //!< 水源カウント
-    [SerializeField] Vector3Int _direct;            //!< 全プレイヤーが向いてる方向
-    public Vector3Int           _offsetPos;         //!< 配列座標補正用変数
-    [SerializeField] bool       _gameOver;          //!< ゲームオーバーフラグ
+    public SquareInfo[,,]       _map;                   //!< マップ情報
+    public Player[]             _player;                //!< プレイヤーオブジェクト
+    public BlockTank[]          _waterBlock;            //!< 水槽オブジェクト
+    public Ground[]             _ground;                //!< 地面ブロック
+    public WaterSourceBlock[]   _waterSource;           //!< 水源ブロック
+    [SerializeField] int        _playerCnt;             //!< プレイヤーカウント
+    [SerializeField] int        _waterBlockCnt;         //!< 水槽カウント
+    [SerializeField] int        _groundCnt;             //!< 地面カウント
+    [SerializeField] int        _waterSourceCnt;        //!< 水源カウント
+    [SerializeField] Vector3Int _direct;                //!< 全プレイヤーが向いてる方向
+    public Vector3Int           _offsetPos;             //!< 配列座標補正用変数
+    public bool                 _gameOver { get; set; } //!< ゲームオーバーフラグ
 
 
     /*
@@ -110,6 +112,10 @@ public class Map : MonoBehaviour
                 return;
             }
         }
+        if (_gameOver)
+        {// 取り合えずここでゲームオーバーの実装
+            SceneManager.LoadScene("SampleScene");
+        }
         MoveObject();
         HandAction();
         RotateObject();
@@ -135,16 +141,16 @@ public class Map : MonoBehaviour
         PlayerSort();   // ソートと更新
         for (int n = 0; n < _playerCnt; n++)
         {
-            _player[n].Move(_direct);
+            _player[n].Move();
             UpdateMap(_player[n]);
         }
     }
 
 
     /*
-    * @brief プレイヤーの回転
-    * @return なし
-    */
+     * @brief プレイヤーの回転
+     * @return なし
+     */
     private void RotateObject()
     {
         if (!Input.GetKey(KeyCode.LeftShift)) return;
@@ -225,6 +231,29 @@ public class Map : MonoBehaviour
 
 
     /*
+     * @brief オブジェクトを落とす
+     * @param1 持っているオブジェクト情報
+     * @param2 落下座標
+     * @return なし
+     */
+    public void FallToObject(SquareInfo haveObj, Vector3Int targetPos)
+    {
+        if (haveObj._myObject == E_FIELD_OBJECT.BLOCK_TANK)
+        {// 水槽の場合
+            _waterBlock[haveObj._number].transform.parent = null;   // 親子関係を話す
+            _waterBlock[haveObj._number].Fall(targetPos);
+            UpdateMap(_waterBlock[haveObj._number]);
+        }
+        else if (haveObj._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// プレイヤーの場合
+            _player[haveObj._number].transform.parent = null;   // 親子関係を話す
+            _player[haveObj._number].Fall(targetPos);
+            UpdateMap(_player[haveObj._number]);
+        }
+    }
+
+
+    /*
      * @brief プレイヤーへ追従
      * @param1 プレイヤーが所持しているオブジェクト情報
      * @param2 プレイヤーのオブジェクト座標
@@ -242,6 +271,24 @@ public class Map : MonoBehaviour
             _player[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
             UpdateMap(_player[haveObj._number]);
         }
+    }
+
+
+    /*
+     * @brief 落下ゲームオーバー時のプレイヤーが落ちるまでの座標
+     * @param1 座標
+     * @return 落下地点
+     */
+    public Vector3Int GetFallPos(Vector3Int pos)
+    {
+        for (; pos.y > 0; pos.y--)
+        {
+            if (isUse(pos))
+            {// 落下地点の一個上
+                return new Vector3Int(pos.x, pos.y + 1, pos.z);
+            }
+        }
+        return pos;    // エリア外への落下
     }
 
 
@@ -270,7 +317,7 @@ public class Map : MonoBehaviour
             }
         }
         // ゲームオーバー
-        return _gameOver = true;
+        return true;
     }
 
 
@@ -427,7 +474,7 @@ public class Map : MonoBehaviour
      * @param1 BaseObject obj
      * return なし
      */
-    public void UpdateMap(BaseObject obj)
+    private void UpdateMap(BaseObject obj)
     {
         DeleteObject(obj._oldPosition);
         SetObject(obj);
@@ -608,35 +655,43 @@ public class Map : MonoBehaviour
      */
     private void offsetDirect()
     {
+        float y = GameObject.FindGameObjectWithTag("MainCamera").transform.localEulerAngles.y;
+
         if (Input.GetKeyDown(KeyCode.D))
         {// 右方
-            _direct.x = VAL_FIELD_MOVE;
+            if (y > -30 && y < 30)          _direct = new Vector3Int(VAL_FIELD_MOVE, 0,  0);
+            else if (y > 240 && y < 300)    _direct = new Vector3Int(  0, 0, VAL_FIELD_MOVE);
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(-VAL_FIELD_MOVE, 0,  0);
+            else if (y > 60 && y < 120)     _direct = new Vector3Int(  0, 0, -VAL_FIELD_MOVE);
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {// 左方
-            _direct.x = -VAL_FIELD_MOVE;
+            if (y > -30 && y < 30)          _direct = new Vector3Int(-VAL_FIELD_MOVE, 0,  0);
+            else if (y > 240 && y < 300)    _direct = new Vector3Int(  0, 0, -VAL_FIELD_MOVE);
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(VAL_FIELD_MOVE, 0,  0);
+            else if (y > 60 && y < 120)     _direct = new Vector3Int(  0, 0, VAL_FIELD_MOVE);
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {// 前方
-            _direct.z = VAL_FIELD_MOVE;
+            if (y > -30 && y < 30)          _direct = new Vector3Int(  0, 0, VAL_FIELD_MOVE);
+            else if (y > 240 && y < 300)    _direct = new Vector3Int( -VAL_FIELD_MOVE, 0,  0);
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(  0, 0, -VAL_FIELD_MOVE);
+            else if (y > 60 && y < 120)     _direct = new Vector3Int(VAL_FIELD_MOVE, 0,  0);
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {// 後方
-            _direct.z = -VAL_FIELD_MOVE;
+            if (y > -30 && y < 30)          _direct = new Vector3Int(  0, 0, -VAL_FIELD_MOVE);
+            else if (y > 240 && y < 300)    _direct = new Vector3Int(VAL_FIELD_MOVE, 0,  0);
+            else if (y > 150 && y < 210)    _direct = new Vector3Int(  0, 0, VAL_FIELD_MOVE);
+            else if (y > 60 && y < 120)     _direct = new Vector3Int( -VAL_FIELD_MOVE, 0,  0);
         }
     }
 
 
     /*
-     * @brief ゲームオーバーフラグの取得
-     * @return ゲームオーバーなら true を返す
+     * @brief 座補補正用
+     * @return なし
      */
-    public bool isGameOver()
-    {
-        return _gameOver;
-    }
-
-
     private void SetOffsetPos()
     {
         // 取り合えずの処理
