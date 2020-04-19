@@ -196,6 +196,8 @@ public class Player : BaseObject
         {// 物を下す
             Put();
         }
+
+        _oldPosition = _position;   // なんでこれでバグが直るの...
     }
 
 

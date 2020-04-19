@@ -98,7 +98,6 @@ public class Map : MonoBehaviour
     {
         // マップとオブジェクト情報の初期化
         InitObject();
-        //CallDebug();
     }
 
     // Update is called once per frame
@@ -115,6 +114,10 @@ public class Map : MonoBehaviour
         if (_gameOver)
         {// 取り合えずここでゲームオーバーの実装
             SceneManager.LoadScene("SampleScene");
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            CallDebug(E_FIELD_OBJECT.BLOCK_TANK);
         }
         MoveObject();
         HandAction();
@@ -702,33 +705,69 @@ public class Map : MonoBehaviour
 
     /*
      * @brief デバッグ用関数
+     * @param1 オブジェクト種
      * @return なし
      */
-    private void CallDebug()
+    private void CallDebug(E_FIELD_OBJECT obj = E_FIELD_OBJECT.MAX)
     {
-        for (int y = 0; y < MAX_OBJECT; y++)
-        {
-            for (int z = 0; z < MAX_OBJECT; z++)
+        int cnt = 0;
+        if (obj == E_FIELD_OBJECT.MAX)
+        {// 全オブジェクトのデバッグ表記
+            for (int y = 0; y < MAX_OBJECT; y++)
             {
-                for (int x = 0; x < MAX_OBJECT; x++)
+                for (int z = 0; z < MAX_OBJECT; z++)
                 {
-                    if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.PLAYER_01))
+                    for (int x = 0; x < MAX_OBJECT; x++)
                     {
-                        Debug.Log(
-                            "座標 x =" + x + " y =" + y + " z =" + z +  " に " +
-                            _player[_map[x, y, z]._number].name + _map[x, y, z]._number + " がいます"
-                            );
+                        if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.PLAYER_01))
+                        {
+                            Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " にプレイヤーがいます" + _map[x, y, z]._number);
+                        }
+                        if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_TANK))
+                        {
+                            Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に水槽があります" + _map[x, y, z]._number);
+                        }
+                        if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_GROUND))
+                        {
+                            Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に地面があります" + _map[x, y, z]._number);
+                        }
                     }
-                    //if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_TANK))
-                    //{
-                    //    Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に水槽があります" + _map[x, y, z]._number);
-                    //}
-                    //if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_GROUND))
-                    //{
-                    //    Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に地面があります" + _map[x, y, z]._number);
-                    //}
                 }
             }
+        }
+        else if (obj == E_FIELD_OBJECT.PLAYER_01)
+        {// プレイヤーのデバッグ表記
+            for (int y = 0; y < MAX_OBJECT; y++)
+            {
+                for (int z = 0; z < MAX_OBJECT; z++)
+                {
+                    for (int x = 0; x < MAX_OBJECT; x++)
+                    {
+                        if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.PLAYER_01))
+                        {
+                            Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " にプレイヤーがいます" + _map[x, y, z]._number);
+                        }
+                    }
+                }
+            }
+        }
+        else if (obj == E_FIELD_OBJECT.BLOCK_TANK)
+        {// 水槽ののデバッグ表記
+            for (int y = 0; y < MAX_OBJECT; y++)
+            {
+                for (int z = 0; z < MAX_OBJECT; z++)
+                {
+                    for (int x = 0; x < MAX_OBJECT; x++)
+                    {
+                        if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_TANK))
+                        {
+                            Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に水槽があります" + _map[x, y, z]._number);
+                            cnt++;
+                        }
+                    }
+                }
+            }
+            Debug.Log("水槽の総数 " + cnt);
         }
     }
 
