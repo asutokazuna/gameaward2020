@@ -120,7 +120,7 @@ public class Player : BaseObject
     */
     public Vector3Int Rotate()
     {
-        if (_lifted)
+        if (_lifted || _isMove)
         {// 取り合えずここに書き込む
             return _direct;
         }
@@ -339,6 +339,7 @@ public class Player : BaseObject
                 {// メモ(mapのプレイヤー配列にソートがかかるため持ち上げにバグがでた)
                     _haveObject._myObject   = _obj._myObject;                // オブジェクト情報のセット
                     _haveObject._number     = _obj._myNumber;                // オブジェクトナンバーセット
+                    _isMove = true;
                 }
                 else
                 {
@@ -362,6 +363,7 @@ public class Player : BaseObject
         if (_map.isGameOver(putPos, E_OBJECT_MODE.PUT))
         {// ゲームオーバー
             _map.FallToObject(_haveObject, _map.GetFallPos(putPos));  // 置く処理
+            _isMove = true;
             return;
         }
         for (int n = 0; n <= 2; n++, putPos.y -= 1)
@@ -376,6 +378,7 @@ public class Player : BaseObject
                 _map.PutToObject(_haveObject, putPos);  // 置く処理
                 PutMode();                              // アニメーションのセット
                 _haveObject = new SquareInfo();         // オブジェクトを手放す
+                _isMove = true;
                 break;
             }
         }
