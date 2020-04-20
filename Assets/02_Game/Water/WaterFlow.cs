@@ -247,8 +247,8 @@ public class WaterFlow : MonoBehaviour
                             break;
 
                         case 1:
-                            if (other.transform.position.z >= this.transform.position.z - 0.9f &&
-                               other.transform.position.z <= this.transform.position.z - 1.1f &&
+                            if (other.transform.position.z <= this.transform.position.z - 0.9f &&
+                               other.transform.position.z >= this.transform.position.z - 1.1f &&
                                other.transform.position.y >= this.transform.position.y - _adjust &&
                                other.transform.position.y <= this.transform.position.y + _adjust &&
                                other.transform.position.x >= this.transform.position.x - _adjust &&
