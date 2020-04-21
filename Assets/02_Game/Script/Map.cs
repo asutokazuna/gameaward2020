@@ -79,6 +79,7 @@ public class Map : MonoBehaviour
     [SerializeField] int        _waterSourceCnt;        //!< 水源カウント
     [SerializeField] Vector3Int _direct;                //!< 全プレイヤーが向いてる方向
     public Vector3Int           _offsetPos;             //!< 配列座標補正用変数
+    Controller                  _input;                 //!< 入力
     public bool                 _gameOver { get; set; } //!< ゲームオーバーフラグ
 
 
@@ -90,6 +91,7 @@ public class Map : MonoBehaviour
     {
         _map        = new SquareInfo[MAX_OBJECT, MAX_OBJECT, MAX_OBJECT];
         _gameOver   = false;
+        _input      = GameObject.FindGameObjectWithTag("Map").GetComponent<Controller>();               // コンポーネントの取得
     }
 
 
@@ -133,9 +135,9 @@ public class Map : MonoBehaviour
     private void MoveObject()
     {
         // 移動キーを何も押してなかったら
-        if (!Input.GetKeyDown(KeyCode.D) && !Input.GetKeyDown(KeyCode.A) &&
-            !Input.GetKeyDown(KeyCode.W) && !Input.GetKeyDown(KeyCode.S) ||
-            Input.GetKey(KeyCode.LeftShift))
+        if (!_input.isInput(E_INPUT_MODE.PUSH, E_INPUT.L_STICK_RIGHT) && !_input.isInput(E_INPUT_MODE.PUSH, E_INPUT.L_STICK_LEFT) &&
+            !_input.isInput(E_INPUT_MODE.PUSH, E_INPUT.L_STICK_UP) && !_input.isInput(E_INPUT_MODE.PUSH, E_INPUT.L_STICK_DOWN) ||
+            _input.isInput(E_INPUT_MODE.PUSH, E_INPUT.LB))
         {
             return;
         }
@@ -156,7 +158,7 @@ public class Map : MonoBehaviour
      */
     private void RotateObject()
     {
-        if (!Input.GetKey(KeyCode.LeftShift)) return;
+        if (!_input.isInput(E_INPUT_MODE.PUSH, E_INPUT.LB)) return;
 
         for (int n = 0; n < _playerCnt; n++)
         {
@@ -173,7 +175,7 @@ public class Map : MonoBehaviour
      */
     public void HandAction()
     {
-        if (!Input.GetKeyDown(KeyCode.Space)) return;
+        if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.B)) return;
         PlayerSort();   // ソートと更新
         for (int n = 0; n < _playerCnt; n++)
         {// 取り合えずソートはなし
@@ -660,28 +662,28 @@ public class Map : MonoBehaviour
     {
         float y = GameObject.FindGameObjectWithTag("MainCamera").transform.localEulerAngles.y;
         Debug.Log("角度" + y);
-        if (Input.GetKeyDown(KeyCode.D))
+        if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT))
         {// 右方
             if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(VAL_FIELD_MOVE, 0,  0);
             else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0, VAL_FIELD_MOVE);
             else if (y > 150 && y < 210)                    _direct = new Vector3Int(-VAL_FIELD_MOVE, 0,  0);
             else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0, -VAL_FIELD_MOVE);
         }
-        else if (Input.GetKeyDown(KeyCode.A))
+        else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT))
         {// 左方
             if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(-VAL_FIELD_MOVE, 0,  0);
             else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0, -VAL_FIELD_MOVE);
             else if (y > 150 && y < 210)                    _direct = new Vector3Int(VAL_FIELD_MOVE, 0,  0);
             else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0, VAL_FIELD_MOVE);
         }
-        else if (Input.GetKeyDown(KeyCode.W))
+        else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
         {// 前方
             if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0, VAL_FIELD_MOVE);
             else if (y > 240 && y < 300)                    _direct = new Vector3Int( -VAL_FIELD_MOVE, 0,  0);
             else if (y > 150 && y < 210)                    _direct = new Vector3Int(  0, 0, -VAL_FIELD_MOVE);
             else if (y > 60 && y < 120)                     _direct = new Vector3Int(VAL_FIELD_MOVE, 0,  0);
         }
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
         {// 後方
             if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0, -VAL_FIELD_MOVE);
             else if (y > 240 && y < 300)                    _direct = new Vector3Int(VAL_FIELD_MOVE, 0,  0);

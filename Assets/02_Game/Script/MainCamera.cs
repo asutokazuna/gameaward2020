@@ -51,11 +51,13 @@ public class MainCamera : MonoBehaviour
         //左右矢印キーで回転
         if (_cnt == (int)_rotateFlame / 1)//回転中じゃなければ
         {
-            if (Input.GetKeyUp(KeyCode.LeftArrow))
+            if (GameObject.FindGameObjectWithTag("Map").GetComponent<Controller>()
+                .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_LEFT))
             {
                 _angle = 90.0f / _rotateFlame;
             }
-            else if (Input.GetKeyUp(KeyCode.RightArrow))
+            else if (GameObject.FindGameObjectWithTag("Map").GetComponent<Controller>()
+                .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_RIGHT))
             {
                 _angle = -90.0f / _rotateFlame;
             }
