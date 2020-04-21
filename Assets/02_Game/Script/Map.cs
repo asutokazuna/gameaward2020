@@ -135,8 +135,10 @@ public class Map : MonoBehaviour
     private void MoveObject()
     {
         // 移動キーを何も押してなかったら
-        if (!_input.isInput(E_INPUT_MODE.PUSH, E_INPUT.L_STICK_RIGHT) && !_input.isInput(E_INPUT_MODE.PUSH, E_INPUT.L_STICK_LEFT) &&
-            !_input.isInput(E_INPUT_MODE.PUSH, E_INPUT.L_STICK_UP) && !_input.isInput(E_INPUT_MODE.PUSH, E_INPUT.L_STICK_DOWN) ||
+        if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT) &&
+            !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT) &&
+            !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP) &&
+            !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN) ||
             _input.isInput(E_INPUT_MODE.PUSH, E_INPUT.LB))
         {
             return;

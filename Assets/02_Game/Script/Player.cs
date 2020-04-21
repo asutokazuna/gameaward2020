@@ -134,7 +134,7 @@ public class Player : BaseObject
 
         float y = GameObject.FindGameObjectWithTag("MainCamera").transform.localEulerAngles.y;
 
-        if (_input.isInput(E_INPUT_MODE.PUSH, E_INPUT.L_STICK_RIGHT))
+        if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT))
         {// 右
             if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  1, 0,  0);   //  90
             else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0,  1);   //   0
@@ -143,7 +143,7 @@ public class Player : BaseObject
             _isMove = true;
             offsetRotate(_direct);
         }
-        else if (_input.isInput(E_INPUT_MODE.PUSH, E_INPUT.L_STICK_LEFT))
+        else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT))
         {// 左
             if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int( -1, 0,  0);   // -90
             else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0, -1);   // 180
@@ -152,7 +152,7 @@ public class Player : BaseObject
             _isMove = true;
             offsetRotate(_direct);
         }
-        else if (_input.isInput(E_INPUT_MODE.PUSH, E_INPUT.L_STICK_UP))
+        else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
         {// 奥
             if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0,  1);   //   0
             else if (y > 240 && y < 300)                    _direct = new Vector3Int( -1, 0,  0);   // -90
@@ -161,7 +161,7 @@ public class Player : BaseObject
             _isMove = true;
             offsetRotate(_direct);
         }
-        else if (_input.isInput(E_INPUT_MODE.PUSH, E_INPUT.L_STICK_DOWN))
+        else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
         {// 手前
             if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0, -1);   // 180
             else if (y > 240 && y < 300)                    _direct = new Vector3Int(  1, 0,  0);   //  90
