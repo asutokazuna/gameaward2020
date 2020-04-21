@@ -7,6 +7,7 @@
  * @data    2020/04/15(水)   プレイヤーの操作ソート
  * @data    2020/04/16(木)   警告文の解決
  * @data    2020/04/18(土)   カメラの向きに合わせたプレイヤーのソート
+ * @date	2020/04/21(火)   クリア処理の追加    加藤
  *
  * @version	1.00
  */
@@ -80,8 +81,8 @@ public class Map : MonoBehaviour
     [SerializeField] Vector3Int _direct;                //!< 全プレイヤーが向いてる方向
     public Vector3Int           _offsetPos;             //!< 配列座標補正用変数
     public bool                 _gameOver { get; set; } //!< ゲームオーバーフラグ
-
-
+    public bool                 _gameClear { get; set; }//!< ゲームクリアフラグ
+    public int                  _fullWaterBlockCnt;
     /*
      * @brief Awake
      * @return なし
@@ -90,6 +91,9 @@ public class Map : MonoBehaviour
     {
         _map        = new SquareInfo[MAX_OBJECT, MAX_OBJECT, MAX_OBJECT];
         _gameOver   = false;
+        _gameClear  = false;
+        _fullWaterBlockCnt = 0; 
+        //↑とりあえずここにいれたけど、他にいい場所あったら移動させてください。 4/21 加藤
     }
 
 
@@ -104,6 +108,10 @@ public class Map : MonoBehaviour
     void Update()
     {
 #if MODE_MAP
+        if(isGameClear())
+        {
+            _gameClear = true;
+        }
         for (int n = 0; n < _playerCnt; n++)
         {
             if (_player[n]._isMove)
@@ -114,6 +122,10 @@ public class Map : MonoBehaviour
         if (_gameOver)
         {// 取り合えずここでゲームオーバーの実装
             SceneManager.LoadScene("SampleScene");
+        }
+        if (_gameClear)
+        {// ゲームクリア時の処理を追加する場所
+            
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
@@ -321,6 +333,21 @@ public class Map : MonoBehaviour
         }
         // ゲームオーバー
         return true;
+    }
+
+
+    /*
+     * @brief ゲームクリア判定
+     * @return ゲームクリアなら true
+     */
+    private bool isGameClear()
+    {
+        if(_waterBlockCnt == _fullWaterBlockCnt)
+        {//満水の箱数が、箱の総数と同じだったら
+            return true;
+        }
+
+        return false;
     }
 
 

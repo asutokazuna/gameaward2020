@@ -14,6 +14,8 @@ public class BulbCreate : MonoBehaviour
 
     public int nTargetCnt;
 
+    public bool ParticleSwitch;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -77,7 +79,12 @@ public class BulbCreate : MonoBehaviour
             if (!bFill)
             {
                 bFill = true;
-                this.GetComponent<ParticleSystem>().Play(true);
+
+                if(ParticleSwitch)
+                {
+                    this.GetComponent<ParticleSystem>().Play(true);
+                }
+                
                 
 
             }

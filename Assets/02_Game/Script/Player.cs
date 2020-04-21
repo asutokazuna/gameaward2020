@@ -10,6 +10,7 @@
  * @data    2020/04/18(土)   落下移動の追加
                              箱を落とす処理の追加
                              カメラの向きに合わせて回転、移動を行うようになった
+ * @date	2020/04/21(火)   クリア・ゲームオーバー時に移動できなくなる処理の追加    加藤
  * 
  * @version	1.00
  */
@@ -120,7 +121,7 @@ public class Player : BaseObject
     */
     public Vector3Int Rotate()
     {
-        if (_lifted || _isMove)
+        if (_lifted || _isMove || _map._gameClear || _map._gameOver)
         {// 取り合えずここに書き込む
             return _direct;
         }
@@ -208,7 +209,7 @@ public class Player : BaseObject
      */
     override public void Move()
     {
-        if (_isMove || _lifted)
+        if (_isMove || _lifted || _map._gameClear || _map._gameOver)
         {// 取り合えずここに書き込む
             return;
         }
