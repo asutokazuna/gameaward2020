@@ -53,9 +53,12 @@ public class WaterFlow : MonoBehaviour
     [SerializeField]
     int TargetDirection;
 
-    private GameObject CountBoxCtrl;
-    private CountBoxUI C_CountBox;
-    
+    private GameObject MapCtrl;
+    private Map CountBoxScript;
+
+    private GameObject UICtrl;
+    private CountBoxUI UIScript;
+
     public int  _currentWater;
     public int   _maxWater;
     [SerializeField]
@@ -87,8 +90,11 @@ public class WaterFlow : MonoBehaviour
         minus = 0;
 
 
-        CountBoxCtrl = GameObject.Find("UICanvas");
-        C_CountBox = CountBoxCtrl.GetComponent<CountBoxUI>();
+        MapCtrl = GameObject.Find("Map");
+        CountBoxScript = MapCtrl.GetComponent<Map>();
+
+        UICtrl = GameObject.Find("UICanvas");
+        UIScript = UICtrl.GetComponent<CountBoxUI>();
     }
 
     private void FixedUpdate()
@@ -119,7 +125,8 @@ public class WaterFlow : MonoBehaviour
             {// 溜まったら
                 _isFullWater = true;
                 _currentWater = _maxWater;
-                C_CountBox.AddFullBox(+1); //全体の水箱+
+                CountBoxScript._fullWaterBlockCnt++; //全体の水箱+
+                UIScript.AddFullBox(+1);
 
                 add = 0;
                 minus = 0;
@@ -128,7 +135,8 @@ public class WaterFlow : MonoBehaviour
             {
                 _isFullWater = false;
                 _currentWater = 0;
-                C_CountBox.AddFullBox(-1); //全体の水箱-
+                CountBoxScript._fullWaterBlockCnt--; //全体の水箱-
+                UIScript.AddFullBox(-1);
             }
 
 
