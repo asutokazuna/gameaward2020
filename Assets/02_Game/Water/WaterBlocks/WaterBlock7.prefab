@@ -28,7 +28,7 @@ GameObject:
   - component: {fileID: 9026659172152283088}
   - component: {fileID: 8844950713058775172}
   m_Layer: 0
-  m_Name: WaterBlock5 1
+  m_Name: WaterBlock7
   m_TagString: WaterBlock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,7 +74,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2b2878182ed6e9d4b86355c7df3dfeb7, type: 2}
+  - {fileID: 2100000, guid: 0e462883cd57c664a883edfb5a05d614, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -172,15 +172,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47aa1f028b1004c40a64058a109337f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MAX_ANIM_WALK: 60
   _myObject: 0
   _myNumber: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
+  _nextPos: {x: 0, y: 0, z: 0}
   _direct: {x: 0, y: 0, z: 0}
   _lifted: 0
-  _fullWater: 0
-  _animCnt: 0
+  _mode: 0
   TargetCnt: 180
   _maxWater: 0
   _numWater: 0
