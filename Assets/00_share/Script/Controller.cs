@@ -3,7 +3,7 @@
  * @brief   入出力装置
  *
  * @author	Kota Nakagami
- * @data    2020/04/15(水)   クラス作成
+ * @data    2020/04/21(水)   クラス作成
  *
  * @version	1.00
  */
@@ -15,7 +15,7 @@ using UnityEngine;
 
 
 /*
- * @enum 入力キー
+ * @enum 入力種類
  */
 public enum E_INPUT
 {
