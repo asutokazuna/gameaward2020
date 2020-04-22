@@ -43,6 +43,7 @@ public class Player : BaseObject
     public PlayerAnimation          _animation;     //!< プレイヤーのアニメーション
     PlayerManager                   _mgr;           //!< プレイヤー管理スクリプト
     BaseObject                      _obj;           //!< 後で改善するから許して
+    Controller                      _input;         //!< 入力キー
 
 
     /*
@@ -67,6 +68,7 @@ public class Player : BaseObject
         _haveObject = new SquareInfo();
         _map        = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>();                      // コンポーネントの取得
         _mgr        = GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>();  // コンポーネントの取得
+        _input      = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();             // コンポーネントの取得
 
         // 座標の補正
         _position = _oldPosition = new Vector3Int(
@@ -126,14 +128,14 @@ public class Player : BaseObject
             return _direct;
         }
 
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (_input.isInput(E_INPUT_MODE.BUTTON, E_INPUT.LB))
         {// 回転モードかのチェック
             _mode = E_OBJECT_MODE.ROTATE;
         }
 
         float y = GameObject.FindGameObjectWithTag("MainCamera").transform.localEulerAngles.y;
 
-        if (Input.GetKeyDown(KeyCode.D))
+        if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT))
         {// 右
             if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  1, 0,  0);   //  90
             else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0,  1);   //   0
@@ -142,7 +144,7 @@ public class Player : BaseObject
             _isMove = true;
             offsetRotate(_direct);
         }
-        else if (Input.GetKeyDown(KeyCode.A))
+        else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT))
         {// 左
             if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int( -1, 0,  0);   // -90
             else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0, -1);   // 180
@@ -151,7 +153,7 @@ public class Player : BaseObject
             _isMove = true;
             offsetRotate(_direct);
         }
-        else if (Input.GetKeyDown(KeyCode.W))
+        else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
         {// 奥
             if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0,  1);   //   0
             else if (y > 240 && y < 300)                    _direct = new Vector3Int( -1, 0,  0);   // -90
@@ -160,7 +162,7 @@ public class Player : BaseObject
             _isMove = true;
             offsetRotate(_direct);
         }
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
         {// 手前
             if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0, -1);   // 180
             else if (y > 240 && y < 300)                    _direct = new Vector3Int(  1, 0,  0);   //  90
