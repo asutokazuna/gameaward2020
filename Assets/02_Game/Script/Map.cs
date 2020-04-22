@@ -84,6 +84,8 @@ public class Map : MonoBehaviour
     public bool                 _gameOver { get; set; } //!< ゲームオーバーフラグ
     public bool                 _gameClear { get; set; }//!< ゲームクリアフラグ
     public int                  _fullWaterBlockCnt;
+
+
     /**
      * @brief Awake
      * @return なし
@@ -116,7 +118,11 @@ public class Map : MonoBehaviour
         }
         if (_gameOver)
         {// 取り合えずここでゲームオーバーの実装
-            SceneManager.LoadScene("SampleScene");
+            foreach (GameObject n in GetGameOverObjects())
+            {// ゲームオーバーオブジェクトの確認
+                Debug.Log(n.name);
+            }
+            //SceneManager.LoadScene("SampleScene");
         }
         if (_gameClear)
         {// ゲームクリア時の処理を追加する場所
@@ -623,6 +629,46 @@ public class Map : MonoBehaviour
             _waterSource[n].Init(n);
             SetObject(_waterSource[n]);
         }
+    }
+
+
+    /**
+     * @brief ゲームオーバーの要因となったオブジェクトの取得
+     * @return GameObject[]、なければnullを返す
+     */
+    public List<GameObject> GetGameOverObjects()
+    {
+        if (!_gameOver)
+        {// まだゲームオーバーじゃあらへんで
+            return null;
+        }
+        var obj = new List<GameObject>();
+        for (int y = 0; y < MAX_OBJECT; y++)
+        {
+            for (int z = 0; z < MAX_OBJECT; z++)
+            {
+                for (int x = 0; x < MAX_OBJECT; x++)
+                {
+                    if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.PLAYER_01) &&
+                        _player[_map[x, y, z]._number]._gameOver)
+                    {
+                        obj.Add(_player[_map[x, y, z]._number].gameObject);
+                    }
+                    if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_TANK) &&
+                        _waterBlock[_map[x, y, z]._number]._gameOver)
+                    {
+                        obj.Add(_waterBlock[_map[x, y, z]._number].gameObject);
+                    }
+                    if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_GROUND) &&
+                        _ground[_map[x, y, z]._number]._gameOver)
+                    {
+                        obj.Add(_ground[_map[x, y, z]._number].gameObject);
+                    }
+                }
+            }
+        }
+
+        return obj;
     }
 
 
