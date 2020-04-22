@@ -1,4 +1,4 @@
-﻿/*
+﻿/**
  * @file	Player01.cs
  * @brief   プレイヤーの管理
  *
@@ -25,7 +25,7 @@ using UnityEngine;
 using DG.Tweening;
 
 
-/*
+/**
  * @class Player01
  * @brief プレイヤーの動き
  */
@@ -46,7 +46,7 @@ public class Player : BaseObject
     Controller                      _input;         //!< 入力キー
 
 
-    /*
+    /**
      * @brief 移動中かどうかの判定
      */
     public bool _isMove //!< 移動フラグ
@@ -57,7 +57,7 @@ public class Player : BaseObject
 
 
 #if MODE_MAP
-    /*
+    /**
      * @brief 初期化
      * @return なし
      */
@@ -89,7 +89,7 @@ public class Player : BaseObject
 #endif
 
 
-    /*
+    /**
      * @brief 初期化
      * @return なし
      */
@@ -107,7 +107,7 @@ public class Player : BaseObject
 
 
 #if MODE_MAP
-    /*
+    /**
      * @brief 更新処理
      * @return なし
      */
@@ -117,7 +117,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
     * @brief 向きを変える
     * @return ベクトル
     */
@@ -180,7 +180,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 物を持ち上げる、下す
      * @return なし
      */
@@ -200,11 +200,11 @@ public class Player : BaseObject
             Put();
         }
 
-        _oldPosition = _position;   // なんでこれでバグが直るの...
+        _oldPosition = _position;
     }
 
 
-    /*
+    /**
      * @brief 通常ブロックの動き
      * @param1 ベクトル
      * @return なし
@@ -286,7 +286,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief  持ち上げられる
      * @param1 ターゲット座標
      * @return なし
@@ -302,7 +302,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief  置かれる
      * @param1 ターゲット座標
      * @return なし
@@ -318,7 +318,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 物を持ち上げる
      * @return なし
      */
@@ -355,7 +355,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 物を下す
      * @return なし
      */
@@ -388,7 +388,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 向きの調整
      * @param1 向き
      * @return なし
@@ -412,7 +412,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 移動後の座標の調整
      * @return なし
      */
@@ -426,10 +426,10 @@ public class Player : BaseObject
     }
 
 
-    /*
-    * @brief 向き変えた時の足踏み
-    * @return なし
-    */
+    /**
+     * @brief 向き変えた時の足踏み
+     * @return なし
+     */
     private void RotateMove()
     {
         if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
@@ -448,7 +448,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 待機モード
      * @return なし
      */
@@ -472,7 +472,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 移動モード
      * @return なし
      */
@@ -499,7 +499,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief ジャンプモード
      * @return なし
      */
@@ -574,7 +574,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 持ち上げられるモード
      * @return なし
      */
@@ -587,7 +587,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 置かれるモード
      * @return なし
      */
@@ -600,7 +600,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 持ち上げるモード
      * @return なし
      */
@@ -632,7 +632,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 置くモード
      * @return なし
      */
@@ -662,7 +662,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief デバッグ用関数
      * @param1 表示したい文字列
      * @return なし
@@ -673,7 +673,7 @@ public class Player : BaseObject
     }
 
 #else
-    /*
+    /**
      * @brief 更新処理
      * @return なし
      */
@@ -713,7 +713,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 通常ブロックの動き
      * @param1 ベクトル
      * @return なし
@@ -806,7 +806,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 物を持ち上げる
      * @return なし
      */
@@ -844,7 +844,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief オブジェクトを持つ処理
      * @param1 持ち上げる対象ぼフィールド座標
      * @return オブジェクトを持つことができるなら true
@@ -879,7 +879,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 物を下す
      * @return なし
      */
@@ -935,7 +935,7 @@ public class Player : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 配列座標の補正
      * @return なし
      */

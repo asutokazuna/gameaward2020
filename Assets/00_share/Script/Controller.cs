@@ -1,4 +1,4 @@
-﻿/*
+﻿/**
  * @file	Controller.cs
  * @brief   入出力装置
  *
@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-/*
+/**
  * @enum 入力種類
  */
 public enum E_INPUT
@@ -45,7 +45,7 @@ public enum E_INPUT
 }
 
 
-/*
+/**
  * @enum 入力モード
  */
 public enum E_INPUT_MODE
@@ -57,7 +57,7 @@ public enum E_INPUT_MODE
 }
 
 
-/*
+/**
  * @enum 入力システム
  */
 public enum E_INPUT_SYSTEM
@@ -68,7 +68,7 @@ public enum E_INPUT_SYSTEM
 
 
 
-/*
+/**
  * @class Controller
  * @brief キーボード、Xboxの入出力
  */
@@ -77,13 +77,12 @@ public class Controller : MonoBehaviour
     /**
      * @class -1～1までの値で取得するボタン
      */
-    [SerializeField]
     private class AxisButton
     {
-        [SerializeField] private float _now_H;
-        [SerializeField] private float _now_V;
-        [SerializeField] private float _old_H;
-        [SerializeField] private float _old_V;
+        private float _now_H;
+        private float _now_V;
+        private float _old_H;
+        private float _old_V;
 
 
         /**
@@ -98,7 +97,6 @@ public class Controller : MonoBehaviour
             _old_V = _now_V;
             _now_H = Input.GetAxis(H);
             _now_V = Input.GetAxis(V);
-            Debug.Log("横軸" + _now_H + "縦軸" + _now_V);
         }
 
 
@@ -114,10 +112,7 @@ public class Controller : MonoBehaviour
                 key == E_INPUT.D_PAD_RIGHT)
             {// 右
                 if (_now_H > sensitivity)
-                {
-                    Debug.Log("ああああああああああ");
                     return true;
-                }
             }
             else if (key == E_INPUT.L_STICK_LEFT || key == E_INPUT.R_STICK_LEFT ||
                 key == E_INPUT.D_PAD_LEFT)
@@ -218,9 +213,9 @@ public class Controller : MonoBehaviour
     [SerializeField] E_INPUT_SYSTEM inputSystem;
 
 
-    [SerializeField] private AxisButton _LStick  = new AxisButton(); //!< Lスティック
-    [SerializeField] private AxisButton _RStick  = new AxisButton(); //!< Rスティック
-    [SerializeField] private AxisButton _DPad    = new AxisButton(); //!< 十字
+    private AxisButton _LStick  = new AxisButton(); //!< Lスティック
+    private AxisButton _RStick  = new AxisButton(); //!< Rスティック
+    private AxisButton _DPad    = new AxisButton(); //!< 十字
 
 
     string[] _name = {
@@ -268,7 +263,7 @@ public class Controller : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 入力
      * @param1 入力モード
      * @param2 ボタン
@@ -288,7 +283,7 @@ public class Controller : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief キーボードでの入力
      * @param1 キーコード
      * @param2 入力モード
@@ -329,7 +324,7 @@ public class Controller : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief ゲームパッドでの入力
      * @param1 ゲームパッド列挙
      * @param2 入力モード
@@ -380,7 +375,7 @@ public class Controller : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 十字キーの取得
      * @param1 入力ボタン
      * @param2 入力モード (まだ未対応)
@@ -412,7 +407,7 @@ public class Controller : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief Lスティックの取得
      * @param1 入力ボタン
      * @param2 入力モード (まだ未対応)
@@ -467,7 +462,7 @@ public class Controller : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief Rスティックの取得
      * @param1 入力ボタン
      * @param2 入力モード (まだ未対応)

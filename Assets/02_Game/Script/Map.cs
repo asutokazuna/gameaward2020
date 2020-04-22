@@ -1,4 +1,4 @@
-﻿/*
+﻿/**
  * @file	Map.cs
  * @brief   フィールドのマップ情報
  *
@@ -23,7 +23,7 @@ using UnityEngine.SceneManagement;
 
 
 
-/*
+/**
  * @enum オブジェクト情報
  */
 public enum E_FIELD_OBJECT
@@ -38,7 +38,7 @@ public enum E_FIELD_OBJECT
 }
 
 
-/*
+/**
  * @brief 一マスあたりの情報
  */
 public struct SquareInfo {
@@ -48,7 +48,7 @@ public struct SquareInfo {
 }
 
 
-/*
+/**
  * @class Map
  */
 public class Map : MonoBehaviour
@@ -84,7 +84,7 @@ public class Map : MonoBehaviour
     public bool                 _gameOver { get; set; } //!< ゲームオーバーフラグ
     public bool                 _gameClear { get; set; }//!< ゲームクリアフラグ
     public int                  _fullWaterBlockCnt;
-    /*
+    /**
      * @brief Awake
      * @return なし
      */
@@ -140,7 +140,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief プレイヤーの移動
      * @return なし
      */
@@ -166,7 +166,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief プレイヤーの回転
      * @return なし
      */
@@ -183,7 +183,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 持ち上げる、又は話す
      * @return なし
      */
@@ -198,7 +198,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief オブジェクトを持ち上げる
      * @param1 自身の座標
      * @param2 持ち上げるオブジェクトの座標
@@ -226,7 +226,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief オブジェクトを置く
      * @param1 持っているオブジェクト情報
      * @param2 置かれる座標
@@ -249,7 +249,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief オブジェクトを落とす
      * @param1 持っているオブジェクト情報
      * @param2 落下座標
@@ -272,7 +272,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief プレイヤーへ追従
      * @param1 プレイヤーが所持しているオブジェクト情報
      * @param2 プレイヤーのオブジェクト座標
@@ -293,7 +293,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 落下ゲームオーバー時のプレイヤーが落ちるまでの座標
      * @param1 座標
      * @return 落下地点
@@ -311,7 +311,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief ゲームオーバー判定
      * @param1 移動先座標
      * @param2 プレイヤーの状態
@@ -340,7 +340,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief ゲームクリア判定
      * @return ゲームクリアなら true
      */
@@ -355,7 +355,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief プレイヤーが移動できない判定
      * @param1 移動先
      * @return 移動できない時 true
@@ -379,7 +379,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 上に登れるか
      * @param1 目的座標
      * @return 登れるなら true を返す
@@ -395,7 +395,7 @@ public class Map : MonoBehaviour
     }
     
 
-    /*
+    /**
      * @brief 下に降りれるか
      * @param1 目的座標
      * @return 降りれるなら true を返す
@@ -411,7 +411,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief プレイヤーがオブジェクトを持てるかの判定
      * @param1 これから持つオブジェクト座標
      * @return オブジェクトを持てるなら true を返す
@@ -435,7 +435,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief プレイヤーがオブジェクトを置けるかの判定
      * @param1 これから置くオブジェクト座標
      * @return オブジェクトを置けるなら true を返す
@@ -455,7 +455,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief オブジェクトの上判定
      * @param1 座標
      * @return 上に行けるなら true を返す
@@ -475,7 +475,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 使用中かどうかの判定
      * @param1 フィールド座標
      * @return 指定のフィールド座標にオブジェクトがあれば true
@@ -488,7 +488,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief ステージフィールドの限界値
      * @param1 配列座標
      * @return ステージの限界値(外)に出る場合、true
@@ -503,7 +503,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief マップの更新
      * @param1 BaseObject obj
      * return なし
@@ -515,7 +515,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief オブジェクト情報のセット
      * @param1 BaseObject obj, int number
      * @return なし
@@ -528,7 +528,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief オブジェクト情報の破棄
      * @param1 座標
      */
@@ -540,7 +540,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief マップ情報と各オブジェクト情報の初期化
      * @return なし
      */
@@ -554,7 +554,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief プレイヤー情報の初期化
      * @return なし
      */
@@ -572,7 +572,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 箱情報の初期化
      * @return なし
      */
@@ -590,7 +590,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 地面情報の初期化
      * @return なし
      */
@@ -608,7 +608,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 水源情報の初期化
      * @return なし
      */
@@ -626,7 +626,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief プレイヤーのソート
      * @return なし
      */
@@ -657,7 +657,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 入れ替えができるかの判定
      * @return 入れ替えが行われるなら true
      */
@@ -683,7 +683,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 方向の修正
      * @return なし
      */
@@ -722,7 +722,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 座補補正用
      * @return なし
      */
@@ -734,7 +734,7 @@ public class Map : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief デバッグ用関数
      * @param1 オブジェクト種
      * @return なし
