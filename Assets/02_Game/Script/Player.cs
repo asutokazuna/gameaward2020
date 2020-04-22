@@ -234,6 +234,7 @@ public class Player : BaseObject
         {// ゲームオーバー(落下)
             _position   = _map.GetFallPos(_position);
             _mode       = E_OBJECT_MODE.FALL;
+            _gameOver   = true;
         }
         else if (_map.isDontMove(_position, _oldPosition) || _lifted == true)
         {// 移動出来ない場合
@@ -569,6 +570,7 @@ public class Player : BaseObject
             {
                 WaitMode();
                 _map._gameOver = true;  // ゲームオーバーやで
+                _gameOver = true;
             });
         }
     }

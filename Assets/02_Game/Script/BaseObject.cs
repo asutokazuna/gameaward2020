@@ -54,6 +54,9 @@ public class BaseObject : MonoBehaviour
     [SerializeField] public Vector3Int          _direct;        //!< 向いてる方向
     [SerializeField] public bool                _lifted;        //!< 何かに持ち上げられいる時 = true
     [SerializeField] protected E_OBJECT_MODE    _mode;          //!< オブジェクトの状態
+    [SerializeField] public bool                _gameOver       //!< ゲームオーバー
+    { get; protected set; }
+
 #if !MODE_MAP
     [SerializeField] public E_FIELD_OBJECT  _haveObj;       //!< 持っているオブジェクト
     [SerializeField] public Vector3         _addPos;        //!< 加算量
@@ -225,6 +228,7 @@ public class BaseObject : MonoBehaviour
             {
                 WaitMode();
                 GameObject.FindGameObjectWithTag("Map").GetComponent<Map>()._gameOver = true;  // ゲームオーバーやで
+                _gameOver = true;
             });
         }
     }
