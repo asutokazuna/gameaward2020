@@ -233,7 +233,6 @@ public class Map : MonoBehaviour
             num = _map[target.x, target.y, target.z]._number;
             _player[num].Lifted(new Vector3Int(pos.x, pos.y + 1, pos.z));
             UpdateMap(_player[num]);
-            Debug.Log(_player[num].name + num + " が持たれた");
             return _player[num];
         }
         return null;
@@ -744,7 +743,7 @@ public class Map : MonoBehaviour
     private void offsetDirect()
     {
         float y = GameObject.FindGameObjectWithTag("MainCamera").transform.localEulerAngles.y;
-        Debug.Log("角度" + y);
+
         if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT))
         {// 右方
             if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(VAL_FIELD_MOVE, 0,  0);

@@ -211,8 +211,8 @@ public class Controller : MonoBehaviour
     }
 
 
-    [Range(0, 1)] [SerializeField] float sensitivity;   // 感度
-    [SerializeField] E_INPUT_SYSTEM inputSystem;        // 入力システム
+    [Range(0, 1)] [SerializeField] float sensitivity = 0;                       // 感度
+    [SerializeField] E_INPUT_SYSTEM inputSystem = E_INPUT_SYSTEM.GAME_PAD;      // 入力システム
 
 
     static private Controller _instance;            //!< 自身のインスタンス
@@ -344,13 +344,11 @@ public class Controller : MonoBehaviour
         if (key == E_INPUT.D_PAD_RIGHT || key == E_INPUT.D_PAD_LEFT ||
             key == E_INPUT.D_PAD_UP || key == E_INPUT.D_PAD_DOWN)
         {// 十字キーの場合
-            Debug.Log("ここ通ってる");
             return isDPad(key, mode);
         }
         else if (key == E_INPUT.L_STICK_RIGHT || key == E_INPUT.L_STICK_LEFT ||
                  key == E_INPUT.L_STICK_UP || key == E_INPUT.L_STICK_DOWN)
         {// Lスティックの場合
-            Debug.Log("ここ通ってる");
             return isLStick(key, mode);
         }
         else if (key == E_INPUT.R_STICK_RIGHT || key == E_INPUT.R_STICK_LEFT ||

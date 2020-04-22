@@ -36,11 +36,11 @@ public enum E_SCENE
 public class SceneMgr : MonoBehaviour
 {
     Controller _input;
-    static private SceneMgr _instance;          //!< 自身のインスタンス
-    [SerializeField] private E_SCENE _nowScene; //!< 今のシーン
-    [SerializeField] private E_SCENE _oldScene; //!< 前のシーン
+    static private SceneMgr _instance;                              //!< 自身のインスタンス
+    [SerializeField] private E_SCENE _nowScene = E_SCENE.TITLE;     //!< 今のシーン
+    [SerializeField] private E_SCENE _oldScene = E_SCENE.TITLE;     //!< 前のシーン
 
-    [SerializeField] private bool _isDebug;     //!< かとしゅん頼む
+    [SerializeField] private bool _isDebug = false;     //!< かとしゅん頼む
 
 
     void Awake()
