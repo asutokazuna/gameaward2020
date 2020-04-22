@@ -50,7 +50,7 @@ public enum E_INPUT
  */
 public enum E_INPUT_MODE
 {
-    BUTTON,       // 押されたら
+    BUTTON,     // 押されたら
     TRIGGER,    // 押した瞬間
     RELEASE,    // 離された瞬間
     REPEAT,     // リピート
@@ -79,10 +79,10 @@ public class Controller : MonoBehaviour
      */
     private class AxisButton
     {
-        private float _now_H;
-        private float _now_V;
-        private float _old_H;
-        private float _old_V;
+        private float _now_H;   //!< 現在の横軸
+        private float _now_V;   //!< 現在の縦軸
+        private float _old_H;   //!< 過去の横軸
+        private float _old_V;   //!< 過去の縦軸
 
 
         /**
@@ -209,8 +209,8 @@ public class Controller : MonoBehaviour
     }
 
 
-    [SerializeField] float sensitivity;
-    [SerializeField] E_INPUT_SYSTEM inputSystem;
+    [Range(0, 1)] [SerializeField] float sensitivity;                // 感度
+    [SerializeField] E_INPUT_SYSTEM inputSystem;    // 入力システム
 
 
     private AxisButton _LStick  = new AxisButton(); //!< Lスティック
@@ -242,15 +242,15 @@ public class Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //DontDestroyOnLoad(this);
+        DontDestroyOnLoad(this);    // 取り合えずここに置いとく
 
         if (sensitivity <= 0)
-        {
+        {// 小さすぎ
             sensitivity = 0.5f; // デフォルト値
         }
         else if (sensitivity > 1)
-        {
-            sensitivity = 1f; // でか過ぎ
+        {// でか過ぎ
+            sensitivity = 1f; // 最大値
         }
     }
 
