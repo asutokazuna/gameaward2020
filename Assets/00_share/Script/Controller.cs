@@ -1,4 +1,4 @@
-﻿/*
+﻿/**
  * @file	Controller.cs
  * @brief   入出力装置
  *
@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-/*
+/**
  * @enum 入力種類
  */
 public enum E_INPUT
@@ -45,19 +45,19 @@ public enum E_INPUT
 }
 
 
-/*
+/**
  * @enum 入力モード
  */
 public enum E_INPUT_MODE
 {
-    BUTTON,       // 押されたら
+    BUTTON,     // 押されたら
     TRIGGER,    // 押した瞬間
     RELEASE,    // 離された瞬間
     REPEAT,     // リピート
 }
 
 
-/*
+/**
  * @enum 入力システム
  */
 public enum E_INPUT_SYSTEM
@@ -68,7 +68,7 @@ public enum E_INPUT_SYSTEM
 
 
 
-/*
+/**
  * @class Controller
  * @brief キーボード、Xboxの入出力
  */
@@ -77,13 +77,12 @@ public class Controller : MonoBehaviour
     /**
      * @class -1～1までの値で取得するボタン
      */
-    [SerializeField]
     private class AxisButton
     {
-        [SerializeField] private float _now_H;
-        [SerializeField] private float _now_V;
-        [SerializeField] private float _old_H;
-        [SerializeField] private float _old_V;
+        private float _now_H;   //!< 現在の横軸
+        private float _now_V;   //!< 現在の縦軸
+        private float _old_H;   //!< 過去の横軸
+        private float _old_V;   //!< 過去の縦軸
 
 
         /**
@@ -98,7 +97,6 @@ public class Controller : MonoBehaviour
             _old_V = _now_V;
             _now_H = Input.GetAxis(H);
             _now_V = Input.GetAxis(V);
-            Debug.Log("横軸" + _now_H + "縦軸" + _now_V);
         }
 
 
@@ -114,10 +112,7 @@ public class Controller : MonoBehaviour
                 key == E_INPUT.D_PAD_RIGHT)
             {// 右
                 if (_now_H > sensitivity)
-                {
-                    Debug.Log("ああああああああああ");
                     return true;
-                }
             }
             else if (key == E_INPUT.L_STICK_LEFT || key == E_INPUT.R_STICK_LEFT ||
                 key == E_INPUT.D_PAD_LEFT)
@@ -214,13 +209,13 @@ public class Controller : MonoBehaviour
     }
 
 
-    [SerializeField] float sensitivity;
-    [SerializeField] E_INPUT_SYSTEM inputSystem;
+    [Range(0, 1)] [SerializeField] float sensitivity;                // 感度
+    [SerializeField] E_INPUT_SYSTEM inputSystem;    // 入力システム
 
 
-    [SerializeField] private AxisButton _LStick  = new AxisButton(); //!< Lスティック
-    [SerializeField] private AxisButton _RStick  = new AxisButton(); //!< Rスティック
-    [SerializeField] private AxisButton _DPad    = new AxisButton(); //!< 十字
+    private AxisButton _LStick  = new AxisButton(); //!< Lスティック
+    private AxisButton _RStick  = new AxisButton(); //!< Rスティック
+    private AxisButton _DPad    = new AxisButton(); //!< 十字
 
 
     string[] _name = {
@@ -247,15 +242,15 @@ public class Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //DontDestroyOnLoad(this);
+        DontDestroyOnLoad(this);    // 取り合えずここに置いとく
 
         if (sensitivity <= 0)
-        {
+        {// 小さすぎ
             sensitivity = 0.5f; // デフォルト値
         }
         else if (sensitivity > 1)
-        {
-            sensitivity = 1f; // でか過ぎ
+        {// でか過ぎ
+            sensitivity = 1f; // 最大値
         }
     }
 
@@ -268,7 +263,7 @@ public class Controller : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 入力
      * @param1 入力モード
      * @param2 ボタン
@@ -284,11 +279,12 @@ public class Controller : MonoBehaviour
         {// ゲームパッド
             return isInputGamePad(key, mode);
         }
-        return false; // エラー、入力装置が機能していない
+        Debug.Log("入力エラー");
+        return false; // エラー
     }
 
 
-    /*
+    /**
      * @brief キーボードでの入力
      * @param1 キーコード
      * @param2 入力モード
@@ -329,7 +325,7 @@ public class Controller : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief ゲームパッドでの入力
      * @param1 ゲームパッド列挙
      * @param2 入力モード
@@ -354,22 +350,22 @@ public class Controller : MonoBehaviour
         }
 
         switch (mode)
-        {// ボタンの押し込み
-            case E_INPUT_MODE.BUTTON :
+        {
+            case E_INPUT_MODE.BUTTON:   // ボタンの押し込み
                 if (Input.GetKey(_name[(int)key]))
                 {
                     return true;
                 }
                 break;
 
-            case E_INPUT_MODE.TRIGGER :
+            case E_INPUT_MODE.TRIGGER:  // 押した瞬間
                 if (Input.GetKeyDown(_name[(int)key]))
                 {
                     return true;
                 }
                 break;
 
-            case E_INPUT_MODE.RELEASE :
+            case E_INPUT_MODE.RELEASE:  // 離した瞬間
                 if (Input.GetKeyUp(_name[(int)key]))
                 {
                     return true;
@@ -380,7 +376,7 @@ public class Controller : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 十字キーの取得
      * @param1 入力ボタン
      * @param2 入力モード (まだ未対応)
@@ -412,7 +408,7 @@ public class Controller : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief Lスティックの取得
      * @param1 入力ボタン
      * @param2 入力モード (まだ未対応)
@@ -467,7 +463,7 @@ public class Controller : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief Rスティックの取得
      * @param1 入力ボタン
      * @param2 入力モード (まだ未対応)

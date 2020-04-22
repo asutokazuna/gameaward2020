@@ -1,4 +1,4 @@
-﻿/*
+﻿/**
  * @file	BaseObject.cs
  * @brief   フィールドに置かれるオブジェクトの基底クラス
  *
@@ -21,7 +21,7 @@ using UnityEngine;
 using DG.Tweening;
 
 
-/*
+/**
  * @enum オブジェクト情報
  */
 public enum E_OBJECT_MODE
@@ -39,7 +39,7 @@ public enum E_OBJECT_MODE
 }
 
 
-/*
+/**
  * @class BaseObject
  * @brief フィールドに置かれるオブジェクトの抽象クラス
  */
@@ -62,7 +62,7 @@ public class BaseObject : MonoBehaviour
 #endif
 
 #if MODE_MAP
-    /*
+    /**
      * @brief オブジェクト情報の初期化
      * @param1 オブジェクト番号
      * @return なし
@@ -81,7 +81,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 初期化
      * @return なし
      */
@@ -91,7 +91,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 更新処理
      * @return なし
      */
@@ -101,7 +101,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief オブジェクトの移動
      * @return なし
      */
@@ -111,7 +111,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief オブジェクトの追従
      * @param1 目的座標
      * @return なし
@@ -134,7 +134,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief  持ち上げられる
      * @param1 ターゲット座標
      * @return なし
@@ -150,7 +150,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief  置かれる
      * @param1 ターゲット座標
      * @return なし
@@ -166,7 +166,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 待機モード
      * @return なし
      */
@@ -176,7 +176,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief ジャンプモード
      * @return なし
      */
@@ -230,7 +230,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 移動後の座標の調整
      * @return なし
      */
@@ -246,7 +246,7 @@ public class BaseObject : MonoBehaviour
 
 
 #else
-    /*
+    /**
      * @brief 初期化
      * @return なし
      */
@@ -260,7 +260,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 初期化
      * @return なし
      */
@@ -270,7 +270,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 更新処理
      * @return なし
      */
@@ -280,7 +280,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief ゲームオーバー処理
      * @return なし
      */
@@ -295,7 +295,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief オブジェクトが何かしらの行動をとれるか
      * @return 行動できるのなら true
      */
@@ -312,7 +312,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief オブジェクトを動かす
      * @return なし
      */
@@ -322,7 +322,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 移動量の算出
      * @return なし
      */
@@ -335,7 +335,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 物を持ち上げる、下す
      * @return なし
      */
@@ -356,7 +356,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 物を持ち上げる
      * @return なし
      */
@@ -366,7 +366,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief  持ち上げられる
      * @param1 ターゲット座標
      * @return なし
@@ -387,7 +387,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 物を下す
      * @return なし
      */
@@ -397,7 +397,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 置く
      * @param1 ターゲット座標
      * @return なし
@@ -418,7 +418,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief オブジェクトの追従
      * @return なし
      */
@@ -436,7 +436,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 配列座標の補正
      * @return なし
      */
@@ -452,7 +452,7 @@ public class BaseObject : MonoBehaviour
 #endif
 
 
-    /*
+    /**
      * @brief 向いてる方向の設定
      * @param1 目的座標
      * @param2 過去座標
@@ -484,7 +484,7 @@ public class BaseObject : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 向いてる方向の初期化
      * @param1 方向
      * @return なし

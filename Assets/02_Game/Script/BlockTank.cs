@@ -1,4 +1,4 @@
-﻿/*
+﻿/**
  * @file	BlockTank.cs
  * @brief   水槽ブロックの管理
  *
@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-/*
+/**
  * @class 水槽ブロック
  * @brief 水の溜まり判定
  */
@@ -40,7 +40,7 @@ public class BlockTank : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 初期化
      * @return なし
      */
@@ -111,7 +111,7 @@ public class BlockTank : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 水の加算する関数
      * return なし
      */
@@ -150,7 +150,7 @@ public class BlockTank : BaseObject
     }
 
 
-    /*
+    /**
      * @brief 水が入ったブロックとの判定
      * @return なし
      */
