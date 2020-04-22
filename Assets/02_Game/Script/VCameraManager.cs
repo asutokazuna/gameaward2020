@@ -37,6 +37,7 @@ public class VCameraManager : MonoBehaviour
     }
     void Update()
     {
+        _gameClear = GameObject.FindWithTag("Map").GetComponent<Map>()._gameClear; ;
 
         //!< Fキーで起動（デバッグ）
         if (Input.GetKeyDown(KeyCode.F))
