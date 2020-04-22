@@ -8,7 +8,9 @@ public class manager : MonoBehaviour
     void Start()
     {
         bool _isDebug;
-        _isDebug = GameObject.Find("DebugManager").GetComponent<DebugManager>()._isDebug;
+
+        _isDebug = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().isDebug();
+
         if(_isDebug)
         {
             this.GetComponent<MeshRenderer>().enabled = true;

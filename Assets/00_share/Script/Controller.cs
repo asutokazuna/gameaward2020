@@ -98,6 +98,7 @@ public class Controller : MonoBehaviour
             _old_V = _now_V;
             _now_H = Input.GetAxis(H);
             _now_V = Input.GetAxis(V);
+            //Debug.Log("横軸 = " + _now_H + "   縦軸" + _now_V);
         }
 
 
@@ -210,8 +211,8 @@ public class Controller : MonoBehaviour
     }
 
 
-    [Range(0, 1)] [SerializeField] float sensitivity;   // 感度
-    [SerializeField] E_INPUT_SYSTEM inputSystem;        // 入力システム
+    [Range(0, 1)] [SerializeField] float sensitivity = 0;                       // 感度
+    [SerializeField] E_INPUT_SYSTEM inputSystem = E_INPUT_SYSTEM.GAME_PAD;      // 入力システム
 
 
     static private Controller _instance;            //!< 自身のインスタンス
@@ -352,7 +353,7 @@ public class Controller : MonoBehaviour
         }
         else if (key == E_INPUT.R_STICK_RIGHT || key == E_INPUT.R_STICK_LEFT ||
                  key == E_INPUT.R_STICK_UP || key == E_INPUT.R_STICK_DOWN)
-        {// Lスティックの場合
+        {// Rスティックの場合
             return isRStick(key, mode);
         }
 
