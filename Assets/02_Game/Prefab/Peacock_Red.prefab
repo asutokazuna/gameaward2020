@@ -4920,7 +4920,7 @@ GameObject:
   - component: {fileID: 7838810763184735818}
   m_Layer: 0
   m_Name: Peacock_Red
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4974,6 +4974,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b67657bb30b6b0147a9e882a796c28b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerState: 0
 --- !u!114 &7838810763184735818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4986,20 +4987,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a130fe2df69a644480f9eaab76571a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MAX_ANIM_WALK: 60
   _myObject: 0
+  _myNumber: 0
   _position: {x: 0, y: 0, z: 0}
   _oldPosition: {x: 0, y: 0, z: 0}
-  _direct: {x: 0, y: 0, z: 0}
-  _haveObj: 0
-  _lifted: 0
-  _fullWater: 0
   _nextPos: {x: 0, y: 0, z: 0}
-  _nowMove: 0
-  _addPos: {x: 0, y: 0, z: 0}
-  _animCnt: 0
-  _havePos: {x: 0, y: 0, z: 0}
-  _playerAnimation: {fileID: 0}
+  _direct: {x: 0, y: 0, z: 0}
+  _lifted: 0
+  _mode: 0
+  _animation: {fileID: 0}
 --- !u!1 &7838810763187787983
 GameObject:
   m_ObjectHideFlags: 0
