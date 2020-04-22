@@ -1,16 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ClearManager : MonoBehaviour
 {
     public bool ClearSwitch;
     public float WaitTime;
+    public float DelayTime;
 
     private Map FlgScript;
     private Clear ClearScript;
     private bool _isFirst;
     private float _timer;
+    private float _changeDelay;
 
     private GameObject ParticleLeft;
     private GameObject ParticleRight;
@@ -23,6 +26,7 @@ public class ClearManager : MonoBehaviour
         ClearScript = GameObject.Find("Clear").GetComponent<Clear>();
         _isFirst = true;
         _timer = WaitTime;
+        _changeDelay = DelayTime;
 
         ParticleLeft = GameObject.Find("ParticleLeft");
         ParticleRight = GameObject.Find("ParticleRight");
@@ -55,12 +59,25 @@ public class ClearManager : MonoBehaviour
                 _timer -= Time.deltaTime;
             }
         }
-       
+
+        if (ClearScript._finishClear)
+        {
+            if (_changeDelay <= 0.0f || Input.anyKey)
+            {
+                //シーン遷移
+                SceneManager.LoadScene("SampleScene");
+            }
+            else
+            {
+                _changeDelay -= Time.deltaTime;
+            }
+        }
+
     }
 
     private void SetClear()
     {
-        if (_isFirst)
+        if (_isFirst && !FlgScript._gameOver)
         {
             ClearScript.StartClear();
             _isFirst = false;
