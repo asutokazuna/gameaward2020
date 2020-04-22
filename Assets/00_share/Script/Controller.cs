@@ -50,7 +50,7 @@ public enum E_INPUT
  */
 public enum E_INPUT_MODE
 {
-    PUSH,       // 押されたら
+    BUTTON,       // 押されたら
     TRIGGER,    // 押した瞬間
     RELEASE,    // 離された瞬間
     REPEAT,     // リピート
@@ -74,9 +74,154 @@ public enum E_INPUT_SYSTEM
  */
 public class Controller : MonoBehaviour
 {
+    /**
+     * @class -1～1までの値で取得するボタン
+     */
+    [SerializeField]
+    private class AxisButton
+    {
+        [SerializeField] private float _now_H;
+        [SerializeField] private float _now_V;
+        [SerializeField] private float _old_H;
+        [SerializeField] private float _old_V;
+
+
+        /**
+         * @brief 更新処理
+         * @param1 横軸
+         * @param1 縦軸
+         * @return なし
+         */
+        public void Update(string H, string V)
+        {
+            _old_H = _now_H;
+            _old_V = _now_V;
+            _now_H = Input.GetAxis(H);
+            _now_V = Input.GetAxis(V);
+            Debug.Log("横軸" + _now_H + "縦軸" + _now_V);
+        }
+
+
+        /**
+         * @brief 傾けていれば
+         * @param1 方向
+         * @param2 感度
+         * @return 反応したら true
+         */
+        public bool isButton(E_INPUT key, float sensitivity)
+        {
+            if (key == E_INPUT.L_STICK_RIGHT || key == E_INPUT.R_STICK_RIGHT ||
+                key == E_INPUT.D_PAD_RIGHT)
+            {// 右
+                if (_now_H > sensitivity)
+                {
+                    Debug.Log("ああああああああああ");
+                    return true;
+                }
+            }
+            else if (key == E_INPUT.L_STICK_LEFT || key == E_INPUT.R_STICK_LEFT ||
+                key == E_INPUT.D_PAD_LEFT)
+            {// 左
+                if (_now_H < -sensitivity)
+                    return true;
+            }
+            else if (key == E_INPUT.L_STICK_UP || key == E_INPUT.R_STICK_UP ||
+                key == E_INPUT.D_PAD_UP)
+            {// 上
+                if (_now_V > sensitivity)
+                    return true;
+            }
+            else if (key == E_INPUT.L_STICK_DOWN || key == E_INPUT.R_STICK_DOWN ||
+                key == E_INPUT.D_PAD_DOWN)
+            {// 下
+                if (_now_V < -sensitivity)
+                    return true;
+            }
+            return false;
+        }
+
+
+        /**
+         * @brief トリガー処理
+         * @param1 方向
+         * @param2 感度
+         * @return 反応したら true
+         */
+        public bool isTrigger(E_INPUT key, float sensitivity)
+        {
+            if (key == E_INPUT.L_STICK_RIGHT || key == E_INPUT.R_STICK_RIGHT ||
+                key == E_INPUT.D_PAD_RIGHT)
+            {// 右
+                if (_now_H > sensitivity && _old_H <= sensitivity)
+                    return true;
+            }
+            else if (key == E_INPUT.L_STICK_LEFT || key == E_INPUT.R_STICK_LEFT ||
+                key == E_INPUT.D_PAD_LEFT)
+            {// 左
+                if (_now_H < -sensitivity && _old_H >= -sensitivity)
+                    return true;
+            }
+            else if (key == E_INPUT.L_STICK_UP || key == E_INPUT.R_STICK_UP ||
+                key == E_INPUT.D_PAD_UP)
+            {// 上
+                if (_now_V > sensitivity && _old_V <= sensitivity)
+                    return true;
+            }
+            else if (key == E_INPUT.L_STICK_DOWN || key == E_INPUT.R_STICK_DOWN ||
+                key == E_INPUT.D_PAD_DOWN)
+            {// 下
+                if (_now_V < -sensitivity && _old_V >= -sensitivity)
+                    return true;
+            }
+            return false;
+        }
+
+        
+        /**
+         * @brief トリガー処理
+         * @param1 方向
+         * @param2 感度
+         * @return 反応したら true
+         */
+        public bool isRelease(E_INPUT key, float sensitivity)
+        {
+            if (key == E_INPUT.L_STICK_RIGHT || key == E_INPUT.R_STICK_RIGHT ||
+                key == E_INPUT.D_PAD_RIGHT)
+            {// 右
+                if (_now_H <= sensitivity && _old_H > sensitivity)
+                    return true;
+            }
+            else if (key == E_INPUT.L_STICK_LEFT || key == E_INPUT.R_STICK_LEFT ||
+                key == E_INPUT.D_PAD_LEFT)
+            {// 左
+                if (_now_H >= -sensitivity && _old_H < -sensitivity)
+                    return true;
+            }
+            else if (key == E_INPUT.L_STICK_UP || key == E_INPUT.R_STICK_UP ||
+                key == E_INPUT.D_PAD_UP)
+            {// 上
+                if (_now_V <= sensitivity && _old_V > sensitivity)
+                    return true;
+            }
+            else if (key == E_INPUT.L_STICK_DOWN || key == E_INPUT.R_STICK_DOWN ||
+                key == E_INPUT.D_PAD_DOWN)
+            {// 下
+                if (_now_V >= -sensitivity && _old_V < -sensitivity)
+                    return true;
+            }
+            return false;
+        }
+    }
+
 
     [SerializeField] float sensitivity;
     [SerializeField] E_INPUT_SYSTEM inputSystem;
+
+
+    [SerializeField] private AxisButton _LStick  = new AxisButton(); //!< Lスティック
+    [SerializeField] private AxisButton _RStick  = new AxisButton(); //!< Rスティック
+    [SerializeField] private AxisButton _DPad    = new AxisButton(); //!< 十字
+
 
     string[] _name = {
         "joystick button 0",        // A
@@ -102,6 +247,8 @@ public class Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //DontDestroyOnLoad(this);
+
         if (sensitivity <= 0)
         {
             sensitivity = 0.5f; // デフォルト値
@@ -115,7 +262,9 @@ public class Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        _LStick.Update(_name[(int)E_INPUT.L_STICK_RIGHT], _name[(int)E_INPUT.L_STICK_UP]);
+        _RStick.Update(_name[(int)E_INPUT.R_STICK_RIGHT], _name[(int)E_INPUT.R_STICK_UP]);
+        _DPad.Update(_name[(int)E_INPUT.D_PAD_RIGHT], _name[(int)E_INPUT.D_PAD_UP]);
     }
 
 
@@ -164,18 +313,18 @@ public class Controller : MonoBehaviour
         }
         else if (key == E_INPUT.B)
         {// Bボタン
-            if (mode == E_INPUT_MODE.PUSH) return Input.GetKey(KeyCode.Space);
+            if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.Space);
             if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.Space);
             if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.Space);
         }
         else if (key == E_INPUT.LB)
         {// LBボタン
-            if (mode == E_INPUT_MODE.PUSH) return Input.GetKey(KeyCode.LeftShift);
+            if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.LeftShift);
             if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.LeftShift);
             if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.LeftShift);
         }
 
-
+        Debug.Log("ゲームパッドで設定されてないボタンです");
         return false;   // ゲームパッドで設定されてない値
     }
 
@@ -206,7 +355,7 @@ public class Controller : MonoBehaviour
 
         switch (mode)
         {// ボタンの押し込み
-            case E_INPUT_MODE.PUSH :
+            case E_INPUT_MODE.BUTTON :
                 if (Input.GetKey(_name[(int)key]))
                 {
                     return true;
@@ -240,30 +389,22 @@ public class Controller : MonoBehaviour
     private bool isDPad(E_INPUT key, E_INPUT_MODE mode)
     {
         if (inputSystem == E_INPUT_SYSTEM.KEYBOARD)
-        {
+        {// キーボード
 
         }
         else if (inputSystem == E_INPUT_SYSTEM.GAME_PAD)
-        {
-            if (key == E_INPUT.D_PAD_LEFT)
-            {// 左
-                if (Input.GetAxis(_name[(int)key]) < -sensitivity)
-                    return true;
+        {// ゲームパッド
+            if (mode == E_INPUT_MODE.BUTTON)
+            {
+                return _DPad.isButton(key, sensitivity);
             }
-            else if (key == E_INPUT.D_PAD_RIGHT)
-            {// 右
-                if (Input.GetAxis(_name[(int)key]) > sensitivity)
-                    return true;
+            else if (mode == E_INPUT_MODE.TRIGGER)
+            {
+                return _DPad.isTrigger(key, sensitivity);
             }
-            else if (key == E_INPUT.D_PAD_UP)
-            {// 上
-                if (Input.GetAxis(_name[(int)key]) > sensitivity)
-                    return true;
-            }
-            else if (key == E_INPUT.D_PAD_DOWN)
-            {// 下
-                if (Input.GetAxis(_name[(int)key]) < -sensitivity)
-                    return true;
+            else if (mode == E_INPUT_MODE.RELEASE)
+            {
+                return _DPad.isRelease(key, sensitivity);
             }
         }
 
@@ -280,53 +421,45 @@ public class Controller : MonoBehaviour
     private bool isLStick(E_INPUT key, E_INPUT_MODE mode)
     {
         if (inputSystem == E_INPUT_SYSTEM.KEYBOARD)
-        {
+        {// キーボード
             if (key == E_INPUT.L_STICK_LEFT)
             {
-                if (mode == E_INPUT_MODE.PUSH) return Input.GetKey(KeyCode.A);
+                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.A);
                 if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.A);
                 if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.A);
             }
             if (key == E_INPUT.L_STICK_RIGHT)
             {
-                if (mode == E_INPUT_MODE.PUSH) return Input.GetKey(KeyCode.D);
+                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.D);
                 if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.D);
                 if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.D);
             }
             if (key == E_INPUT.L_STICK_UP)
             {
-                if (mode == E_INPUT_MODE.PUSH) return Input.GetKey(KeyCode.W);
+                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.W);
                 if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.W);
                 if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.W);
             }
             if (key == E_INPUT.L_STICK_DOWN)
             {
-                if (mode == E_INPUT_MODE.PUSH) return Input.GetKey(KeyCode.S);
+                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.S);
                 if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.S);
                 if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.S);
             }
         }
         else if (inputSystem == E_INPUT_SYSTEM.GAME_PAD)
-        {
-            if (key == E_INPUT.L_STICK_RIGHT)
-            {// 右
-                if (Input.GetAxis(_name[(int)key]) > sensitivity)
-                    return true;
+        {// ゲームパッド
+            if (mode == E_INPUT_MODE.BUTTON)
+            {
+                return _LStick.isButton(key, sensitivity);
             }
-            else if (key == E_INPUT.L_STICK_LEFT)
-            {// 左
-                if (Input.GetAxis(_name[(int)key]) < -sensitivity)
-                    return true;
+            else if (mode == E_INPUT_MODE.TRIGGER)
+            {
+                return _LStick.isTrigger(key, sensitivity);
             }
-            else if (key == E_INPUT.L_STICK_UP)
-            {// 上
-                if (Input.GetAxis(_name[(int)key]) > sensitivity)
-                    return true;
-            }
-            else if (key == E_INPUT.L_STICK_DOWN)
-            {// 下
-                if (Input.GetAxis(_name[(int)key]) < -sensitivity)
-                    return true;
+            else if (mode == E_INPUT_MODE.RELEASE)
+            {
+                return _LStick.isRelease(key, sensitivity);
             }
         }
 
@@ -343,53 +476,45 @@ public class Controller : MonoBehaviour
     private bool isRStick(E_INPUT key, E_INPUT_MODE mode)
     {
         if (inputSystem == E_INPUT_SYSTEM.KEYBOARD)
-        {
+        {// キーボード
             if (key == E_INPUT.R_STICK_LEFT)
             {
-                if (mode == E_INPUT_MODE.PUSH) return Input.GetKey(KeyCode.LeftArrow);
+                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.LeftArrow);
                 if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.LeftArrow);
                 if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.LeftArrow);
             }
             if (key == E_INPUT.R_STICK_RIGHT)
             {
-                if (mode == E_INPUT_MODE.PUSH) return Input.GetKey(KeyCode.RightArrow);
+                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.RightArrow);
                 if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.RightArrow);
                 if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.RightArrow);
             }
             if (key == E_INPUT.R_STICK_UP)
             {
-                if (mode == E_INPUT_MODE.PUSH) return Input.GetKey(KeyCode.UpArrow);
+                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.UpArrow);
                 if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.UpArrow);
                 if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.UpArrow);
             }
             if (key == E_INPUT.R_STICK_DOWN)
             {
-                if (mode == E_INPUT_MODE.PUSH) return Input.GetKey(KeyCode.DownArrow);
+                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.DownArrow);
                 if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.DownArrow);
                 if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.DownArrow);
             }
         }
         else if (inputSystem == E_INPUT_SYSTEM.GAME_PAD)
-        {
-            if (key == E_INPUT.R_STICK_RIGHT)
-            {// 右
-                if (Input.GetAxis(_name[(int)key]) > sensitivity)
-                    return true;
+        {// ゲームパッド
+            if (mode == E_INPUT_MODE.BUTTON)
+            {
+                return _RStick.isButton(key, sensitivity);
             }
-            else if (key == E_INPUT.R_STICK_LEFT)
-            {// 左
-                if (Input.GetAxis(_name[(int)key]) < -sensitivity)
-                    return true;
+            else if (mode == E_INPUT_MODE.TRIGGER)
+            {
+                return _RStick.isTrigger(key, sensitivity);
             }
-            else if (key == E_INPUT.R_STICK_UP)
-            {// 上
-                if (Input.GetAxis(_name[(int)key]) > sensitivity)
-                    return true;
-            }
-            else if (key == E_INPUT.R_STICK_DOWN)
-            {// 下
-                if (Input.GetAxis(_name[(int)key]) < -sensitivity)
-                    return true;
+            else if (mode == E_INPUT_MODE.RELEASE)
+            {
+                return _RStick.isRelease(key, sensitivity);
             }
         }
         return false;

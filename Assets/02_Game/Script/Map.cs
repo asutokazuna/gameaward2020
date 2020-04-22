@@ -91,7 +91,7 @@ public class Map : MonoBehaviour
     {
         _map        = new SquareInfo[MAX_OBJECT, MAX_OBJECT, MAX_OBJECT];
         _gameOver   = false;
-        _input      = GameObject.FindGameObjectWithTag("Map").GetComponent<Controller>();               // コンポーネントの取得
+        _input      = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();               // コンポーネントの取得
     }
 
 
@@ -139,7 +139,7 @@ public class Map : MonoBehaviour
             !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT) &&
             !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP) &&
             !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN) ||
-            _input.isInput(E_INPUT_MODE.PUSH, E_INPUT.LB))
+            _input.isInput(E_INPUT_MODE.BUTTON, E_INPUT.LB))
         {
             return;
         }
@@ -160,7 +160,7 @@ public class Map : MonoBehaviour
      */
     private void RotateObject()
     {
-        if (!_input.isInput(E_INPUT_MODE.PUSH, E_INPUT.LB)) return;
+        if (!_input.isInput(E_INPUT_MODE.BUTTON, E_INPUT.LB)) return;
 
         for (int n = 0; n < _playerCnt; n++)
         {

@@ -67,7 +67,7 @@ public class Player : BaseObject
         _haveObject = new SquareInfo();
         _map        = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>();                      // コンポーネントの取得
         _mgr        = GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>();  // コンポーネントの取得
-        _input      = GameObject.FindGameObjectWithTag("Map").GetComponent<Controller>();               // コンポーネントの取得
+        _input      = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();             // コンポーネントの取得
 
         // 座標の補正
         _position = _oldPosition = new Vector3Int(
@@ -127,7 +127,7 @@ public class Player : BaseObject
             return _direct;
         }
 
-        if (_input.isInput(E_INPUT_MODE.PUSH, E_INPUT.LB))
+        if (_input.isInput(E_INPUT_MODE.BUTTON, E_INPUT.LB))
         {// 回転モードかのチェック
             _mode = E_OBJECT_MODE.ROTATE;
         }
