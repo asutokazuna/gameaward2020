@@ -279,7 +279,8 @@ public class Controller : MonoBehaviour
         {// ゲームパッド
             return isInputGamePad(key, mode);
         }
-        return false; // エラー、入力装置が機能していない
+        Debug.Log("入力エラー");
+        return false; // エラー
     }
 
 
@@ -349,22 +350,22 @@ public class Controller : MonoBehaviour
         }
 
         switch (mode)
-        {// ボタンの押し込み
-            case E_INPUT_MODE.BUTTON :
+        {
+            case E_INPUT_MODE.BUTTON:   // ボタンの押し込み
                 if (Input.GetKey(_name[(int)key]))
                 {
                     return true;
                 }
                 break;
 
-            case E_INPUT_MODE.TRIGGER :
+            case E_INPUT_MODE.TRIGGER:  // 押した瞬間
                 if (Input.GetKeyDown(_name[(int)key]))
                 {
                     return true;
                 }
                 break;
 
-            case E_INPUT_MODE.RELEASE :
+            case E_INPUT_MODE.RELEASE:  // 離した瞬間
                 if (Input.GetKeyUp(_name[(int)key]))
                 {
                     return true;
