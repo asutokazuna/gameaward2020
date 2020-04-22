@@ -74,6 +74,7 @@ public class Map : MonoBehaviour
     public BlockTank[]          _waterBlock;            //!< 水槽オブジェクト
     public Ground[]             _ground;                //!< 地面ブロック
     public WaterSourceBlock[]   _waterSource;           //!< 水源ブロック
+    public PlayerAnimation      _animation;             //!< プレイヤーのアニメーション
     [SerializeField] int        _playerCnt;             //!< プレイヤーカウント
     [SerializeField] int        _waterBlockCnt;         //!< 水槽カウント
     [SerializeField] int        _groundCnt;             //!< 地面カウント
@@ -136,6 +137,13 @@ public class Map : MonoBehaviour
         {
             if (_player[n]._isMove)
             {// まだ移動中のプレイヤーがいれば、操作を受け付けない
+                return;
+            }
+        }
+        foreach (Player obj in _player)
+        {// まだアニメーション中のプレイヤーがいれば、操作を受け付けない
+            if (!obj.isAnim())
+            {
                 return;
             }
         }
