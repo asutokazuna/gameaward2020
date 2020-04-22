@@ -3,7 +3,8 @@
  * @brief   入出力装置
  *
  * @author	Kota Nakagami
- * @data    2020/04/21(水)   クラス作成
+ * @data    2020/04/21(火)   クラス作成
+ * @data    2020/04/22(水)   スティック、十字キーのトリガー、リリースの実装
  *
  * @version	1.00
  */
@@ -209,10 +210,11 @@ public class Controller : MonoBehaviour
     }
 
 
-    [Range(0, 1)] [SerializeField] float sensitivity;                // 感度
-    [SerializeField] E_INPUT_SYSTEM inputSystem;    // 入力システム
+    [Range(0, 1)] [SerializeField] float sensitivity;   // 感度
+    [SerializeField] E_INPUT_SYSTEM inputSystem;        // 入力システム
 
 
+    static private Controller _instance;            //!< 自身のインスタンス
     private AxisButton _LStick  = new AxisButton(); //!< Lスティック
     private AxisButton _RStick  = new AxisButton(); //!< Rスティック
     private AxisButton _DPad    = new AxisButton(); //!< 十字
@@ -239,19 +241,24 @@ public class Controller : MonoBehaviour
     };
 
 
+    void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {
-        DontDestroyOnLoad(this);    // 取り合えずここに置いとく
 
-        if (sensitivity <= 0)
-        {// 小さすぎ
-            sensitivity = 0.5f; // デフォルト値
-        }
-        else if (sensitivity > 1)
-        {// でか過ぎ
-            sensitivity = 1f; // 最大値
-        }
     }
 
     // Update is called once per frame
@@ -516,3 +523,6 @@ public class Controller : MonoBehaviour
         return false;
     }
 }
+
+
+// EOF
