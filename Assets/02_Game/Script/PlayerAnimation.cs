@@ -33,6 +33,11 @@ public class PlayerAnimation : MonoBehaviour
         E_JUMP,
         E_JUMP_CHARA,
         E_JUMP_BOX,
+        E_WAIT_TP,
+        E_WAIT_OVER_BOX,
+        E_WAIT_TP_BOX,
+        E_WAIT_OVER_CHARA,
+        E_WAIT_TP_CHARA,
 
         E_NONE
     };

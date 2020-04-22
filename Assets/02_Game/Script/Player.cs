@@ -128,11 +128,6 @@ public class Player : BaseObject
             return _direct;
         }
 
-        if (_input.isInput(E_INPUT_MODE.BUTTON, E_INPUT.LB))
-        {// 回転モードかのチェック
-            _mode = E_OBJECT_MODE.ROTATE;
-        }
-
         float y = GameObject.FindGameObjectWithTag("MainCamera").transform.localEulerAngles.y;
 
         if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT))
@@ -142,6 +137,7 @@ public class Player : BaseObject
             else if (y > 150 && y < 210)                    _direct = new Vector3Int( -1, 0,  0);   // -90
             else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0, -1);   // 180
             _isMove = true;
+            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
             offsetRotate(_direct);
         }
         else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT))
@@ -151,6 +147,7 @@ public class Player : BaseObject
             else if (y > 150 && y < 210)                    _direct = new Vector3Int(  1, 0,  0);   //  90
             else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0,  1);   //   0
             _isMove = true;
+            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
             offsetRotate(_direct);
         }
         else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
@@ -160,6 +157,7 @@ public class Player : BaseObject
             else if (y > 150 && y < 210)                    _direct = new Vector3Int(  0, 0, -1);   // 180
             else if (y > 60 && y < 120)                     _direct = new Vector3Int(  1, 0,  0);   //  90
             _isMove = true;
+            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
             offsetRotate(_direct);
         }
         else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
@@ -169,6 +167,7 @@ public class Player : BaseObject
             else if (y > 150 && y < 210)                    _direct = new Vector3Int(  0, 0,  1);   //   0
             else if (y > 60 && y < 120)                     _direct = new Vector3Int( -1, 0,  0);   // -90
             _isMove = true;
+            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
             offsetRotate(_direct);
         }
         if (_mode == E_OBJECT_MODE.ROTATE)
@@ -661,6 +660,16 @@ public class Player : BaseObject
                 WaitMode();
             });
         }
+    }
+
+
+    /*
+    * @brief アニメーション中かどうかの判定
+    * @return _animation.AnimFinish
+    */
+    public bool isAnim()
+    {
+        return _animation.AnimFinish;
     }
 
 
