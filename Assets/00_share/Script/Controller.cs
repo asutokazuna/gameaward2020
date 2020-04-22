@@ -98,6 +98,7 @@ public class Controller : MonoBehaviour
             _old_V = _now_V;
             _now_H = Input.GetAxis(H);
             _now_V = Input.GetAxis(V);
+            //Debug.Log("横軸 = " + _now_H + "   縦軸" + _now_V);
         }
 
 
@@ -343,16 +344,18 @@ public class Controller : MonoBehaviour
         if (key == E_INPUT.D_PAD_RIGHT || key == E_INPUT.D_PAD_LEFT ||
             key == E_INPUT.D_PAD_UP || key == E_INPUT.D_PAD_DOWN)
         {// 十字キーの場合
+            Debug.Log("ここ通ってる");
             return isDPad(key, mode);
         }
         else if (key == E_INPUT.L_STICK_RIGHT || key == E_INPUT.L_STICK_LEFT ||
                  key == E_INPUT.L_STICK_UP || key == E_INPUT.L_STICK_DOWN)
         {// Lスティックの場合
+            Debug.Log("ここ通ってる");
             return isLStick(key, mode);
         }
         else if (key == E_INPUT.R_STICK_RIGHT || key == E_INPUT.R_STICK_LEFT ||
                  key == E_INPUT.R_STICK_UP || key == E_INPUT.R_STICK_DOWN)
-        {// Lスティックの場合
+        {// Rスティックの場合
             return isRStick(key, mode);
         }
 

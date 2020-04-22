@@ -22,9 +22,9 @@ using UnityEngine.SceneManagement;
  */
 public enum E_SCENE
 {
-    TITLE = 0,
-    STAGE_SELECT = 1,
-    GAME = 2,
+    TITLE           = 0,
+    STAGE_SELECT    = 1,
+    GAME            = 2,
 }
 
 
@@ -39,6 +39,8 @@ public class SceneMgr : MonoBehaviour
     static private SceneMgr _instance;          //!< 自身のインスタンス
     [SerializeField] private E_SCENE _nowScene; //!< 今のシーン
     [SerializeField] private E_SCENE _oldScene; //!< 前のシーン
+
+    [SerializeField] private bool _isDebug;     //!< かとしゅん頼む
 
 
     void Awake()
@@ -73,7 +75,6 @@ public class SceneMgr : MonoBehaviour
     {
         if (_oldScene == _nowScene)
         {// シーンの切り替えが発生してないで
-            Debug.Log("弾き返していくぅ");
             return;
         }
 
@@ -81,4 +82,11 @@ public class SceneMgr : MonoBehaviour
 
         SceneManager.LoadScene((int)_nowScene);
     }
+
+
+    public bool isDebug()
+    {
+        return _isDebug;
+    }
+
 }
