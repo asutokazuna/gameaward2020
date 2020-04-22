@@ -24,56 +24,107 @@ public class VCameraManager : MonoBehaviour
     //Map _mapScript; //!< クリア状態取得オブジェクト
 
     bool _gameClear; //!< クリア状態
+    bool _gameOver; //!< ゲームオーバー状態
+    bool _systemflg;
     int _cnt = 0;
+    int _listCnt;//!<リストの要素数カウント
     bool _componentFlg = false;
-    GameObject gameObject; //!< プレイヤー
-
+    List<GameObject> _gameObjectOver; //!< フォーカスオブジェクト
+    GameObject _gameObjectPlayer;
+    Vector3 CameraPos;
     void Start()
     {
-        //!< タグだと個別フォーカスできないかも？
-        gameObject = GameObject.FindGameObjectWithTag("Player");
+        _gameObjectPlayer = GameObject.FindGameObjectWithTag("Player");//!< タグだと個別フォーカスできないかも？
+
         //!< クリア状態取得
-        _gameClear = GameObject.FindWithTag("Map").GetComponent<Map>()._gameClear; ;
+        _gameClear = GameObject.FindWithTag("Map").GetComponent<Map>()._gameClear;
+        _gameOver = false;
+
+        CameraPos = vcamera.Follow.position;
     }
     void Update()
     {
-        _gameClear = GameObject.FindWithTag("Map").GetComponent<Map>()._gameClear; ;
+        GameClear();
+        GameOver();
 
-        //!< Fキーで起動（デバッグ）
-        if (Input.GetKeyDown(KeyCode.F))
+      
+    }
+
+    void GameClear()
+    {
+        _gameClear = GameObject.FindWithTag("Map").GetComponent<Map>()._gameClear;
+
+        if (_gameClear && !_systemflg)
         {
-            vcamera.Priority = 100; //!< 優先度変化？よくわからん
-
-            //!< 有効化・無効化
+            vcamera.Priority = 100;//!< 優先度変化？よくわからん
+            // 有効化・無効化
             GetComponent<CinemachineVirtualCamera>().enabled =
                 !GetComponent<CinemachineVirtualCamera>().enabled;//カメラ追跡のオンオフ
+            _systemflg = true;
             _componentFlg = !_componentFlg;
+            /*
+            //vcamera.Follow = _gameObjectPlayer.transform;//追跡対象の設定
+            vcamera.LookAt = _gameObjectPlayer.transform;//追跡対象の設定
+            CameraPos.x -= _gameObjectPlayer.transform.position.x;
+            CameraPos.y -= _gameObjectPlayer.transform.position.y;
+            CameraPos.z -= _gameObjectPlayer.transform.position.z;
 
+            CameraPos.x /= 30;
+            CameraPos.y /= 30;
+            CameraPos.z /= 30;
+            */
         }
-        if (_componentFlg)
+        else if (_gameClear && _systemflg)  
         {
-            _cnt++;
-        }
-        if (_cnt > 1)
-        {
-            vcamera.Follow = gameObject.transform;//追跡対象の設定
-            vcamera.LookAt = gameObject.transform;//追跡対象の設定
-        }
+          _cnt++;
 
 
-        if (_gameClear)
+            if (_cnt > 30)
+            {
+                vcamera.Follow = _gameObjectPlayer.transform;//追跡対象の設定
+                vcamera.LookAt = _gameObjectPlayer.transform;//追跡対象の設定
+
+               // vcamera.Follow.position = CameraPos * _cnt;
+            }
+        }
+    }
+
+    void GameOver()
+    {
+        _gameOver = GameObject.FindWithTag("Map").GetComponent<Map>()._gameOver;
+
+        if (_gameOver)
         {
-            vcamera.Priority = 100;
+            vcamera.Priority = 100;//!< 優先度変化？よくわからん
             // 有効化・無効化
             GetComponent<CinemachineVirtualCamera>().enabled =
                 !GetComponent<CinemachineVirtualCamera>().enabled;//カメラ追跡のオンオフ
 
             _componentFlg = !_componentFlg;
 
+
+            if (_componentFlg)
+            {
+                _cnt++;
+            }
+            if (_cnt > 1)
+            {
+                //!< タグだと個別フォーカスできないかも？
+                _gameObjectOver = GameObject.FindWithTag("Map").GetComponent<Map>().GetGameOverObjects();
+                _listCnt = _gameObjectOver.Count - 1;
+                vcamera.Follow = _gameObjectOver[_listCnt].transform;//追跡対象の設定
+               // Vector3 _followObject = vcamera.Follow.position;
+               // _followObject.y -= 2;
+               // vcamera.Follow.position = _followObject;
+                vcamera.LookAt = _gameObjectOver[_listCnt].transform;//追跡対象の設定
+
+              //vcamera.
+            }
         }
-        //  vcamera.Follow = gameObject.transform;//追跡対象の設定
-        //  vcamera.LookAt = gameObject.transform;//追跡対象の設定
     }
+
+
 }
+
 
 
