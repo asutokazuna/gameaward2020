@@ -59,6 +59,8 @@ public class WaterFlow : MonoBehaviour
     private GameObject UICtrl;
     private CountBoxUI UIScript;
 
+    private BoxEmission EmissionScript;
+
     public int  _currentWater;
     public int   _maxWater;
     [SerializeField]
@@ -95,6 +97,8 @@ public class WaterFlow : MonoBehaviour
 
         UICtrl = GameObject.Find("UICanvas");
         UIScript = UICtrl.GetComponent<CountBoxUI>();
+
+        EmissionScript = this.GetComponent<BoxEmission>();
     }
 
     private void FixedUpdate()
@@ -127,6 +131,7 @@ public class WaterFlow : MonoBehaviour
                 _currentWater = _maxWater;
                 CountBoxScript._fullWaterBlockCnt++; //全体の水箱+
                 UIScript.AddFullBox(+1);
+                EmissionScript.BoxEmissionOn();
 
                 add = 0;
                 minus = 0;
