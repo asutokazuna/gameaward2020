@@ -11,6 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using DG.Tweening;
 /**
  * @class MainCamera
  * @brief カメラ回転
@@ -45,7 +46,8 @@ public class MainCamera : MonoBehaviour
     GameObject _gameObjectPlayer; //!< Playerオブジェクトの格納
     Vector3 _cameraPos;　//<!カメラ座標いじる用
     Vector3 _lookAtObject; //<!追跡オブジェクト
-
+    Vector3Int _direct;
+   
 
     // Use this for initialization
     // @details 　publicで設定した値を設定する
@@ -59,10 +61,11 @@ public class MainCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _direct = _direct = GameObject.FindWithTag("Player").GetComponent<Player>()._direct;
         GameClear();
         GameOver();
         CameraRotate();
-      
+
     }
     /**
      * @brief 関数概要　カメラの初期値設定
@@ -72,7 +75,7 @@ public class MainCamera : MonoBehaviour
      * @details 　publicで設定した値を設定する
      */
 
-   public void SetCamera()
+    public void SetCamera()
     {
         Transform myTransform = this.transform;//変数に取得
         myTransform.position = _setCameraPos;  // 座標を設定
@@ -115,6 +118,7 @@ public class MainCamera : MonoBehaviour
         //!< クリア状態取得
         _gameClear = GameObject.FindWithTag("Map").GetComponent<Map>()._gameClear;
         _gameOver = false;
+        _direct = GameObject.FindWithTag("Player").GetComponent<Player>()._direct;
     }
 
 
@@ -143,76 +147,18 @@ public class MainCamera : MonoBehaviour
         }
         else if (_gameClear && _systemflg)
         {
-            _cnt++;
-
-
-            //if (_cnt > 30)
-            // {
             Transform myTransform = this.transform;//変数に取得
-            _cameraPos = _gameObjectPlayer.transform.position;//追跡対象の設定
+            _cameraPos = _gameObjectPlayer.transform.position + (_direct * 2);//追跡対象の設定
+            _cameraPos.y += _correctionValueClear.y;
 
             _lookAtObject = _gameObjectPlayer.transform.position;//追跡対象の設定
-            _lookAtObject.y = _gameObjectPlayer.transform.position.y + 0.5f;
-            _cameraPos.y += _correctionValueClear.y;
-            _cameraPos.z += _correctionValueClear.z;
-            _flgCheck = 0;
+            _lookAtObject.y = _gameObjectPlayer.transform.position.y + _correctionValueClear.y;
 
-            if (!(myTransform.position.x + 0.1f > _cameraPos.x && myTransform.position.x - 0.1 < _cameraPos.x))
-            {
-                if (myTransform.position.x < _cameraPos.x)
-                {
-                    _cameraPos.x = (_cameraPos.x * -1) / 120;
-                }
-                else
-                {
-                    _cameraPos.x /= 120;
-
-                }
-                    _flgCheck++;
-            }
-            else
-            {
-                _cameraPos.x = 0;
-            }
-            if (!(myTransform.position.y + 0.1f > _cameraPos.y && myTransform.position.y - 0.1 < _cameraPos.y))
-            {
-
-                if (myTransform.position.y < _cameraPos.y)
-                {
-
-                    _cameraPos.y /= 120;
-                }
-                else
-                {
-                    _cameraPos.y = (_cameraPos.y * -1) / 120;
-                }
-                _flgCheck++;
-            }
-            else
-            {
-                _cameraPos.y = 0;
-            }
-            if (!(myTransform.position.z + 0.1f > _cameraPos.z && myTransform.position.z - 0.1 < _cameraPos.z))
-            {
-
-                if (myTransform.position.z < _cameraPos.z)
-                {//+
-                    _cameraPos.z = (_cameraPos.z * -1) / 120;
-                }
-                else
-                {//-
-                    _cameraPos.z /= 120;
-                }
-                _flgCheck++;
-            }
-            else
-            {
-                _cameraPos.z = 0;
-            }
-                myTransform.position += _cameraPos;
+      
+            myTransform.transform.DOMove(_cameraPos,1);
             myTransform.LookAt(_lookAtObject);  // 向きを設定
 
-                                                //  }
+                            
         }
     }
 
@@ -222,30 +168,19 @@ public class MainCamera : MonoBehaviour
 
         if (_gameOver)
         {
-            _waitTime -= Time.deltaTime;
-            if (_waitTime < 0)
-            {
-                _systemflg = true;
-            }
-            if (_systemflg)
-            {
-                _cnt++;
-            }
-            if (_cnt > 1)
-            {
-                Transform myTransform = this.transform;//変数に取得
-                //!< タグだと個別フォーカスできないかも？
-                _gameObjectOver = GameObject.FindWithTag("Map").GetComponent<Map>().GetGameOverObjects();
-                _listCnt = _gameObjectOver.Count - 1;
+            // _waitTime -= Time.deltaTime;
+            //  if (_waitTime < 0)
+            //{
+            Transform myTransform = this.transform;//変数に取得
+                                                   //!< タグだと個別フォーカスできないかも？
+            _gameObjectOver = GameObject.FindWithTag("Map").GetComponent<Map>().GetGameOverObjects();
+            _cameraPos = _gameObjectOver[_listCnt].transform.position - _direct + _correctionValueOver;//追跡対象の設定
 
-                _cameraPos = _gameObjectOver[_listCnt].transform.position;//追跡対象の設定
-                _lookAtObject = _gameObjectOver[_listCnt].transform.position;//追跡対象の設定
-                _cameraPos.y += _correctionValueOver.y;
-                _cameraPos.z += _correctionValueOver.z;
+            _lookAtObject = _gameObjectOver[_listCnt].transform.position;//追跡対象の設定
 
-                transform.position = _cameraPos;
-                myTransform.LookAt(_lookAtObject);  // 向きを設定
-            }
+            myTransform.transform.DOMove(_cameraPos, 1);
+            myTransform.LookAt(_lookAtObject);  // 向きを設定
+           // }
         }
     }
 
