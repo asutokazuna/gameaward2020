@@ -13,6 +13,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
 
 /*
@@ -70,10 +71,6 @@ public class WaterFlow : MonoBehaviour
     [SerializeField]
     private bool _isWaterSource;
 
-    public int add;
-    public int minus;
-    public int test;
-
     private float _adjust = 0.5f;
 
     // Start is called before the first frame update
@@ -88,8 +85,10 @@ public class WaterFlow : MonoBehaviour
             WaterLeak[i] = false;
         }
 
-        add = 0;
-        minus = 0;
+        for (int i = 0; i < 6; i++)
+        {
+            WaterLeak[i] = false;
+        }
 
 
         MapCtrl = GameObject.Find("Map");
@@ -99,6 +98,9 @@ public class WaterFlow : MonoBehaviour
         UIScript = UICtrl.GetComponent<CountBoxUI>();
 
         EmissionScript = this.GetComponent<BoxEmission>();
+
+        CreateWaterLeak();
+        StopChildParticle();
     }
 
     private void FixedUpdate()
@@ -111,7 +113,6 @@ public class WaterFlow : MonoBehaviour
             {
                 MinusWater();
                 //_currentWater--;
-                minus++;
             }
             _isMinusWater = false;
 
@@ -133,8 +134,7 @@ public class WaterFlow : MonoBehaviour
                 UIScript.AddFullBox(+1);
                 EmissionScript.BoxEmissionOn();
 
-                add = 0;
-                minus = 0;
+                PlayChildParticle();
             }
             else if (_currentWater < _maxWater - 10 && _isFullWater.Equals(true))
             {
@@ -142,24 +142,12 @@ public class WaterFlow : MonoBehaviour
                 _currentWater = 0;
                 CountBoxScript._fullWaterBlockCnt--; //全体の水箱-
                 UIScript.AddFullBox(-1);
+
+                StopChildParticle();
             }
 
 
-            if (_isFullWater)
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    WaterLeak[i] = true;
-                }
-                WaterLeak[5] = false;
-            }
-            else
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    WaterLeak[i] = false;
-                }
-            }
+            
         }
         else
         {
@@ -167,9 +155,25 @@ public class WaterFlow : MonoBehaviour
             _isFullWater = true;
         }
 
-        
+        if (_isFullWater)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                if (direction[i])
+                {
+                    WaterLeak[i] = true;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                WaterLeak[i] = false;
+            }
+        }
 
-        
+
     }
 
     // Update is called once per frame
@@ -205,6 +209,124 @@ public class WaterFlow : MonoBehaviour
        
     }
 
+    private void CreateWaterLeak()
+    {
+        GameObject LeakSide = (GameObject)Resources.Load("WaterLeak_side");
+        GameObject LeakTop = (GameObject)Resources.Load("WaterLeak_top");
+        //Vector3 pos = this.transform.position;
+        //pos.y -= 0.2f;
+
+
+        //Instantiate(obj, pos, Quaternion.Euler(-90, 0, 0));
+
+        for(int i = 0;i < 5;i++)
+        {
+            switch (i)
+            {
+                case 0:
+                    if(direction[(i + RotateDirection) % 4])
+                    {
+                        Vector3 pos = this.transform.position;
+                        pos.x += 0.5f;
+                        pos.y -= 0.1f;
+
+                        GameObject Obj;
+                        Obj = Instantiate(LeakSide, pos, Quaternion.Euler(0, 90, 0));
+                        Obj.transform.parent = this.transform;
+                        Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    }
+                    
+                    break;
+
+                case 1:
+                    if (direction[(i + RotateDirection) % 4])
+                    {
+                        Vector3 pos = this.transform.position;
+                        pos.z += 0.5f;
+                        pos.y -= 0.1f;
+
+                        GameObject Obj;
+                        Obj = Instantiate(LeakSide, pos, Quaternion.Euler(0, 0, 0));
+                        Obj.transform.parent = this.transform;
+                        Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    }
+
+                    break;
+
+                case 2:
+                    if (direction[(i + RotateDirection) % 4])
+                    {
+                        Vector3 pos = this.transform.position;
+                        pos.x += -0.5f;
+                        pos.y -= 0.1f;
+
+                        GameObject Obj;
+                        Obj = Instantiate(LeakSide, pos, Quaternion.Euler(0, 270, 0));
+                        Obj.transform.parent = this.transform;
+                        Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    }
+
+                    break;
+
+                case 3:
+                    if (direction[(i + RotateDirection) % 4])
+                    {
+                        Vector3 pos = this.transform.position;
+                        pos.z += -0.5f;
+                        pos.y -= 0.1f;
+
+                        GameObject Obj;
+                        Obj = Instantiate(LeakSide, pos, Quaternion.Euler(0, 180, 0));
+                        Obj.transform.parent = this.transform;
+                        Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    }
+
+                    break;
+
+                case 4:
+                    if (direction[i])
+                    {
+                        Vector3 pos = this.transform.position;
+                        pos.y += 0.6f;
+
+                        GameObject Obj;
+                        Obj = Instantiate(LeakTop, pos, Quaternion.Euler(-90, 00, 0));
+                        Obj.transform.parent = this.transform;
+                        Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    }
+
+                    break;
+            }
+        }
+      
+
+    }
+
+    private void PlayChildParticle()
+    {
+        var childTransforms = this.transform.GetComponentsInChildren<Transform>()
+          .Where(t => t.tag == "WaterLeak");
+
+        foreach (var item in childTransforms)
+        {
+            item.GetComponent<ParticleSystem>().Play(true);
+            Debug.Log("play");
+        }
+    }
+
+    private void StopChildParticle()
+    {
+        Debug.Log("in");
+        foreach (Transform childTransform in this.transform)
+        {
+            if (childTransform.tag == "WaterLeak")
+            {
+                childTransform.GetComponent<ParticleSystem>().Play(true);
+                Debug.Log("stop");
+            }
+        }
+    }
+
     private void OnTriggerStay(Collider other)
     {
         //相手のタグが箱かつ、自分自身が満水だったら
@@ -217,13 +339,7 @@ public class WaterFlow : MonoBehaviour
                 if (direction[i])
                 {
                     TargetDirection = (i + RotateDirection) % 4;
-                    if(gameObject.tag == "WaterBlock")
-                    {
-                        //Debug.Log(TargetDirection);
-                    }
-
-                    
-                    
+                   
                     switch (TargetDirection)
                     {
                         case 0:
@@ -234,21 +350,19 @@ public class WaterFlow : MonoBehaviour
                                other.transform.position.z >= this.transform.position.z - _adjust &&
                                other.transform.position.z <= this.transform.position.z + _adjust)
                             {
-                                test = TargetDirection;
+                                
                                // other.GetComponent<WaterFlow>()._currentWater++;
                                 if (other.GetComponent<WaterFlow>().direction[(TargetDirection + 2 + other.GetComponent<WaterFlow>().RotateDirection) % 4])
-                                    
-
-
                                 {
                                     //繋がる
                                     WaterLeak[TargetDirection] = false;
                                     if(_currentWater > other.GetComponent<WaterFlow>()._currentWater)
                                     {
                                         other.GetComponent<WaterFlow>()._currentWater++;
-                                        other.GetComponent<WaterFlow>().add++;
+                                       
                                         MinusWater();
-                                       // Debug.Log("0");
+
+                                        WaterLeak[i] = false;
                                     }
                                     
                                 }
@@ -274,9 +388,10 @@ public class WaterFlow : MonoBehaviour
                                     if (_currentWater > other.GetComponent<WaterFlow>()._currentWater)
                                     {
                                         other.GetComponent<WaterFlow>()._currentWater++;
-                                        other.GetComponent<WaterFlow>().add++;
+                                        
                                         MinusWater();
-                                       // Debug.Log("1");
+
+                                        WaterLeak[i] = false;
                                     }
                                 }
                                 else
@@ -307,9 +422,10 @@ public class WaterFlow : MonoBehaviour
                                     if (_currentWater > other.GetComponent<WaterFlow>()._currentWater)
                                     {
                                         other.GetComponent<WaterFlow>()._currentWater++;
-                                        other.GetComponent<WaterFlow>().add++;
+                                       
                                         MinusWater();
-                                       // Debug.Log("2");
+
+                                        WaterLeak[i] = false;
                                     }
                                 }
                                 else
@@ -335,14 +451,15 @@ public class WaterFlow : MonoBehaviour
                                     if (_currentWater > other.GetComponent<WaterFlow>()._currentWater)
                                     {
                                         other.GetComponent<WaterFlow>()._currentWater++;
-                                        other.GetComponent<WaterFlow>().add++;
+                                       
                                         MinusWater();
-                                       // Debug.Log("3");
+
+                                        WaterLeak[i] = false;
                                     }
                                 }
                                 else
                                 {
-                                    //繋がらない
+                                    //繋がらない 
                                 }
                             }
                             break;
@@ -367,7 +484,7 @@ public class WaterFlow : MonoBehaviour
                         if (_currentWater > other.GetComponent<WaterFlow>()._currentWater)
                         {
                             other.GetComponent<WaterFlow>()._currentWater++;
-                            other.GetComponent<WaterFlow>().add++;
+                           
                             MinusWater();
                         }
 
@@ -396,7 +513,7 @@ public class WaterFlow : MonoBehaviour
                         if (_currentWater > other.GetComponent<WaterFlow>()._currentWater)
                         {
                             other.GetComponent<WaterFlow>()._currentWater++;
-                            other.GetComponent<WaterFlow>().add++;
+                           
                             MinusWater();
                         }
 
