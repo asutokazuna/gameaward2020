@@ -8,8 +8,8 @@
 		[MaterialToggle] _RimLight("Rim",Float) = 0
 		_RimColor("RimColor", Color) = (0.5, 0.7, 0.5, 1)
 		_Edge("RimEdge",Range(0,5)) = 2.5
-		[MaterialToggle]_Lighting("_Lighting",Float) = 0
-		_LightingColor("LightingColor",Color) = (1, 1, 1, 1)
+		[MaterialToggle]_Emission("_Emission",Float) = 0
+		_EmissionColor("EmissionColor",Color) = (1, 1, 1, 1)
 
 	}
 
@@ -72,8 +72,8 @@
 		fixed4 _RimColor;
 		half _Edge;
 		half _RimLight;
-		float _Lighting;
-		fixed4 _LightingColor;
+		float _Emission;
+		fixed4 _EmissionColor;
 
 		void surf(Input IN, inout SurfaceOutputStandard o) 
 		{
@@ -85,9 +85,9 @@
 			}
 
 			o.Smoothness = _Smoothness;
-			if (_Lighting) 
+			if (_Emission)
 			{
-				o.Emission = (_LightingColor);
+				o.Emission = (_EmissionColor);
 			}
 		}
 		ENDCG
