@@ -5,6 +5,7 @@
  * @date    2020/03/30(月)  作成
  * @date    2020/04/10(金)  ジャンプアニメーション追加・アニメーションのセットの仕方を変更
  * @date    2020/04/18(土)  アニメーションの終了検知用の関数追加・アニメーションの遷移の仕様を変更
+ * @data    2020/04/23(木)  プレイヤーの状態を取得する関数の追加　(Kaiki Mori)
  */
 
 using System.Collections;
@@ -97,6 +98,17 @@ public class PlayerAnimation : MonoBehaviour
     public void SetPlayerState(PlayerState state)
     {
         _playerNextState = state;       // 次のアニメーションをセット
+    }
+
+
+    /**
+    * @brief        プレイヤーの状態の取得
+    * @return       _playerState　プレイヤーの状態
+    * @details      プレイヤーの状態を取得する関数です
+    */
+    public PlayerState GetPlayerState()
+    {
+        return _playerState;
     }
 
     /**
