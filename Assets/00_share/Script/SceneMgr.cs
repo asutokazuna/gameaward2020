@@ -16,7 +16,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-/*
+/**
  * @enum シーン列挙
  * @brief ビルドセッティングと同じ値にしてね
  */
@@ -25,17 +25,20 @@ public enum E_SCENE
     TITLE           = 0,
     STAGE_SELECT    = 1,
     GAME            = 2,
+    _1_1            = 3,
+    _1_2            = 4,
+    _1_3            = 5,
+    _1_4            = 6,
 }
 
 
 
-/*
+/**
  * @class シーンマネージャー
  * @brief 全てのシーン管理
  */
 public class SceneMgr : MonoBehaviour
 {
-    Controller _input;
     static private SceneMgr _instance;                              //!< 自身のインスタンス
     [SerializeField] private E_SCENE _nowScene = E_SCENE.TITLE;     //!< 今のシーン
     [SerializeField] private E_SCENE _oldScene = E_SCENE.TITLE;     //!< 前のシーン
@@ -61,24 +64,23 @@ public class SceneMgr : MonoBehaviour
     void Start()
     {
         _oldScene = _nowScene;
-        _input = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();
     }
+
 
     // Update is called once per frame
     void Update()
     {
-        LoadScene();
+        ChangeScene();
     }
 
 
-    private void LoadScene()
+    public void ChangeScene()
     {
         if (_oldScene == _nowScene)
         {// シーンの切り替えが発生してないで
             return;
         }
-
-        _oldScene = _nowScene;  // 過去シーンの保存
+        _oldScene = _nowScene;        // 過去シーンの保存
 
         SceneManager.LoadScene((int)_nowScene);
     }
