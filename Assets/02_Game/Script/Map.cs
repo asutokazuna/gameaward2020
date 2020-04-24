@@ -168,17 +168,6 @@ public class Map : MonoBehaviour
      */
     private void MoveObject()
     {
-        /*
-        for (int n = 0; n < _playerCnt; n++)
-        {
-            if (_player[n]._tramplineflag )
-            {
-                _player[n].TramplineJump(_player[n]._position);
-                UpdateMap(_player[n]);
-            }
-        }
-         */
-            
         // 移動キーを何も押してなかったら
         if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT) &&
             !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT) &&
@@ -274,12 +263,6 @@ public class Map : MonoBehaviour
             _waterBlock[haveObj._number].Puted(targetPos);
             UpdateMap(_waterBlock[haveObj._number]);
         }
-        if(haveObj._myObject == E_FIELD_OBJECT.BLOCK_TRAMPLINE)
-        {
-            _tramplineBlock[haveObj._number].transform.parent = null;// 親子関係を話す
-            _tramplineBlock[haveObj._number].Puted(targetPos);
-            UpdateMap(_tramplineBlock[haveObj._number]);
-        }
         else if (haveObj._myObject == E_FIELD_OBJECT.PLAYER_01)
         {// プレイヤーの場合
             _player[haveObj._number].transform.parent = null;   // 親子関係を話す
@@ -303,12 +286,6 @@ public class Map : MonoBehaviour
             _waterBlock[haveObj._number].Fall(targetPos);
             UpdateMap(_waterBlock[haveObj._number]);
         }
-        else if(haveObj._myObject == E_FIELD_OBJECT.BLOCK_TRAMPLINE)
-        {
-            _tramplineBlock[haveObj._number].transform.parent = null;
-            _tramplineBlock[haveObj._number].Fall(targetPos);
-            UpdateMap(_tramplineBlock[haveObj._number]);
-        }
         else if (haveObj._myObject == E_FIELD_OBJECT.PLAYER_01)
         {// プレイヤーの場合
             _player[haveObj._number].transform.parent = null;   // 親子関係を話す
@@ -330,11 +307,6 @@ public class Map : MonoBehaviour
         {// 水槽の場合
             _waterBlock[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
             UpdateMap(_waterBlock[haveObj._number]);
-        }
-        else if(haveObj._myObject == E_FIELD_OBJECT.BLOCK_TRAMPLINE)
-        {
-            _tramplineBlock[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
-            UpdateMap(_tramplineBlock[haveObj._number]);
         }
         else if (haveObj._myObject == E_FIELD_OBJECT.PLAYER_01)
         {// 水槽の場合
@@ -375,10 +347,14 @@ public class Map : MonoBehaviour
         {// 移動時
             for (int n = 0; n <= MAX_OBJECT; n++, pos.y--)
             {// 2マス以上落下した場合
-                if(isTrampline(pos))
+                if (isTrampline(pos))
+                {
                     return false;
-                if (isUse(pos))
+                }
+                if (isUse(pos) && n <= VAL_FALL)
+                {
                     return false;
+                }
             }
         }
         if (mode == E_OBJECT_MODE.PUT)
