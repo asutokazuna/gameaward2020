@@ -4,6 +4,7 @@
  *
  * @author  Shun Kato
  * @date    2020/04/13      作成
+ * @date    2020/04/23      水漏れ関係を追加
  * @version	1.00
  */
 
@@ -209,17 +210,23 @@ public class WaterFlow : MonoBehaviour
        
     }
 
+    private void CreateHuta()
+    {
+        
+    }
     private void CreateWaterLeak()
     {
         GameObject LeakSide = (GameObject)Resources.Load("WaterLeak_side");
         GameObject LeakTop = (GameObject)Resources.Load("WaterLeak_top");
+
+        GameObject huta = (GameObject)Resources.Load("suigen_huta");
         //Vector3 pos = this.transform.position;
         //pos.y -= 0.2f;
 
 
         //Instantiate(obj, pos, Quaternion.Euler(-90, 0, 0));
 
-        for(int i = 0;i < 5;i++)
+        for (int i = 0;i < 5;i++)
         {
             switch (i)
             {
@@ -234,6 +241,16 @@ public class WaterFlow : MonoBehaviour
                         Obj = Instantiate(LeakSide, pos, Quaternion.Euler(0, 90, 0));
                         Obj.transform.parent = this.transform;
                         Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    }
+                    else
+                    {
+                        if(this.tag == "WaterSourceBlock")
+                        {
+                            GameObject Obj;
+                            Obj = Instantiate(huta, this.transform.position, Quaternion.Euler(0, 270, 0));
+                            Obj.transform.parent = this.transform;
+                            Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                        }
                     }
                     
                     break;
@@ -250,6 +267,16 @@ public class WaterFlow : MonoBehaviour
                         Obj.transform.parent = this.transform;
                         Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
                     }
+                    else
+                    {
+                        if (this.tag == "WaterSourceBlock")
+                        {
+                            GameObject Obj;
+                            Obj = Instantiate(huta, this.transform.position, Quaternion.Euler(0, 180, 0));
+                            Obj.transform.parent = this.transform;
+                            Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                        }
+                    }
 
                     break;
 
@@ -264,6 +291,16 @@ public class WaterFlow : MonoBehaviour
                         Obj = Instantiate(LeakSide, pos, Quaternion.Euler(0, 270, 0));
                         Obj.transform.parent = this.transform;
                         Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    }
+                    else
+                    {
+                        if (this.tag == "WaterSourceBlock")
+                        {
+                            GameObject Obj;
+                            Obj = Instantiate(huta, this.transform.position, Quaternion.Euler(0, 90, 0));
+                            Obj.transform.parent = this.transform;
+                            Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                        }
                     }
 
                     break;
@@ -280,6 +317,16 @@ public class WaterFlow : MonoBehaviour
                         Obj.transform.parent = this.transform;
                         Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
                     }
+                    else
+                    {
+                        if (this.tag == "WaterSourceBlock")
+                        {
+                            GameObject Obj;
+                            Obj = Instantiate(huta, this.transform.position, Quaternion.Euler(0, 0, 0));
+                            Obj.transform.parent = this.transform;
+                            Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                        }
+                    }
 
                     break;
 
@@ -293,6 +340,16 @@ public class WaterFlow : MonoBehaviour
                         Obj = Instantiate(LeakTop, pos, Quaternion.Euler(-90, 00, 0));
                         Obj.transform.parent = this.transform;
                         Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                    }
+                    else
+                    {
+                        if (this.tag == "WaterSourceBlock")
+                        {
+                            GameObject Obj;
+                            Obj = Instantiate(huta, this.transform.position, Quaternion.Euler(90, 0, 0));
+                            Obj.transform.parent = this.transform;
+                            Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+                        }
                     }
 
                     break;
