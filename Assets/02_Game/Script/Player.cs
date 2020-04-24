@@ -44,8 +44,6 @@ public class Player : BaseObject
     PlayerManager                   _mgr;           //!< プレイヤー管理スクリプト
     BaseObject                      _obj;           //!< 後で改善するから許して
     Controller                      _input;         //!< 入力キー
-
-
     /**
      * @brief 移動中かどうかの判定
      */
@@ -221,24 +219,27 @@ public class Player : BaseObject
         _position       = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
         _isMove         = true;
 
+        if (_map.isTrampline(new Vector3Int(_oldPosition.x, _oldPosition.y - 1, _oldPosition.z)))
+        {
+            _position = _map.GetTramplinepPos(_position);
+        }
         //offsetDirect(); // 向いてる方向の補正
-
         if (_map.isLimitField(_position))
         {// マップ配列へ参照できない値の場合
-            _position   = _oldPosition;
-            _isMove     = false;    // 取り合えずの処理
+            _position = _oldPosition;
+            _isMove = false;    // 取り合えずの処理
             Debug.Log("エラー : " + name + " はマップ配列外へ移動した");
         }
         else if (_map.isGameOver(_position, E_OBJECT_MODE.MOVE))
         {// ゲームオーバー(落下)
-            _position   = _map.GetFallPos(_position);
-            _mode       = E_OBJECT_MODE.FALL;
-            _gameOver   = true;
+            _position = _map.GetFallPos(_position);
+            _mode = E_OBJECT_MODE.FALL;
+            _gameOver = true;
         }
         else if (_map.isDontMove(_position, _oldPosition) || _lifted == true)
         {// 移動出来ない場合
-            _position   = _oldPosition;
-            _isMove     = false;    // 取り合えずの処理
+            _position = _oldPosition;
+            _isMove = false;    // 取り合えずの処理
         }
         else if (_map.isGetup(_position))
         {// 何かの上に上る時
@@ -247,7 +248,8 @@ public class Player : BaseObject
         }
         else if (_map.isGetoff(_position))
         {// 一段下に降りる時
-            _position = new Vector3Int(_position.x, _position.y - 1, _position.z);
+         //_position = new Vector3Int(_position.x, _position.y - 1, _position.z);
+            _position = _map.GetoffPos(_position);
             _mode = E_OBJECT_MODE.GET_OFF;
         }
         else
@@ -456,6 +458,9 @@ public class Player : BaseObject
     {
         _mode       = E_OBJECT_MODE.WAIT;
         _isMove     = false;
+
+        _oldPosition = _position;
+
         if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
             _haveObject._myObject == E_FIELD_OBJECT.MAX)
         {// 何も持っていない時
@@ -522,6 +527,14 @@ public class Player : BaseObject
             }
             transform.DOJump(_nextPos, 1, 1, _mgr.MoveTime, false).OnComplete(() =>
             {
+
+                //if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
+                //{
+                //    //_position = _map.GetTramplinepPos(_position, _direct);
+                //    //_map.UpdateMap(_obj);
+                //    //JumpMode();
+                //}
+
                 WaitMode();
             });
         }
