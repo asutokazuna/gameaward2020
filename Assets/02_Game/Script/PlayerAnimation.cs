@@ -9,7 +9,7 @@
  * @data    2020/04/24(金)  プレイヤーの状態を追加
  */
 
-#define TEST_ANIM   // アニメーション切り替え
+//#define TEST_ANIM   // アニメーター切り替え
 
 using System.Collections;
 using System.Collections.Generic;
@@ -21,32 +21,8 @@ using UnityEngine;
  */
 public class PlayerAnimation : MonoBehaviour
 {
-#if TEST_ANIM
-        // プレイヤーの状態
-    public enum PlayerState
-    {
-        E_WAIT,
-        E_WALK,
-        E_LIFT_CHARA,
-        E_WAIT_CHARA,
-        E_WALK_CHARA,
-        E_PUT_CHARA,
-        E_LIFT_BOX,
-        E_WAIT_BOX,
-        E_WALK_BOX,
-        E_PUT_BOX,
-        E_JUMP,
-        E_JUMP_CHARA,
-        E_JUMP_BOX,
-        E_WAIT_TP,
-        E_WAIT_OVER_BOX,
-        E_WAIT_TP_BOX,
-        E_WAIT_OVER_CHARA,
-        E_WAIT_TP_CHARA,
+#if !TEST_ANIM
 
-        E_NONE
-    };
-#else
     // プレイヤーの状態
     public enum PlayerState
     {
@@ -92,10 +68,36 @@ public class PlayerAnimation : MonoBehaviour
 
         E_NONE,
     };
+
+#else
+    // プレイヤーの状態
+    public enum PlayerState
+    {
+        E_WAIT,
+        E_WALK,
+        E_LIFT_CHARA,
+        E_WAIT_CHARA,
+        E_WALK_CHARA,
+        E_PUT_CHARA,
+        E_LIFT_BOX,
+        E_WAIT_BOX,
+        E_WALK_BOX,
+        E_PUT_BOX,
+        E_JUMP,
+        E_JUMP_CHARA,
+        E_JUMP_BOX,
+        E_WAIT_TP,
+        E_WAIT_OVER_BOX,
+        E_WAIT_TP_BOX,
+        E_WAIT_OVER_CHARA,
+        E_WAIT_TP_CHARA,
+
+        E_NONE
+    };
 #endif
 
     // アニメーション管理用
-    Animator                        _playerAnimator;    //!< アニメーター取得用
+    Animator _playerAnimator;    //!< アニメーター取得用
     [SerializeField] PlayerState    _playerState;       //!< プレイヤーの状態管理用
     PlayerState                     _playerNextState;   //!< プレイヤーの状態管理用
     bool _animFinish;               //!< アニメーション変更フラグ
