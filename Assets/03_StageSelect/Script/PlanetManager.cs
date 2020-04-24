@@ -6,11 +6,8 @@ public class PlanetManager : MonoBehaviour
 {
     //フィールドブロックを変数に格納
     public GameObject _stageSelectManager; //!< ステージセレクトマネージャーを中心に置く
-    public GameObject _planetObject1;            //回転の中心となる星の格納用
-    public GameObject _planetObject2;            //回転の中心となる星の格納用
-    public GameObject _planetObject3;            //回転の中心となる星の格納用
-    public GameObject _planetObject4;            //回転の中心となる星の格納用
-
+ 
+    [SerializeField] private List<GameObject> _planetObject;
     public float rotateSpeed = 4.0f;            //回転の速さ
 
     public float _angle = 90.0f; //!<星を回転させたときに回転する角度
@@ -56,12 +53,12 @@ public class PlanetManager : MonoBehaviour
     private void SetPlanet()
     {
         Vector3 _pos = _setPlanetPos;
-        _planetObject1.transform.position = new Vector3(_pos.x, _pos.y, _pos.z);  // 座標を設定
-        _planetObject2.transform.position = new Vector3(_pos.x, _pos.y, _pos.z * -1);  // 座標を設定
-        _planetObject3.transform.position = new Vector3(_pos.x * -1, _pos.y, _pos.z * -1);  // 座標を設定
-        _planetObject4.transform.position = new Vector3(_pos.x * -1, _pos.y, _pos.z);  // 座標を設定
+        _planetObject[0].transform.position = new Vector3(_pos.x, _pos.y, _pos.z);  // 座標を設定
+        _planetObject[1].transform.position = new Vector3(_pos.x, _pos.y, _pos.z * -1);  // 座標を設定
+        _planetObject[2].transform.position = new Vector3(_pos.x * -1, _pos.y, _pos.z * -1);  // 座標を設定
+        _planetObject[3].transform.position = new Vector3(_pos.x * -1, _pos.y, _pos.z);  // 座標を設定
         Debug.Log("a");
-        _selectPlanet = _planetObject1;
+        _selectPlanet = _planetObject[0];
     }
     /**
      * @brief 関数概要　フィールド中心座標取得
@@ -76,29 +73,16 @@ public class PlanetManager : MonoBehaviour
     {
         //Vector3でX,Y方向の回転の度合いを定義
         Vector3 angle = new Vector3(Input.GetAxis("Mouse X") * rotateSpeed, Input.GetAxis("Mouse Y") * rotateSpeed, 0);
-        if (_selectPlanet == _planetObject1)
+
+        for (int i = 0; i < 4; i++)
         {
-            //transform.RotateAround()をしようして星を回転させる
-            _planetObject1.transform.RotateAround(_planetObject1.transform.position, Vector3.up, angle.x);
-            _planetObject1.transform.RotateAround(_planetObject1.transform.position, transform.right, angle.y);
-        }
-        else if (_selectPlanet == _planetObject2)
-        {
-            //transform.RotateAround()をしようして星を回転させる
-            _planetObject2.transform.RotateAround(_planetObject2.transform.position, Vector3.up, angle.x);
-            _planetObject2.transform.RotateAround(_planetObject2.transform.position, transform.right, angle.y);
-        }
-        else if (_selectPlanet == _planetObject3)
-        {
-            //transform.RotateAround()をしようして星を回転させる
-            _planetObject3.transform.RotateAround(_planetObject3.transform.position, Vector3.up, angle.x);
-            _planetObject3.transform.RotateAround(_planetObject3.transform.position, transform.right, angle.y);
-        }
-        else if (_selectPlanet == _planetObject4)
-        {
-            //transform.RotateAround()をして星を回転させる
-            _planetObject4.transform.RotateAround(_planetObject4.transform.position, Vector3.up, angle.x);
-            _planetObject4.transform.RotateAround(_planetObject4.transform.position, transform.right, angle.y);
+            if (_selectPlanet == _planetObject[0])
+            {
+                //transform.RotateAround()をしようして星を回転させる
+                _planetObject[i].transform.RotateAround(_planetObject[i].transform.position, Vector3.up, angle.x);
+                _planetObject[i].transform.RotateAround(_planetObject[i].transform.position, transform.right, angle.y);
+            }
+     
         }
 
 
@@ -107,11 +91,10 @@ public class PlanetManager : MonoBehaviour
     private void ResetPlanet()
     {
 
-        _planetObject1.transform.localEulerAngles = Vector3.zero;
-        _planetObject2.transform.localEulerAngles = Vector3.zero;
-        _planetObject3.transform.localEulerAngles = Vector3.zero;
-        _planetObject4.transform.localEulerAngles = Vector3.zero;
-
+        for (int i = 0; i < 4; i++)
+        {
+            _planetObject[i].transform.localEulerAngles = Vector3.zero;
+        }
     }
     // キーで星を回転させる関数
     private void RotatePlanetS()
@@ -132,11 +115,12 @@ public class PlanetManager : MonoBehaviour
         //カウント中は回転
         if (_cnt > 0 && _angle != 0)
         {
-            //星を回転させる
-            _planetObject1.transform.RotateAround(_rotateCenter, Vector3.up, _angle);
-            _planetObject2.transform.RotateAround(_rotateCenter, Vector3.up, _angle);
-            _planetObject3.transform.RotateAround(_rotateCenter, Vector3.up, _angle);
-            _planetObject4.transform.RotateAround(_rotateCenter, Vector3.up, _angle);
+
+            for (int i = 0; i < 4; i++)
+            {
+                //星を回転させる
+                _planetObject[i].transform.RotateAround(_rotateCenter, Vector3.up, _angle);
+            }
 
             _cnt -= 1;//カウンター減算
         }
@@ -155,14 +139,14 @@ public class PlanetManager : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.LeftArrow))
         {
             ResetPlanet();
-            if (_selectPlanet == _planetObject1)
-                _selectPlanet = _planetObject4;
-            else if (_selectPlanet == _planetObject4)
-                _selectPlanet = _planetObject3;
-            else if (_selectPlanet == _planetObject3)
-                _selectPlanet = _planetObject2;
-            else if (_selectPlanet == _planetObject2)
-                _selectPlanet = _planetObject1;
+            if (_selectPlanet == _planetObject[0])
+                _selectPlanet = _planetObject[3];
+            else if (_selectPlanet == _planetObject[3])
+                _selectPlanet = _planetObject[2];
+            else if (_selectPlanet == _planetObject[2])
+                _selectPlanet = _planetObject[1];
+            else if (_selectPlanet == _planetObject[1])
+                _selectPlanet = _planetObject[0];
 
             _angle = _oldAngle / _rotateFlame;
         }
@@ -170,14 +154,14 @@ public class PlanetManager : MonoBehaviour
         {
             ResetPlanet();
          
-            if (_selectPlanet == _planetObject1)
-                _selectPlanet = _planetObject2;
-            else if (_selectPlanet == _planetObject2)
-                _selectPlanet = _planetObject3;
-            else if (_selectPlanet == _planetObject3)
-                _selectPlanet = _planetObject4;
-            else if (_selectPlanet == _planetObject4)
-                _selectPlanet = _planetObject1;
+            if (_selectPlanet == _planetObject[0])
+                _selectPlanet = _planetObject[1];
+            else if (_selectPlanet == _planetObject[1])
+                _selectPlanet = _planetObject[2];
+            else if (_selectPlanet == _planetObject[2])
+                _selectPlanet = _planetObject[3];
+            else if (_selectPlanet == _planetObject[3])
+                _selectPlanet = _planetObject[0];
 
             _angle = (_oldAngle * -1) / _rotateFlame;
         }

@@ -89,4 +89,9 @@ public class SceneMgr : MonoBehaviour
         return _isDebug;
     }
 
+    public void SetScene(E_SCENE _nextScene)
+    {
+        _nowScene = _nextScene;
+    }
+
 }

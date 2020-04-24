@@ -6,7 +6,7 @@
  * @date 2020/03/30 カメラの初期値設定と、フィールド中心座標の取得
  */
 
-using Boo.Lang.Environments;
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;

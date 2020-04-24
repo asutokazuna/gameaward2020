@@ -3782,10 +3782,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stageSelectManager: {fileID: 2052093434}
-  _planetObject1: {fileID: 0}
-  _planetObject2: {fileID: 0}
-  _planetObject3: {fileID: 0}
-  _planetObject4: {fileID: 0}
+  _planetObject:
+  - {fileID: 2132083152}
+  - {fileID: 552536308}
+  - {fileID: 421140227}
+  - {fileID: 500703554}
   rotateSpeed: 4
   _angle: 90
   _rotateFlame: 60
@@ -3976,6 +3977,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   line: {x: 8, y: 2, z: 8}
+  _stageObject:
+  - {fileID: 75592843}
+  - {fileID: 1469536145}
+  - {fileID: 802642442}
+  - {fileID: 1303646800}
+  - {fileID: 1081662361}
+  - {fileID: 1003317401}
+  - {fileID: 1147057412}
+  - {fileID: 133848000}
 --- !u!135 &2093276256
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4180,3 +4190,9 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2101953020}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2132083152 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 2d495a135cf4b074db4eb5525ec51c5f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1289775052}
+  m_PrefabAsset: {fileID: 0}
