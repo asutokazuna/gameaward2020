@@ -121,6 +121,8 @@ public class Player : BaseObject
     */
     public Vector3Int Rotate()
     {
+        #region Rotate
+
         if (_lifted || _isMove || _map._gameClear || _map._gameOver)
         {// 取り合えずここに書き込む
             return _direct;
@@ -174,6 +176,8 @@ public class Player : BaseObject
         }
 
         return _direct;
+
+        #endregion
     }
 
 
