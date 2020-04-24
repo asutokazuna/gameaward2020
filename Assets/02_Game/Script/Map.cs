@@ -34,6 +34,7 @@ public enum E_FIELD_OBJECT
     BLOCK_GROUND,           // 地面
     BLOCK_WATER_SOURCE,     // 水源ブロック
     BLOCK_TANK,             // 水槽
+    BLOCK_TRAMPLINE,
     MAX,                    // 最大値
 }
 
@@ -58,7 +59,6 @@ public class Map : MonoBehaviour
     [SerializeField] int MAX_OBJECT         = 10;       // マップ1辺あたりに置けるオブジェクトの最大値
     [SerializeField] int VAL_FIELD_MOVE     = 1;        // 一マス当たりの移動値
     [SerializeField] int VAL_FALL           = 2;        // 落下死判定になるマス数
-
     //! 変数宣言
     [NamedArrayAttribute(new string[] {
         "オブジェクトなし",
@@ -67,6 +67,7 @@ public class Map : MonoBehaviour
         "地面ブロック",
         "水源ブロック",
         "水槽ブロック",
+        "跳ねブロック",
         })]  // オブジェクトが増えたら随時追加
     [SerializeField] string[] _objectTag = new string[(int)E_FIELD_OBJECT.MAX];
     public SquareInfo[,,]       _map;                   //!< マップ情報
@@ -74,17 +75,20 @@ public class Map : MonoBehaviour
     public BlockTank[]          _waterBlock;            //!< 水槽オブジェクト
     public Ground[]             _ground;                //!< 地面ブロック
     public WaterSourceBlock[]   _waterSource;           //!< 水源ブロック
+    public TramplineBlock[]     _tramplineBlock;        //
     public PlayerAnimation      _animation;             //!< プレイヤーのアニメーション
     [SerializeField] int        _playerCnt;             //!< プレイヤーカウント
     [SerializeField] int        _waterBlockCnt;         //!< 水槽カウント
     [SerializeField] int        _groundCnt;             //!< 地面カウント
     [SerializeField] int        _waterSourceCnt;        //!< 水源カウント
+    [SerializeField] int        _tramplineCnt;          //
     [SerializeField] Vector3Int _direct;                //!< 全プレイヤーが向いてる方向
     public Vector3Int           _offsetPos;             //!< 配列座標補正用変数
     Controller                  _input;                 //!< 入力
     public bool                 _gameOver { get; set; } //!< ゲームオーバーフラグ
     public bool                 _gameClear { get; set; }//!< ゲームクリアフラグ
     public int                  _fullWaterBlockCnt;
+    public int _jumpspeed = 1;
 
 
     /**
@@ -131,7 +135,7 @@ public class Map : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            CallDebug(E_FIELD_OBJECT.BLOCK_TANK);
+            CallDebug();
         }
         for (int n = 0; n < _playerCnt; n++)
         {
@@ -146,6 +150,10 @@ public class Map : MonoBehaviour
             {
                 return;
             }
+        }
+        foreach(Player obj in _player)
+        {
+            UpdateMap(obj);
         }
         MoveObject();
         HandAction();
@@ -167,6 +175,7 @@ public class Map : MonoBehaviour
             !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN) ||
             _input.isInput(E_INPUT_MODE.BUTTON, E_INPUT.LB))
         {
+           
             return;
         }
         _direct = new Vector3Int();
@@ -179,6 +188,7 @@ public class Map : MonoBehaviour
         }
     }
 
+    
 
     /**
      * @brief プレイヤーの回転
@@ -334,12 +344,19 @@ public class Map : MonoBehaviour
      */
     public bool isGameOver(Vector3Int pos, E_OBJECT_MODE mode)
     {
+
         if (mode == E_OBJECT_MODE.MOVE)
         {// 移動時
-            for (int n = 0; n <= VAL_FALL; n++, pos.y--)
+            for (int n = 0; n <= MAX_OBJECT; n++, pos.y--)
             {// 2マス以上落下した場合
-                if (isUse(pos))
+                if (isTrampline(pos))
+                {
                     return false;
+                }
+                if (isUse(pos) && n <= VAL_FALL)
+                {
+                    return false;
+                }
             }
         }
         if (mode == E_OBJECT_MODE.PUT)
@@ -406,6 +423,7 @@ public class Map : MonoBehaviour
         {// 登れるオブジェクトが無い場合
             return false;
         }
+        
         return true;
     }
     
@@ -424,7 +442,46 @@ public class Map : MonoBehaviour
         }
         return false;
     }
+    /*
+     * トランポリン処理
+     * 
+     */
+    public bool isTrampline(Vector3Int targetPos)
+    {
+        if (isUse(targetPos) && _map[targetPos.x, targetPos.y, targetPos.z]._myObject == E_FIELD_OBJECT.BLOCK_TRAMPLINE)
+        {
+            return true;
+        }
 
+        return false;
+    }
+
+    public Vector3Int GetTramplinepPos(Vector3Int playerPos,Vector3Int vec = new Vector3Int())
+    {
+        Vector3Int pos = new Vector3Int(playerPos.x + vec.x, playerPos.y + vec.y, playerPos.z + vec.x );
+        for(int n = MAX_OBJECT - 1;n >= 0;n--)
+        {
+            if (isUse(new Vector3Int(pos.x, n, pos.z)))
+            {
+                return new Vector3Int(pos.x, n + 1, pos.z);
+            }
+        }
+
+        return new Vector3Int();
+    }
+
+    public Vector3Int GetoffPos(Vector3Int pos)
+    {
+        for (int n = MAX_OBJECT - 1; n >= 0; n-- ,pos.y--)
+        {
+            if (isUse(new Vector3Int(pos.x, pos.y, pos.z)))
+            {
+                return new Vector3Int(pos.x, pos.y + 1, pos.z);
+            }
+        }
+
+        return new Vector3Int();
+    }
 
     /**
      * @brief プレイヤーがオブジェクトを持てるかの判定
@@ -525,7 +582,7 @@ public class Map : MonoBehaviour
      * @param1 BaseObject obj
      * return なし
      */
-    private void UpdateMap(BaseObject obj)
+    public void UpdateMap(BaseObject obj)
     {
         DeleteObject(obj._oldPosition);
         SetObject(obj);
@@ -568,6 +625,7 @@ public class Map : MonoBehaviour
         InitBlockTankObj();     // 箱の初期化
         InitGroundObj();        // 地面の初期化
         InitWaterblockObj();    // 水源ブロックの初期化
+        InitTramplineblockObj();//
     }
 
 
@@ -641,6 +699,24 @@ public class Map : MonoBehaviour
             SetObject(_waterSource[n]);
         }
     }
+    
+    
+    /**
+     * @brief 水源情報の初期化
+     * @return なし
+     */
+    private void InitTramplineblockObj()
+    {
+        GameObject[] tramplineblock = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_FIELD_OBJECT.BLOCK_TRAMPLINE]);
+        _tramplineCnt = tramplineblock.Length;
+        _tramplineBlock = new TramplineBlock[_tramplineCnt];
+        for (int n = 0; n < _waterSourceCnt; n++)
+        {
+            _tramplineBlock[n] = tramplineblock[n].GetComponent<TramplineBlock>();
+            _tramplineBlock[n].Init(n);
+            SetObject(_tramplineBlock[n]);
+        }
+    }
 
 
     /**
@@ -712,6 +788,7 @@ public class Map : MonoBehaviour
             UpdateMap(_player[n]);
         }
     }
+
 
 
     /**
@@ -818,6 +895,10 @@ public class Map : MonoBehaviour
                         if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_GROUND))
                         {
                             Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に地面があります" + _map[x, y, z]._number);
+                        }
+                        if(_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_TRAMPLINE))
+                        { 
+                            Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " にトランポリンがあります" + _map[x, y, z]._number);
                         }
                     }
                 }
