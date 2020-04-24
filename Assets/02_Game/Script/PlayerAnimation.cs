@@ -6,7 +6,10 @@
  * @date    2020/04/10(金)  ジャンプアニメーション追加・アニメーションのセットの仕方を変更
  * @date    2020/04/18(土)  アニメーションの終了検知用の関数追加・アニメーションの遷移の仕様を変更
  * @data    2020/04/23(木)  プレイヤーの状態を取得する関数の追加　(Kaiki Mori)
+ * @data    2020/04/24(金)  プレイヤーの状態を追加
  */
+
+//#define TEST_ANIM   // アニメーター切り替え
 
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +21,55 @@ using UnityEngine;
  */
 public class PlayerAnimation : MonoBehaviour
 {
+#if !TEST_ANIM
+
+    // プレイヤーの状態
+    public enum PlayerState
+    {
+        E_WAIT,
+        E_WALK,
+        E_JUMP,
+        E_WAIT_TP,
+        E_JUMP_TP,
+        E_BUMP,
+        E_FALL,
+        E_FALL_FAINT,
+        E_HIT_FAINT,
+        E_HAPPY,
+        E_LIFT_UP_BOX,
+        E_LIFT_BOX,
+        E_LIFT_LOW_BOX,
+        E_PUT_UP_BOX,
+        E_PUT_BOX,
+        E_PUT_LOW_BOX,
+        E_WAIT_BOX,
+        E_WALK_BOX,
+        E_WAIT_OVER_BOX,
+        E_JUMP_BOX,
+        E_WAIT_TP_BOX,
+        E_JUMP_TP_BOX,
+        E_BUMP_BOX,
+        E_FALL_BOX,
+        E_LIFT_UP_CHARA,
+        E_LIFT_CHARA,
+        E_LIFT_LOW_CHARA,
+        E_PUT_UP_CHARA,
+        E_PUT_CHARA,
+        E_PUT_LOW_CHARA,
+        E_WAIT_CHARA,
+        E_WALK_CHARA,
+        E_WAIT_OVER_CHARA,
+        E_JUMP_CHARA,
+        E_WAIT_TP_CHARA,
+        E_JUMP_TP_CHARA,
+        E_BUMP_CHARA,
+        E_FALL_CHARA,
+        E_HAPPY_CHARA,
+
+        E_NONE,
+    };
+
+#else
     // プレイヤーの状態
     public enum PlayerState
     {
@@ -42,9 +94,10 @@ public class PlayerAnimation : MonoBehaviour
 
         E_NONE
     };
+#endif
 
     // アニメーション管理用
-    Animator                        _playerAnimator;    //!< アニメーター取得用
+    Animator _playerAnimator;    //!< アニメーター取得用
     [SerializeField] PlayerState    _playerState;       //!< プレイヤーの状態管理用
     PlayerState                     _playerNextState;   //!< プレイヤーの状態管理用
     bool _animFinish;               //!< アニメーション変更フラグ
