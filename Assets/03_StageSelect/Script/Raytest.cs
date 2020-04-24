@@ -1,14 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Raytest : MonoBehaviour
 {
     public Vector3 line;
+    [SerializeField] private List<GameObject> _stageObject;
+    SceneMgr _sceneManager;
     // Start is called before the first frame update
     void Start()
     {
-        
+        _sceneManager = GameObject.FindWithTag("SceneManager").GetComponent<SceneMgr>();
     }
 
     // Update is called once per frame
@@ -26,6 +29,16 @@ public class Raytest : MonoBehaviour
 
         foreach (RaycastHit hit in Physics.RaycastAll(_ray))
         {
+            for (int i = 0; i < _stageObject.Count; i++)
+            {
+                if (hit.collider.name == _stageObject[i].name)
+                {
+                    if (Input.GetKey(KeyCode.Return))
+                    {
+                        _sceneManager.SetScene((E_SCENE)i + 3);
+                    }
+                }
+            }
            // Debug.Log(hit.collider.gameObject.name);
         }
     }
