@@ -12,18 +12,20 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using DG.Tweening;
+using System.Diagnostics;
+using Boo.Lang.Environments;
 /**
- * @class MainCamera
- * @brief カメラ回転
- */
+* @class MainCamera
+* @brief カメラ回転
+*/
 public class MainCamera : MonoBehaviour
 {
     //フィールドブロックを変数に格納
     //配列にしたかったけどやり方わからなかった
-    public GameObject __fieldBlock1; //!< フィールドブロック1
-    public GameObject __fieldBlock2; //!< フィールドブロック2
-    public GameObject __fieldBlock3; //!< フィールドブロック3
-    public GameObject __fieldBlock4; //!< フィールドブロック4
+    public GameObject _fieldBlock1; //!< フィールドブロック1
+    public GameObject _fieldBlock2; //!< フィールドブロック2
+    public GameObject _fieldBlock3; //!< フィールドブロック3
+    public GameObject _fieldBlock4; //!< フィールドブロック4
 
  
     public float _angle = 90.0f; //!<カメラを回転させたときに回転する角度
@@ -40,14 +42,20 @@ public class MainCamera : MonoBehaviour
     bool _gameClear; //!< クリア状態
     bool _gameOver; //!< ゲームオーバー状態
     bool _systemflg;
+    bool[] _Doflg = { false, false };
     int _listCnt;//!<リストの要素数カウント
+    float _TimeCnt = 5.0f;
     public float _waitTime = 2.0f;
     List<GameObject> _gameObjectOver; //!< フォーカスオブジェクト
     GameObject _gameObjectPlayer; //!< Playerオブジェクトの格納
+    Transform myTransform;
     Vector3 _cameraPos;　//<!カメラ座標いじる用
     Vector3 _lookAtObject; //<!追跡オブジェクト
+    Vector3 _startPos;
     Vector3Int _direct;
-   
+    
+               
+
 
     // Use this for initialization
     // @details 　publicで設定した値を設定する
@@ -95,14 +103,14 @@ public class MainCamera : MonoBehaviour
     void SetFieldCenter()
     {
         //フィールドx中心座標取得計算
-        _fieldPos.x = (((__fieldBlock1.transform.position.x + __fieldBlock2.transform.position.x) / 2) + 
-            ((__fieldBlock3.transform.position.x + __fieldBlock4.transform.position.x) / 2)) / 2;
+        _fieldPos.x = (((_fieldBlock1.transform.position.x + _fieldBlock2.transform.position.x) / 2) + 
+            ((_fieldBlock3.transform.position.x + _fieldBlock4.transform.position.x) / 2)) / 2;
         //フィールドy中心座標取得計算
-        _fieldPos.y = (((__fieldBlock1.transform.position.y + __fieldBlock2.transform.position.y) / 2) + 
-            ((__fieldBlock3.transform.position.y + __fieldBlock4.transform.position.y) / 2)) / 2;
+        _fieldPos.y = (((_fieldBlock1.transform.position.y + _fieldBlock2.transform.position.y) / 2) + 
+            ((_fieldBlock3.transform.position.y + _fieldBlock4.transform.position.y) / 2)) / 2;
         //フィールドz中心座標取得計算
-        _fieldPos.z = (((__fieldBlock1.transform.position.z + __fieldBlock2.transform.position.z) / 2) + 
-            ((__fieldBlock3.transform.position.z + __fieldBlock4.transform.position.z) / 2)) / 2;
+        _fieldPos.z = (((_fieldBlock1.transform.position.z + _fieldBlock2.transform.position.z) / 2) + 
+            ((_fieldBlock3.transform.position.z + _fieldBlock4.transform.position.z) / 2)) / 2;
         //Debug.Log(_fieldPos.x);
         //Debug.Log(_fieldPos.y);
         //Debug.Log(_fieldPos.z);
@@ -131,7 +139,11 @@ public class MainCamera : MonoBehaviour
             _waitTime -= Time.deltaTime;
             if (_waitTime < 0)
             {
+                myTransform = this.transform;
                 _systemflg = true;
+                _Doflg[0] = true;
+                
+                // _angle = 360.0f / (_TimeCnt * 60);
             }
             /*
             //vcamera.Follow = _gameObjectPlayer.transform;//追跡対象の設定
@@ -147,18 +159,59 @@ public class MainCamera : MonoBehaviour
         }
         else if (_gameClear && _systemflg)
         {
-            Transform myTransform = this.transform;//変数に取得
-            _cameraPos = _gameObjectPlayer.transform.position + (_direct * 2);//追跡対象の設定
-            _cameraPos.y += _correctionValueClear.y;
+            if (_TimeCnt > 0)
+            {
+               
+                myTransform.LookAt(_fieldPos);
+                
+//                transform.RotateAround(_fieldPos, Vector3.up,1.0f );
+                _TimeCnt -= Time.deltaTime;
+                _startPos = this.transform.position;
 
-            _lookAtObject = _gameObjectPlayer.transform.position;//追跡対象の設定
-            _lookAtObject.y = _gameObjectPlayer.transform.position.y + _correctionValueClear.y;
+              //  UnityEngine.Debug.Log(_angle);
+            }
+            
+             else if (_TimeCnt < 0)
+            {
+                /*
+                 myTransform = this.transform;//変数に取得
+                _cameraPos = _gameObjectPlayer.transform.position + (_direct * 2);//追跡対象の設定
+                _cameraPos.y += _correctionValueClear.y;
+                Vector3 _relayPoint = new Vector3(_startPos.x - _cameraPos.x, _startPos.y - _cameraPos.y, _startPos.z - _cameraPos.z);
+                _relayPoint = _relayPoint + _direct;
+                Vector3[] _path = { new Vector3(_startPos.x, _startPos.y, _startPos.z), new Vector3(_relayPoint.x, _relayPoint.y, _relayPoint.z), new Vector3(_cameraPos.x, _cameraPos.x, _cameraPos.x) };
 
-      
-            myTransform.transform.DOMove(_cameraPos,1);
-            myTransform.LookAt(_lookAtObject);  // 向きを設定
+                _lookAtObject = _gameObjectPlayer.transform.position;//追跡対象の設定
+                _lookAtObject.y = _gameObjectPlayer.transform.position.y + _correctionValueClear.y;
 
-                            
+               // myTransform.transform.DOLocalPath(_path, 1.0f, PathType.CatmullRom);
+                myTransform.transform.DOMove(_cameraPos, 1.0f);
+            */
+                _lookAtObject = _gameObjectPlayer.transform.position;//追跡対象の設定
+                _lookAtObject.y = _gameObjectPlayer.transform.position.y + _correctionValueClear.y;
+
+                myTransform.LookAt(_lookAtObject);  // 向きを設定
+            }
+
+            if (_Doflg[0] == true && _Doflg[1] == false)
+            {
+                Sequence seq = DOTween.Sequence();
+                //myTransform.transform.DOMove(new Vector3(-4, 3, -15), 1.0f);
+                _cameraPos = _gameObjectPlayer.transform.position+(_direct*2);//追跡対象の設定
+                Vector3[] _path = { new Vector3(_fieldPos.x + 4, 3, _fieldPos.z - 4),
+                                    new Vector3(_fieldPos.x + 4, 3, _fieldPos.z + 4),
+                                    new Vector3(_fieldPos.x - 4, 3, _fieldPos.z + 4),
+                                    new Vector3(_fieldPos.x - 4, 3, _fieldPos.z - 4),
+                                    new Vector3(_cameraPos.x + 3, _cameraPos.y + 3.0f, _cameraPos.z - 3) ,
+                                    new Vector3(_cameraPos.x + 2, _cameraPos.y + 2.0f, _cameraPos.z + 2) ,
+                                    new Vector3(_cameraPos.x + 2, _cameraPos.y + 1.5f, _cameraPos.z + 2) ,
+                                    new Vector3(_cameraPos.x, _cameraPos.y, _cameraPos.z) };
+                //seq.Append(
+                    myTransform.DOLocalPath(_path, 10.0f, PathType.CatmullRom).SetOptions(false);
+               
+                _Doflg[1] = true;
+
+            }
         }
     }
 
