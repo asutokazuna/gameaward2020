@@ -4,15 +4,17 @@
 	{
 		//[PerRendererData]
 		_MainTex("Sprite Texture", 2D) = "white" {}
-		_Color("Tint", Color) = (1,1,1,1)
+		_Color("Color", Color) = (1,1,1,1)
+		_ScrollSpeed("ScrollSpeed",Float) = 3
 
-		_StencilComp("Stencil Comparison", Float) = 8
-		_Stencil("Stencil ID", Float) = 0
-		_StencilOp("Stencil Operation", Float) = 0
-		_StencilWriteMask("Stencil Write Mask", Float) = 255
-		_StencilReadMask("Stencil Read Mask", Float) = 255
+		
+		[HideInInspector] _StencilComp("Stencil Comparison", Float) = 8
+		[HideInInspector] _Stencil("Stencil ID", Float) = 0
+		[HideInInspector] _StencilOp("Stencil Operation", Float) = 0
+		[HideInInspector] _StencilWriteMask("Stencil Write Mask", Float) = 255
+		[HideInInspector] _StencilReadMask("Stencil Read Mask", Float) = 255
 
-		_ColorMask("Color Mask", Float) = 15
+		[HideInInspector] _ColorMask("Color Mask", Float) = 15
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip("Use Alpha Clip", Float) = 0
 	}
@@ -77,6 +79,7 @@
 
 			sampler2D _MainTex;
 			fixed4 _Color;
+			float  _ScrollSpeed;
 			fixed4 _TextureSampleAdd;
 			float4 _ClipRect;
 			float4 _MainTex_ST;
@@ -98,7 +101,7 @@
 			fixed4 frag(v2f IN) : SV_Target
 			{
 				fixed2 scrolledUV = IN.texcoord;
-				scrolledUV.x += _Time * 3;
+				scrolledUV.x += _Time * _ScrollSpeed;
 
 				half4 color = (tex2D(_MainTex, scrolledUV) + _TextureSampleAdd) * IN.color;
 
