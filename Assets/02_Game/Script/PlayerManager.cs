@@ -1,4 +1,4 @@
-﻿/*
+﻿/**
  * @file	PlayerManager.cs
  * @brief   プレイヤーの共通機能の統括
  *
@@ -19,6 +19,7 @@ public class PlayerManager : MonoBehaviour
 {
     //! 変数宣言
     [SerializeField] float _moveTime;   //!< 移動時間
+    [SerializeField] bool _debug;
 
 
     // Start is called before the first frame update
@@ -38,12 +39,21 @@ public class PlayerManager : MonoBehaviour
     }
 
 
-    /*
+    /**
      * @brief 移動時間変数の取得
      */
     public float MoveTime
     {
         get { return _moveTime; }
+    }
+
+
+    /**
+     * @brief 移動中かどうかの判定
+     */
+    public bool Debug //!< 移動フラグ
+    {
+        get { return _debug; }  // ゲッター
     }
 }
 

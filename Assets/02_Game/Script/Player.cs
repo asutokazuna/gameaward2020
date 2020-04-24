@@ -221,6 +221,12 @@ public class Player : BaseObject
         _position       = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
         _isMove         = true;
 
+        if (name.Equals("Player"))
+        {
+            Debug.Log("ベクトル" + movement);
+            Debug.Log("移動先の座標" + _position);
+        }
+
         //offsetDirect(); // 向いてる方向の補正
 
         if (_map.isLimitField(_position))
@@ -234,25 +240,35 @@ public class Player : BaseObject
             _position   = _map.GetFallPos(_position);
             _mode       = E_OBJECT_MODE.FALL;
             _gameOver   = true;
+            if (name.Equals("Player"))
+                Debug.Log("ゲームオーバー判定");
         }
         else if (_map.isDontMove(_position, _oldPosition) || _lifted == true)
         {// 移動出来ない場合
             _position   = _oldPosition;
             _isMove     = false;    // 取り合えずの処理
+            if (name.Equals("Player"))
+                Debug.Log("移動できない判定");
         }
         else if (_map.isGetup(_position))
         {// 何かの上に上る時
             _position = new Vector3Int(_position.x, _position.y + 1, _position.z);
             _mode = E_OBJECT_MODE.GET_UP;
+            if (name.Equals("Player"))
+                Debug.Log("上に乗る判定");
         }
         else if (_map.isGetoff(_position))
         {// 一段下に降りる時
             _position = new Vector3Int(_position.x, _position.y - 1, _position.z);
             _mode = E_OBJECT_MODE.GET_OFF;
+            if (name.Equals("Player"))
+                Debug.Log("降りる判定");
         }
         else
         {// 正面への移動
             _mode = E_OBJECT_MODE.MOVE;
+            if (name.Equals("Player"))
+                Debug.Log("正面へ移動判定");
         }
         
         // 後で修正
@@ -669,6 +685,10 @@ public class Player : BaseObject
     */
     public bool isAnim()
     {
+        if (_mgr.Debug)
+        {
+            return true;
+        }
         return _animation.AnimFinish;
     }
 

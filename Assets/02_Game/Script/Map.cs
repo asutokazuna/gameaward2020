@@ -206,9 +206,11 @@ public class Map : MonoBehaviour
         if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.B)) return;
         PlayerSort();   // ソートと更新
         for (int n = 0; n < _playerCnt; n++)
-        {// 取り合えずソートはなし
+        {
             _player[n].HandAction();
         }
+        foreach (Player obj in _player)
+            UpdateMap(obj);
     }
 
 
@@ -437,12 +439,14 @@ public class Map : MonoBehaviour
         {
             return true;
         }
-        else if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.PLAYER_01 &&                     // プレイヤーの場合
-            pos.y + 1 < MAX_OBJECT && _map[pos.x, pos.y + 1, pos.z]._myObject == E_FIELD_OBJECT.NONE && // 上に何も積まれてない
-            !_player[_map[pos.x, pos.y, pos.z]._number]._lifted)                                        // 何かに持たれてない
-        {
-            Debug.Log(_player[_map[pos.x, pos.y, pos.z]._number].name + _map[pos.x, pos.y, pos.z]._number + " が持たれた");
-            return true;
+        else if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.PLAYER_01)
+        {// プレイヤーの場合
+            if (pos.y + 1 < MAX_OBJECT && _map[pos.x, pos.y + 1, pos.z]._myObject == E_FIELD_OBJECT.NONE && // 上に何も積まれてない
+                !_player[_map[pos.x, pos.y, pos.z]._number]._lifted)
+            {
+                return true;
+            }
+            Debug.Log("どうして？");
         }
         return false;
     }
