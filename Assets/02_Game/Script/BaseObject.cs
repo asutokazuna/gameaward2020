@@ -229,6 +229,8 @@ public class BaseObject : MonoBehaviour
                 ).OnComplete(() =>
             {
                 WaitMode();
+                this.gameObject.SetActive(false);       //割れた箱を非表示に
+                Instantiate((GameObject)Resources.Load("Debris"), _nextPos, Quaternion.identity);       //箱の破片を生成
                 GameObject.FindGameObjectWithTag("Map").GetComponent<Map>()._gameOver = true;  // ゲームオーバーやで
                 _gameOver = true;
             });
