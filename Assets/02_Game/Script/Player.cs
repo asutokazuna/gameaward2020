@@ -724,10 +724,9 @@ public class Player : BaseObject
             else if (n == 2)
             {
                 Debug.Log("下のを持つ");
-                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_LOW_CHARA);
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_LOW_BOX);
             }
 
-            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_BOX);
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
                 GameObject.Find(_obj.name).transform.parent = transform; // 追従
@@ -772,7 +771,6 @@ public class Player : BaseObject
             else if (n == 2)
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_LOW_BOX);
 
-            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_BOX);
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
                 WaitMode();
