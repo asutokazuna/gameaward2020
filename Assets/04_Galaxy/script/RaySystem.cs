@@ -26,13 +26,15 @@ public class RaySystem : MonoBehaviour
         Vector3 _center = new Vector3(Screen.width / 2, Screen.height / 2);
         //Rayが当たったオブジェクトの情報を入れる箱   
         Ray _ray = Camera.main.ScreenPointToRay(_center);
+
+        //Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         //Debug.Log(_center);
 
         foreach (RaycastHit hit in Physics.RaycastAll(_ray))
         {
             //Debug.Log(hit.collider);
-            Debug.Log(hit.collider.transform.parent.parent.name);
-            Debug.Log(hit.collider.transform.parent.parent);
+           // Debug.Log(hit.collider.transform.parent.parent.name);
+            Debug.Log(hit.collider.name);
             for (int i = 0; i < _stageObject.Count; i++)
             {
 
@@ -50,7 +52,7 @@ public class RaySystem : MonoBehaviour
                     //ベータ版用プログラム↓
                     if (hit.collider.transform.parent.parent.name == _stageObject[i].name)
                     {
-                        Debug.Log("Enter");
+                       // Debug.Log("Enter");
                         if (Input.GetKey(KeyCode.Return))
                         {
                             _sceneManager.SetScene((E_SCENE)i + 3);
