@@ -381,7 +381,7 @@ public class Player : BaseObject
                 {
                     Debug.Log(name + " 持ち上げるオブジェクトが参照できないよ？");
                 }
-                LiftMode();                                             // アニメーションのセット
+                LiftMode(n);                                             // アニメーションのセット
                 break;
             }
         }
@@ -412,7 +412,7 @@ public class Player : BaseObject
             else if (_map.isPut(putPos))
             {// 置くことができる
                 _map.PutToObject(_haveObject, putPos);  // 置く処理
-                PutMode();                              // アニメーションのセット
+                PutMode(n);                             // アニメーションのセット
                 _haveObject = new SquareInfo();         // オブジェクトを手放す
                 _isMove = true;
                 break;
@@ -605,15 +605,15 @@ public class Player : BaseObject
             if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
                 _haveObject._myObject == E_FIELD_OBJECT.MAX)
             {// 何も持っていない時
-                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL);
+                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL_FAINT);
             }
             else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
             {// プレイヤーを持っている時
-                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL_CHARA);
+                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL_FAINT);
             }
             else
             {// 何かを持っている時
-                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL_BOX);
+                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL_FAINT);
             }
             transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
                 (_oldPosition.y - _position.y), // ジャンプパワー
@@ -629,6 +629,19 @@ public class Player : BaseObject
         }
         else if (_mode == E_OBJECT_MODE.AREA_FALL)
         {
+            if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
+                _haveObject._myObject == E_FIELD_OBJECT.MAX)
+            {// 何も持っていない時
+                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL);
+            }
+            else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
+            {// プレイヤーを持っている時
+                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL);
+            }
+            else
+            {// 何かを持っている時
+                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL);
+            }
             transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
                 (_oldPosition.y - _position.y), // ジャンプパワー
                 1,  // ジャンプ回数
@@ -674,7 +687,7 @@ public class Player : BaseObject
      * @brief 持ち上げるモード
      * @return なし
      */
-    private void LiftMode()
+    private void LiftMode(int n)
     {
         if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
             _haveObject._myObject == E_FIELD_OBJECT.MAX)
@@ -683,7 +696,13 @@ public class Player : BaseObject
         }
         else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
         {// プレイヤーを持つとき
-            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_CHARA);
+            if (n == 0)
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_UP_CHARA);
+            if (n == 1)
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_CHARA);
+            if (n == 2)
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_LOW_CHARA);
+
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
                 GameObject.Find(_obj.name).transform.parent = transform; // 追従
@@ -692,6 +711,22 @@ public class Player : BaseObject
         }
         else
         {// プレイヤー以外を持つ時
+            if (n == 0)
+            {
+                Debug.Log("高い所から持つ");
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_UP_BOX);
+            }
+            if (n == 1)
+            {
+                Debug.Log("正面の物を持つ");
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_BOX);
+            }
+            if (n == 2)
+            {
+                Debug.Log("下のを持つ");
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_LOW_CHARA);
+            }
+
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_BOX);
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
@@ -706,7 +741,7 @@ public class Player : BaseObject
      * @brief 置くモード
      * @return なし
      */
-    private void PutMode()
+    private void PutMode(int n)
     {
         if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
             _haveObject._myObject == E_FIELD_OBJECT.MAX)
@@ -715,6 +750,13 @@ public class Player : BaseObject
         }
         else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
         {// プレイヤーを持つとき
+            if (n == 0)
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_UP_CHARA);
+            if (n == 1)
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_CHARA);
+            if (n == 2)
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_LOW_CHARA);
+
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_CHARA);
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
@@ -723,6 +765,13 @@ public class Player : BaseObject
         }
         else
         {// プレイヤー以外を持つ時
+            if (n == 0)
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_UP_BOX);
+            if (n == 1)
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_BOX);
+            if (n == 2)
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_LOW_BOX);
+
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_BOX);
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
