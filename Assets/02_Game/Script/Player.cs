@@ -709,10 +709,10 @@ public class Player : BaseObject
     }
 
 
-    /*
-    * @brief アニメーション中かどうかの判定
-    * @return _animation.AnimFinish
-    */
+    /**
+     * @brief アニメーション中かどうかの判定
+     * @return _animation.AnimFinish
+     */
     public bool isAnim()
     {
         if (_mgr.Debug)
@@ -733,7 +733,9 @@ public class Player : BaseObject
         Debug.Log(message);
     }
 
+
 #else
+    #region FiealController
     /**
      * @brief 更新処理
      * @return なし
@@ -1008,6 +1010,7 @@ public class Player : BaseObject
             (int)(transform.position.z - GameObject.FindGameObjectWithTag("FieldController").transform.position.z)
             );
     }
+    #endregion
 #endif
 }
 
