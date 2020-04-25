@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7326,7 +7326,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55dfbf1054c793e44a9f83d48ec49f69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nomalFade: {fileID: 2100000, guid: cda7322c3ada9bc4f865e376ef45c0c4, type: 2}
+  _fadeMat:
+  - {fileID: 2100000, guid: cda7322c3ada9bc4f865e376ef45c0c4, type: 2}
+  - {fileID: 2100000, guid: 77747dc2ff6cd884886e97b52e5f1bce, type: 2}
   _fadeSpeed: 0.01
 --- !u!1 &982965968 stripped
 GameObject:
@@ -12571,9 +12573,9 @@ Canvas:
   m_GameObject: {fileID: 1184877081}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_RenderMode: 1
+  m_Camera: {fileID: 963194227}
+  m_PlaneDistance: 1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -13486,6 +13488,8 @@ Transform:
   m_Children:
   - {fileID: 505204770}
   - {fileID: 426035905}
+  - {fileID: 1938670017}
+  - {fileID: 982965969}
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -16,8 +16,7 @@ using UnityEngine;
 public class Fade : MonoBehaviour
 {
     Material _appliedMat;
-    [SerializeField] Material _nomalFade;
-    //[SerializeField] Material _wipeFade; 複数の場合
+    [SerializeField] Material[] _fadeMat;
     [Range(0, 1)] [SerializeField] float _fadeSpeed;
 
 
@@ -27,7 +26,7 @@ public class Fade : MonoBehaviour
     */
     void Start()
     {
-        _appliedMat = _nomalFade;
+        _appliedMat = _fadeMat[0];
         _appliedMat.SetFloat("_Timer", 0);
 
     }
@@ -77,6 +76,14 @@ public class Fade : MonoBehaviour
         }
     }
 
+    /**
+    * @brief フェードタイプ変更
+    * @return なし
+    */
+    public void SetFadeType(int Type)
+    {
+        _appliedMat = _fadeMat[Type];
+    }
 
 
 
