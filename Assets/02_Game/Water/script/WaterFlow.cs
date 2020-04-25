@@ -217,6 +217,7 @@ public class WaterFlow : MonoBehaviour
     private void CreateWaterLeak()
     {
         GameObject LeakSide = (GameObject)Resources.Load("WaterLeak_side");
+        GameObject LeakSource = (GameObject)Resources.Load("WaterLeak_Source");
         GameObject LeakTop = (GameObject)Resources.Load("WaterLeak_top");
 
         GameObject huta = (GameObject)Resources.Load("suigen_huta");
@@ -238,7 +239,15 @@ public class WaterFlow : MonoBehaviour
                         pos.y -= 0.1f;
 
                         GameObject Obj;
-                        Obj = Instantiate(LeakSide, pos, Quaternion.Euler(0, 90, 0));
+                        if(_isWaterSource)
+                        {
+                            Obj = Instantiate(LeakSource, pos, Quaternion.Euler(0, 90, 0));
+                        }
+                        else
+                        {
+                            Obj = Instantiate(LeakSide, pos, Quaternion.Euler(0, 90, 0));
+                        }
+                        
                         Obj.transform.parent = this.transform;
                         Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
                     }
@@ -263,7 +272,15 @@ public class WaterFlow : MonoBehaviour
                         pos.y -= 0.1f;
 
                         GameObject Obj;
-                        Obj = Instantiate(LeakSide, pos, Quaternion.Euler(0, 0, 0));
+                        if (_isWaterSource)
+                        {
+                            Obj = Instantiate(LeakSource, pos, Quaternion.Euler(0, 0, 0));
+                        }
+                        else
+                        {
+                            Obj = Instantiate(LeakSide, pos, Quaternion.Euler(0, 0, 0));
+                        }
+                        
                         Obj.transform.parent = this.transform;
                         Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
                     }
@@ -288,7 +305,15 @@ public class WaterFlow : MonoBehaviour
                         pos.y -= 0.1f;
 
                         GameObject Obj;
-                        Obj = Instantiate(LeakSide, pos, Quaternion.Euler(0, 270, 0));
+                        if (_isWaterSource)
+                        {
+                            Obj = Instantiate(LeakSource, pos, Quaternion.Euler(0, 270, 0));
+                        }
+                        else
+                        {
+                            Obj = Instantiate(LeakSide, pos, Quaternion.Euler(0, 270, 0));
+                        }
+                        
                         Obj.transform.parent = this.transform;
                         Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
                     }
@@ -313,7 +338,15 @@ public class WaterFlow : MonoBehaviour
                         pos.y -= 0.1f;
 
                         GameObject Obj;
-                        Obj = Instantiate(LeakSide, pos, Quaternion.Euler(0, 180, 0));
+                        if (_isWaterSource)
+                        {
+                            Obj = Instantiate(LeakSource, pos, Quaternion.Euler(0, 180, 0));
+                        }
+                        else
+                        {
+                            Obj = Instantiate(LeakSide, pos, Quaternion.Euler(0, 180, 0));
+                        }
+                        
                         Obj.transform.parent = this.transform;
                         Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
                     }
@@ -386,8 +419,9 @@ public class WaterFlow : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        //相手のタグが箱かつ、自分自身が満水だったら
-        if(other.gameObject.tag == "WaterBlock" && _isFullWater)
+        //相手のタグが箱かつ、自分自身が満水かつ、持たれていなかったら
+        if(other.gameObject.tag == "WaterBlock" && _isFullWater && 
+            !this.GetComponent<BlockTank>()._lifted)
         {
             
             for (int i = 0; i < 4; i++)
