@@ -40,11 +40,11 @@ public class meshUV : MonoBehaviour
         }
         _myMesh.uv = nUV;
 
-        if (_myScript._currentWater >= _myScript._maxWater - 35 && _mr.material.color.a >= _color.a)
+        if (_myScript._currentWater >= _myScript._maxWater - 35 && _mr.material.color.a <= _color.a)
         {
             _mr.material.color += new Color(0,0,0,0.01f);       //ここの数値を弄ると出るのが早くなったりする
         }
-        else if (_myScript._currentWater >= 0)
+        else if (_myScript._currentWater <= 0)
         {
             _mr.material.color = new Color(_color.r, _color.g, _color.b, 0);
         }
