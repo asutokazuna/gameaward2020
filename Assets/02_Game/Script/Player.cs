@@ -698,9 +698,9 @@ public class Player : BaseObject
         {// プレイヤーを持つとき
             if (n == 0)
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_UP_CHARA);
-            if (n == 1)
+            else if (n == 1)
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_CHARA);
-            if (n == 2)
+            else if (n == 2)
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_LOW_CHARA);
 
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
@@ -716,12 +716,12 @@ public class Player : BaseObject
                 Debug.Log("高い所から持つ");
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_UP_BOX);
             }
-            if (n == 1)
+            else if (n == 1)
             {
                 Debug.Log("正面の物を持つ");
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_BOX);
             }
-            if (n == 2)
+            else if (n == 2)
             {
                 Debug.Log("下のを持つ");
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_LOW_CHARA);
@@ -752,9 +752,9 @@ public class Player : BaseObject
         {// プレイヤーを持つとき
             if (n == 0)
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_UP_CHARA);
-            if (n == 1)
+            else if (n == 1)
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_CHARA);
-            if (n == 2)
+            else if (n == 2)
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_LOW_CHARA);
 
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_CHARA);
@@ -767,9 +767,9 @@ public class Player : BaseObject
         {// プレイヤー以外を持つ時
             if (n == 0)
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_UP_BOX);
-            if (n == 1)
+            else if (n == 1)
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_BOX);
-            if (n == 2)
+            else if (n == 2)
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_LOW_BOX);
 
             _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_BOX);
