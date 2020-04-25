@@ -29,6 +29,7 @@ public enum E_OBJECT_MODE
     WAIT,       // 待機
     ROTATE,     // 回転
     MOVE,       // 移動
+    DONT_MOVE,  // 動けない
     GET_UP,     // 上に登る
     GET_OFF,    // 下に降りる
     LIFT,       // 持ち上げる
