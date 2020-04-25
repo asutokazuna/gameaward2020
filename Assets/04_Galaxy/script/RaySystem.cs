@@ -33,7 +33,7 @@ public class RaySystem : MonoBehaviour
         foreach (RaycastHit hit in Physics.RaycastAll(_ray))
         {
             //Debug.Log(hit.collider);
-            Debug.Log(hit.collider.transform.parent.parent.name);
+           // Debug.Log(hit.collider.transform.parent.parent.name);
             Debug.Log(hit.collider.name);
             for (int i = 0; i < _stageObject.Count; i++)
             {
@@ -52,7 +52,7 @@ public class RaySystem : MonoBehaviour
                     //ベータ版用プログラム↓
                     if (hit.collider.transform.parent.parent.name == _stageObject[i].name)
                     {
-                        Debug.Log("Enter");
+                       // Debug.Log("Enter");
                         if (Input.GetKey(KeyCode.Return))
                         {
                             _sceneManager.SetScene((E_SCENE)i + 3);
