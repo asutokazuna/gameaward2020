@@ -9,6 +9,7 @@ public class UICange : MonoBehaviour
 {
     [SerializeField] GameObject[] _gameObject;
     [SerializeField] int _planetNo;
+    [SerializeField] int MAX_UI;
 
     // Start is called before the first frame update
     void Start()
@@ -30,9 +31,9 @@ public class UICange : MonoBehaviour
             _planetNo++;
         }
         if(_planetNo < 0) {
-            _planetNo = 3;
+            _planetNo = MAX_UI;
         }
-        if(_planetNo > 3) {
+        if(_planetNo > MAX_UI) {
             _planetNo = 0;
         }
 
