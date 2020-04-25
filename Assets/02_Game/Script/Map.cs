@@ -373,6 +373,24 @@ public class Map : MonoBehaviour
 
 
     /**
+     * @brief エリア外判定
+     * @param1 プレイヤーの座標
+     * @return エリア外なら true
+     */
+    public bool isOutsideTheArea(Vector3Int pos)
+    {
+        for (; pos.y >= 0; pos.y--)
+        {
+            if (isUse(pos))
+            {
+                return false;   // マップへの落下
+            }
+        }
+        return true;    // エリア外
+    }
+
+
+    /**
      * @brief ゲームクリア判定
      * @return ゲームクリアなら true
      */

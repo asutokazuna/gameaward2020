@@ -36,6 +36,7 @@ public enum E_OBJECT_MODE
     PUT,        // 置く
     PUTED,      // 置かれる
     FALL,       // 落下
+    AREA_FALL,  // エリア外
 }
 
 
