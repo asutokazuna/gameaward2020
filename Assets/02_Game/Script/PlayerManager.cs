@@ -18,7 +18,8 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     //! 変数宣言
-    [SerializeField] float _moveTime;   //!< 移動時間
+    [SerializeField] float _moveTime;               //!< 移動時間
+    [SerializeField] float _outsideTheAreaTime;     //!< エリア外落下時間
     [SerializeField] bool _debug;
 
 
@@ -45,6 +46,15 @@ public class PlayerManager : MonoBehaviour
     public float MoveTime
     {
         get { return _moveTime; }
+    }
+
+
+    /**
+     * @brief 移動時間変数の取得
+     */
+    public float OutsideTheEreaTime
+    {
+        get { return _outsideTheAreaTime; }
     }
 
 

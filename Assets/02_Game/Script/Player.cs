@@ -242,8 +242,15 @@ public class Player : BaseObject
         }
         else if (_map.isGameOver(_position, E_OBJECT_MODE.MOVE))
         {// ゲームオーバー(落下)
+            if (_map.isOutsideTheArea(_position))
+            {// エリア外
+                _mode = E_OBJECT_MODE.AREA_FALL;
+            }
+            else
+            {// 落下
+                _mode = E_OBJECT_MODE.FALL;
+            }
             _position   = _map.GetFallPos(_position);
-            _mode       = E_OBJECT_MODE.FALL;
             _gameOver   = true;
             if (name.Equals("Player"))
                 Debug.Log("ゲームオーバー判定");
@@ -301,7 +308,7 @@ public class Player : BaseObject
         {// ジャンプで降りる
             JumpMode(); // アニメーションのセット
         }
-        else if (_mode == E_OBJECT_MODE.FALL)
+        else if (_mode == E_OBJECT_MODE.FALL || _mode == E_OBJECT_MODE.AREA_FALL)
         {// ジャンプで落ちる
             JumpMode(); // アニメーションのセット
         }
@@ -547,14 +554,6 @@ public class Player : BaseObject
             }
             transform.DOJump(_nextPos, 1, 1, _mgr.MoveTime, false).OnComplete(() =>
             {
-
-                //if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
-                //{
-                //    //_position = _map.GetTramplinepPos(_position, _direct);
-                //    //_map.UpdateMap(_obj);
-                //    //JumpMode();
-                //}
-
                 WaitMode();
             });
         }
@@ -604,6 +603,20 @@ public class Player : BaseObject
                 _map._gameOver = true;  // ゲームオーバーやで
                 _gameOver = true;
             });
+        }
+        else if (_mode == E_OBJECT_MODE.AREA_FALL)
+        {
+            transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
+                (_oldPosition.y - _position.y), // ジャンプパワー
+                1,  // ジャンプ回数
+                _mgr.MoveTime, // 時間
+                false
+                ).OnComplete(() =>
+                {
+                    transform.DOScale(new Vector3(), _mgr.OutsideTheEreaTime);
+                    _map._gameOver = true;  // ゲームオーバーやで
+                    _gameOver = true;
+                });
         }
     }
 
