@@ -7218,10 +7218,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b49f76e0e008f04bb41eac2a5542322, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  __fieldBlock1: {fileID: 1517515728}
-  __fieldBlock2: {fileID: 1636311888}
-  __fieldBlock3: {fileID: 1370826468}
-  __fieldBlock4: {fileID: 1169281248}
+  _fieldBlock1: {fileID: 1517515728}
+  _fieldBlock2: {fileID: 1169281248}
+  _fieldBlock3: {fileID: 1636311888}
+  _fieldBlock4: {fileID: 1370826468}
   _angle: 90
   _rotateFlame: 60
   _setCameraPos: {x: -4, y: 6, z: -10}
@@ -7338,7 +7338,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55dfbf1054c793e44a9f83d48ec49f69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nomalFade: {fileID: 2100000, guid: cda7322c3ada9bc4f865e376ef45c0c4, type: 2}
+  _fadeMat:
+  - {fileID: 2100000, guid: cda7322c3ada9bc4f865e376ef45c0c4, type: 2}
   _fadeSpeed: 0.01
 --- !u!1 &982965968 stripped
 GameObject:
