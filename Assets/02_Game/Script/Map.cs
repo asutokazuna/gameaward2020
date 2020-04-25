@@ -709,6 +709,10 @@ public class Map : MonoBehaviour
     {
         GameObject[] tramplineblock = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_FIELD_OBJECT.BLOCK_TRAMPLINE]);
         _tramplineCnt = tramplineblock.Length;
+        if (_tramplineCnt <= 0)
+        {
+            return;
+        }
         _tramplineBlock = new TramplineBlock[_tramplineCnt];
         for (int n = 0; n < _waterSourceCnt; n++)
         {
