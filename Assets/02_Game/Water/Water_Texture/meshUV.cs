@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿/**
+ * @file meshUV
+ * @brief 水のテクスチャ処理
+ * @author kondo katsutoshi
+ * @date 2020/04/25 テクスチャがｽﾝｯってでるようにした
+ */
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,9 +40,9 @@ public class meshUV : MonoBehaviour
         }
         _myMesh.uv = nUV;
 
-        if (_myScript._isFullWater)
+        if (_myScript._currentWater >= _myScript._maxWater - 35 && _mr.material.color.a >= _color.a)
         {
-            _mr.material.color = _color;
+            _mr.material.color += new Color(0,0,0,0.01f);       //ここの数値を弄ると出るのが早くなったりする
         }
         else if (_myScript._currentWater >= 0)
         {
