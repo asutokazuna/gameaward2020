@@ -204,6 +204,7 @@ GameObject:
   - component: {fileID: 601020077}
   - component: {fileID: 601020082}
   - component: {fileID: 601020083}
+  - component: {fileID: 601020084}
   m_Layer: 0
   m_Name: CameraObj
   m_TagString: Untagged
@@ -346,6 +347,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &601020084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601020076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 216f1c471d0bbb447b03fd3c5e850aa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stageObject:
+  - {fileID: 1718462324}
+  - {fileID: 514338315}
+  - {fileID: 1712040347}
+  - {fileID: 2113998549}
 --- !u!1001 &627944734
 PrefabInstance:
   m_ObjectHideFlags: 0
