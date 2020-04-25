@@ -11,7 +11,7 @@ public class Title : MonoBehaviour
     {
         if (Input.anyKey)
         {
-            SceneManager.LoadScene("Galaxy");
+            GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE.STAGE_SELECT);
         }
     }
 }
