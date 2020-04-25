@@ -23,6 +23,7 @@ public class PlanetManager : MonoBehaviour
     // Use this for initialization
     // @details 　publicで設定した値を設定する
 
+    UICange _uiScript; 
 
 
     void Start()
@@ -31,6 +32,7 @@ public class PlanetManager : MonoBehaviour
         _angle = 360.0f / _maxPlanet;
         _oldAngle = _angle;
         SetPlanet();
+        _uiScript = GetComponent<UICange>();
     }
 
     // Update is called once per frame
@@ -146,6 +148,7 @@ public class PlanetManager : MonoBehaviour
         Debug.Log(_selectPlanet);
         if (Input.GetKeyUp(KeyCode.LeftArrow))
         {
+            _uiScript.ChangePlanetName(true);
             ResetPlanet();
             for (int i = 0; i < _maxPlanet; i++) 
             {
@@ -165,6 +168,7 @@ public class PlanetManager : MonoBehaviour
         }
         else if (Input.GetKeyUp(KeyCode.RightArrow))
         {
+            _uiScript.ChangePlanetName(false);
             ResetPlanet();
             for (int i = 0; i < _maxPlanet; i++)
             {
