@@ -22,13 +22,14 @@ using UnityEngine.SceneManagement;
  */
 public enum E_SCENE
 {
-    TITLE           = 0,
-    STAGE_SELECT    = 1,
-    GAME            = 2,
-    _1_1            = 3,
-    _1_2            = 4,
-    _1_3            = 5,
-    _1_4            = 6,
+    TITLE           = 0,    // タイトル
+    STAGE_SELECT    = 1,    // ステージ選択
+    GAME            = 2,    // SampleScene
+    _1_1            = 3,    // 1-1
+    _1_2            = 4,    // 1-2
+    _1_3            = 5,    // 1-3
+    _1_4            = 6,    // 1-4
+    RELOAD,                 // リロード
 }
 
 
@@ -42,6 +43,7 @@ public class SceneMgr : MonoBehaviour
     static private SceneMgr _instance;                              //!< 自身のインスタンス
     [SerializeField] private E_SCENE _nowScene = E_SCENE.TITLE;     //!< 今のシーン
     [SerializeField] private E_SCENE _oldScene = E_SCENE.TITLE;     //!< 前のシーン
+    [SerializeField] private bool _reroad = false;
 
     [SerializeField] private bool _isDebug = false;     //!< かとしゅん頼む
 
@@ -63,7 +65,9 @@ public class SceneMgr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _oldScene = _nowScene;
+        int nowHandle = SceneManager.GetActiveScene().buildIndex;
+        Debug.Log("ハンドル値" + nowHandle);
+        _nowScene = _oldScene = (E_SCENE)nowHandle;
     }
 
 
@@ -76,12 +80,12 @@ public class SceneMgr : MonoBehaviour
 
     public void ChangeScene()
     {
-        if (_oldScene == _nowScene)
+        if (_oldScene == _nowScene && !_reroad)
         {// シーンの切り替えが発生してないで
             return;
         }
-        _oldScene = _nowScene;        // 過去シーンの保存
-
+        _oldScene   = _nowScene;        // 過去シーンの保存
+        _reroad     = false;            // リロードしないよ
         SceneManager.LoadScene((int)_nowScene);
     }
 
@@ -91,9 +95,21 @@ public class SceneMgr : MonoBehaviour
         return _isDebug;
     }
 
-    public void SetScene(E_SCENE _nextScene)
+
+    /**
+     * @brief シーンのセット
+     * @param1 シーン列挙 デフォルト引数でリロード
+     * @return なし
+     */
+    public void SetScene(E_SCENE nextScene = E_SCENE.RELOAD)
     {
-        _nowScene = _nextScene;
+        if (nextScene == E_SCENE.RELOAD)
+        {
+            _reroad = true;
+            return;
+        }
+        _nowScene = nextScene;
     }
+
 
 }
