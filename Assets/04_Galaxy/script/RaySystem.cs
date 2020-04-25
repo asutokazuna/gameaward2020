@@ -1,12 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class Raytest : MonoBehaviour
+public class RaySystem : MonoBehaviour
 {
-   
     [SerializeField] private List<GameObject> _stageObject;
+    CameraMove _cameraMove;
     SceneMgr _sceneManager;
     // Start is called before the first frame update
     void Start()
@@ -17,6 +16,7 @@ public class Raytest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Debug.Log(_cameraMove._currentID);
         RayTest();
     }
     void RayTest()
@@ -29,19 +29,23 @@ public class Raytest : MonoBehaviour
 
         foreach (RaycastHit hit in Physics.RaycastAll(_ray))
         {
+            Debug.Log(hit.collider.GetComponent<revolution>().PlanetID);
             for (int i = 0; i < _stageObject.Count; i++)
             {
-                if (hit.collider.name == _stageObject[i].name)
+
+                if (hit.collider.GetComponent<revolution>().PlanetID == _cameraMove._currentID)
                 {
-                    Debug.Log(i+1);
-                    if (Input.GetKey(KeyCode.Return))
+                    if (hit.collider.name == _stageObject[i].name)
                     {
-                        //Debug.Log("Enter");
-                        _sceneManager.SetScene((E_SCENE)i + 3);
+                        if (Input.GetKey(KeyCode.Return))
+                        {
+                            //Debug.Log("Enter");
+                            _sceneManager.SetScene((E_SCENE)i + 3);
+                        }
                     }
                 }
             }
-           // Debug.Log(hit.collider.gameObject.name);
+            // Debug.Log(hit.collider.gameObject.name);
         }
     }
 }
