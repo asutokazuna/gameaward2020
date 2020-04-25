@@ -11,12 +11,13 @@ public class RaySystem : MonoBehaviour
     void Start()
     {
         _sceneManager = GameObject.FindWithTag("SceneManager").GetComponent<SceneMgr>();
+        _cameraMove = GameObject.Find("CameraObj").GetComponent<CameraMove>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Debug.Log(_cameraMove._currentID);
+        
         RayTest();
     }
     void RayTest()
@@ -25,21 +26,33 @@ public class RaySystem : MonoBehaviour
         Vector3 _center = new Vector3(Screen.width / 2, Screen.height / 2);
         //Rayが当たったオブジェクトの情報を入れる箱   
         Ray _ray = Camera.main.ScreenPointToRay(_center);
-        //Debug.Log(center);
+        //Debug.Log(_center);
 
         foreach (RaycastHit hit in Physics.RaycastAll(_ray))
         {
-            Debug.Log(hit.collider.GetComponent<revolution>().PlanetID);
+            //Debug.Log(hit.collider);
+            Debug.Log(hit.collider.transform.parent.parent.name);
+            Debug.Log(hit.collider.transform.parent.parent);
             for (int i = 0; i < _stageObject.Count; i++)
             {
 
-                if (hit.collider.GetComponent<revolution>().PlanetID == _cameraMove._currentID)
+                if (hit.collider.transform.parent.parent.GetComponent<revolution>().PlanetID == _cameraMove._currentID)
                 {
-                    if (hit.collider.name == _stageObject[i].name)
+                    //if (hit.collider.name == _stageObject[i].name)
+                    //{
+                    //        Debug.Log("Enter");
+                    //    if (Input.GetKey(KeyCode.Return))
+                    //    {
+                    //        _sceneManager.SetScene((E_SCENE)i + 3);
+                    //    }
+                    //}
+
+                    //ベータ版用プログラム↓
+                    if (hit.collider.transform.parent.parent.name == _stageObject[i].name)
                     {
+                        Debug.Log("Enter");
                         if (Input.GetKey(KeyCode.Return))
                         {
-                            //Debug.Log("Enter");
                             _sceneManager.SetScene((E_SCENE)i + 3);
                         }
                     }
