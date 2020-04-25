@@ -131,7 +131,10 @@ public class Map : MonoBehaviour
         }
         if (_gameClear)
         {// ゲームクリア時の処理を追加する場所
-            
+            foreach (Player obj in _player)
+            {
+                obj.GameClear();
+            }
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
