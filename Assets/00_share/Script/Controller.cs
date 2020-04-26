@@ -319,8 +319,8 @@ public class Controller : MonoBehaviour
         {// Lスティックの場合
             return isRStick(key, mode);
         }
-        else if (key == E_INPUT.B)
-        {// Bボタン
+        else if (key == E_INPUT.A)
+        {// Aボタン
             if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.Space);
             if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.Space);
             if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.Space);
