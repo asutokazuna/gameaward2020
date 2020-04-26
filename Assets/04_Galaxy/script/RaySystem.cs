@@ -59,7 +59,7 @@ public class RaySystem : MonoBehaviour
                        // Debug.Log("Enter");
                         if (Input.GetKey(KeyCode.Return))
                         {
-                            _sceneManager.SetScene((E_SCENE)i + 2);
+                            //_sceneManager.SetScene((E_SCENE)i + 2);
                         }
                     }
                 }

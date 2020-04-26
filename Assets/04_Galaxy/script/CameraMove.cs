@@ -30,7 +30,9 @@ public class CameraMove : MonoBehaviour
     [SerializeField] private float mouseY;
     private GameObject UI;
     private GameObject StageSelectManager;
+    private SceneMgr SceneManager;
 
+    public float _offsetY;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +41,7 @@ public class CameraMove : MonoBehaviour
         UI = GameObject.Find("CanvasUI");
         UI.SetActive(false);
 
+        SceneManager = GameObject.Find("SceneManager").GetComponent<SceneMgr>();
 
         _planetData = GameObject.FindGameObjectsWithTag("Planet");
         _camera = this.transform.GetComponentInChildren<Transform>();
@@ -123,6 +126,15 @@ public class CameraMove : MonoBehaviour
         Quaternion _rotation = Quaternion.LookRotation(_relativePos);
         _camera.rotation = Quaternion.Slerp(_camera.rotation, _rotation, _cameraSpd);
 
+        if(_isOrbital)
+        {
+            Vector3 pos = _camera.position;
+            pos.y += _offsetY;
+
+            _camera.position = pos;
+
+        }
+
         if(Input.GetKeyDown(KeyCode.Space) && _isOrbital)   //シーン遷移処理
         {
             switch(_currentID)  
@@ -130,18 +142,21 @@ public class CameraMove : MonoBehaviour
                 case 1:     //森
 
                     //ここにシーン遷移の処理
+                    SceneManager.SetScene(E_SCENE._1_1);
 
                     break;
 
                 case 2:     //火山
 
                     //ここにシーン遷移の処理
+                    SceneManager.SetScene(E_SCENE._1_2);
 
                     break;
 
                 case 3:     //キノコ
 
                     //ここにシーン遷移の処理
+                    SceneManager.SetScene(E_SCENE._1_3);
 
                     break;
             }
