@@ -28,11 +28,18 @@ public class CameraMove : MonoBehaviour
     private float _angleY;
 
     [SerializeField] private float mouseY;
+    private GameObject UI;
+    private GameObject StageSelectManager;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        StageSelectManager = GameObject.Find("StageSelectManager");
+        UI = GameObject.Find("CanvasUI");
+        UI.SetActive(false);
+
+
         _planetData = GameObject.FindGameObjectsWithTag("Planet");
         _camera = this.transform.GetComponentInChildren<Transform>();
         _isOrbital = false;
@@ -46,11 +53,13 @@ public class CameraMove : MonoBehaviour
         {
             _currentID--;
             _isOrbital = false;
+            StageSelectManager.GetComponent<UICange>().ChangePlanetName(true);
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
             _currentID++;
             _isOrbital = false;
+            StageSelectManager.GetComponent<UICange>().ChangePlanetName(false);
         }
 
         if(_currentID >= 4)
@@ -77,9 +86,11 @@ public class CameraMove : MonoBehaviour
         {
             _agent.destination = _currentPlanet.transform.position;
             _cameraSpd = _cameraRotateSpd;
+            UI.SetActive(false);
         }
         else
         {
+            UI.SetActive(true);
             _cameraSpd = 1.0f;
 
             _angleX += Input.GetAxis("Mouse X") * _rotateSpeed;
