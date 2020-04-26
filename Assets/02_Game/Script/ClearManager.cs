@@ -65,7 +65,15 @@ public class ClearManager : MonoBehaviour
             if (_changeDelay <= 0.0f || Input.anyKey)
             {
                 //シーン遷移
-                GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene();
+                if (Input.GetKeyDown(KeyCode.Z))
+                {// 次のステージ
+                    GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE_MODE.NEXT_STAGE);
+                }
+                else if (Input.GetKeyDown(KeyCode.C))
+                {// ステージ選択
+                    GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE.STAGE_SELECT);
+                }
+                //GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene();
             }
             else
             {

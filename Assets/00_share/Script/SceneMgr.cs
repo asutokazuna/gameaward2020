@@ -24,13 +24,21 @@ public enum E_SCENE
 {
     TITLE           = 0,    // タイトル
     STAGE_SELECT    = 1,    // ステージ選択
-    GAME            = 2,    // SampleScene
     _1_1            = 3,    // 1-1
     _1_2            = 4,    // 1-2
     _1_3            = 5,    // 1-3
-    _1_4            = 6,    // 1-4
-    RELOAD,                 // リロード
 }
+
+
+/**
+ * @enum シーン切り替えのモード
+ */
+public enum E_SCENE_MODE
+{
+    RELOAD,                 // リロード
+    NEXT_STAGE,             // 次のステージ
+}
+
 
 
 
@@ -72,8 +80,8 @@ public class SceneMgr : MonoBehaviour
         Debug.Log("ハンドル値" + nowHandle);
         _nowScene = _oldScene = (E_SCENE)nowHandle;
 
-        _mainCamera = GameObject.Find("Main Camera");
-        _fadeScript = _mainCamera.GetComponent<Fade>();
+        //_mainCamera = GameObject.Find("Main Camera");
+        //_fadeScript = _mainCamera.GetComponent<Fade>();
     }
 
 
@@ -93,12 +101,12 @@ public class SceneMgr : MonoBehaviour
         _oldScene   = _nowScene;        // 過去シーンの保存
         _reroad     = false;            // リロードしないよ
 
-
-        _fadeScript.StartFadeOut();
-        Invoke("Load", 2f); //フェード終わるまで遅延
+        Load();
+        //_fadeScript.StartFadeOut();
+        //Invoke("Load", 2f); //フェード終わるまで遅延
     }
 
-    public void Load()
+    private void Load()
     {
         SceneManager.LoadScene((int)_nowScene);
     }
@@ -115,15 +123,48 @@ public class SceneMgr : MonoBehaviour
      * @param1 シーン列挙 デフォルト引数でリロード
      * @return なし
      */
-    public void SetScene(E_SCENE nextScene = E_SCENE.RELOAD)
+    public void SetScene(E_SCENE_MODE mode)
     {
-        if (nextScene == E_SCENE.RELOAD)
-        {
+        if (mode == E_SCENE_MODE.RELOAD)
+        {// シーンの再読み込み
             _reroad = true;
             return;
         }
-        _nowScene = nextScene;
+        else if (mode == E_SCENE_MODE.NEXT_STAGE)
+        {// 次のシーンへ移行
+            if (isNextScene())
+            {// まだ同じ星の中でステージがある
+                _nowScene += 1;
+            }
+            else
+            {// ステージ選択へ戻る
+                _nowScene = E_SCENE.STAGE_SELECT;
+            }
+        }
     }
 
 
+    /**
+     * @brief シーンのセット
+     * @param1 シーン列挙 デフォルト引数でリロード
+     * @return なし
+     */
+    public void SetScene(E_SCENE scene)
+    {
+        _nowScene = scene;
+    }
+
+
+    /**
+     * @brief 次のステージへ移行できるか
+     * @return 行けるなら true を返す
+     */
+    private bool isNextScene()
+    {
+        if ((int)_nowScene + 1 <= (int)E_SCENE._1_3)
+        {// 取り合えずの処理
+            return true;
+        }
+        return false;
+    }
 }
