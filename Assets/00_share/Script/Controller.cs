@@ -42,7 +42,8 @@ public enum E_INPUT
     R_STICK_LEFT,   // Rスティック左
     R_STICK_UP,     // Rスティック上
     R_STICK_DOWN,   // Rスティック下
-    MAX,            // 最大値
+    MAX,            // 配列最大値
+    ENY_BUTTON,     // 何かしらのキー
 }
 
 
@@ -78,13 +79,14 @@ public class Controller : MonoBehaviour
     /**
      * @class -1～1までの値で取得するボタン
      */
-    private class AxisButton
+    public class AxisButton
     {
-        private float _now_H;   //!< 現在の横軸
-        private float _now_V;   //!< 現在の縦軸
+        public float _now_H { get; private set; }   //!< 現在の横軸
+
+        public float _now_V { get; private set; }   //!< 現在の縦軸
+
         private float _old_H;   //!< 過去の横軸
         private float _old_V;   //!< 過去の縦軸
-
 
         /**
          * @brief 更新処理
@@ -94,10 +96,10 @@ public class Controller : MonoBehaviour
          */
         public void Update(string H, string V)
         {
-            _old_H = _now_H;
-            _old_V = _now_V;
-            _now_H = Input.GetAxis(H);
-            _now_V = Input.GetAxis(V);
+            _old_H = this._now_H;
+            _old_V = this._now_V;
+            this._now_H = Input.GetAxis(H);
+            this._now_V = Input.GetAxis(V);
             //Debug.Log("横軸 = " + _now_H + "   縦軸" + _now_V);
         }
 
@@ -216,9 +218,11 @@ public class Controller : MonoBehaviour
 
 
     static private Controller _instance;            //!< 自身のインスタンス
-    private AxisButton _LStick  = new AxisButton(); //!< Lスティック
-    private AxisButton _RStick  = new AxisButton(); //!< Rスティック
-    private AxisButton _DPad    = new AxisButton(); //!< 十字
+    public AxisButton _LStick   = new AxisButton(); //!< Lスティック
+    public AxisButton _RStick   = new AxisButton(); //!< Rスティック
+    public AxisButton _DPad     = new AxisButton(); //!< 十字
+
+
 
 
     string[] _name = {

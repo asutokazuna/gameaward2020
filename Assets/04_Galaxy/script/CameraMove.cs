@@ -24,6 +24,7 @@ public class CameraMove : MonoBehaviour
     private Vector3 _angles;
 
     public float _rotateSpeed;
+    public float _rotateControllerSpeed;
     private float _angleX;
     private float _angleY;
 
@@ -52,13 +53,17 @@ public class CameraMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Q))
+        if(Input.GetKeyDown(KeyCode.Q)
+            || GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT)
+            )
         {
             _currentID--;
             _isOrbital = false;
             StageSelectManager.GetComponent<UICange>().ChangePlanetName(true);
         }
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E)
+            || GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT)
+            )
         {
             _currentID++;
             _isOrbital = false;
@@ -97,9 +102,11 @@ public class CameraMove : MonoBehaviour
             _cameraSpd = 1.0f;
 
             _angleX += Input.GetAxis("Mouse X") * _rotateSpeed;
+            _angleX += GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()._RStick._now_H * _rotateControllerSpeed;
             CheckAngle(_angleX);
 
             _angleY += Input.GetAxis("Mouse Y") * _rotateSpeed;
+            _angleY += GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()._RStick._now_V * _rotateControllerSpeed;
             if(_angleY * _rotateSpeed <= 0)
             {
                 _angleY = 0;
@@ -135,7 +142,9 @@ public class CameraMove : MonoBehaviour
 
         }
 
-        if(Input.GetKeyDown(KeyCode.Space) && _isOrbital)   //シーン遷移処理
+        if((Input.GetKeyDown(KeyCode.Space)
+            || GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
+            && _isOrbital)   //シーン遷移処理
         {
             switch(_currentID)  
             {

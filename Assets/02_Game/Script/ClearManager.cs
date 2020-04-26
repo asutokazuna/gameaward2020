@@ -103,10 +103,6 @@ public class ClearManager : MonoBehaviour
             ParticleTop.GetComponent<ParticleSystem>().Play(true);
 
             _stageClear[(int)GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().NowScene] = true;
-            if (GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().NowScene == E_SCENE._1_1)
-            {
-                Debug.Log("あああああ");
-            }
         }
     }
 
