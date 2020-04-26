@@ -216,7 +216,7 @@ public class Map : MonoBehaviour
      */
     public void HandAction()
     {
-        if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.B)) return;
+        if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A)) return;
         PlayerSort();   // ソートと更新
         for (int n = 0; n < _playerCnt; n++)
         {
