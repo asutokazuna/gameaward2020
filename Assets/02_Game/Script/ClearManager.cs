@@ -66,12 +66,11 @@ public class ClearManager : MonoBehaviour
         {
             if (_changeDelay <= 0.0f || Input.anyKey)
             {
-                _stageClear[(int)GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().NowScene] = true;
                 CallDebug();
                 
                 if (isGameClear())
                 {// クリアやで
-                    return;
+                    GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE.CLEAR);
                 }
                 //シーン遷移
                 else if (Input.GetKeyDown(KeyCode.Z))
@@ -102,13 +101,19 @@ public class ClearManager : MonoBehaviour
             ParticleLeft.GetComponent<ParticleSystem>().Play(true);
             ParticleRight.GetComponent<ParticleSystem>().Play(true);
             ParticleTop.GetComponent<ParticleSystem>().Play(true);
+
+            _stageClear[(int)GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().NowScene] = true;
+            if (GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().NowScene == E_SCENE._1_1)
+            {
+                Debug.Log("あああああ");
+            }
         }
     }
 
 
     public bool isGameClear()
     {// 取り合えずベータ版クリア
-        for (int n = 0; n <= (int)E_SCENE.CLEAR; n++)
+        for (int n = (int)E_SCENE._1_1; n < (int)E_SCENE.CLEAR; n++)
         {
             if (!_stageClear[n])
             {// まだ未クリアがあるよ
@@ -121,7 +126,7 @@ public class ClearManager : MonoBehaviour
 
     private void CallDebug()
     {
-        for (int n = 0; n <= (int)E_SCENE.CLEAR; n++)
+        for (int n = (int)E_SCENE._1_1; n < (int)E_SCENE.CLEAR; n++)
         {
             if (!_stageClear[n])
             {// まだ未クリアがあるよ

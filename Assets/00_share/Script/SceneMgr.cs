@@ -24,9 +24,9 @@ public enum E_SCENE
 {
     TITLE           = 0,    // タイトル
     STAGE_SELECT    = 1,    // ステージ選択
-    _1_1            = 3,    // 1-1
-    _1_2            = 4,    // 1-2
-    _1_3            = 5,    // 1-3
+    _1_1            = 2,    // 1-1
+    _1_2            = 3,    // 1-2
+    _1_3            = 4,    // 1-3
     CLEAR,                  // クリアシーン
 }
 
@@ -166,7 +166,7 @@ public class SceneMgr : MonoBehaviour
      */
     private bool isNextScene()
     {
-        if ((int)_nowScene + 1 < (int)E_SCENE._1_3)
+        if ((int)_nowScene + 1 <= (int)E_SCENE._1_3)
         {// 取り合えずの処理
             return true;
         }
