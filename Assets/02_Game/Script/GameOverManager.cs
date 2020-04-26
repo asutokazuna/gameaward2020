@@ -45,7 +45,7 @@ public class GameOverManager : MonoBehaviour
             if (_changeDelay <= 0.0f || Input.anyKey)
             {
                 //シーン遷移
-                GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene();
+                GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE_MODE.RELOAD);
             }
             else
             {
