@@ -81,8 +81,8 @@ public class SceneMgr : MonoBehaviour
         Debug.Log("ハンドル値" + nowHandle);
         _nowScene = _oldScene = (E_SCENE)nowHandle;
 
-        //_mainCamera = GameObject.Find("Main Camera");
-        //_fadeScript = _mainCamera.GetComponent<Fade>();
+        _mainCamera = GameObject.Find("Main Camera");
+        _fadeScript = _mainCamera.GetComponent<Fade>();
     }
 
 
@@ -102,17 +102,12 @@ public class SceneMgr : MonoBehaviour
         _oldScene   = _nowScene;        // 過去シーンの保存
         _reroad     = false;            // リロードしないよ
 
-        Load();
-        //StartCoroutine(_fadeScript.FadeOut(OnFinishedCoroutine));
+        OnFinishedCoroutine();
+        //StartCoroutine(_fadeScript.FadeOut(OnFinishedCoroutine)); // ごめん分からない...
     }
+
 
     public void OnFinishedCoroutine()
-    {
-        //_fadeScript.StartFadeOut();
-        //Invoke("Load", 2f); //フェード終わるまで遅延
-    }
-
-    private void Load()
     {
         SceneManager.LoadScene((int)_nowScene);
     }
@@ -174,3 +169,6 @@ public class SceneMgr : MonoBehaviour
         return false;
     }
 }
+
+
+// EOF
