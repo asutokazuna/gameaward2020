@@ -495,7 +495,14 @@ public class Player : BaseObject
         if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
             _haveObject._myObject == E_FIELD_OBJECT.MAX)
         {// 何も持っていない時
-            _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
+            //if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
+            //{
+            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT_TP);
+            //}
+            //else
+            {
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
+            }
         }
         else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
         {// プレイヤーを持ち上げたとき
@@ -585,7 +592,7 @@ public class Player : BaseObject
             if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
                 _haveObject._myObject == E_FIELD_OBJECT.MAX)
             {// 何も持っていない時
-                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP);
+                _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_TP);
             }
             else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
             {// プレイヤーを持っている時

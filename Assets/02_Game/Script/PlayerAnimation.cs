@@ -7,6 +7,7 @@
  * @date    2020/04/18(土)  アニメーションの終了検知用の関数追加・アニメーションの遷移の仕様を変更
  * @data    2020/04/23(木)  プレイヤーの状態を取得する関数の追加　(Kaiki Mori)
  * @data    2020/04/24(金)  プレイヤーの状態を追加
+ * @data    2020/04/26(金)  トランポリンのアニメーション制御機能を追加
  */
 
 //#define TEST_ANIM   // アニメーター切り替え
@@ -97,10 +98,11 @@ public class PlayerAnimation : MonoBehaviour
 #endif
 
     // アニメーション管理用
-    Animator _playerAnimator;    //!< アニメーター取得用
+    Animator                        _playerAnimator;    //!< アニメーター取得用
     [SerializeField] PlayerState    _playerState;       //!< プレイヤーの状態管理用
     PlayerState                     _playerNextState;   //!< プレイヤーの状態管理用
-    bool _animFinish;               //!< アニメーション変更フラグ
+    bool                            _animFinish;        //!< アニメーション変更フラグ
+    public TrampolineAnim           _trampolineAnim;   //!< トランポリンアニメーションのセット
 
     //!< アニメーション変更フラグ参照用
     public bool AnimFinish
@@ -153,7 +155,6 @@ public class PlayerAnimation : MonoBehaviour
         _playerNextState = state;       // 次のアニメーションをセット
     }
 
-
     /**
     * @brief        プレイヤーの状態の取得
     * @return       _playerState　プレイヤーの状態
@@ -172,5 +173,25 @@ public class PlayerAnimation : MonoBehaviour
     public void SetAnimFinish()
     {
         _animFinish = true;        // アニメーション終了
+    }
+
+    /**
+    * @brief        トランポリンのアニメーションをセット
+    * @return       なし
+    * @details      トランポリンのアニメーションをセットするアニメーションイベントの関数です
+    */
+    void SetTrampolineAnim()
+    {
+        _trampolineAnim.StartWaitTP();        // トランポリンアニメーションを開始
+    }
+
+    /**
+    * @brief        ジャンプした際のトランポリンのアニメーションをセット
+    * @return       なし
+    * @details      トランポリンのアニメーションをセットするアニメーションイベントの関数です
+    */
+    void SetJumpTrampolineAnim()
+    {
+        _trampolineAnim.StartJumpTP();        // トランポリンアニメーションを開始
     }
 }
