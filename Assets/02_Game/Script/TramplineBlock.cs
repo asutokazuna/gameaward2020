@@ -13,7 +13,7 @@ public class TramplineBlock : BaseObject
         // 座標の補正
         _position = _oldPosition = new Vector3Int(
             (int)(transform.position.x - map._offsetPos.x),
-            (int)(transform.position.y - map._offsetPos.y),
+            (int)((transform.position.y + 0.6f) - map._offsetPos.y),
             (int)(transform.position.z - map._offsetPos.z)
             );
 
@@ -32,5 +32,15 @@ public class TramplineBlock : BaseObject
     override public void Update()
     {
         
+    }
+
+    override public void offSetTransform()
+    {
+        Map map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
+        _nextPos = new Vector3(
+            _position.x + map._offsetPos.x,
+            _position.y + map._offsetPos.y - 0.6f,
+            _position.z + map._offsetPos.z
+            );
     }
 }
