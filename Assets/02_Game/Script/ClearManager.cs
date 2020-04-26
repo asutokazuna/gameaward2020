@@ -19,7 +19,7 @@ public class ClearManager : MonoBehaviour
     private GameObject ParticleRight;
     private GameObject ParticleTop;
 
-    static private bool[] _stageClear = new bool[(int)E_SCENE.CLEAR];
+    public static bool[] _stageClear = new bool[(int)E_SCENE.CLEAR];
 
     // Start is called before the first frame update
     void Start()
@@ -44,7 +44,7 @@ public class ClearManager : MonoBehaviour
         ParticleTop.GetComponent<ParticleSystem>().Clear(true);
 
 
-
+        CallDebug();
     }
 
     // Update is called once per frame
@@ -60,6 +60,11 @@ public class ClearManager : MonoBehaviour
             {
                 _timer -= Time.deltaTime;
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            CallDebug();
         }
 
         if (ClearScript._finishClear)
