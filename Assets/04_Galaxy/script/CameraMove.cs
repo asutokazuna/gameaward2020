@@ -36,6 +36,7 @@ public class CameraMove : MonoBehaviour
         _planetData = GameObject.FindGameObjectsWithTag("Planet");
         _camera = this.transform.GetComponentInChildren<Transform>();
         _isOrbital = false;
+        _currentID = 1;
     }
 
     // Update is called once per frame
@@ -52,8 +53,18 @@ public class CameraMove : MonoBehaviour
             _isOrbital = false;
         }
 
-        
-        for(int i = _planetData.Length - 1;i >= 0;i--)
+        if(_currentID >= 4)
+        {
+            _currentID = 1;
+        }
+        if (_currentID <= 0)
+        {
+            _currentID = 3;
+        }
+
+
+
+        for (int i = _planetData.Length - 1;i >= 0;i--)
         {
             if(_planetData[i].GetComponent<revolution>().PlanetID == _currentID)
             {
@@ -101,6 +112,31 @@ public class CameraMove : MonoBehaviour
         Quaternion _rotation = Quaternion.LookRotation(_relativePos);
         _camera.rotation = Quaternion.Slerp(_camera.rotation, _rotation, _cameraSpd);
 
+        if(Input.GetKeyDown(KeyCode.Space) && _isOrbital)   //シーン遷移処理
+        {
+            switch(_currentID)  
+            {
+                case 1:     //森
+
+                    //ここにシーン遷移の処理
+
+                    break;
+
+                case 2:     //火山
+
+                    //ここにシーン遷移の処理
+
+                    break;
+
+                case 3:     //キノコ
+
+                    //ここにシーン遷移の処理
+
+                    break;
+            }
+        }
+
+        switch
     }
 
     private void OnTriggerEnter(Collider other)
