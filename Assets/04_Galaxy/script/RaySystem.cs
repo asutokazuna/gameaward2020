@@ -37,7 +37,11 @@ public class RaySystem : MonoBehaviour
             Debug.Log(hit.collider.name);
             for (int i = 0; i < _stageObject.Count; i++)
             {
-
+                if (!hit.collider.transform.parent)
+                {// 取り合えずこいつでエラー文が一個減る
+                    continue;
+                }
+                Debug.Log(hit.collider.transform.parent.parent.GetComponent<revolution>().PlanetID + " = ID");
                 if (hit.collider.transform.parent.parent.GetComponent<revolution>().PlanetID == _cameraMove._currentID)
                 {
                     //if (hit.collider.name == _stageObject[i].name)
