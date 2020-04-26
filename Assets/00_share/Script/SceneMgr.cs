@@ -142,6 +142,10 @@ public class SceneMgr : MonoBehaviour
                 _nowScene = E_SCENE.STAGE_SELECT;
             }
         }
+        else if (isGameClear())
+        {// 取り合えずベータ版クリア
+            _nowScene = E_SCENE.CLEAR;
+        }
     }
 
 
@@ -162,11 +166,30 @@ public class SceneMgr : MonoBehaviour
      */
     private bool isNextScene()
     {
-        if ((int)_nowScene + 1 <= (int)E_SCENE._1_3)
+        if ((int)_nowScene + 1 < (int)E_SCENE._1_3)
         {// 取り合えずの処理
             return true;
         }
         return false;
+    }
+
+
+    private bool isGameClear()
+    {// 取り合えずベータ版クリア
+        if (GameObject.FindGameObjectWithTag("GameClearManager").GetComponent<ClearManager>().isGameClear())
+        {// ゲームクリア
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * @brief 現在のシーンの取得
+     */
+    public E_SCENE NowScene //!< 移動フラグ
+    {
+        get { return _nowScene; }  // ゲッター
     }
 }
 

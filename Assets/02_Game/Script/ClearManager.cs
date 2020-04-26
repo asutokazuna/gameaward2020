@@ -19,6 +19,8 @@ public class ClearManager : MonoBehaviour
     private GameObject ParticleRight;
     private GameObject ParticleTop;
 
+    static private bool[] _stageClear = new bool[(int)E_SCENE.CLEAR];
+
     // Start is called before the first frame update
     void Start()
     {
@@ -64,8 +66,15 @@ public class ClearManager : MonoBehaviour
         {
             if (_changeDelay <= 0.0f || Input.anyKey)
             {
+                _stageClear[(int)GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().NowScene] = true;
+                CallDebug();
+                
+                if (isGameClear())
+                {// クリアやで
+                    return;
+                }
                 //シーン遷移
-                if (Input.GetKeyDown(KeyCode.Z))
+                else if (Input.GetKeyDown(KeyCode.Z))
                 {// 次のステージ
                     GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE_MODE.NEXT_STAGE);
                 }
@@ -93,6 +102,35 @@ public class ClearManager : MonoBehaviour
             ParticleLeft.GetComponent<ParticleSystem>().Play(true);
             ParticleRight.GetComponent<ParticleSystem>().Play(true);
             ParticleTop.GetComponent<ParticleSystem>().Play(true);
+        }
+    }
+
+
+    public bool isGameClear()
+    {// 取り合えずベータ版クリア
+        for (int n = 0; n <= (int)E_SCENE.CLEAR; n++)
+        {
+            if (!_stageClear[n])
+            {// まだ未クリアがあるよ
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    private void CallDebug()
+    {
+        for (int n = 0; n <= (int)E_SCENE.CLEAR; n++)
+        {
+            if (!_stageClear[n])
+            {// まだ未クリアがあるよ
+                Debug.Log(n + " 未クリア");
+            }
+            else
+            {
+                Debug.Log(n + " クリアしてる");
+            }
         }
     }
 }
