@@ -93,12 +93,10 @@ public class SceneMgr : MonoBehaviour
         _oldScene   = _nowScene;        // 過去シーンの保存
         _reroad     = false;            // リロードしないよ
 
-
-        _fadeScript.StartFadeOut();
-        Invoke("Load", 2f); //フェード終わるまで遅延
+        StartCoroutine(_fadeScript.FadeOut(OnFinishedCoroutine));
     }
 
-    public void Load()
+    public void OnFinishedCoroutine()
     {
         SceneManager.LoadScene((int)_nowScene);
     }
