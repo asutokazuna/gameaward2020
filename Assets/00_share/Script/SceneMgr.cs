@@ -107,6 +107,7 @@ public class SceneMgr : MonoBehaviour
     }
 
     public void OnFinishedCoroutine()
+    {
         //_fadeScript.StartFadeOut();
         //Invoke("Load", 2f); //フェード終わるまで遅延
     }

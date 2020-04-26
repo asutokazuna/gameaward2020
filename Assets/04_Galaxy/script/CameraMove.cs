@@ -136,7 +136,7 @@ public class CameraMove : MonoBehaviour
             }
         }
 
-        switch
+        //switch
     }
 
     private void OnTriggerEnter(Collider other)
