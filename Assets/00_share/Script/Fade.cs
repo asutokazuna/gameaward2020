@@ -7,7 +7,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Events;
 
 /**
  * @class Fade
@@ -46,28 +46,21 @@ public class Fade : MonoBehaviour
     * @brief フェードアウト開始処理
     * @return なし
     */
-    public void StartFadeOut()
-    {
-        StartCoroutine(FadeOut());
-    }
-    IEnumerator FadeOut()
+    public IEnumerator FadeOut(UnityAction callback)
     {
         for (float i = 0; i <= 1.1f; i += _fadeSpeed)
         {
             _appliedMat.SetFloat("_Timer", Mathf.Clamp(i, 0, 1.0f));
             yield return null;
         }
+        callback();
     }
 
     /**
     * @brief フェードイン開始処理
     * @return なし
     */
-    public void StartFadeIn()
-    {
-        StartCoroutine(FadeIn());
-    }
-    IEnumerator FadeIn()
+    public IEnumerator FadeIn()
     {
         for (float i = 1; i > 0.0f; i -= _fadeSpeed)
         {
@@ -84,22 +77,5 @@ public class Fade : MonoBehaviour
     {
         _appliedMat = _fadeMat[Type];
     }
-
-
-
-    private void Update()   //仮開始判定
-    {
-
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            StartFadeOut();
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            StartFadeIn();
-        }
-
-    }
-
 }
 
