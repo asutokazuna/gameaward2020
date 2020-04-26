@@ -47,6 +47,9 @@ public class SceneMgr : MonoBehaviour
 
     [SerializeField] private bool _isDebug = false;     //!< かとしゅん頼む
 
+    private GameObject _mainCamera; //!<フェード用
+    private Fade _fadeScript;
+
 
     void Awake()
     {
@@ -68,6 +71,9 @@ public class SceneMgr : MonoBehaviour
         int nowHandle = SceneManager.GetActiveScene().buildIndex;
         Debug.Log("ハンドル値" + nowHandle);
         _nowScene = _oldScene = (E_SCENE)nowHandle;
+
+        _mainCamera = GameObject.Find("Main Camera");
+        _fadeScript = _mainCamera.GetComponent<Fade>();
     }
 
 
@@ -86,6 +92,14 @@ public class SceneMgr : MonoBehaviour
         }
         _oldScene   = _nowScene;        // 過去シーンの保存
         _reroad     = false;            // リロードしないよ
+
+
+        _fadeScript.StartFadeOut();
+        Invoke("Load", 2f); //フェード終わるまで遅延
+    }
+
+    public void Load()
+    {
         SceneManager.LoadScene((int)_nowScene);
     }
 
