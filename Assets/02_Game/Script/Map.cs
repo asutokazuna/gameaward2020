@@ -26,15 +26,15 @@ using UnityEngine.SceneManagement;
 /**
  * @enum オブジェクト情報
  */
-public enum E_FIELD_OBJECT
+public enum E_OBJECT
 {
     NONE,                   // 無
     PLAYER_01,              // プレイヤー01
     BLOCK_NORMAL,           // 通常ブロック
-    BLOCK_GROUND,           // 地面
+    BLOCK_GROUND,           // 地面ブロック
     BLOCK_WATER_SOURCE,     // 水源ブロック
-    BLOCK_TANK,             // 水槽
-    BLOCK_TRAMPLINE,
+    BLOCK_TANK,             // 水槽ブロック
+    BLOCK_TRAMPLINE,        // トランポリンブロック
     MAX,                    // 最大値
 }
 
@@ -43,9 +43,9 @@ public enum E_FIELD_OBJECT
  * @brief 一マスあたりの情報
  */
 public struct SquareInfo {
-    public E_FIELD_OBJECT  _myObject;  //!< マスが持つオブジェクト情報
-    public int             _number;    //!< オブジェクトナンバー
-    public bool            _isUpdate;  //!< 更新flag
+    public E_OBJECT  _myObject;         //!< マスが持つオブジェクト情報
+    public int             _number;     //!< オブジェクトナンバー
+    public bool            _isUpdate;   //!< 更新flag
 }
 
 
@@ -69,26 +69,20 @@ public class Map : MonoBehaviour
         "水槽ブロック",
         "跳ねブロック",
         })]  // オブジェクトが増えたら随時追加
-    [SerializeField] string[] _objectTag = new string[(int)E_FIELD_OBJECT.MAX];
-    public SquareInfo[,,]       _map;                   //!< マップ情報
-    public Player[]             _player;                //!< プレイヤーオブジェクト
-    public BlockTank[]          _waterBlock;            //!< 水槽オブジェクト
-    public Ground[]             _ground;                //!< 地面ブロック
-    public WaterSourceBlock[]   _waterSource;           //!< 水源ブロック
-    public TramplineBlock[]     _tramplineBlock;        //
-    public PlayerAnimation      _animation;             //!< プレイヤーのアニメーション
-    [SerializeField] int        _playerCnt;             //!< プレイヤーカウント
-    [SerializeField] int        _waterBlockCnt;         //!< 水槽カウント
-    [SerializeField] int        _groundCnt;             //!< 地面カウント
-    [SerializeField] int        _waterSourceCnt;        //!< 水源カウント
-    [SerializeField] int        _tramplineCnt;          //
-    [SerializeField] Vector3Int _direct;                //!< 全プレイヤーが向いてる方向
-    public Vector3Int           _offsetPos;             //!< 配列座標補正用変数
-    Controller                  _input;                 //!< 入力
+    [SerializeField] string[] _objectTag = new string[(int)E_OBJECT.MAX];
+
+    public SquareInfo[,,]           _map;               //!< マップ情報
+    public List<Player>             _player;            //!< プレイヤー
+    public List<Ground>             _ground;            //!< 地面
+    public List<WaterSourceBlock>   _waterSource;       //!< 水源
+    public List<BlockTank>          _tankBlock;         //!< 水槽
+    public List<TramplineBlock>     _trampoline;        //!< トランポリン
+    [SerializeField] Vector3Int     _direct;            //!< 全プレイヤーが向いてる方向
+    public Vector3Int               _offsetPos;         //!< 配列座標補正用変数
+    Controller                      _input;             //!< 入力
     public bool                 _gameOver { get; set; } //!< ゲームオーバーフラグ
     public bool                 _gameClear { get; set; }//!< ゲームクリアフラグ
     public int                  _fullWaterBlockCnt;
-    public int _jumpspeed = 1;
 
 
     /**
@@ -140,17 +134,10 @@ public class Map : MonoBehaviour
         {
             CallDebug();
         }
-        for (int n = 0; n < _playerCnt; n++)
-        {
-            if (_player[n]._isMove)
-            {// まだ移動中のプレイヤーがいれば、操作を受け付けない
-                return;
-            }
-        }
         foreach (Player obj in _player)
-        {// まだアニメーション中のプレイヤーがいれば、操作を受け付けない
-            if (!obj.isAnim())
-            {
+        {
+            if (obj._isMove || !obj.isAnim())
+            {// まだ移動中のプレイヤーがいれば、操作を受け付けない
                 return;
             }
         }
@@ -158,6 +145,7 @@ public class Map : MonoBehaviour
         {
             UpdateMap(obj);
         }
+
         MoveObject();
         HandAction();
         RotateObject();
@@ -184,10 +172,10 @@ public class Map : MonoBehaviour
         _direct = new Vector3Int();
         offsetDirect();
         PlayerSort();   // ソートと更新
-        for (int n = 0; n < _playerCnt; n++)
+        foreach (Player obj in _player)
         {
-            _player[n].Move();
-            UpdateMap(_player[n]);
+            obj.Move();
+            UpdateMap(obj);
         }
     }
 
@@ -201,9 +189,9 @@ public class Map : MonoBehaviour
     {
         if (!_input.isInput(E_INPUT_MODE.BUTTON, E_INPUT.LB)) return;
 
-        for (int n = 0; n < _playerCnt; n++)
+        foreach (Player obj in _player)
         {
-            _player[n].Rotate();
+            obj.Rotate();
         }
         offsetDirect();
         PlayerSort();   // ソートと更新
@@ -218,9 +206,9 @@ public class Map : MonoBehaviour
     {
         if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A)) return;
         PlayerSort();   // ソートと更新
-        for (int n = 0; n < _playerCnt; n++)
+        foreach (Player obj in _player)
         {
-            _player[n].HandAction();
+            obj.HandAction();
         }
         foreach (Player obj in _player)
             UpdateMap(obj);
@@ -236,14 +224,14 @@ public class Map : MonoBehaviour
     public BaseObject LiftToObject(Vector3Int pos, Vector3Int target)
     {
         int num = 0;
-        if (_map[target.x, target.y, target.z]._myObject == E_FIELD_OBJECT.BLOCK_TANK)
+        if (_map[target.x, target.y, target.z]._myObject == E_OBJECT.BLOCK_TANK)
         {// これから持つオブジェクトが水槽だった場合
             num = _map[target.x, target.y, target.z]._number;
-            _waterBlock[num].Lifted(new Vector3Int(pos.x, pos.y + 1, pos.z));
-            UpdateMap(_waterBlock[num]);
-            return _waterBlock[num];
+            _tankBlock[num].Lifted(new Vector3Int(pos.x, pos.y + 1, pos.z));
+            UpdateMap(_tankBlock[num]);
+            return _tankBlock[num];
         }
-        else if (_map[target.x, target.y, target.z]._myObject == E_FIELD_OBJECT.PLAYER_01)
+        else if (_map[target.x, target.y, target.z]._myObject == E_OBJECT.PLAYER_01)
         {// これから持つオブジェクトがプレイヤーだった場合
             num = _map[target.x, target.y, target.z]._number;
             _player[num].Lifted(new Vector3Int(pos.x, pos.y + 1, pos.z));
@@ -262,13 +250,13 @@ public class Map : MonoBehaviour
      */
     public void PutToObject(SquareInfo haveObj, Vector3Int targetPos)
     {
-        if (haveObj._myObject == E_FIELD_OBJECT.BLOCK_TANK)
+        if (haveObj._myObject == E_OBJECT.BLOCK_TANK)
         {// 水槽の場合
-            _waterBlock[haveObj._number].transform.parent = null;   // 親子関係を話す
-            _waterBlock[haveObj._number].Puted(targetPos);
-            UpdateMap(_waterBlock[haveObj._number]);
+            _tankBlock[haveObj._number].transform.parent = null;   // 親子関係を話す
+            _tankBlock[haveObj._number].Puted(targetPos);
+            UpdateMap(_tankBlock[haveObj._number]);
         }
-        else if (haveObj._myObject == E_FIELD_OBJECT.PLAYER_01)
+        else if (haveObj._myObject == E_OBJECT.PLAYER_01)
         {// プレイヤーの場合
             _player[haveObj._number].transform.parent = null;   // 親子関係を話す
             _player[haveObj._number].Puted(targetPos);
@@ -285,13 +273,13 @@ public class Map : MonoBehaviour
      */
     public void FallToObject(SquareInfo haveObj, Vector3Int targetPos)
     {
-        if (haveObj._myObject == E_FIELD_OBJECT.BLOCK_TANK)
+        if (haveObj._myObject == E_OBJECT.BLOCK_TANK)
         {// 水槽の場合
-            _waterBlock[haveObj._number].transform.parent = null;   // 親子関係を話す
-            _waterBlock[haveObj._number].Fall(targetPos);
-            UpdateMap(_waterBlock[haveObj._number]);
+            _tankBlock[haveObj._number].transform.parent = null;   // 親子関係を話す
+            _tankBlock[haveObj._number].Fall(targetPos);
+            UpdateMap(_tankBlock[haveObj._number]);
         }
-        else if (haveObj._myObject == E_FIELD_OBJECT.PLAYER_01)
+        else if (haveObj._myObject == E_OBJECT.PLAYER_01)
         {// プレイヤーの場合
             _player[haveObj._number].transform.parent = null;   // 親子関係を話す
             _player[haveObj._number].Fall(targetPos);
@@ -308,12 +296,12 @@ public class Map : MonoBehaviour
      */
     public void Follow(SquareInfo haveObj, Vector3Int playerPos)
     {
-        if (haveObj._myObject == E_FIELD_OBJECT.BLOCK_TANK)
+        if (haveObj._myObject == E_OBJECT.BLOCK_TANK)
         {// 水槽の場合
-            _waterBlock[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
-            UpdateMap(_waterBlock[haveObj._number]);
+            _tankBlock[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
+            UpdateMap(_tankBlock[haveObj._number]);
         }
-        else if (haveObj._myObject == E_FIELD_OBJECT.PLAYER_01)
+        else if (haveObj._myObject == E_OBJECT.PLAYER_01)
         {// 水槽の場合
             _player[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
             UpdateMap(_player[haveObj._number]);
@@ -399,8 +387,8 @@ public class Map : MonoBehaviour
      */
     private bool isGameClear()
     {
-        if(_waterBlockCnt == _fullWaterBlockCnt)
-        {//満水の箱数が、箱の総数と同じだったら
+        if(GameObject.FindGameObjectsWithTag(_objectTag[(int)E_OBJECT.BLOCK_TANK]).Length == _fullWaterBlockCnt)
+        {//満水の箱数が、箱の総数と同じだったら(変数の方を使いたかった...)
             return true;
         }
 
@@ -423,8 +411,8 @@ public class Map : MonoBehaviour
         {// 二段以上で登れない
             return true;
         }
-        if (_map[targetPos.x, targetPos.y, targetPos.z]._myObject == E_FIELD_OBJECT.PLAYER_01 ||
-            (targetPos.y - 1 >= 0 && _map[targetPos.x, targetPos.y - 1, targetPos.z]._myObject == E_FIELD_OBJECT.PLAYER_01))
+        if (_map[targetPos.x, targetPos.y, targetPos.z]._myObject == E_OBJECT.PLAYER_01 ||
+            (targetPos.y - 1 >= 0 && _map[targetPos.x, targetPos.y - 1, targetPos.z]._myObject == E_OBJECT.PLAYER_01))
         {// 移動先にプレイヤーがいる場合
             return true;
         }
@@ -439,8 +427,8 @@ public class Map : MonoBehaviour
      */
     public bool isGetup(Vector3Int targetPos)
     {
-        if (_map[targetPos.x, targetPos.y, targetPos.z]._myObject == E_FIELD_OBJECT.NONE ||
-            _map[targetPos.x, targetPos.y, targetPos.z]._myObject == E_FIELD_OBJECT.PLAYER_01)
+        if (_map[targetPos.x, targetPos.y, targetPos.z]._myObject == E_OBJECT.NONE ||
+            _map[targetPos.x, targetPos.y, targetPos.z]._myObject == E_OBJECT.PLAYER_01)
         {// 登れるオブジェクトが無い場合
             return false;
         }
@@ -456,8 +444,8 @@ public class Map : MonoBehaviour
      */
     public bool isGetoff(Vector3Int targetPos)
     {
-        if (_map[targetPos.x, targetPos.y - 1, targetPos.z]._myObject == E_FIELD_OBJECT.NONE &&
-            _map[targetPos.x, targetPos.y - 1, targetPos.z]._myObject != E_FIELD_OBJECT.PLAYER_01)
+        if (_map[targetPos.x, targetPos.y - 1, targetPos.z]._myObject == E_OBJECT.NONE &&
+            _map[targetPos.x, targetPos.y - 1, targetPos.z]._myObject != E_OBJECT.PLAYER_01)
         {// 下に何もない
             return true;
         }
@@ -469,7 +457,7 @@ public class Map : MonoBehaviour
      */
     public bool isTrampline(Vector3Int targetPos)
     {
-        if (isUse(targetPos) && _map[targetPos.x, targetPos.y, targetPos.z]._myObject == E_FIELD_OBJECT.BLOCK_TRAMPLINE)
+        if (isUse(targetPos) && _map[targetPos.x, targetPos.y, targetPos.z]._myObject == E_OBJECT.BLOCK_TRAMPLINE)
         {
             return true;
         }
@@ -511,15 +499,15 @@ public class Map : MonoBehaviour
      */
     public bool isLift(Vector3Int pos)
     {
-        if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.BLOCK_TANK &&                         // 水槽ブロックの場合
-            pos.y + 1 < MAX_OBJECT && _map[pos.x, pos.y + 1, pos.z]._myObject == E_FIELD_OBJECT.NONE && // 上に何も積まれてない
-            !_waterBlock[_map[pos.x, pos.y, pos.z]._number]._lifted)                                    // 何かに持たれてない
+        if (_map[pos.x, pos.y, pos.z]._myObject == E_OBJECT.BLOCK_TANK &&                         // 水槽ブロックの場合
+            pos.y + 1 < MAX_OBJECT && _map[pos.x, pos.y + 1, pos.z]._myObject == E_OBJECT.NONE && // 上に何も積まれてない
+            !_tankBlock[_map[pos.x, pos.y, pos.z]._number]._lifted)                                    // 何かに持たれてない
         {
             return true;
         }
-        else if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.PLAYER_01)
+        else if (_map[pos.x, pos.y, pos.z]._myObject == E_OBJECT.PLAYER_01)
         {// プレイヤーの場合
-            if (pos.y + 1 < MAX_OBJECT && _map[pos.x, pos.y + 1, pos.z]._myObject == E_FIELD_OBJECT.NONE && // 上に何も積まれてない
+            if (pos.y + 1 < MAX_OBJECT && _map[pos.x, pos.y + 1, pos.z]._myObject == E_OBJECT.NONE && // 上に何も積まれてない
                 !_player[_map[pos.x, pos.y, pos.z]._number]._lifted)
             {
                 return true;
@@ -541,7 +529,7 @@ public class Map : MonoBehaviour
         {// ここのif分入ったら多分ゲームオーバー
             return false;
         }
-        if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.NONE &&
+        if (_map[pos.x, pos.y, pos.z]._myObject == E_OBJECT.NONE &&
             isRideon(new Vector3Int(pos.x, pos.y - 1, pos.z)))
         {// 一個下に置ける
             return true;
@@ -559,9 +547,9 @@ public class Map : MonoBehaviour
      */
     private bool isRideon(Vector3Int pos)
     {
-        if (_map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.NONE      ||
-            _map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.MAX       ||
-            _map[pos.x, pos.y, pos.z]._myObject == E_FIELD_OBJECT.PLAYER_01
+        if (_map[pos.x, pos.y, pos.z]._myObject == E_OBJECT.NONE      ||
+            _map[pos.x, pos.y, pos.z]._myObject == E_OBJECT.MAX       ||
+            _map[pos.x, pos.y, pos.z]._myObject == E_OBJECT.PLAYER_01
             )
         {
             return false;
@@ -577,7 +565,7 @@ public class Map : MonoBehaviour
      */
     public bool isUse(Vector3Int pos)
     {
-        if (!isLimitField(pos) && _map[pos.x, pos.y, pos.z]._myObject != E_FIELD_OBJECT.NONE)
+        if (!isLimitField(pos) && _map[pos.x, pos.y, pos.z]._myObject != E_OBJECT.NONE)
             return true;
         return false;
     }
@@ -629,7 +617,7 @@ public class Map : MonoBehaviour
      */
     private void DeleteObject(Vector3Int pos)
     {
-        _map[pos.x, pos.y, pos.z]._myObject   = E_FIELD_OBJECT.NONE;
+        _map[pos.x, pos.y, pos.z]._myObject   = E_OBJECT.NONE;
         _map[pos.x, pos.y, pos.z]._number     = 0;
         _map[pos.x, pos.y, pos.z]._isUpdate   = false;
     }
@@ -656,12 +644,10 @@ public class Map : MonoBehaviour
      */
     private void InitPlayerObj()
     {
-        GameObject[] player = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_FIELD_OBJECT.PLAYER_01]);
-        _playerCnt          = player.Length;
-        _player             = new Player[_playerCnt];
-        for (int n = 0; n < _playerCnt; n++)
+        GameObject[] player = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_OBJECT.PLAYER_01]);
+        for (int n = 0; n < player.Length; n++)
         {
-            _player[n] = player[n].GetComponent<Player>();
+            _player.Add(player[n].GetComponent<Player>());
             _player[n].Init(n);         // プレイヤーコンポーネントの初期化
             SetObject(_player[n]);      // マップ情報にプレイヤー情報をセット
         }
@@ -674,14 +660,12 @@ public class Map : MonoBehaviour
      */
     private void InitBlockTankObj()
     {
-        GameObject[] box = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_FIELD_OBJECT.BLOCK_TANK]);
-        _waterBlockCnt = box.Length;
-        _waterBlock = new BlockTank[_waterBlockCnt];
-        for (int n = 0; n < _waterBlockCnt; n++)
+        GameObject[] box = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_OBJECT.BLOCK_TANK]);
+        for (int n = 0; n < box.Length; n++)
         {
-            _waterBlock[n] = box[n].GetComponent<BlockTank>();
-            _waterBlock[n].Init(n);
-            SetObject(_waterBlock[n]);
+            _tankBlock.Add(box[n].GetComponent<BlockTank>());
+            _tankBlock[n].Init(n);
+            SetObject(_tankBlock[n]);
         }
     }
 
@@ -692,12 +676,10 @@ public class Map : MonoBehaviour
      */
     private void InitGroundObj()
     {
-        GameObject[] ground = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_FIELD_OBJECT.BLOCK_GROUND]);
-        _groundCnt = ground.Length;
-        _ground = new Ground[_groundCnt];
-        for (int n = 0; n < _groundCnt; n++)
+        GameObject[] ground = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_OBJECT.BLOCK_GROUND]);
+        for (int n = 0; n < ground.Length; n++)
         {
-            _ground[n] = ground[n].GetComponent<Ground>();
+            _ground.Add(ground[n].GetComponent<Ground>());
             _ground[n].Init(n);
             SetObject(_ground[n]);
         }
@@ -710,12 +692,10 @@ public class Map : MonoBehaviour
      */
     private void InitWaterblockObj()
     {
-        GameObject[] waterblock = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_FIELD_OBJECT.BLOCK_WATER_SOURCE]);
-        _waterSourceCnt = waterblock.Length;
-        _waterSource = new WaterSourceBlock[_waterSourceCnt];
-        for (int n = 0; n < _waterSourceCnt; n++)
+        GameObject[] waterblock = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_OBJECT.BLOCK_WATER_SOURCE]);
+        for (int n = 0; n < waterblock.Length; n++)
         {
-            _waterSource[n] = waterblock[n].GetComponent<WaterSourceBlock>();
+            _waterSource.Add(waterblock[n].GetComponent<WaterSourceBlock>());
             _waterSource[n].Init(n);
             SetObject(_waterSource[n]);
         }
@@ -728,14 +708,12 @@ public class Map : MonoBehaviour
      */
     private void InitTramplineblockObj()
     {
-        GameObject[] tramplineblock = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_FIELD_OBJECT.BLOCK_TRAMPLINE]);
-        _tramplineCnt = tramplineblock.Length;
-        _tramplineBlock = new TramplineBlock[_tramplineCnt];
-        for (int n = 0; n < _tramplineCnt; n++)
+        GameObject[] tramplineblock = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_OBJECT.BLOCK_TRAMPLINE]);
+        for (int n = 0; n < tramplineblock.Length; n++)
         {
-            _tramplineBlock[n] = tramplineblock[n].GetComponent<TramplineBlock>();
-            _tramplineBlock[n].Init(n);
-            SetObject(_tramplineBlock[n]);
+            _trampoline.Add(tramplineblock[n].GetComponent<TramplineBlock>());
+            _trampoline[n].Init(n);
+            SetObject(_trampoline[n]);
         }
     }
 
@@ -757,17 +735,17 @@ public class Map : MonoBehaviour
             {
                 for (int x = 0; x < MAX_OBJECT; x++)
                 {
-                    if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.PLAYER_01) &&
+                    if (_map[x, y, z]._myObject.Equals(E_OBJECT.PLAYER_01) &&
                         _player[_map[x, y, z]._number]._gameOver)
                     {
                         obj.Add(_player[_map[x, y, z]._number].gameObject);
                     }
-                    if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_TANK) &&
-                        _waterBlock[_map[x, y, z]._number]._gameOver)
+                    if (_map[x, y, z]._myObject.Equals(E_OBJECT.BLOCK_TANK) &&
+                        _tankBlock[_map[x, y, z]._number]._gameOver)
                     {
-                        obj.Add(_waterBlock[_map[x, y, z]._number].gameObject);
+                        obj.Add(_tankBlock[_map[x, y, z]._number].gameObject);
                     }
-                    if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_GROUND) &&
+                    if (_map[x, y, z]._myObject.Equals(E_OBJECT.BLOCK_GROUND) &&
                         _ground[_map[x, y, z]._number]._gameOver)
                     {
                         obj.Add(_ground[_map[x, y, z]._number].gameObject);
@@ -786,12 +764,14 @@ public class Map : MonoBehaviour
      */
     private void PlayerSort()
     {
-        if (_playerCnt <= 1)
+        GameObject[] player = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_OBJECT.PLAYER_01]);
+
+        if (player.Length <= 1)
         {// プレイヤーが一体しかいない場合
             return;
         }
         Player work;
-        for (int i = _playerCnt - 1; i > 0; i--)
+        for (int i = player.Length - 1; i > 0; i--)
         {
             for (int j = 0; j < i; j++)
             {
@@ -803,7 +783,7 @@ public class Map : MonoBehaviour
                 }
             }
         }
-        for (int n = 0; n < _playerCnt; n++)
+        for (int n = 0; n < player.Length; n++)
         {
             _player[n]._myNumber = n;
             UpdateMap(_player[n]);
@@ -894,10 +874,10 @@ public class Map : MonoBehaviour
      * @param1 オブジェクト種
      * @return なし
      */
-    private void CallDebug(E_FIELD_OBJECT obj = E_FIELD_OBJECT.MAX)
+    private void CallDebug(E_OBJECT obj = E_OBJECT.MAX)
     {
         int cnt = 0;
-        if (obj == E_FIELD_OBJECT.MAX)
+        if (obj == E_OBJECT.MAX)
         {// 全オブジェクトのデバッグ表記
             for (int y = 0; y < MAX_OBJECT; y++)
             {
@@ -905,19 +885,19 @@ public class Map : MonoBehaviour
                 {
                     for (int x = 0; x < MAX_OBJECT; x++)
                     {
-                        if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.PLAYER_01))
+                        if (_map[x, y, z]._myObject.Equals(E_OBJECT.PLAYER_01))
                         {
                             Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " にプレイヤーがいます" + _map[x, y, z]._number);
                         }
-                        if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_TANK))
+                        if (_map[x, y, z]._myObject.Equals(E_OBJECT.BLOCK_TANK))
                         {
                             Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に水槽があります" + _map[x, y, z]._number);
                         }
-                        if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_GROUND))
+                        if (_map[x, y, z]._myObject.Equals(E_OBJECT.BLOCK_GROUND))
                         {
                             Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に地面があります" + _map[x, y, z]._number);
                         }
-                        if(_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_TRAMPLINE))
+                        if(_map[x, y, z]._myObject.Equals(E_OBJECT.BLOCK_TRAMPLINE))
                         { 
                             Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " にトランポリンがあります" + _map[x, y, z]._number);
                         }
@@ -925,7 +905,7 @@ public class Map : MonoBehaviour
                 }
             }
         }
-        else if (obj == E_FIELD_OBJECT.PLAYER_01)
+        else if (obj == E_OBJECT.PLAYER_01)
         {// プレイヤーのデバッグ表記
             for (int y = 0; y < MAX_OBJECT; y++)
             {
@@ -933,7 +913,7 @@ public class Map : MonoBehaviour
                 {
                     for (int x = 0; x < MAX_OBJECT; x++)
                     {
-                        if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.PLAYER_01))
+                        if (_map[x, y, z]._myObject.Equals(E_OBJECT.PLAYER_01))
                         {
                             Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " にプレイヤーがいます" + _map[x, y, z]._number);
                         }
@@ -941,7 +921,7 @@ public class Map : MonoBehaviour
                 }
             }
         }
-        else if (obj == E_FIELD_OBJECT.BLOCK_TANK)
+        else if (obj == E_OBJECT.BLOCK_TANK)
         {// 水槽ののデバッグ表記
             for (int y = 0; y < MAX_OBJECT; y++)
             {
@@ -949,7 +929,7 @@ public class Map : MonoBehaviour
                 {
                     for (int x = 0; x < MAX_OBJECT; x++)
                     {
-                        if (_map[x, y, z]._myObject.Equals(E_FIELD_OBJECT.BLOCK_TANK))
+                        if (_map[x, y, z]._myObject.Equals(E_OBJECT.BLOCK_TANK))
                         {
                             Debug.Log("座標 x =" + x + " y =" + y + " z =" + z + " に水槽があります" + _map[x, y, z]._number);
                             cnt++;

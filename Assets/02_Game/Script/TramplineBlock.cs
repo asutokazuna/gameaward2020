@@ -7,7 +7,7 @@ public class TramplineBlock : BaseObject
     override public void Init(int number)
     {
         Map map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
-        _myObject = E_FIELD_OBJECT.BLOCK_TRAMPLINE;
+        _myObject = E_OBJECT.BLOCK_TRAMPLINE;
         _myNumber = number;
 
         // 座標の補正

@@ -40,7 +40,7 @@ public class Ground : BaseObject
     override public void Init(int number)
     {
         Map map     = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
-        _myObject   = E_FIELD_OBJECT.BLOCK_GROUND;
+        _myObject   = E_OBJECT.BLOCK_GROUND;
         _myNumber   = number;
 
         // 座標の補正
