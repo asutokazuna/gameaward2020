@@ -28,7 +28,7 @@ public class Fade : MonoBehaviour
     {
         _appliedMat = _fadeMat[0];
         _appliedMat.SetFloat("_Timer", 0);
-
+        StartFadeIn();
     }
 
     /**
@@ -46,6 +46,10 @@ public class Fade : MonoBehaviour
     * @brief フェードアウト開始処理
     * @return なし
     */
+    public void StartFadeOut(UnityAction callback)
+    {
+        StartCoroutine(FadeOut(callback));
+    }
     public IEnumerator FadeOut(UnityAction callback)
     {
         for (float i = 0; i <= 1.1f; i += _fadeSpeed)
@@ -60,6 +64,10 @@ public class Fade : MonoBehaviour
     * @brief フェードイン開始処理
     * @return なし
     */
+    public void StartFadeIn()
+    {
+        StartCoroutine(FadeIn());
+    }
     public IEnumerator FadeIn()
     {
         for (float i = 1; i > 0.0f; i -= _fadeSpeed)
