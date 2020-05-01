@@ -48,7 +48,7 @@ public enum E_OBJECT_MODE
 public class BaseObject : MonoBehaviour
 {
     //! 変数宣言
-    [SerializeField] public E_OBJECT      _myObject;      //!< 自身のオブジェクト情報
+    [SerializeField] public E_OBJECT            _myObject;      //!< 自身のオブジェクト情報
     [SerializeField] public int                 _myNumber;      //!< 自身のオブジェクト番号
     [SerializeField] public Vector3Int          _position;      //!< 現在フィールド座標
     [SerializeField] public Vector3Int          _oldPosition;   //!< 過去フィールド座標
