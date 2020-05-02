@@ -166,7 +166,6 @@ public class Map : MonoBehaviour
             !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN) ||
             _input.isInput(E_INPUT_MODE.BUTTON, E_INPUT.LB))
         {
-           
             return;
         }
         _direct = new Vector3Int();

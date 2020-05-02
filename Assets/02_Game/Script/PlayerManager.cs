@@ -23,7 +23,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] float _putTime;                //!< 置く時間
     [SerializeField] float _jumpTime;               //!< ジャンプ時間
     [SerializeField] float _outsideTheAreaTime;     //!< エリア外落下時間
-    [SerializeField] bool _debug;
+    [SerializeField] bool _debug = default;
 
 
     // Start is called before the first frame update
@@ -44,6 +44,10 @@ public class PlayerManager : MonoBehaviour
         if (_jumpTime <= 0)
         {// 移動時間が0を下回った状態でセットされていたら
             _jumpTime = 1;  // デフォルトタイムにセット(アニメーションに合わせる)
+        }
+        if (_outsideTheAreaTime <= 0)
+        {// 移動時間が0を下回った状態でセットされていたら
+            _outsideTheAreaTime = 1;
         }
     }
 

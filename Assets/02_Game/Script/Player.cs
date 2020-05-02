@@ -80,10 +80,8 @@ public class Player : BaseObject
 
         _lifted     = false;
 
-
         //_direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
-        _direct = Rotate();
-
+        Rotate();
 
         _mode       = E_OBJECT_MODE.WAIT;
         _isMove     = false;
@@ -178,7 +176,7 @@ public class Player : BaseObject
             offsetRotate(_direct);
         }
         else
-        {// 初期化
+        {// 初期化(カメラの向き正面固定じゃないと死ぬ)
             if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  1, 0,  0);   //  90
             else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0,  1);   //   0
             else if (y > 150 && y < 210)                    _direct = new Vector3Int( -1, 0,  0);   // -90
