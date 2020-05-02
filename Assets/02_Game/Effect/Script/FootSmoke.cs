@@ -12,8 +12,8 @@ using UnityEngine;
 public class FootSmoke : MonoBehaviour
 {
     // 変数宣言
-    [SerializeField] private ParticleSystem _footSmoke;     //!< 移動時のパーティクルシステム
-    public PlayerAnimation                  _animation;     //!< プレイヤーのアニメーション
+    [SerializeField] private ParticleSystem _footSmoke = default;     //!< 移動時のパーティクルシステム
+    public PlayerAnimation                  _animation = default;     //!< プレイヤーのアニメーション
 
     /**
      * 初期化

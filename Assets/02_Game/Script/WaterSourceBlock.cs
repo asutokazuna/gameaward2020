@@ -29,7 +29,7 @@ public class WaterSourceBlock : BaseObject
     override public void Init(int number)
     {
         Map map     = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>(); // コンポーネントの取得
-        _myObject   = E_FIELD_OBJECT.BLOCK_WATER_SOURCE;
+        _myObject   = E_OBJECT.BLOCK_WATER_SOURCE;
         _myNumber   = number;
 
         // 座標の補正
