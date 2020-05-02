@@ -79,7 +79,12 @@ public class Player : BaseObject
         _nextPos = transform.position;
 
         _lifted     = false;
-        _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
+
+
+        //_direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
+        _direct = Rotate();
+
+
         _mode       = E_OBJECT_MODE.WAIT;
         _isMove     = false;
 
@@ -171,6 +176,13 @@ public class Player : BaseObject
             _isMove = true;
             _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
             offsetRotate(_direct);
+        }
+        else
+        {// 初期化
+            if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  1, 0,  0);   //  90
+            else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0,  1);   //   0
+            else if (y > 150 && y < 210)                    _direct = new Vector3Int( -1, 0,  0);   // -90
+            else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0, -1);   // 180
         }
         if (_mode == E_OBJECT_MODE.ROTATE)
         {// 回転の動き
@@ -378,6 +390,7 @@ public class Player : BaseObject
                     _haveObject._myObject   = _obj._myObject;                // オブジェクト情報のセット
                     _haveObject._number     = _obj._myNumber;                // オブジェクトナンバーセット
                     _isMove = true;
+                    Debug.Log(name +  " が " + _obj.name + " を持ち上げた");
                 }
                 else
                 {

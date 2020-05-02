@@ -132,7 +132,7 @@ public class Map : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            CallDebug();
+            CallDebug(E_OBJECT.BLOCK_TANK);
         }
         foreach (Player obj in _player)
         {
