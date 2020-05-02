@@ -102,8 +102,9 @@ public class SceneMgr : MonoBehaviour
         _oldScene   = _nowScene;        // 過去シーンの保存
         _reroad     = false;            // リロードしないよ
 
-        OnFinishedCoroutine();
+        //OnFinishedCoroutine();
         //StartCoroutine(_fadeScript.FadeOut(OnFinishedCoroutine)); // ごめん分からない...
+        _fadeScript.StartFadeOut(OnFinishedCoroutine);
     }
 
 
