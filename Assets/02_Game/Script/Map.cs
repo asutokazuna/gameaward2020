@@ -31,10 +31,10 @@ public enum E_OBJECT
     NONE,                   // 無
     PLAYER_01,              // プレイヤー01
     BLOCK_NORMAL,           // 通常ブロック
-    BLOCK_GROUND,           // 地面ブロック
+    BLOCK_GROUND,           // 地面
     BLOCK_WATER_SOURCE,     // 水源ブロック
-    BLOCK_TANK,             // 水槽ブロック
-    BLOCK_TRAMPLINE,        // トランポリンブロック
+    BLOCK_TANK,             // 水槽
+    BLOCK_TRAMPLINE,
     MAX,                    // 最大値
 }
 
