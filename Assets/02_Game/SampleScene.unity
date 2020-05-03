@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.41799453, g: 0.6202176, b: 0.7881757, a: 1}
+  m_IndirectSpecularColor: {r: 0.41808498, g: 0.6202031, b: 0.7880958, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -586,6 +586,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveTime: 0.7
+  _liftTime: 0
+  _putTime: 0
+  _jumpTime: 0
   _outsideTheAreaTime: 0
   _debug: 0
 --- !u!114 &51244599
@@ -1109,6 +1112,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 99703265}
   m_Mesh: {fileID: 2272001217198551621, guid: 2d495a135cf4b074db4eb5525ec51c5f, type: 3}
+--- !u!1 &99957418 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4220139750101252078, guid: 7ff196cd7a45e6e4fb00b70941408bdb,
+    type: 3}
+  m_PrefabInstance: {fileID: 462887808}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &99957423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99957418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10c747a5ae753274dab132c114acd07d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &121223004
 GameObject:
   m_ObjectHideFlags: 0
@@ -8655,7 +8676,7 @@ PrefabInstance:
     - target: {fileID: 2480568515342992271, guid: 7ff196cd7a45e6e4fb00b70941408bdb,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 2480568515342992271, guid: 7ff196cd7a45e6e4fb00b70941408bdb,
         type: 3}
@@ -8707,11 +8728,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2498412244079493938, guid: 7ff196cd7a45e6e4fb00b70941408bdb,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c80fe48b3795ceb4b9f67d5fe6a4e93b, type: 2}
     - target: {fileID: 4556647702940938073, guid: 7ff196cd7a45e6e4fb00b70941408bdb,
         type: 3}
       propertyPath: CountBoxCtrl
       value: 
       objectReference: {fileID: 1184877081}
+    - target: {fileID: 5310060242286882445, guid: 7ff196cd7a45e6e4fb00b70941408bdb,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8982046136633530927, guid: 7ff196cd7a45e6e4fb00b70941408bdb,
         type: 3}
       propertyPath: ParticleSwitch
@@ -27820,20 +27851,13 @@ MonoBehaviour:
   - WaterBlock
   - TramplineBlock
   _player: []
-  _waterBlock: []
   _ground: []
   _waterSource: []
-  _tramplineBlock: []
-  _animation: {fileID: 0}
-  _playerCnt: 0
-  _waterBlockCnt: 0
-  _groundCnt: 0
-  _waterSourceCnt: 0
-  _tramplineCnt: 0
+  _tankBlock: []
+  _trampoline: []
   _direct: {x: 0, y: 0, z: 0}
   _offsetPos: {x: 0, y: 0, z: 0}
   _fullWaterBlockCnt: 0
-  _jumpspeed: 1
 --- !u!114 &1835315811
 MonoBehaviour:
   m_ObjectHideFlags: 0
