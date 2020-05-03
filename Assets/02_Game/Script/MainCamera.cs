@@ -43,7 +43,7 @@ public class MainCamera : MonoBehaviour
     bool _gameOver; //!< ゲームオーバー状態
     bool _systemflg;
     bool[] _Doflg = { false, false };
-    int _listCnt;//!<リストの要素数カウント
+    int _listCnt = default;//!<リストの要素数カウント
     float _TimeCnt = 5.0f;
     public float _waitTime = 2.0f;
     List<GameObject> _gameObjectOver; //!< フォーカスオブジェクト

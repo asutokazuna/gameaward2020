@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class Raytest : MonoBehaviour
 {
    
-    [SerializeField] private List<GameObject> _stageObject;
+    [SerializeField] private List<GameObject> _stageObject = default;
     SceneMgr _sceneManager;
     // Start is called before the first frame update
     void Start()

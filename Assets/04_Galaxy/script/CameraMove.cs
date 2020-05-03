@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class CameraMove : MonoBehaviour
 {
     [SerializeField]
-    private NavMeshAgent _agent;
+    private NavMeshAgent _agent = default;
     public int _currentID;
     public float _distanceToPlanet;
     public float _cameraMoveSpd1;
@@ -34,6 +34,7 @@ public class CameraMove : MonoBehaviour
     private SceneMgr SceneManager;
 
     public float _offsetY;
+
 
     // Start is called before the first frame update
     void Start()

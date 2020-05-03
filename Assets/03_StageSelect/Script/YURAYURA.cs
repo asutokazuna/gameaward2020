@@ -8,8 +8,8 @@ using UnityEngine.UI;
 
 public class YURAYURA : MonoBehaviour
 {
-    [SerializeField] float _moveScale;
-    [SerializeField] float _moveSpeed;
+    [SerializeField] float _moveScale = default;
+    [SerializeField] float _moveSpeed = default;
     private RectTransform _rect;
     private Vector3 _start;
 
