@@ -42,6 +42,12 @@ public class RaySystem : MonoBehaviour
             if(target.collider.tag != "mask")
             {
                 pointer.transform.position = target.point;  //当たった場合
+
+                Debug.Log(target.collider.gameObject.GetComponent<StageID>()._stageID);
+                if (Input.GetKey(KeyCode.Return))
+                {
+                    _sceneManager.SetScene(target.collider.gameObject.GetComponent<StageID>()._stageID);
+                }
             }
             else
             {
@@ -54,45 +60,44 @@ public class RaySystem : MonoBehaviour
         {
             pointer.transform.position = new Vector3(0.0f, 0.0f, 0.0f); //何も当たらなかった場合
         }
-            
 
-        
+       
 
-        //foreach (RaycastHit hit in Physics.RaycastAll(_ray))
-        //{
-        //    //Debug.Log(hit.collider);
-        //   // Debug.Log(hit.collider.transform.parent.parent.name);
-        //    Debug.Log(hit.collider.name);
-        //    for (int i = 0; i < _stageObject.Count; i++)
-        //    {
-        //        if (!hit.collider.transform.parent)
-        //        {// 取り合えずこいつでエラー文が一個減る
-        //            continue;
-        //        }
-        //        Debug.Log(hit.collider.transform.parent.parent.GetComponent<revolution>().PlanetID + " = ID");
-        //        if (hit.collider.transform.parent.parent.GetComponent<revolution>().PlanetID == _cameraMove._currentID)
-        //        {
-        //            //if (hit.collider.name == _stageObject[i].name)
-        //            //{
-        //            //        Debug.Log("Enter");
-        //            //    if (Input.GetKey(KeyCode.Return))
-        //            //    {
-        //            //        _sceneManager.SetScene((E_SCENE)i + 3);
-        //            //    }
-        //            //}
+            //foreach (RaycastHit hit in Physics.RaycastAll(_ray))
+            //{
+            //    //Debug.Log(hit.collider);
+            //   // Debug.Log(hit.collider.transform.parent.parent.name);
+            //    Debug.Log(hit.collider.name);
+            //    for (int i = 0; i < _stageObject.Count; i++)
+            //    {
+            //        if (!hit.collider.transform.parent)
+            //        {// 取り合えずこいつでエラー文が一個減る
+            //            continue;
+            //        }
+            //        Debug.Log(hit.collider.transform.parent.parent.GetComponent<revolution>().PlanetID + " = ID");
+            //        if (hit.collider.transform.parent.parent.GetComponent<revolution>().PlanetID == _cameraMove._currentID)
+            //        {
+            //            //if (hit.collider.name == _stageObject[i].name)
+            //            //{
+            //            //        Debug.Log("Enter");
+            //            //    if (Input.GetKey(KeyCode.Return))
+            //            //    {
+            //            //        _sceneManager.SetScene((E_SCENE)i + 3);
+            //            //    }
+            //            //}
 
-        //            //ベータ版用プログラム↓
-        //            if (hit.collider.transform.parent.parent.name == _stageObject[i].name)
-        //            {
-        //               // Debug.Log("Enter");
-        //                if (Input.GetKey(KeyCode.Return))
-        //                {
-        //                    //_sceneManager.SetScene((E_SCENE)i + 2);
-        //                }
-        //            }
-        //        }
-        //    }
-        //    // Debug.Log(hit.collider.gameObject.name);
-        //}
-    }
+            //            //ベータ版用プログラム↓
+            //            if (hit.collider.transform.parent.parent.name == _stageObject[i].name)
+            //            {
+            //               // Debug.Log("Enter");
+            //                if (Input.GetKey(KeyCode.Return))
+            //                {
+            //                    //_sceneManager.SetScene((E_SCENE)i + 2);
+            //                }
+            //            }
+            //        }
+            //    }
+            //    // Debug.Log(hit.collider.gameObject.name);
+            //}
+        }
 }
