@@ -422,7 +422,7 @@ public class WaterFlow : MonoBehaviour
     {
         //相手のタグが箱かつ、自分自身が満水かつ、持たれていなかったら
         if(other.gameObject.tag == "WaterBlock" && _isFullWater && 
-            !this.GetComponent<BlockTank>()._lifted)
+            this.GetComponent<BlockTank>()._lifted == E_HANDS_ACTION.NONE)
         {
             
             for (int i = 0; i < 4; i++)

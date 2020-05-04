@@ -19,7 +19,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 
 
@@ -43,9 +42,8 @@ public enum E_OBJECT
  * @brief 一マスあたりの情報
  */
 public struct SquareInfo {
-    public E_OBJECT  _myObject;         //!< マスが持つオブジェクト情報
-    public int             _number;     //!< オブジェクトナンバー
-    public bool            _isUpdate;   //!< 更新flag
+    public E_OBJECT         _myObject;  //!< マスが持つオブジェクト情報
+    public int              _number;    //!< オブジェクトナンバー
 }
 
 
@@ -77,6 +75,8 @@ public class Map : MonoBehaviour
     public List<WaterSourceBlock>   _waterSource;       //!< 水源
     public List<BlockTank>          _tankBlock;         //!< 水槽
     public List<TramplineBlock>     _trampoline;        //!< トランポリン
+
+
     [SerializeField] Vector3Int     _direct;            //!< 全プレイヤーが向いてる方向
     public Vector3Int               _offsetPos;         //!< 配列座標補正用変数
     Controller                      _input;             //!< 入力
@@ -105,6 +105,8 @@ public class Map : MonoBehaviour
     {
         // マップとオブジェクト情報の初期化
         InitObject();
+        _direct = _player[0]._direct;
+        PlayerSort();   // ソートと更新
     }
 
     // Update is called once per frame
@@ -121,7 +123,6 @@ public class Map : MonoBehaviour
             {// ゲームオーバーオブジェクトの確認
                 Debug.Log(n.name);
             }
-            //SceneManager.LoadScene("SampleScene");
         }
         if (_gameClear)
         {// ゲームクリア時の処理を追加する場所
@@ -141,11 +142,14 @@ public class Map : MonoBehaviour
                 return;
             }
         }
-        foreach(Player obj in _player)
+        foreach (Player obj in _player)
         {
-            UpdateMap(obj);
+            if (obj._putUpdate)
+            {// まだ移動中のプレイヤーがいれば、操作を受け付けない
+                HandAction(true);
+                return;
+            }
         }
-
         MoveObject();
         HandAction();
         RotateObject();
@@ -190,7 +194,7 @@ public class Map : MonoBehaviour
 
         foreach (Player obj in _player)
         {
-            obj.Rotate();
+            obj.GetComponent<Player>().Rotate();
         }
         offsetDirect();
         PlayerSort();   // ソートと更新
@@ -201,44 +205,109 @@ public class Map : MonoBehaviour
      * @brief 持ち上げる、又は話す
      * @return なし
      */
-    public void HandAction()
+    public void HandAction(bool flag = false)
     {
-        if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A)) return;
-        PlayerSort();   // ソートと更新
+        if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A) && !flag) return;
         foreach (Player obj in _player)
         {
-            obj.HandAction();
+            if (obj.isCenter())
+            {
+                obj._putUpdate = true;
+            }
         }
         foreach (Player obj in _player)
+        {
+            obj.HandAction(flag);
+        }
+        foreach (Player obj in _player)
+        {
             UpdateMap(obj);
+        }
+    }
+
+
+    #region MapLift
+
+    /**
+     * @brief プレイヤーがオブジェクトを持てるかの判定
+     * @param1 これから持つオブジェクト座標
+     * @return オブジェクトを持てるなら オブジェクト情報 を返す
+     */
+    public SquareInfo isLift(Vector3Int pos)
+    {
+        if (_map[pos.x, pos.y, pos.z]._myObject == E_OBJECT.BLOCK_TANK &&                           // 水槽ブロックの場合
+            pos.y + 1 < MAX_OBJECT && _map[pos.x, pos.y + 1, pos.z]._myObject == E_OBJECT.NONE &&   // 上に何も積まれてない
+            _tankBlock[_map[pos.x, pos.y, pos.z]._number]._lifted != E_HANDS_ACTION.DO)             // 何かに持たれてない
+        {
+            return _map[pos.x, pos.y, pos.z];
+        }
+        if (_map[pos.x, pos.y, pos.z]._myObject == E_OBJECT.PLAYER_01)
+        {// プレイヤーの場合
+            if (pos.y + 1 < MAX_OBJECT && _map[pos.x, pos.y + 1, pos.z]._myObject == E_OBJECT.NONE && // 上に何も積まれてない
+                _player[_map[pos.x, pos.y, pos.z]._number]._lifted != E_HANDS_ACTION.DO
+                )
+            {
+                return _map[pos.x, pos.y, pos.z];
+            }
+        }
+        return new SquareInfo();
+    }
+
+
+    /**
+     * @brief 持ち上げるオブジェクトの取得
+     * @param 持ち上げるオブジェクト情報
+     * @return GameObject型で返す
+     */
+    public GameObject GetLiftObject(SquareInfo obj)
+    {
+        if (obj._myObject == E_OBJECT.BLOCK_TANK)
+        {
+            return _tankBlock[obj._number].gameObject;
+        }
+        if (obj._myObject == E_OBJECT.PLAYER_01)
+        {
+            return _player[obj._number].gameObject;
+        }
+        return null;
     }
 
 
     /**
      * @brief オブジェクトを持ち上げる
-     * @param1 自身の座標
-     * @param2 持ち上げるオブジェクトの座標
-     * @return オブジェクト情報
+     * @param1 持ち上げるオブジェクト情報
+     * @param2 目的座標
+     * @return なし
      */
-    public BaseObject LiftToObject(Vector3Int pos, Vector3Int target)
+    public void LiftToObject(SquareInfo obj, Vector3Int pos)
     {
-        int num = 0;
-        if (_map[target.x, target.y, target.z]._myObject == E_OBJECT.BLOCK_TANK)
+        if (obj._myObject == E_OBJECT.BLOCK_TANK)
         {// これから持つオブジェクトが水槽だった場合
-            num = _map[target.x, target.y, target.z]._number;
-            _tankBlock[num].Lifted(new Vector3Int(pos.x, pos.y + 1, pos.z));
-            UpdateMap(_tankBlock[num]);
-            return _tankBlock[num];
+            _tankBlock[obj._number].Lifted(pos);
+            DeleteObject(_tankBlock[obj._number]._oldPosition);
         }
-        else if (_map[target.x, target.y, target.z]._myObject == E_OBJECT.PLAYER_01)
+        if (obj._myObject == E_OBJECT.PLAYER_01)
         {// これから持つオブジェクトがプレイヤーだった場合
-            num = _map[target.x, target.y, target.z]._number;
-            _player[num].Lifted(new Vector3Int(pos.x, pos.y + 1, pos.z));
-            UpdateMap(_player[num]);
-            return _player[num];
+            _player[obj._number].Lifted(pos);
+            DeleteObject(_player[obj._number]._oldPosition);
         }
-        return null;
     }
+
+    public void Poop(SquareInfo obj, Vector3Int pos)
+    {// 糞関数、絶対後で直す
+        if (obj._myObject == E_OBJECT.BLOCK_TANK)
+        {
+            _tankBlock[obj._number]._position = pos;
+            DeleteObject(_tankBlock[obj._number]._oldPosition);
+        }
+        if (obj._myObject == E_OBJECT.PLAYER_01)
+        {
+            _player[obj._number]._position = pos;
+            DeleteObject(_player[obj._number]._oldPosition);
+        }
+    }
+
+    #endregion
 
 
     /**
@@ -260,6 +329,7 @@ public class Map : MonoBehaviour
             _player[haveObj._number].transform.parent = null;   // 親子関係を話す
             _player[haveObj._number].Puted(targetPos);
             UpdateMap(_player[haveObj._number]);
+            Debug.Log(_player[haveObj._number].name + " が降ろされた");
         }
     }
 
@@ -297,12 +367,12 @@ public class Map : MonoBehaviour
     {
         if (haveObj._myObject == E_OBJECT.BLOCK_TANK)
         {// 水槽の場合
-            _tankBlock[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
+            _tankBlock[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z), _direct);
             UpdateMap(_tankBlock[haveObj._number]);
         }
         else if (haveObj._myObject == E_OBJECT.PLAYER_01)
         {// 水槽の場合
-            _player[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z));
+            _player[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z), _direct);
             UpdateMap(_player[haveObj._number]);
         }
     }
@@ -403,7 +473,7 @@ public class Map : MonoBehaviour
     public bool isDontMove(Vector3Int targetPos, Vector3Int oldPos)
     {
         if (isUse(new Vector3Int(oldPos.x, oldPos.y + 1, oldPos.z)) && isUse(new Vector3Int(oldPos.x, oldPos.y + 2, oldPos.z)))
-        {// 二段以上積み上げている時
+        {// 二段以上積み上げている時(取り合えず)
             return true;
         }
         if (isUse(targetPos) && isUse(new Vector3Int(targetPos.x, targetPos.y + 1, targetPos.z)))
@@ -450,9 +520,12 @@ public class Map : MonoBehaviour
         }
         return false;
     }
-    /*
-     * トランポリン処理
-     * 
+
+
+    /**
+     * @brief トランポリン処理
+     * @param 移動先座標
+     * @return 移動先がトランポリンなら true
      */
     public bool isTrampline(Vector3Int targetPos)
     {
@@ -464,6 +537,13 @@ public class Map : MonoBehaviour
         return false;
     }
 
+
+    /**
+     * @brief トランポリンからの移動先座標の取得
+     * @param1 プレイヤーの座標
+     * @param2 ベクトル
+     * @return 移動先座標
+     */
     public Vector3Int GetTramplinepPos(Vector3Int playerPos,Vector3Int vec = new Vector3Int())
     {
         Vector3Int pos = new Vector3Int(playerPos.x + vec.x, playerPos.y + vec.y, playerPos.z + vec.x );
@@ -474,10 +554,15 @@ public class Map : MonoBehaviour
                 return new Vector3Int(pos.x, n + 1, pos.z);
             }
         }
-
         return new Vector3Int();
     }
 
+
+    /**
+     * @brief 降りる先の座標取得
+     * @param 探索開始座標
+     * return 移動先座標
+     */
     public Vector3Int GetoffPos(Vector3Int pos)
     {
         for (int n = MAX_OBJECT - 1; n >= 0; n-- ,pos.y--)
@@ -487,33 +572,7 @@ public class Map : MonoBehaviour
                 return new Vector3Int(pos.x, pos.y + 1, pos.z);
             }
         }
-
         return new Vector3Int();
-    }
-
-    /**
-     * @brief プレイヤーがオブジェクトを持てるかの判定
-     * @param1 これから持つオブジェクト座標
-     * @return オブジェクトを持てるなら true を返す
-     */
-    public bool isLift(Vector3Int pos)
-    {
-        if (_map[pos.x, pos.y, pos.z]._myObject == E_OBJECT.BLOCK_TANK &&                         // 水槽ブロックの場合
-            pos.y + 1 < MAX_OBJECT && _map[pos.x, pos.y + 1, pos.z]._myObject == E_OBJECT.NONE && // 上に何も積まれてない
-            !_tankBlock[_map[pos.x, pos.y, pos.z]._number]._lifted)                                    // 何かに持たれてない
-        {
-            return true;
-        }
-        else if (_map[pos.x, pos.y, pos.z]._myObject == E_OBJECT.PLAYER_01)
-        {// プレイヤーの場合
-            if (pos.y + 1 < MAX_OBJECT && _map[pos.x, pos.y + 1, pos.z]._myObject == E_OBJECT.NONE && // 上に何も積まれてない
-                !_player[_map[pos.x, pos.y, pos.z]._number]._lifted)
-            {
-                return true;
-            }
-            Debug.Log("どうして？");
-        }
-        return false;
     }
 
 
@@ -606,7 +665,6 @@ public class Map : MonoBehaviour
     {
         _map[obj._position.x, obj._position.y, obj._position.z]._myObject    = obj._myObject;
         _map[obj._position.x, obj._position.y, obj._position.z]._number      = obj._myNumber;
-        _map[obj._position.x, obj._position.y, obj._position.z]._isUpdate    = false;
     }
 
 
@@ -618,7 +676,6 @@ public class Map : MonoBehaviour
     {
         _map[pos.x, pos.y, pos.z]._myObject   = E_OBJECT.NONE;
         _map[pos.x, pos.y, pos.z]._number     = 0;
-        _map[pos.x, pos.y, pos.z]._isUpdate   = false;
     }
 
 
@@ -633,7 +690,7 @@ public class Map : MonoBehaviour
         InitBlockTankObj();     // 箱の初期化
         InitGroundObj();        // 地面の初期化
         InitWaterblockObj();    // 水源ブロックの初期化
-        InitTramplineblockObj();//
+        InitTramplineblockObj();// トランポリンの初期化
     }
 
 
@@ -702,7 +759,7 @@ public class Map : MonoBehaviour
     
     
     /**
-     * @brief 水源情報の初期化
+     * @brief トランポリンの初期化
      * @return なし
      */
     private void InitTramplineblockObj()
@@ -787,6 +844,13 @@ public class Map : MonoBehaviour
             _player[n]._myNumber = n;
             UpdateMap(_player[n]);
         }
+        for (int n = 0; n < player.Length; n++)
+        {
+            if (_player[n]._haveObject._myObject == E_OBJECT.PLAYER_01)
+            {
+                _player[n]._haveObject = _map[_player[n]._position.x, _player[n]._position.y + 1, _player[n]._position.z];
+            }
+        }
     }
 
 
@@ -797,19 +861,27 @@ public class Map : MonoBehaviour
      */
     private bool isSort(Player i, Player j)
     {
-        if (_direct.x > 0 && i._position.x < j._position.x)
+        if (_direct.x > 0 &&
+            (i._position.x < j._position.x) ||
+            (i._position.x == j._position.x && i._position.y > j._position.y))
         {// 右方
             return true;
         }
-        else if (_direct.x < 0 && i._position.x > j._position.x)
+        else if (_direct.x < 0 &&
+            (i._position.x > j._position.x) ||
+            (i._position.x == j._position.x && i._position.y > j._position.y))
         {// 左方
             return true;
         }
-        else if (_direct.z > 0 && i._position.z < j._position.z)
+        else if (_direct.z > 0 &&
+            (i._position.z < j._position.z) ||
+            (i._position.z == j._position.z && i._position.y > j._position.y))
         {// 前方
             return true;
         }
-        else if (_direct.z < 0 && i._position.z > j._position.z)
+        else if (_direct.z < 0 &&
+            (i._position.z > j._position.z) ||
+            (i._position.z == j._position.z && i._position.y > j._position.y))
         {// 後方
             return true;
         }

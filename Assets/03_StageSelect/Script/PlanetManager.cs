@@ -7,7 +7,7 @@ public class PlanetManager : MonoBehaviour
     //フィールドブロックを変数に格納
     public GameObject _stageSelectManager; //!< ステージセレクトマネージャーを中心に置く
  
-    [SerializeField] private List<GameObject> _planetObject;
+    [SerializeField] private List<GameObject> _planetObject = default;
     [SerializeField] float rotateSpeed = 4.0f;            //回転の速さ
 
     float _oldAngle;//!<回転角度の退避

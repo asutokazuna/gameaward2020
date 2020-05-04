@@ -7,9 +7,10 @@ using UnityEngine.UI;
 
 public class UICange : MonoBehaviour
 {
-    [SerializeField] GameObject[] _gameObject;
+    [SerializeField] GameObject[] _gameObject = default;
     [SerializeField] int _planetNo;
     [SerializeField] int MAX_UI;
+
 
     // Start is called before the first frame update
     void Start()

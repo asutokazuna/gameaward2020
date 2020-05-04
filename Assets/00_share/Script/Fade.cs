@@ -17,7 +17,7 @@ public class Fade : MonoBehaviour
 {
     Material _appliedMat;
     [SerializeField] Material[] _fadeMat;
-    [Range(0, 1)] [SerializeField] float _fadeSpeed;
+    [Range(0, 1)] [SerializeField] float _fadeSpeed = default;
 
 
     /**
