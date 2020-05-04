@@ -4,25 +4,27 @@ using UnityEngine;
 
 public class BoxEmission : MonoBehaviour
 {
-    [SerializeField] float EmissionTimer;
+    [SerializeField]float _emissionSpeed = 0.03f;
     MeshRenderer mesh;
+
 
     // Start is called before the first frame update
     void Start()
     {
         mesh = GetComponent<MeshRenderer>();
-        mesh.material.SetFloat("_Emission", 0);
+        mesh.material.SetFloat("_Brightness", 0);
     }
 
-
-    public void BoxEmissionOn()
+    public void StartEmission()
     {
-        mesh.material.SetFloat("_Emission", 1);
-        Invoke("BoxEmissionOff", EmissionTimer);
+        StartCoroutine("Emission");
     }
-
-    public void BoxEmissionOff()
+    public IEnumerator Emission()
     {
-        mesh.material.SetFloat("_Emission", 0);
+        for (float i = 0.5f; i <= Mathf.PI; i += _emissionSpeed)
+        {
+            mesh.material.SetFloat("_Brightness", Mathf.Clamp(Mathf.Sin(i), 0, 1.0f));
+            yield return null;
+        }
     }
 }
