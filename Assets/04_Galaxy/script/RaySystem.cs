@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RaySystem : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> _stageObject;
+    [SerializeField] private List<GameObject> _stageObject = default;
     CameraMove _cameraMove;
     SceneMgr _sceneManager;
     // Start is called before the first frame update
