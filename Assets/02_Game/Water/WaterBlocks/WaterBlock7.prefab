@@ -43,7 +43,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6219104347285724310}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -4.074649, y: 2.595, z: -3.8453293}
+  m_LocalPosition: {x: 3, y: 1, z: 2}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children:
   - {fileID: 8237954707731895241}
@@ -5010,9 +5010,6 @@ MonoBehaviour:
   _maxWater: 300
   _isFullWater: 0
   _isWaterSource: 0
-  add: 0
-  minus: 0
-  test: 0
 --- !u!65 &8844950713058775172
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5038,7 +5035,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: affb33a809ce97f47a6e4fe6e9685634, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EmissionTimer: 3
+  _emissionSpeed: 0.03
 --- !u!1001 &3724912744002402946
 PrefabInstance:
   m_ObjectHideFlags: 0
