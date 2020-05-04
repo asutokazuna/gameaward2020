@@ -22,10 +22,7 @@ public class MainCamera : MonoBehaviour
 {
     //フィールドブロックを変数に格納
     //配列にしたかったけどやり方わからなかった
-    public GameObject _fieldBlock1; //!< フィールドブロック1
-    public GameObject _fieldBlock2; //!< フィールドブロック2
-    public GameObject _fieldBlock3; //!< フィールドブロック3
-    public GameObject _fieldBlock4; //!< フィールドブロック4
+    [SerializeField] List<GameObject> _fieldBlock;
 
  
     public float _angle = 90.0f; //!<カメラを回転させたときに回転する角度
@@ -43,8 +40,10 @@ public class MainCamera : MonoBehaviour
     bool _gameOver; //!< ゲームオーバー状態
     bool _systemflg;
     bool[] _Doflg = { false, false };
-    int _listCnt;//!<リストの要素数カウント
-    float _TimeCnt = 5.0f;
+    int _listCnt = 0;//!<リストの要素数カウント
+    float _TimeCnt = 1.0f;
+    float _time2 = 0;
+    float _oldtime = 0;
     public float _waitTime = 2.0f;
     List<GameObject> _gameObjectOver; //!< フォーカスオブジェクト
     GameObject _gameObjectPlayer; //!< Playerオブジェクトの格納
@@ -53,8 +52,15 @@ public class MainCamera : MonoBehaviour
     Vector3 _lookAtObject; //<!追跡オブジェクト
     Vector3 _startPos;
     Vector3Int _direct;
-    
-               
+
+    [SerializeField] float _rotateTime = 8;//!（手ブレ軽減用(数字が大きいほど手ブレが減り回転が遅くなる))
+    [SerializeField] float _rotateSpeed = 2;//!<回転するはやさ（数字が大きいほど回転が早くなる）
+    [SerializeField] Vector3 _circleSize = new Vector3(4, 2, 4);//!<回転するときの円の大きさ
+    [SerializeField] bool _focus = true;//!<フォーカス対象の設定（trueがPlayer,falseがFieldCenter)
+
+
+
+
 
 
     // Use this for initialization
@@ -103,14 +109,14 @@ public class MainCamera : MonoBehaviour
     void SetFieldCenter()
     {
         //フィールドx中心座標取得計算
-        _fieldPos.x = (((_fieldBlock1.transform.position.x + _fieldBlock2.transform.position.x) / 2) + 
-            ((_fieldBlock3.transform.position.x + _fieldBlock4.transform.position.x) / 2)) / 2;
+        _fieldPos.x = (((_fieldBlock[0].transform.position.x + _fieldBlock[1].transform.position.x) / 2) + 
+            ((_fieldBlock[2].transform.position.x + _fieldBlock[3].transform.position.x) / 2)) / 2;
         //フィールドy中心座標取得計算
-        _fieldPos.y = (((_fieldBlock1.transform.position.y + _fieldBlock2.transform.position.y) / 2) + 
-            ((_fieldBlock3.transform.position.y + _fieldBlock4.transform.position.y) / 2)) / 2;
+        _fieldPos.y = (((_fieldBlock[0].transform.position.y + _fieldBlock[1].transform.position.y) / 2) + 
+            ((_fieldBlock[2].transform.position.y + _fieldBlock[3].transform.position.y) / 2)) / 2;
         //フィールドz中心座標取得計算
-        _fieldPos.z = (((_fieldBlock1.transform.position.z + _fieldBlock2.transform.position.z) / 2) + 
-            ((_fieldBlock3.transform.position.z + _fieldBlock4.transform.position.z) / 2)) / 2;
+        _fieldPos.z = (((_fieldBlock[0].transform.position.z + _fieldBlock[1].transform.position.z) / 2) + 
+            ((_fieldBlock[2].transform.position.z + _fieldBlock[3].transform.position.z) / 2)) / 2;
         //Debug.Log(_fieldPos.x);
         //Debug.Log(_fieldPos.y);
         //Debug.Log(_fieldPos.z);
@@ -161,17 +167,17 @@ public class MainCamera : MonoBehaviour
         {
             if (_TimeCnt > 0)
             {
-               
+
                 myTransform.LookAt(_fieldPos);
-                
-//                transform.RotateAround(_fieldPos, Vector3.up,1.0f );
+
+                //                transform.RotateAround(_fieldPos, Vector3.up,1.0f );
                 _TimeCnt -= Time.deltaTime;
                 _startPos = this.transform.position;
 
-              //  UnityEngine.Debug.Log(_angle);
+                //  UnityEngine.Debug.Log(_angle);
             }
-            
-             else if (_TimeCnt < 0)
+
+            else if (_TimeCnt < 0)
             {
                 /*
                  myTransform = this.transform;//変数に取得
@@ -187,31 +193,51 @@ public class MainCamera : MonoBehaviour
                // myTransform.transform.DOLocalPath(_path, 1.0f, PathType.CatmullRom);
                 myTransform.transform.DOMove(_cameraPos, 1.0f);
             */
-                _lookAtObject = _gameObjectPlayer.transform.position;//追跡対象の設定
-                _lookAtObject.y = _gameObjectPlayer.transform.position.y + _correctionValueClear.y;
-
-                myTransform.LookAt(_lookAtObject);  // 向きを設定
-            }
-
-            if (_Doflg[0] == true && _Doflg[1] == false)
-            {
-                Sequence seq = DOTween.Sequence();
-                //myTransform.transform.DOMove(new Vector3(-4, 3, -15), 1.0f);
-                _cameraPos = _gameObjectPlayer.transform.position+(_direct*2);//追跡対象の設定
-                Vector3[] _path = { new Vector3(_fieldPos.x + 4, 3, _fieldPos.z - 4),
-                                    new Vector3(_fieldPos.x + 4, 3, _fieldPos.z + 4),
-                                    new Vector3(_fieldPos.x - 4, 3, _fieldPos.z + 4),
-                                    new Vector3(_fieldPos.x - 4, 3, _fieldPos.z - 4),
-                                    new Vector3(_cameraPos.x + 3, _cameraPos.y + 3.0f, _cameraPos.z - 3) ,
-                                    new Vector3(_cameraPos.x + 2, _cameraPos.y + 2.0f, _cameraPos.z + 2) ,
-                                    new Vector3(_cameraPos.x + 2, _cameraPos.y + 1.5f, _cameraPos.z + 2) ,
-                                    new Vector3(_cameraPos.x, _cameraPos.y, _cameraPos.z) };
-                //seq.Append(
-                    myTransform.DOLocalPath(_path, 10.0f, PathType.CatmullRom).SetOptions(false);
+                Sequence _seq = DOTween.Sequence();
+                _gameObjectPlayer = GameObject.FindGameObjectWithTag("Player");//!< タグだと個別フォーカスできないかも？
+                if (_focus)
+                {
+                    _lookAtObject = _gameObjectPlayer.transform.position;//追跡対象の設定
+                    _lookAtObject.y = _gameObjectPlayer.transform.position.y + _correctionValueClear.y;
+                   
+                }
+                else
+                {
+                     _lookAtObject = _fieldPos;
+                     _lookAtObject.y = 1;
+                }
+                float _time = 0;
+                _time += Time.deltaTime * _rotateTime;
+                _time2 += Time.deltaTime / _rotateSpeed;
                
-                _Doflg[1] = true;
-
+                Vector3 _setPos = new Vector3(_fieldPos.x + _circleSize.x * Mathf.Sin(_time2), _fieldPos.y + _circleSize.y, _fieldPos.z + _circleSize.z * Mathf.Cos(_time2));
+                _seq.Append(myTransform.DOMove(_setPos, _time));
+                
+                myTransform.LookAt(_lookAtObject);  // 向きを設定
+                
             }
+
+            //if (_Doflg[0] == true && _Doflg[1] == false)
+            //{
+            //    Sequence seq = DOTween.Sequence();
+            //    //myTransform.transform.DOMove(new Vector3(-4, 3, -15), 1.0f);
+            //    _cameraPos = _gameObjectPlayer.transform.position+(_direct*2);//追跡対象の設定
+            //    Vector3[] _path = { new Vector3(_fieldPos.x + 4, 3, _fieldPos.z - 4),
+            //                        new Vector3(_fieldPos.x + 4, 3, _fieldPos.z + 4),
+            //                        new Vector3(_fieldPos.x - 4, 3, _fieldPos.z + 4),
+            //                        new Vector3(_fieldPos.x - 4, 3, _fieldPos.z - 4),
+            //                        new Vector3(_cameraPos.x + 3, _cameraPos.y + 3.0f, _cameraPos.z - 3) ,
+            //                        new Vector3(_cameraPos.x + 2, _cameraPos.y + 2.0f, _cameraPos.z + 2) ,
+            //                        new Vector3(_cameraPos.x + 2, _cameraPos.y + 1.5f, _cameraPos.z + 2) ,
+            //                        new Vector3(_cameraPos.x, _cameraPos.y, _cameraPos.z) };
+               
+
+            //    //seq.Append(
+            //        myTransform.DOLocalPath(_path, 10.0f, PathType.CatmullRom).SetOptions(false);
+               
+            //    _Doflg[1] = true;
+
+            //}
         }
     }
 
@@ -227,6 +253,7 @@ public class MainCamera : MonoBehaviour
             Transform myTransform = this.transform;//変数に取得
                                                    //!< タグだと個別フォーカスできないかも？
             _gameObjectOver = GameObject.FindWithTag("Map").GetComponent<Map>().GetGameOverObjects();
+            _listCnt = _gameObjectOver.Count;
             _cameraPos = _gameObjectOver[_listCnt].transform.position - _direct + _correctionValueOver;//追跡対象の設定
 
             _lookAtObject = _gameObjectOver[_listCnt].transform.position;//追跡対象の設定
