@@ -197,6 +197,12 @@ public class Player : BaseObject
             RotateMove();
         }
 
+        // 持っているオブジェクトの追従
+        if (_haveObject._myObject != E_OBJECT.NONE)
+        {// 何か持っている時
+            _map.Follow(_haveObject, _position, _direct);    // 追従させる
+        }
+
         return _direct;
 
         #endregion
@@ -299,7 +305,7 @@ public class Player : BaseObject
         // 持っているオブジェクトの追従
         if (_haveObject._myObject != E_OBJECT.NONE)
         {// 何か持っている時
-            _map.Follow(_haveObject, _position);    // 追従させる
+            _map.Follow(_haveObject, _position, _direct);    // 追従させる
         }
 
         // 座標移動
@@ -324,6 +330,26 @@ public class Player : BaseObject
         else if (_mode == E_OBJECT_MODE.FALL || _mode == E_OBJECT_MODE.AREA_FALL)
         {// ジャンプで落ちる
             JumpMode(); // アニメーションのセット
+        }
+    }
+
+
+    /**
+     * @brief オブジェクトの追従
+     * @param1 目的座標
+     * @param2 方向
+     * @return なし
+     */
+    override public void Follow(Vector3Int pos, Vector3Int direct)
+    {
+        _oldPosition    = _position;
+        _position       = pos;
+        _direct         = direct;
+
+        // 持っているオブジェクトの追従
+        if (_haveObject._myObject != E_OBJECT.NONE)
+        {// 何か持っている時
+            _map.Follow(_haveObject, _position, _direct);    // 追従させる
         }
     }
 

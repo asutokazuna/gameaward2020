@@ -133,7 +133,7 @@ public class Map : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            CallDebug(E_OBJECT.BLOCK_TANK);
+            CallDebug(E_OBJECT.PLAYER_01);
         }
         foreach (Player obj in _player)
         {
@@ -147,8 +147,11 @@ public class Map : MonoBehaviour
             if (obj._putUpdate)
             {// まだ移動中のプレイヤーがいれば、操作を受け付けない
                 HandAction(true);
-                return;
             }
+        }
+        foreach (Player obj in _player)
+        {// どっかでマップ全体をターン制にしたいね
+            PlayerSort();   // ソートと更新
         }
         MoveObject();
         HandAction();
@@ -363,16 +366,16 @@ public class Map : MonoBehaviour
      * @param2 プレイヤーのオブジェクト座標
      * @return なし
      */
-    public void Follow(SquareInfo haveObj, Vector3Int playerPos)
+    public void Follow(SquareInfo haveObj, Vector3Int playerPos, Vector3Int direct)
     {
         if (haveObj._myObject == E_OBJECT.BLOCK_TANK)
         {// 水槽の場合
-            _tankBlock[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z), _direct);
+            _tankBlock[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z), direct);
             UpdateMap(_tankBlock[haveObj._number]);
         }
         else if (haveObj._myObject == E_OBJECT.PLAYER_01)
         {// 水槽の場合
-            _player[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z), _direct);
+            _player[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z), direct);
             UpdateMap(_player[haveObj._number]);
         }
     }
