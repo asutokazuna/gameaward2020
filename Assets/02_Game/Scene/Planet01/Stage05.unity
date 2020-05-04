@@ -201,6 +201,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveTime: 0.7
+  _liftTime: 0
+  _putTime: 0
+  _jumpTime: 0
   _outsideTheAreaTime: 0
   _debug: 0
 --- !u!114 &51244599
@@ -6959,7 +6962,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.25783423, y: 0.084186025, z: -0.02255758, w: 0.9622502}
-  m_LocalPosition: {x: -4, y: 6, z: -10}
+  m_LocalPosition: {x: -4, y: 6, z: -9.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2140260695}
@@ -6980,18 +6983,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b49f76e0e008f04bb41eac2a5542322, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fieldBlock1: {fileID: 1958758804}
-  _fieldBlock2: {fileID: 474428176}
-  _fieldBlock3: {fileID: 0}
-  _fieldBlock4: {fileID: 30840042}
+  _fieldBlock:
+  - {fileID: 1144662260}
+  - {fileID: 474428176}
+  - {fileID: 2080240111}
+  - {fileID: 30840042}
   _angle: 90
   _rotateFlame: 60
-  _setCameraPos: {x: -4, y: 6, z: -10}
+  _setCameraPos: {x: -4, y: 6, z: -9.5}
   _setCameraRot: {x: 1, y: 1, z: 1}
   _manualSetCamera: 1
   _correctionValueClear: {x: 0, y: 0.5, z: 0}
   _correctionValueOver: {x: 0, y: 10, z: 0}
   _waitTime: 1
+  _rotateTime: 8
+  _rotateSpeed: 2
+  _circleSize: {x: 4, y: 2, z: 4}
+  _focus: 1
 --- !u!82 &963194230
 AudioSource:
   m_ObjectHideFlags: 0
@@ -12034,6 +12042,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb339dadbba096e4796b13ab51e9a60d, type: 3}
+--- !u!1 &1144662260 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5216520923728498659, guid: eb339dadbba096e4796b13ab51e9a60d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1144662259}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1152798670
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13079,8 +13093,8 @@ Transform:
   m_Children:
   - {fileID: 505204770}
   - {fileID: 861851157}
-  - {fileID: 1651758256}
   - {fileID: 1413122035}
+  - {fileID: 1651758256}
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13519,20 +13533,13 @@ MonoBehaviour:
   - WaterBlock
   - TramplineBlock
   _player: []
-  _waterBlock: []
   _ground: []
   _waterSource: []
-  _tramplineBlock: []
-  _animation: {fileID: 0}
-  _playerCnt: 0
-  _waterBlockCnt: 0
-  _groundCnt: 0
-  _waterSourceCnt: 0
-  _tramplineCnt: 0
+  _tankBlock: []
+  _trampoline: []
   _direct: {x: 0, y: 0, z: 0}
   _offsetPos: {x: 0, y: 0, z: 0}
   _fullWaterBlockCnt: 0
-  _jumpspeed: 1
 --- !u!114 &1835315811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13853,12 +13860,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1958758804 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5216520923728498659, guid: eb339dadbba096e4796b13ab51e9a60d,
-    type: 3}
-  m_PrefabInstance: {fileID: 1870246821}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1977016759 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6433375576992791653, guid: 43074db5db4376c409b29ef8582001ed,
@@ -14117,6 +14118,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb339dadbba096e4796b13ab51e9a60d, type: 3}
+--- !u!1 &2080240111 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5216520923728498659, guid: eb339dadbba096e4796b13ab51e9a60d,
+    type: 3}
+  m_PrefabInstance: {fileID: 2080240110}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2114663010
 GameObject:
   m_ObjectHideFlags: 0

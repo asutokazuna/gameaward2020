@@ -312,6 +312,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveTime: 0.7
+  _liftTime: 0
+  _putTime: 0
+  _jumpTime: 0
   _outsideTheAreaTime: 0
   _debug: 0
 --- !u!114 &51244599
@@ -7118,10 +7121,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b49f76e0e008f04bb41eac2a5542322, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fieldBlock1: {fileID: 1654808541}
-  _fieldBlock2: {fileID: 998169776}
-  _fieldBlock3: {fileID: 1616070697}
-  _fieldBlock4: {fileID: 511053855}
+  _fieldBlock:
+  - {fileID: 1654808541}
+  - {fileID: 998169776}
+  - {fileID: 1616070697}
+  - {fileID: 511053855}
   _angle: 90
   _rotateFlame: 60
   _setCameraPos: {x: -4, y: 6, z: -10}
@@ -7130,6 +7134,10 @@ MonoBehaviour:
   _correctionValueClear: {x: 0, y: 0.5, z: 0}
   _correctionValueOver: {x: 0, y: 10, z: 0}
   _waitTime: 1
+  _rotateTime: 8
+  _rotateSpeed: 2
+  _circleSize: {x: 4, y: 2, z: 4}
+  _focus: 1
 --- !u!82 &963194230
 AudioSource:
   m_ObjectHideFlags: 0
@@ -13987,20 +13995,13 @@ MonoBehaviour:
   - WaterBlock
   - TramplineBlock
   _player: []
-  _waterBlock: []
   _ground: []
   _waterSource: []
-  _tramplineBlock: []
-  _animation: {fileID: 0}
-  _playerCnt: 0
-  _waterBlockCnt: 0
-  _groundCnt: 0
-  _waterSourceCnt: 0
-  _tramplineCnt: 0
+  _tankBlock: []
+  _trampoline: []
   _direct: {x: 0, y: 0, z: 0}
   _offsetPos: {x: 0, y: 0, z: 0}
   _fullWaterBlockCnt: 0
-  _jumpspeed: 1
 --- !u!114 &1835315811
 MonoBehaviour:
   m_ObjectHideFlags: 0

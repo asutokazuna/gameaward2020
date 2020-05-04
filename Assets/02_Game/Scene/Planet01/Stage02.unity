@@ -194,6 +194,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveTime: 0.7
+  _liftTime: 0
+  _putTime: 0
+  _jumpTime: 0
   _outsideTheAreaTime: 0
   _debug: 0
 --- !u!114 &51244599
@@ -5431,12 +5434,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 253864458}
   m_CullTransparentMesh: 0
---- !u!1 &338286488 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5216520923728498659, guid: eb339dadbba096e4796b13ab51e9a60d,
-    type: 3}
-  m_PrefabInstance: {fileID: 1426226586}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &343018933
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5506,6 +5503,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb339dadbba096e4796b13ab51e9a60d, type: 3}
+--- !u!1 &349177371 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5216520923728498659, guid: eb339dadbba096e4796b13ab51e9a60d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1870246821}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &397984783
 GameObject:
   m_ObjectHideFlags: 0
@@ -6705,6 +6708,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 764234452}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &858916240 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5216520923728498659, guid: eb339dadbba096e4796b13ab51e9a60d,
+    type: 3}
+  m_PrefabInstance: {fileID: 943351708}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &861851157 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7691639383044527087, guid: 6f6eb81db2e4aa34cb7518a05a1d5606,
@@ -6961,10 +6970,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b49f76e0e008f04bb41eac2a5542322, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fieldBlock1: {fileID: 2014872822}
-  _fieldBlock2: {fileID: 2027930445}
-  _fieldBlock3: {fileID: 2027930445}
-  _fieldBlock4: {fileID: 338286488}
+  _fieldBlock:
+  - {fileID: 349177371}
+  - {fileID: 1381368646}
+  - {fileID: 858916240}
+  - {fileID: 1993093478}
   _angle: 90
   _rotateFlame: 60
   _setCameraPos: {x: -4, y: 6, z: -10}
@@ -6973,6 +6983,10 @@ MonoBehaviour:
   _correctionValueClear: {x: 0, y: 0.5, z: 0}
   _correctionValueOver: {x: 0, y: 10, z: 0}
   _waitTime: 1
+  _rotateTime: 8
+  _rotateSpeed: 2
+  _circleSize: {x: 4, y: 2, z: 4}
+  _focus: 1
 --- !u!82 &963194230
 AudioSource:
   m_ObjectHideFlags: 0
@@ -12420,6 +12434,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1335746691}
   m_CullTransparentMesh: 0
+--- !u!1 &1381368646 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5216520923728498659, guid: eb339dadbba096e4796b13ab51e9a60d,
+    type: 3}
+  m_PrefabInstance: {fileID: 343018933}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1426226586
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13418,20 +13438,13 @@ MonoBehaviour:
   - WaterBlock
   - TramplineBlock
   _player: []
-  _waterBlock: []
   _ground: []
   _waterSource: []
-  _tramplineBlock: []
-  _animation: {fileID: 0}
-  _playerCnt: 0
-  _waterBlockCnt: 0
-  _groundCnt: 0
-  _waterSourceCnt: 0
-  _tramplineCnt: 0
+  _tankBlock: []
+  _trampoline: []
   _direct: {x: 0, y: 0, z: 0}
   _offsetPos: {x: 0, y: 0, z: 0}
   _fullWaterBlockCnt: 0
-  _jumpspeed: 1
 --- !u!114 &1835315811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13758,23 +13771,17 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 576831868}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2014872822 stripped
+--- !u!1 &1993093478 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5216520923728498659, guid: eb339dadbba096e4796b13ab51e9a60d,
     type: 3}
-  m_PrefabInstance: {fileID: 1870246821}
+  m_PrefabInstance: {fileID: 1426226586}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &2027152746 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9097156883611663856, guid: eb339dadbba096e4796b13ab51e9a60d,
     type: 3}
   m_PrefabInstance: {fileID: 1426226586}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2027930445 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5216520923728498659, guid: eb339dadbba096e4796b13ab51e9a60d,
-    type: 3}
-  m_PrefabInstance: {fileID: 943351708}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &2027930446 stripped
 Transform:
