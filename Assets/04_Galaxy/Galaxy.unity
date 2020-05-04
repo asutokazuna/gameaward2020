@@ -556,11 +556,11 @@ NavMeshAgent:
   m_GameObject: {fileID: 601020076}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.1
   m_Speed: 20
-  m_Acceleration: 8
+  m_Acceleration: 20
   avoidancePriority: 50
-  m_AngularSpeed: 300
+  m_AngularSpeed: 200
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 0
@@ -637,7 +637,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 601020076}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.94, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1796474333}
@@ -661,8 +661,8 @@ MonoBehaviour:
   _distanceToPlanet: 2
   _cameraMoveSpd1: 0
   _cameraMoveSpd2: 0
-  _cameraRotateSpd: 0.01
-  _isOrbital: 0
+  _cameraRotateSpd: 0
+  _isOrbital: 1
   _cameraSpd: 0
   _rotateSpeed: 0.1
   _rotateControllerSpeed: 0.05
@@ -1690,7 +1690,7 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1530113767}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 0
   m_Extents: {x: 1, y: 0.5, z: 1}
@@ -6818,6 +6818,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7875132409626308736, guid: 1f041354a48c03b488c84a2915dc8c6d,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1796474332}
     - target: {fileID: 7875132409626308739, guid: 1f041354a48c03b488c84a2915dc8c6d,
         type: 3}
       propertyPath: m_LocalPosition.x

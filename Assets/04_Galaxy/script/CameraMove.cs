@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class CameraMove : MonoBehaviour
 {
     [SerializeField]
-    private NavMeshAgent _agent;
+    private NavMeshAgent _agent = default;
     public int _currentID;
     public float _distanceToPlanet;
     public float _cameraMoveSpd1;
@@ -17,8 +17,8 @@ public class CameraMove : MonoBehaviour
     private GameObject _currentPlanet;
     private Transform _camera;
 
-    [SerializeField]
-    private bool _isOrbital;
+  
+    public bool _isOrbital;
     [SerializeField]
     private float _cameraSpd;
     private Vector3 _angles;
@@ -34,6 +34,8 @@ public class CameraMove : MonoBehaviour
     private SceneMgr SceneManager;
 
     public float _offsetY;
+
+   
 
     // Start is called before the first frame update
     void Start()
