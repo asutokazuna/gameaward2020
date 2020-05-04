@@ -181,7 +181,7 @@ public class CameraMove : MonoBehaviour
         if(other.GetComponent<revolution>().PlanetID == _currentID)
         {
             _isOrbital = true;
-            Vector3 _axis = _camera.position - _currentPlanet.transform.position;
+            //Vector3 _axis = _camera.position - _currentPlanet.transform.position;
         }
     }
 
