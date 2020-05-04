@@ -133,7 +133,8 @@ public class WaterFlow : MonoBehaviour
                 _currentWater = _maxWater;
                 CountBoxScript._fullWaterBlockCnt++; //全体の水箱+
                 UIScript.AddFullBox(+1);
-                EmissionScript.BoxEmissionOn();
+
+                EmissionScript.StartEmission(); //光らせる
 
                 PlayChildParticle();
             }

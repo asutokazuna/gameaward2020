@@ -10,6 +10,10 @@
 		_Edge("RimEdge",Range(0,5)) = 2.5
 		[MaterialToggle]_Emission("_Emission",Float) = 0
 		_EmissionColor("EmissionColor",Color) = (1, 1, 1, 1)
+		_EmissionTex("EmissionTex",2D) = "white"{}
+		_Brightness("Brightness", Range(0,1)) = 0.0
+		_BrightnessOffset("Brightness Offset", Float) = -1.0
+		_BrightnessModifier("Brightness Modifier", Float) = 3.0
 
 	}
 
@@ -66,6 +70,7 @@
 		half _Smoothness;
 
 		struct Input {
+			float2 uv_EmissionTex;
 			float3 worldNormal;
 			float3 viewDir;
 		};
@@ -74,6 +79,12 @@
 		half _RimLight;
 		float _Emission;
 		fixed4 _EmissionColor;
+		sampler2D _EmissionTex;
+
+		half _Brightness;
+		half _BrightnessOffset; 
+		half _BrightnessModifier;
+
 
 		void surf(Input IN, inout SurfaceOutputStandard o) 
 		{
@@ -87,7 +98,8 @@
 			o.Smoothness = _Smoothness;
 			if (_Emission)
 			{
-				o.Emission = (_EmissionColor);
+				fixed4 e = tex2D(_EmissionTex, IN.uv_EmissionTex);
+				o.Emission += max(0.0, e  * _Brightness * _BrightnessModifier + _BrightnessOffset) * _EmissionColor;
 			}
 		}
 		ENDCG
