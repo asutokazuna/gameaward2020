@@ -38,12 +38,12 @@ public class Player : BaseObject
                      bool           _isUpdate;          //!< 更新flag
     FieldController _fieldCtrl;
 #endif
-    [SerializeField] SquareInfo     _haveObject;    //!< 持っているオブジェクト情報
+    public           SquareInfo     _haveObject;    //!< 持っているオブジェクト情報
                      Map            _map;           //!< マップ
     public PlayerAnimation          _animation;     //!< プレイヤーのアニメーション
     PlayerManager                   _mgr;           //!< プレイヤー管理スクリプト
-    BaseObject                      _obj;           //!< 後で改善するから許して
     Controller                      _input;         //!< 入力キー
+    public bool _putUpdate;
 
 
     /**
@@ -78,9 +78,24 @@ public class Player : BaseObject
             );
         _nextPos = transform.position;
 
-        _lifted     = false;
+        _lifted     = E_HANDS_ACTION.NONE;
 
-        Rotate();
+        if (transform.localEulerAngles.y == 0)
+        {
+            _direct.z = 1;
+        }
+        else if (transform.localEulerAngles.y == 90)
+        {
+            _direct.x = 1;
+        }
+        else if (transform.localEulerAngles.y == 180)
+        {
+            _direct.z = -1;
+        }
+        else if (transform.localEulerAngles.y == 270)
+        {
+            _direct.x = -1;
+        }
 
         _mode       = E_OBJECT_MODE.WAIT;
         _isMove     = false;
@@ -115,7 +130,10 @@ public class Player : BaseObject
      */
     override public void Update()
     {
-        
+        if (_haveObject._myObject == E_OBJECT.PLAYER_01)
+        {
+            Debug.Log(name + " がプレイヤー持ってます!!!!!!!");
+        }
     }
 
 
@@ -127,7 +145,7 @@ public class Player : BaseObject
     {
         #region Rotate
 
-        if (_lifted || _isMove || _map._gameClear || _map._gameOver)
+        if (_lifted != E_HANDS_ACTION.NONE || _isMove || _map._gameClear || _map._gameOver)
         {// 取り合えずここに書き込む
             return _direct;
         }
@@ -174,13 +192,6 @@ public class Player : BaseObject
             _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
             offsetRotate(_direct);
         }
-        else
-        {// 初期化(カメラの向き正面固定じゃないと死ぬ)
-            if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  1, 0,  0);   //  90
-            else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0,  1);   //   0
-            else if (y > 150 && y < 210)                    _direct = new Vector3Int( -1, 0,  0);   // -90
-            else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0, -1);   // 180
-        }
         if (_mode == E_OBJECT_MODE.ROTATE)
         {// 回転の動き
             RotateMove();
@@ -194,16 +205,17 @@ public class Player : BaseObject
 
     /**
      * @brief 物を持ち上げる、下す
+     * @param フラグ
      * @return なし
      */
-    public void HandAction()
+    public void HandAction(bool flag = false)
     {
-        if (_isMove || _lifted)
+        if (_isMove || _lifted != E_HANDS_ACTION.NONE)
         {// 取り合えずここに書き込む
             return;
         }
 
-        if (_haveObject._myObject == E_OBJECT.NONE)
+        if (_haveObject._myObject == E_OBJECT.NONE && !flag)
         {// 物を持ち上げる
             Lift();
         }
@@ -223,7 +235,7 @@ public class Player : BaseObject
      */
     override public void Move()
     {
-        if (_isMove || _lifted || _map._gameClear || _map._gameOver)
+        if (_isMove || _lifted != E_HANDS_ACTION.NONE || _map._gameClear || _map._gameOver)
         {// 取り合えずここに書き込む
             return;
         }
@@ -234,11 +246,7 @@ public class Player : BaseObject
         _position       = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
         _isMove         = true;
 
-        if (name.Equals("Player"))
-        {
-            Debug.Log("ベクトル" + movement);
-            Debug.Log("移動先の座標" + _position);
-        }
+        Debug.Log(name + " が処理しました");
 
         if (_map.isTrampline(new Vector3Int(_oldPosition.x, _oldPosition.y - 1, _oldPosition.z)))
         {
@@ -263,36 +271,26 @@ public class Player : BaseObject
             }
             _position   = _map.GetFallPos(_position);
             _gameOver   = true;
-            if (name.Equals("Player"))
-                Debug.Log("ゲームオーバー判定");
         }
-        else if (_map.isDontMove(_position, _oldPosition) || _lifted == true)
+        else if (_map.isDontMove(_position, _oldPosition) || _lifted != E_HANDS_ACTION.NONE)
         {// 移動出来ない場合
             _position   = _oldPosition;
             _mode = E_OBJECT_MODE.DONT_MOVE;
-            if (name.Equals("Player"))
-                Debug.Log("移動できない判定");
         }
         else if (_map.isGetup(_position))
         {// 何かの上に上る時
             _position = new Vector3Int(_position.x, _position.y + 1, _position.z);
             _mode = E_OBJECT_MODE.GET_UP;
-            if (name.Equals("Player"))
-                Debug.Log("上に乗る判定");
         }
         else if (_map.isGetoff(_position))
         {// 一段下に降りる時
          //_position = new Vector3Int(_position.x, _position.y - 1, _position.z);
             _position = _map.GetoffPos(_position);
             _mode = E_OBJECT_MODE.GET_OFF;
-            if (name.Equals("Player"))
-                Debug.Log("降りる判定");
         }
         else
         {// 正面への移動
             _mode = E_OBJECT_MODE.MOVE;
-            if (name.Equals("Player"))
-                Debug.Log("正面へ移動判定");
         }
         
         // 後で修正
@@ -339,9 +337,13 @@ public class Player : BaseObject
     {
         _oldPosition    = _position;
         _position       = pos;
-        _lifted         = true;
+        _lifted         = E_HANDS_ACTION.NOW_PLAY;
         _mode           = E_OBJECT_MODE.LIFTED;
         offSetTransform();
+        if (_lifted != E_HANDS_ACTION.NONE && _haveObject._myObject != E_OBJECT.NONE)
+        {// 取り合えずの処理
+            _map.Poop(_haveObject, new Vector3Int(_position.x, _position.y + 1, _position.z));
+        }
         LiftedMode();   // 持ち上げられる
     }
 
@@ -355,7 +357,7 @@ public class Player : BaseObject
     {
         _oldPosition    = _position;
         _position       = pos;
-        _lifted         = false;
+        _lifted         = E_HANDS_ACTION.NOW_PLAY;
         _mode           = E_OBJECT_MODE.PUTED;
         offSetTransform();
         PutedMode();    // 置かれる
@@ -379,21 +381,11 @@ public class Player : BaseObject
                 Debug.Log("エラー : " + name + " はマップ配列外への参照をしようとした");
                 continue;
             }
-            else if (_map.isLift(havePos))
+            _haveObject = _map.isLift(havePos);
+            if (_haveObject._myObject != E_OBJECT.NONE)
             {// 何かのオブジェクトを持てる場合
-                _obj = _map.LiftToObject(_position, havePos);            // これから持つオブジェクトの情報取得
-                if (_obj)
-                {// メモ(mapのプレイヤー配列にソートがかかるため持ち上げにバグがでた)
-                    _haveObject._myObject   = _obj._myObject;                // オブジェクト情報のセット
-                    _haveObject._number     = _obj._myNumber;                // オブジェクトナンバーセット
-                    _isMove = true;
-                    Debug.Log(name +  " が " + _obj.name + " を持ち上げた");
-                }
-                else
-                {
-                    Debug.Log(name + " 持ち上げるオブジェクトが参照できないよ？");
-                }
-                LiftMode(n);                                             // アニメーションのセット
+                _map.LiftToObject(_haveObject, new Vector3Int(_position.x, _position.y + 1, _position.z));
+                LiftMode(n);    // アニメーションのセット
                 break;
             }
         }
@@ -427,9 +419,24 @@ public class Player : BaseObject
                 PutMode(n);                             // アニメーションのセット
                 _haveObject = new SquareInfo();         // オブジェクトを手放す
                 _isMove = true;
+                _putUpdate = false;
                 break;
             }
         }
+    }
+
+
+    /**
+     * @brief トーテムポールで挟まれてるか
+     * @return 挟まれてるなら true
+     */
+    public bool isCenter()
+    {
+        if (_lifted == E_HANDS_ACTION.DO && _haveObject._myObject != E_OBJECT.NONE)
+        {
+            return true;
+        }
+        return false;
     }
 
 
@@ -684,6 +691,7 @@ public class Player : BaseObject
     {
         transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
         {//　取り合えずこれで行く
+            _lifted = E_HANDS_ACTION.DO;
             WaitMode();
         });
     }
@@ -697,6 +705,7 @@ public class Player : BaseObject
     {
         transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
         {//　取り合えずこれで行く
+            _lifted = E_HANDS_ACTION.NONE;
             WaitMode();
         });
     }
@@ -724,31 +733,22 @@ public class Player : BaseObject
 
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
-                GameObject.Find(_obj.name).transform.parent = transform; // 追従
+                GameObject.Find(_map.GetLiftObject(_haveObject).name).transform.parent = transform; // 追従
                 WaitMode();
             });
         }
         else
         {// プレイヤー以外を持つ時
             if (n == 0)
-            {
-                Debug.Log("高い所から持つ");
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_UP_BOX);
-            }
             else if (n == 1)
-            {
-                Debug.Log("正面の物を持つ");
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_BOX);
-            }
             else if (n == 2)
-            {
-                Debug.Log("下のを持つ");
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_LOW_BOX);
-            }
 
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
-                GameObject.Find(_obj.name).transform.parent = transform; // 追従
+                GameObject.Find(_map.GetLiftObject(_haveObject).name).transform.parent = transform; // 追従
                 WaitMode();
             });
         }

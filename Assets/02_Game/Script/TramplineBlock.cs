@@ -17,7 +17,7 @@ public class TramplineBlock : BaseObject
             (int)(transform.position.z - map._offsetPos.z)
             );
 
-        _lifted = false;
+        _lifted = E_HANDS_ACTION.NONE;
         _mode = E_OBJECT_MODE.WAIT;
         _direct = new Vector3Int(0, 0, 0);  // 取り合えずの処理
     }

@@ -42,6 +42,19 @@ public enum E_OBJECT_MODE
 
 
 /**
+ * @enum 持つ、離すのアクション
+ */
+public enum E_HANDS_ACTION
+{
+    NONE,
+    DO,
+    NOW_PLAY,
+}
+
+
+
+
+/**
  * @class BaseObject
  * @brief フィールドに置かれるオブジェクトの抽象クラス
  */
@@ -54,7 +67,9 @@ public class BaseObject : MonoBehaviour
     [SerializeField] public Vector3Int          _oldPosition;   //!< 過去フィールド座標
     [SerializeField] protected Vector3          _nextPos;       //!< 次の座標
     [SerializeField] public Vector3Int          _direct;        //!< 向いてる方向
-    [SerializeField] public bool                _lifted;        //!< 何かに持ち上げられいる時 = true
+
+    [SerializeField] public E_HANDS_ACTION      _lifted;        //!< 何かに持ち上げられいる時 = true
+
     [SerializeField] protected E_OBJECT_MODE    _mode;          //!< オブジェクトの状態
     [SerializeField] public bool                _gameOver       //!< ゲームオーバー
     { get; protected set; }
@@ -80,9 +95,8 @@ public class BaseObject : MonoBehaviour
         // 座標の補正
         _position = _oldPosition = new Vector3Int(0, 0, 0);
 
-        _lifted     = false;
+        _lifted     = E_HANDS_ACTION.NONE;
         _mode       = E_OBJECT_MODE.WAIT;
-        _direct     = new Vector3Int(0, 0, 1);  // 取り合えずの処理
     }
 
 
@@ -119,20 +133,25 @@ public class BaseObject : MonoBehaviour
     /**
      * @brief オブジェクトの追従
      * @param1 目的座標
+     * @param2 方向
      * @return なし
      */
-    virtual public void Follow(Vector3Int pos)
+    virtual public void Follow(Vector3Int pos, Vector3Int direct)
     {
         _oldPosition    = _position;
         _position       = pos;
+        _direct         = direct;
     }
 
 
+    /**
+     * @brief 落ちる
+     */
     virtual public void Fall(Vector3Int pos)
     {
         _oldPosition    = _position;
         _position       = pos;
-        _lifted         = false;
+        _lifted         = E_HANDS_ACTION.NOW_PLAY;
         _mode           = E_OBJECT_MODE.FALL;
         offSetTransform();
         JumpMode();
@@ -148,7 +167,7 @@ public class BaseObject : MonoBehaviour
     {
         _oldPosition    = _position;
         _position       = pos;
-        _lifted         = true;
+        _lifted         = E_HANDS_ACTION.NOW_PLAY;
         _mode           = E_OBJECT_MODE.LIFTED;
         offSetTransform();
         JumpMode();   // 持ち上げられる
@@ -164,7 +183,7 @@ public class BaseObject : MonoBehaviour
     {
         _oldPosition    = _position;
         _position       = pos;
-        _lifted         = false;
+        _lifted         = E_HANDS_ACTION.NOW_PLAY;
         _mode           = E_OBJECT_MODE.PUTED;
         offSetTransform();
         JumpMode();
@@ -200,6 +219,7 @@ public class BaseObject : MonoBehaviour
                 false
             ).OnComplete(() =>
             {
+                _lifted = E_HANDS_ACTION.DO;
                 WaitMode();
             });
         }
@@ -215,6 +235,7 @@ public class BaseObject : MonoBehaviour
                 false
             ).OnComplete(() =>
             {
+                _lifted = E_HANDS_ACTION.NONE;
                 WaitMode();
             });
         }
@@ -228,6 +249,7 @@ public class BaseObject : MonoBehaviour
                 false
                 ).OnComplete(() =>
             {
+                _lifted = E_HANDS_ACTION.NONE;
                 WaitMode();
                 this.gameObject.SetActive(false);       //割れた箱を非表示に
                 Instantiate((GameObject)Resources.Load("Debris"), _nextPos, Quaternion.identity);       //箱の破片を生成
