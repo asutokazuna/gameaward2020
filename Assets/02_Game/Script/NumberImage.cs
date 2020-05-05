@@ -4,6 +4,7 @@
  * @author  Risa Ito
  * @date    2020/04/03(金)  作成
  * @date    2020/04/05(日)  0の時0桁になってしまうバグを修正
+ * @date    2020/05/05(火)  値の設定の仕方を変更
  */
 
 using System.Collections;
@@ -39,12 +40,12 @@ public class NumberImage : MonoBehaviour
     }
 
     /**
-    * @brief        値の加算
-    * @param[in]    int 数値の増減量
+    * @brief        値のセット
+    * @param[in]    int 表示したい数値
     * @return       なし
-    * @details      表示したい値の増減をセットする関数です
+    * @details      表示したい値をセットする関数です
     */
-    public void AddValue(int num)
+    public void SetValue(int num)
     {
         // 対象となるオブジェクトを探す
         var objs = GameObject.FindGameObjectsWithTag(_numberTag);
@@ -58,7 +59,7 @@ public class NumberImage : MonoBehaviour
             }
         }
 
-        _value += num;      // 値の加算
+        _value = num;      // 値の加算
 
         // 上限チェック
         if (_value > MAX_NUM)

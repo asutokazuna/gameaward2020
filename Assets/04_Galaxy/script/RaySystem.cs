@@ -7,6 +7,7 @@ public class RaySystem : MonoBehaviour
     [SerializeField] private List<GameObject> _stageObject = default;
     CameraMove _cameraMove;
     SceneMgr _sceneManager;
+    private E_SCENE _stageID = 0;//ID置き場
 
     public float dist;
 
@@ -44,6 +45,7 @@ public class RaySystem : MonoBehaviour
                 pointer.transform.position = target.point;  //当たった場合
 
                 Debug.Log(target.collider.gameObject.GetComponent<StageID>()._stageID);
+                SetID(target.collider.gameObject.GetComponent<StageID>()._stageID);
                 if (Input.GetKey(KeyCode.Return))
                 {
                     _sceneManager.SetScene(target.collider.gameObject.GetComponent<StageID>()._stageID);
@@ -52,6 +54,7 @@ public class RaySystem : MonoBehaviour
             else
             {
                 pointer.transform.position = new Vector3(0.0f, 0.0f, 0.0f); //マスクとあたった場合
+                SetID(0);
             }
             
            // Debug.Log(Vector3.Distance(target.point, transform.position));
@@ -100,4 +103,14 @@ public class RaySystem : MonoBehaviour
             //    // Debug.Log(hit.collider.gameObject.name);
             //}
         }
+
+    public void SetID(E_SCENE _stageId)
+    {
+        _stageID = _stageId;
+    }
+
+    public E_SCENE GetID()
+    {
+        return _stageID;
+    }
 }

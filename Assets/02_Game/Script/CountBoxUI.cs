@@ -4,6 +4,7 @@
  * @author  Risa Ito
  * @date    2020/03/30(月)  作成
  * @date    2020/04/05(日)  画像表示に対応
+ * @date    2020/05/05(火)  NumberImage.csの仕様変更に合わせて一部修正
  */
 
 using System.Collections;
@@ -35,7 +36,7 @@ public class CountBoxUI : MonoBehaviour
         _countTatalBox = _boxObjects.Length;
 
         // 画像表示
-        _tatalBoxImage.AddValue(_countTatalBox);
+        _tatalBoxImage.SetValue(_countTatalBox);
     }
 
     /**
