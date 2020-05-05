@@ -43,7 +43,7 @@ public class MainCamera : MonoBehaviour
     int _listCnt = 0;//!<リストの要素数カウント
     float _TimeCnt = 1.0f;
     float _time2 = 0;
-    float _oldtime = 0;
+    //float _oldtime = 0;
     public float _waitTime = 2.0f;
     List<GameObject> _gameObjectOver; //!< フォーカスオブジェクト
     GameObject _gameObjectPlayer; //!< Playerオブジェクトの格納
