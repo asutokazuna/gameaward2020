@@ -479,8 +479,6 @@ public class BaseObject : MonoBehaviour
             );
     }
 
-#endif
-
 
     /**
      * @brief 向いてる方向の設定
@@ -526,14 +524,7 @@ public class BaseObject : MonoBehaviour
         _direct = new Vector3Int(0, 0, 1);
     }
 
-
-    //public void Rotate(Vector3Int direct)
-    //{
-    //    if (direct.x > 0)
-    //    {// 右に回転
-    //
-    //    }
-    //}
+#endif
 }
 
 // EOF

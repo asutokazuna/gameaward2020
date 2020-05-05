@@ -265,6 +265,11 @@ public class Player : BaseObject
             _isMove = false;    // 取り合えずの処理
             Debug.Log("エラー : " + name + " はマップ配列外へ移動した");
         }
+        else if (_map.isDontMove(_position, _oldPosition) || _lifted != E_HANDS_ACTION.NONE)
+        {// 移動出来ない場合
+            _position = _oldPosition;
+            _mode = E_OBJECT_MODE.DONT_MOVE;
+        }
         else if (_map.isGameOver(_position, E_OBJECT_MODE.MOVE))
         {// ゲームオーバー(落下)
             if (_map.isOutsideTheArea(_position))
@@ -277,11 +282,6 @@ public class Player : BaseObject
             }
             _position   = _map.GetFallPos(_position);
             _gameOver   = true;
-        }
-        else if (_map.isDontMove(_position, _oldPosition) || _lifted != E_HANDS_ACTION.NONE)
-        {// 移動出来ない場合
-            _position   = _oldPosition;
-            _mode = E_OBJECT_MODE.DONT_MOVE;
         }
         else if (_map.isGetup(_position))
         {// 何かの上に上る時
