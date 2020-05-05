@@ -38,6 +38,14 @@ public enum E_OBJECT
 }
 
 
+public enum E_TURN
+{
+    WAIT,   // 操作受付
+    MOVE,   // 操作実行中
+}
+
+
+
 /**
  * @brief 一マスあたりの情報
  */
@@ -69,13 +77,15 @@ public class Map : MonoBehaviour
         })]  // オブジェクトが増えたら随時追加
     [SerializeField] string[] _objectTag = new string[(int)E_OBJECT.MAX];
 
-    public SquareInfo[,,]           _map;               //!< マップ情報
-    public List<Player>             _player;            //!< プレイヤー
-    public List<Ground>             _ground;            //!< 地面
-    public List<WaterSourceBlock>   _waterSource;       //!< 水源
-    public List<BlockTank>          _tankBlock;         //!< 水槽
-    public List<TramplineBlock>     _trampoline;        //!< トランポリン
+    public SquareInfo[,,]           _map            = default;      //!< マップ情報
+    public Player[]                 _player         = default;      //!< プレイヤー
+    public Ground[]                 _ground         = default;      //!< 地面
+    public WaterSourceBlock[]       _waterSource    = default;      //!< 水源
+    public BlockTank[]              _tankBlock      = default;      //!< 水槽
+    public TramplineBlock[]         _trampoline     = default;      //!< トランポリン
 
+    private int _playerCnt      = 0;
+    private int _tankBlockCnt   = 0;
 
     [SerializeField] Vector3Int     _direct;            //!< 全プレイヤーが向いてる方向
     public Vector3Int               _offsetPos;         //!< 配列座標補正用変数
@@ -83,6 +93,7 @@ public class Map : MonoBehaviour
     public bool                 _gameOver { get; set; } //!< ゲームオーバーフラグ
     public bool                 _gameClear { get; set; }//!< ゲームクリアフラグ
     public int                  _fullWaterBlockCnt;
+    public E_TURN               _turn;                  //!< ターン制
 
 
     /**
@@ -107,6 +118,7 @@ public class Map : MonoBehaviour
         InitObject();
         _direct = _player[0]._direct;
         PlayerSort();   // ソートと更新
+        _turn = E_TURN.WAIT;
     }
 
     // Update is called once per frame
@@ -149,13 +161,17 @@ public class Map : MonoBehaviour
                 HandAction(true);
             }
         }
-        foreach (Player obj in _player)
-        {// どっかでマップ全体をターン制にしたいね
-            PlayerSort();   // ソートと更新
+        if (_turn == E_TURN.MOVE)
+        {
+            _turn = E_TURN.WAIT;
         }
-        MoveObject();
-        HandAction();
-        RotateObject();
+
+        if (_turn == E_TURN.WAIT)
+        {
+            MoveObject();
+            HandAction();
+            RotateObject();
+        }
 #endif
     }
 
@@ -176,6 +192,7 @@ public class Map : MonoBehaviour
             return;
         }
         _direct = new Vector3Int();
+
         offsetDirect();
         PlayerSort();   // ソートと更新
         foreach (Player obj in _player)
@@ -183,6 +200,7 @@ public class Map : MonoBehaviour
             obj.Move();
             UpdateMap(obj);
         }
+        _turn = E_TURN.MOVE;
     }
 
     
@@ -199,8 +217,10 @@ public class Map : MonoBehaviour
         {
             obj.GetComponent<Player>().Rotate();
         }
+
         offsetDirect();
         PlayerSort();   // ソートと更新
+        _turn = E_TURN.MOVE;
     }
 
 
@@ -226,6 +246,8 @@ public class Map : MonoBehaviour
         {
             UpdateMap(obj);
         }
+
+        _turn = E_TURN.MOVE;
     }
 
 
@@ -459,8 +481,8 @@ public class Map : MonoBehaviour
      */
     private bool isGameClear()
     {
-        if(GameObject.FindGameObjectsWithTag(_objectTag[(int)E_OBJECT.BLOCK_TANK]).Length == _fullWaterBlockCnt)
-        {//満水の箱数が、箱の総数と同じだったら(変数の方を使いたかった...)
+        if(_tankBlockCnt == _fullWaterBlockCnt)
+        {//満水の箱数が、箱の総数と同じだったら
             return true;
         }
 
@@ -704,9 +726,11 @@ public class Map : MonoBehaviour
     private void InitPlayerObj()
     {
         GameObject[] player = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_OBJECT.PLAYER_01]);
-        for (int n = 0; n < player.Length; n++)
+        _playerCnt = player.Length;
+        _player = new Player[_playerCnt];
+        for (int n = 0; n < _playerCnt; n++)
         {
-            _player.Add(player[n].GetComponent<Player>());
+            _player[n] = player[n].GetComponent<Player>();
             _player[n].Init(n);         // プレイヤーコンポーネントの初期化
             SetObject(_player[n]);      // マップ情報にプレイヤー情報をセット
         }
@@ -720,9 +744,11 @@ public class Map : MonoBehaviour
     private void InitBlockTankObj()
     {
         GameObject[] box = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_OBJECT.BLOCK_TANK]);
-        for (int n = 0; n < box.Length; n++)
+        _tankBlockCnt = box.Length;
+        _tankBlock = new BlockTank[_tankBlockCnt];
+        for (int n = 0; n < _tankBlockCnt; n++)
         {
-            _tankBlock.Add(box[n].GetComponent<BlockTank>());
+            _tankBlock[n] = box[n].GetComponent<BlockTank>();
             _tankBlock[n].Init(n);
             SetObject(_tankBlock[n]);
         }
@@ -736,9 +762,10 @@ public class Map : MonoBehaviour
     private void InitGroundObj()
     {
         GameObject[] ground = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_OBJECT.BLOCK_GROUND]);
+        _ground = new Ground[ground.Length];
         for (int n = 0; n < ground.Length; n++)
         {
-            _ground.Add(ground[n].GetComponent<Ground>());
+            _ground[n] = ground[n].GetComponent<Ground>();
             _ground[n].Init(n);
             SetObject(_ground[n]);
         }
@@ -752,9 +779,10 @@ public class Map : MonoBehaviour
     private void InitWaterblockObj()
     {
         GameObject[] waterblock = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_OBJECT.BLOCK_WATER_SOURCE]);
+        _waterSource = new WaterSourceBlock[waterblock.Length];
         for (int n = 0; n < waterblock.Length; n++)
         {
-            _waterSource.Add(waterblock[n].GetComponent<WaterSourceBlock>());
+            _waterSource[n] = waterblock[n].GetComponent<WaterSourceBlock>();
             _waterSource[n].Init(n);
             SetObject(_waterSource[n]);
         }
@@ -768,9 +796,10 @@ public class Map : MonoBehaviour
     private void InitTramplineblockObj()
     {
         GameObject[] tramplineblock = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_OBJECT.BLOCK_TRAMPLINE]);
+        _trampoline = new TramplineBlock[tramplineblock.Length];
         for (int n = 0; n < tramplineblock.Length; n++)
         {
-            _trampoline.Add(tramplineblock[n].GetComponent<TramplineBlock>());
+            _trampoline[n] = tramplineblock[n].GetComponent<TramplineBlock>();
             _trampoline[n].Init(n);
             SetObject(_trampoline[n]);
         }
@@ -823,14 +852,13 @@ public class Map : MonoBehaviour
      */
     private void PlayerSort()
     {
-        GameObject[] player = GameObject.FindGameObjectsWithTag(_objectTag[(int)E_OBJECT.PLAYER_01]);
-
-        if (player.Length <= 1)
+        if (_playerCnt <= 1)
         {// プレイヤーが一体しかいない場合
             return;
         }
         Player work;
-        for (int i = player.Length - 1; i > 0; i--)
+
+        for (int i = _playerCnt - 1; i > 0; i--)
         {
             for (int j = 0; j < i; j++)
             {
@@ -842,12 +870,12 @@ public class Map : MonoBehaviour
                 }
             }
         }
-        for (int n = 0; n < player.Length; n++)
+        for (int n = 0; n < _playerCnt; n++)
         {
             _player[n]._myNumber = n;
             UpdateMap(_player[n]);
         }
-        for (int n = 0; n < player.Length; n++)
+        for (int n = 0; n < _playerCnt; n++)
         {
             if (_player[n]._haveObject._myObject == E_OBJECT.PLAYER_01)
             {
@@ -865,26 +893,22 @@ public class Map : MonoBehaviour
     private bool isSort(Player i, Player j)
     {
         if (_direct.x > 0 &&
-            (i._position.x < j._position.x) ||
-            (i._position.x == j._position.x && i._position.y > j._position.y))
+            (i._position.x < j._position.x))
         {// 右方
             return true;
         }
         else if (_direct.x < 0 &&
-            (i._position.x > j._position.x) ||
-            (i._position.x == j._position.x && i._position.y > j._position.y))
+            (i._position.x > j._position.x))
         {// 左方
             return true;
         }
         else if (_direct.z > 0 &&
-            (i._position.z < j._position.z) ||
-            (i._position.z == j._position.z && i._position.y > j._position.y))
+            (i._position.z < j._position.z))
         {// 前方
             return true;
         }
         else if (_direct.z < 0 &&
-            (i._position.z > j._position.z) ||
-            (i._position.z == j._position.z && i._position.y > j._position.y))
+            (i._position.z > j._position.z))
         {// 後方
             return true;
         }
