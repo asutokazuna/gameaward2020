@@ -38,6 +38,9 @@ public enum E_OBJECT
 }
 
 
+/**
+ * @enum 操作受付処理
+ */
 public enum E_TURN
 {
     WAIT,   // 操作受付
@@ -84,12 +87,13 @@ public class Map : MonoBehaviour
     public BlockTank[]              _tankBlock      = default;      //!< 水槽
     public TramplineBlock[]         _trampoline     = default;      //!< トランポリン
 
-    private int _playerCnt      = 0;
-    private int _tankBlockCnt   = 0;
+    private int _playerCnt      = 0;    //!< プレイヤーの総数
+    private int _tankBlockCnt   = 0;    //!< 水槽の総数
 
     [SerializeField] Vector3Int     _direct;            //!< 全プレイヤーが向いてる方向
     public Vector3Int               _offsetPos;         //!< 配列座標補正用変数
     Controller                      _input;             //!< 入力
+
     public bool                 _gameOver { get; set; } //!< ゲームオーバーフラグ
     public bool                 _gameClear { get; set; }//!< ゲームクリアフラグ
     public int                  _fullWaterBlockCnt;
@@ -164,6 +168,7 @@ public class Map : MonoBehaviour
         if (_turn == E_TURN.MOVE)
         {
             _turn = E_TURN.WAIT;
+            return;
         }
 
         if (_turn == E_TURN.WAIT)
@@ -485,7 +490,6 @@ public class Map : MonoBehaviour
         {//満水の箱数が、箱の総数と同じだったら
             return true;
         }
-
         return false;
     }
 
@@ -857,7 +861,6 @@ public class Map : MonoBehaviour
             return;
         }
         Player work;
-
         for (int i = _playerCnt - 1; i > 0; i--)
         {
             for (int j = 0; j < i; j++)
@@ -871,14 +874,14 @@ public class Map : MonoBehaviour
             }
         }
         for (int n = 0; n < _playerCnt; n++)
-        {
+        {// 識別番号の更新
             _player[n]._myNumber = n;
             UpdateMap(_player[n]);
         }
         for (int n = 0; n < _playerCnt; n++)
         {
             if (_player[n]._haveObject._myObject == E_OBJECT.PLAYER_01)
-            {
+            {// 持っているオブジェクトの更新
                 _player[n]._haveObject = _map[_player[n]._position.x, _player[n]._position.y + 1, _player[n]._position.z];
             }
         }
@@ -1020,7 +1023,7 @@ public class Map : MonoBehaviour
             }
         }
         else if (obj == E_OBJECT.BLOCK_TANK)
-        {// 水槽ののデバッグ表記
+        {// 水槽のデバッグ表記
             for (int y = 0; y < MAX_OBJECT; y++)
             {
                 for (int z = 0; z < MAX_OBJECT; z++)
