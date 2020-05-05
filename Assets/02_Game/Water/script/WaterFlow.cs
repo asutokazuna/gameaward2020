@@ -593,8 +593,8 @@ public class WaterFlow : MonoBehaviour
             {
                 if (other.transform.position.z >= this.transform.position.z - _adjust &&
                     other.transform.position.z <= this.transform.position.z + _adjust &&
-                    other.transform.position.y >= this.transform.position.y - 0.9f &&
-                    other.transform.position.y <= this.transform.position.y - 1.1f &&
+                    other.transform.position.y <= this.transform.position.y - 0.9f &&
+                    other.transform.position.y >= this.transform.position.y - 1.1f &&
                     other.transform.position.x >= this.transform.position.x - _adjust &&
                     other.transform.position.x <= this.transform.position.x + _adjust)
                 {
