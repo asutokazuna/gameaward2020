@@ -144,34 +144,35 @@ public class CameraMove : MonoBehaviour
 
         }
 
-        if((Input.GetKeyDown(KeyCode.Space)
-            || GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
-            && _isOrbital)   //シーン遷移処理
-        {
-            switch(_currentID)  
-            {
-                case 1:     //森
+        //テスト用
+        //if((Input.GetKeyDown(KeyCode.Space)
+        //    || GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
+        //    && _isOrbital)   //シーン遷移処理
+        //{
+        //    switch(_currentID)  
+        //    {
+        //        case 1:     //森
 
-                    //ここにシーン遷移の処理
-                    SceneManager.SetScene(E_SCENE._1_1);
+        //            //ここにシーン遷移の処理
+        //            SceneManager.SetScene(E_SCENE._1_1);
 
-                    break;
+        //            break;
 
-                case 2:     //火山
+        //        case 2:     //火山
 
-                    //ここにシーン遷移の処理
-                    SceneManager.SetScene(E_SCENE._1_2);
+        //            //ここにシーン遷移の処理
+        //            SceneManager.SetScene(E_SCENE._1_2);
 
-                    break;
+        //            break;
 
-                case 3:     //キノコ
+        //        case 3:     //キノコ
 
-                    //ここにシーン遷移の処理
-                    SceneManager.SetScene(E_SCENE._1_3);
+        //            //ここにシーン遷移の処理
+        //            SceneManager.SetScene(E_SCENE._1_3);
 
-                    break;
-            }
-        }
+        //            break;
+        //    }
+        //}
 
         //switch
     }
