@@ -5,6 +5,7 @@
  * @author  Shun Kato
  * @date    2020/04/13      作成
  * @date    2020/04/23      水漏れ関係を追加
+ * @date    2020/05/05      満タン時にFullWaterPS再生の追加
  * @version	1.00
  */
 
@@ -72,6 +73,9 @@ public class WaterFlow : MonoBehaviour
     [SerializeField]
     private bool _isWaterSource;
 
+    [SerializeField]
+    private bool _isFullPS;
+
     private float _adjust = 0.5f;
 
     // Start is called before the first frame update
@@ -91,6 +95,7 @@ public class WaterFlow : MonoBehaviour
             WaterLeak[i] = false;
         }
 
+        _isFullPS = false;
 
         MapCtrl = GameObject.Find("Map");
         CountBoxScript = MapCtrl.GetComponent<Map>();
@@ -102,6 +107,7 @@ public class WaterFlow : MonoBehaviour
 
         CreateWaterLeak();
         StopChildParticle();
+       // PlayChildFullPS();
     }
 
     private void FixedUpdate()
@@ -130,6 +136,7 @@ public class WaterFlow : MonoBehaviour
             if (_currentWater >= _maxWater - 10 && _isFullWater.Equals(false))
             {// 溜まったら
                 _isFullWater = true;
+                _isFullPS = true;
                 _currentWater = _maxWater;
                 CountBoxScript._fullWaterBlockCnt++; //全体の水箱+
                 UIScript.AddFullBox(+1);
@@ -137,10 +144,13 @@ public class WaterFlow : MonoBehaviour
                 EmissionScript.StartEmission(); //光らせる
 
                 PlayChildParticle();
+                CreateFullPS();
+                //PlayChildFullPS();
             }
             else if (_currentWater < _maxWater - 10 && _isFullWater.Equals(true))
             {
                 _isFullWater = false;
+                _isFullPS = false;
                 _currentWater = 0;
                 CountBoxScript._fullWaterBlockCnt--; //全体の水箱-
                 UIScript.AddFullBox(-1);
@@ -222,11 +232,11 @@ public class WaterFlow : MonoBehaviour
         GameObject LeakTop = (GameObject)Resources.Load("WaterLeak_top");
 
         GameObject huta = (GameObject)Resources.Load("suigen_huta");
+
         //Vector3 pos = this.transform.position;
         //pos.y -= 0.2f;
-
-
         //Instantiate(obj, pos, Quaternion.Euler(-90, 0, 0));
+
 
         for (int i = 0;i < 5;i++)
         {
@@ -413,7 +423,7 @@ public class WaterFlow : MonoBehaviour
             if (childTransform.tag == "WaterLeak")
             {
                 childTransform.GetComponent<ParticleSystem>().Play(true);
-                Debug.Log("stop");
+                Debug.Log("stop  1");
             }
         }
     }
@@ -624,5 +634,44 @@ public class WaterFlow : MonoBehaviour
         //    _currentWater++;
         //    add++;
         //}
+    }
+
+    private void CreateFullPS()
+    {
+        if (this.tag == "WaterBlock")
+        {
+            GameObject FullPS = (GameObject)Resources.Load("FullWaterPS");
+
+            GameObject Obj;
+            Obj = Instantiate(FullPS, this.transform.position, Quaternion.Euler(0, 0, 0));
+            Obj.transform.parent = this.transform;
+            Obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        }
+    }
+
+    private void PlayChildFullPS()
+    {
+        if (_isFullPS)
+        {
+            var childTransforms = this.transform.GetComponentsInChildren<Transform>()
+              .Where(t => t.tag == "FullWaterParticle");
+            foreach (var item in childTransforms)
+            {
+                item.GetComponent<ParticleSystem>().Play(true);
+                _isFullPS = false;
+            }
+            Debug.Log("play  FullPs");
+        }
+        else
+        {
+            var childTransforms = this.transform.GetComponentsInChildren<Transform>()
+          .Where(t => t.tag == "FullWaterParticle");
+            foreach (var item in childTransforms)
+            {
+                item.GetComponent<ParticleSystem>().Play(false);
+            }
+            Debug.Log("stop  FullPs");
+
+        }
     }
 }
