@@ -12,8 +12,8 @@ public class PlanetManager : MonoBehaviour
 
     float _oldAngle;//!<回転角度の退避
     [SerializeField] private float _rotateFlame = 60.0f; //!<回転時間
-    [SerializeField] private Vector3 _setPlanetPos; //!<カメラ座標設定
-    [SerializeField] private Vector3 _setPlanetRot; //!<カメラ注視点設定
+    [SerializeField] private Vector3 _setPlanetPos=default; //!<カメラ座標設定
+    [SerializeField] private Vector3 _setPlanetRot=default; //!<カメラ注視点設定
     [SerializeField] private int _maxPlanet = 3;
     private float _angle = 90.0f; //!<星を回転させたときに回転する角度
     Vector3 _rotateCenter; //!<回転中心座標
