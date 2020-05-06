@@ -38,7 +38,8 @@ public class MainCamera : MonoBehaviour
     bool _gameClear; //!< クリア状態
     bool _gameOver; //!< ゲームオーバー状態
     bool _systemflg;
-bool _initFlg=false;
+    bool _initFlg=false;
+    bool _cameraMove = false;
     int _listCnt = 0;//!<リストの要素数カウント
     float _TimeCnt = 1.0f;
     float _time2 = 0;
@@ -60,11 +61,13 @@ bool _initFlg=false;
 
 
     [SerializeField] float _rotateTimeStart = 8;//!（手ブレ軽減用(数字が大きいほど手ブレが減り回転が遅くなる))
-    [SerializeField] float _rotateSpeedStart = 2;//!<回転するはやさ（数字が小さいほど回転が早くなる）
-    [SerializeField] Vector3 _circleSizeStart = new Vector3(4, 2, 4);//!<回転するときの円の大きさ
+    [SerializeField] float _rotateSpeedStart = 1.3f;//!<回転するはやさ（数字が小さいほど回転が早くなる）
+    [SerializeField] Vector3 _circleSizeStart = new Vector3(8, 0, 8);//!<回転するときの円の大きさ
     [SerializeField] bool _focusStart = true;//!<フォーカス対象の設定（trueがPlayer,falseがFieldCenter)
     [SerializeField] float _startHigh = 14.0f;//スタート演出のカメラの高さ
     [SerializeField] float _startTime = 8.0f;//スタート演出秒数
+    [SerializeField] float _skipTime = 2.0f;//スキップ時や最後補正するときのカメラ移動時間
+    
     float _holdStartTime;
     float _holdStartHigh;
 
@@ -156,13 +159,22 @@ bool _initFlg=false;
 
         if (_gameClear && !_systemflg)
         {
+            if (_waitTime > 0&&!_cameraMove)
+            {
+                _time2 += Time.deltaTime;
+                Vector3 _clearStartPos = new Vector3(_fieldPos.x + _circleSizeClear.x * Mathf.Sin(_time2), _fieldPos.y + _circleSizeClear.y, _fieldPos.z + _circleSizeClear.z * Mathf.Cos(_time2));
+                myTransform.DOMove(_clearStartPos, _waitTime);
+                _cameraMove = true;
+            }
             _waitTime -= Time.deltaTime;
             if (_waitTime < 0)
             {
-           // UnityEngine.Debug.Break();
+                // UnityEngine.Debug.Break();
                 myTransform = this.transform;
                 _systemflg = true;
+            
             }
+
            
         }
         else if (_gameClear && _systemflg)
@@ -171,7 +183,6 @@ bool _initFlg=false;
             {
                 _TimeCnt -= Time.deltaTime;
             }
-
             else if (_TimeCnt < 0)
             {
                 Sequence _seq = DOTween.Sequence();
@@ -297,12 +308,12 @@ bool _initFlg=false;
 
             myTransform.LookAt(_lookAtObject);  // 向きを設定
         }
-        if (_startTime < 0&&!_initFlg)
+        if (_startTime < 0&&!_initFlg||Input.anyKeyDown)
         {
-           myTransform.DOMove(_setCameraPos,2);
+           myTransform.DOMove(_setCameraPos,_skipTime);
             _initFlg = true;
         }
-        if (_startTime < 0)
+        if (_startTime < 0||_initFlg)
         {
             myTransform.LookAt(_lookAtObject);  // 向きを設定
         }
