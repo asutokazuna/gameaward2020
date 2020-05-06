@@ -10,6 +10,7 @@
  */
 
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -92,7 +93,15 @@ public class SceneMgr : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
+    private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+    {
+        _mainCamera = GameObject.Find("Main Camera");
+        _fadeScript = _mainCamera.GetComponent<Fade>();
+    }
+
 
 
     // Start is called before the first frame update
@@ -104,7 +113,7 @@ public class SceneMgr : MonoBehaviour
 
         //_mainCamera = GameObject.Find("Main Camera");
         //_fadeScript = _mainCamera.GetComponent<Fade>();
-        _fadeScript = GetComponent<Fade>();
+        //_fadeScript = GetComponent<Fade>();
     }
 
 
