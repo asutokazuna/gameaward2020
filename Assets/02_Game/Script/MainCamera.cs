@@ -308,10 +308,13 @@ public class MainCamera : MonoBehaviour
 
             myTransform.LookAt(_lookAtObject);  // 向きを設定
         }
-        if (_startTime < 0&&!_initFlg||Input.anyKeyDown)
+        if (!_initFlg)
         {
-           myTransform.DOMove(_setCameraPos,_skipTime);
-            _initFlg = true;
+            if (_startTime < 0 ||Input.anyKeyDown)
+             {
+                myTransform.DOMove(_setCameraPos, _skipTime);
+                _initFlg = true;
+            }
         }
         if (_startTime < 0||_initFlg)
         {
