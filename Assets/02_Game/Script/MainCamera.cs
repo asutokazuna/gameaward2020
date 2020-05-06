@@ -40,11 +40,13 @@ public class MainCamera : MonoBehaviour
     bool _gameOver; //!< ゲームオーバー状態
     bool _systemflg;
     bool[] _Doflg = { false, false };
+    bool _initFlg=false;
     int _listCnt = 0;//!<リストの要素数カウント
     float _TimeCnt = 1.0f;
     float _time2 = 0;
+    float _flameMoveSpeed;
     //float _oldtime = 0;
-    public float _waitTime = 2.0f;
+    public float _waitTime = 0.0f;
     List<GameObject> _gameObjectOver; //!< フォーカスオブジェクト
     GameObject _gameObjectPlayer; //!< Playerオブジェクトの格納
     Transform myTransform;
@@ -52,13 +54,22 @@ public class MainCamera : MonoBehaviour
     Vector3 _lookAtObject; //<!追跡オブジェクト
     Vector3 _startPos;
     Vector3Int _direct;
+    
 
-    [SerializeField] float _rotateTime = 8;//!（手ブレ軽減用(数字が大きいほど手ブレが減り回転が遅くなる))
-    [SerializeField] float _rotateSpeed = 2;//!<回転するはやさ（数字が大きいほど回転が早くなる）
-    [SerializeField] Vector3 _circleSize = new Vector3(4, 2, 4);//!<回転するときの円の大きさ
-    [SerializeField] bool _focus = true;//!<フォーカス対象の設定（trueがPlayer,falseがFieldCenter)
+    [SerializeField] float _rotateTimeClear = 8;//!（手ブレ軽減用(数字が大きいほど手ブレが減り回転が遅くなる))
+    [SerializeField] float _rotateSpeedClear = 2;//!<回転するはやさ（数字が小さいほど回転が早くなる）
+    [SerializeField] Vector3 _circleSizeClear = new Vector3(4, 2, 4);//!<回転するときの円の大きさ
+    [SerializeField] bool _focusClear = true;//!<フォーカス対象の設定（trueがPlayer,falseがFieldCenter)
 
 
+    [SerializeField] float _rotateTimeStart = 8;//!（手ブレ軽減用(数字が大きいほど手ブレが減り回転が遅くなる))
+    [SerializeField] float _rotateSpeedStart = 2;//!<回転するはやさ（数字が小さいほど回転が早くなる）
+    [SerializeField] Vector3 _circleSizeStart = new Vector3(4, 2, 4);//!<回転するときの円の大きさ
+    [SerializeField] bool _focusStart = true;//!<フォーカス対象の設定（trueがPlayer,falseがFieldCenter)
+    [SerializeField] float _startHigh = 14.0f;//スタート演出のカメラの高さ
+    [SerializeField] float _startTime = 8.0f;//スタート演出秒数
+    float _holdStartTime;
+    float _holdStartHigh;
 
 
 
@@ -67,19 +78,25 @@ public class MainCamera : MonoBehaviour
     // @details 　publicで設定した値を設定する
     void Start()
     {
-        Init();
+        float time = 0;
+        time += Time.deltaTime;
+        _holdStartTime=_startTime;
+        _holdStartHigh = _startHigh;
 
-        
+        myTransform = this.transform;
+        _flameMoveSpeed = (_startHigh - _setCameraPos.y) / (_startTime / time);
+        UnityEngine.Debug.Log(_flameMoveSpeed);
+        Init();
     }
 
     // Update is called once per frame
     void Update()
     {
+        StartCamera();
         _direct = _direct = GameObject.FindWithTag("Player").GetComponent<Player>()._direct;
         GameClear();
         GameOver();
         CameraRotate();
-
     }
     /**
      * @brief 関数概要　カメラの初期値設定
@@ -195,7 +212,7 @@ public class MainCamera : MonoBehaviour
             */
                 Sequence _seq = DOTween.Sequence();
                 _gameObjectPlayer = GameObject.FindGameObjectWithTag("Player");//!< タグだと個別フォーカスできないかも？
-                if (_focus)
+                if (_focusClear)
                 {
                     _lookAtObject = _gameObjectPlayer.transform.position;//追跡対象の設定
                     _lookAtObject.y = _gameObjectPlayer.transform.position.y + _correctionValueClear.y;
@@ -207,10 +224,10 @@ public class MainCamera : MonoBehaviour
                      _lookAtObject.y = 1;
                 }
                 float _time = 0;
-                _time += Time.deltaTime * _rotateTime;
-                _time2 += Time.deltaTime / _rotateSpeed;
+                _time += Time.deltaTime * _rotateTimeClear;
+                _time2 += Time.deltaTime / _rotateSpeedClear;
                
-                Vector3 _setPos = new Vector3(_fieldPos.x + _circleSize.x * Mathf.Sin(_time2), _fieldPos.y + _circleSize.y, _fieldPos.z + _circleSize.z * Mathf.Cos(_time2));
+                Vector3 _setPos = new Vector3(_fieldPos.x + _circleSizeClear.x * Mathf.Sin(_time2), _fieldPos.y + _circleSizeClear.y, _fieldPos.z + _circleSizeClear.z * Mathf.Cos(_time2));
                 _seq.Append(myTransform.DOMove(_setPos, _time));
                 
                 myTransform.LookAt(_lookAtObject);  // 向きを設定
@@ -301,6 +318,51 @@ public class MainCamera : MonoBehaviour
             _angle = 0.0f;
         }
         //  Debug.Log(_cnt);
+    }
+
+    void StartCamera()
+    {
+        if (!_initFlg)
+        {
+            UnityEngine.Debug.Log("Start");
+            Sequence _seq = DOTween.Sequence();
+            _gameObjectPlayer = GameObject.FindGameObjectWithTag("Player");//!< タグだと個別フォーカスできないかも？
+            if (_focusStart)
+            {
+                _lookAtObject = _gameObjectPlayer.transform.position;//追跡対象の設定
+                _lookAtObject.y = _gameObjectPlayer.transform.position.y + _correctionValueClear.y;
+
+            }
+            else
+            {
+                _lookAtObject = _fieldPos;
+                _lookAtObject.y = 1;
+            }
+            float _time = 0;
+            _time += Time.deltaTime;
+            _startHigh -= (_holdStartHigh - _setCameraPos.y) / (_holdStartTime / _time);
+            _time *= _rotateTimeStart;
+            _time2 += Time.deltaTime / _rotateSpeedStart;
+            _startTime -= Time.deltaTime;
+            if(_startHigh<_cameraPos.y)
+            {
+                _startHigh = _cameraPos.y;
+            }
+            Vector3 _setPos = new Vector3(_fieldPos.x - _circleSizeStart.x * Mathf.Sin(_time2), _startHigh, _fieldPos.z - _circleSizeStart.z * Mathf.Cos(_time2));
+           
+            _seq.Append(myTransform.DOMove(_setPos, _time));
+
+            myTransform.LookAt(_lookAtObject);  // 向きを設定
+        }
+        if (_startTime < 0&&!_initFlg)
+        {
+           myTransform.DOMove(_setCameraPos,2);
+            _initFlg = true;
+        }
+        if (_startTime < 0)
+        {
+            myTransform.LookAt(_lookAtObject);  // 向きを設定
+        }
     }
 }
 
