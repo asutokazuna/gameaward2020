@@ -102,8 +102,9 @@ public class SceneMgr : MonoBehaviour
         Debug.Log("ハンドル値" + nowHandle);
         _nowScene = _oldScene = (E_SCENE)nowHandle;
 
-        _mainCamera = GameObject.Find("Main Camera");
-        _fadeScript = _mainCamera.GetComponent<Fade>();
+        //_mainCamera = GameObject.Find("Main Camera");
+        //_fadeScript = _mainCamera.GetComponent<Fade>();
+        _fadeScript = GetComponent<Fade>();
     }
 
 

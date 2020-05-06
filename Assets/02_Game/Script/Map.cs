@@ -111,7 +111,7 @@ public class Map : MonoBehaviour
         _gameClear  = false;
         _fullWaterBlockCnt = 0; 
         //↑とりあえずここにいれたけど、他にいい場所あったら移動させてください。 4/21 加藤
-        _input      = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();               // コンポーネントの取得
+        //_input      = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();               // コンポーネントの取得
     }
 
 
@@ -123,6 +123,8 @@ public class Map : MonoBehaviour
         _direct = _player[0]._direct;
         PlayerSort();   // ソートと更新
         _turn = E_TURN.WAIT;
+        if (_input == null)
+            _input = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();
     }
 
     // Update is called once per frame

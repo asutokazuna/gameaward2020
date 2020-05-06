@@ -6613,7 +6613,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &740214759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13521,6 +13521,7 @@ MonoBehaviour:
   _direct: {x: 0, y: 0, z: 0}
   _offsetPos: {x: 0, y: 0, z: 0}
   _fullWaterBlockCnt: 0
+  _turn: 0
 --- !u!114 &1835315811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19097,6 +19098,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: InputManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 1309686206179017840, guid: 3af5f3f13fe89af4ea4826999fac96e7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1309686206179017842, guid: 3af5f3f13fe89af4ea4826999fac96e7,
         type: 3}

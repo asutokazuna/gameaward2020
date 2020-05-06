@@ -14,6 +14,7 @@ public class GameOverManager : MonoBehaviour
     private bool _isFirst;
     private float _timer;
     private float _changeDelay;
+    bool _isOnce;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +24,7 @@ public class GameOverManager : MonoBehaviour
         _isFirst = true;
         _timer = WaitTime;
         _changeDelay = DelayTime;
+        _isOnce = false;
     }
 
     // Update is called once per frame
@@ -42,8 +44,9 @@ public class GameOverManager : MonoBehaviour
 
         if(GameOverScript._finishGameover)
         {
-            if (_changeDelay <= 0.0f || Input.anyKey)
+            if ((_changeDelay <= 0.0f || Input.anyKey) && _isOnce == false)
             {
+                _isOnce = true;
                 //シーン遷移
                 GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE_MODE.RELOAD);
             }
