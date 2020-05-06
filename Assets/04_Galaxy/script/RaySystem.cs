@@ -22,8 +22,14 @@ public class RaySystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        RayTest();
+        if(_cameraMove._isOrbital)
+        {
+            RayTest();
+        }
+        else
+        {
+            SetID(0);
+        }
     }
     void RayTest()
     {
@@ -44,12 +50,19 @@ public class RaySystem : MonoBehaviour
             {
                 pointer.transform.position = target.point;  //当たった場合
 
-                Debug.Log(target.collider.gameObject.GetComponent<StageID>()._stageID);
-                SetID(target.collider.gameObject.GetComponent<StageID>()._stageID);
-                if (Input.GetKey(KeyCode.Return))
+                if(target.collider.gameObject.GetComponent<StageID>())
                 {
-                    _sceneManager.SetScene(GetID());
+                    Debug.Log(target.collider.gameObject.GetComponent<StageID>()._stageID);
+                    SetID(target.collider.gameObject.GetComponent<StageID>()._stageID);
+                    if (Input.GetKey(KeyCode.Return))
+                    {
+                        
+                        //_sceneManager.SetScene(E_SCENE._1_1);
+                        _sceneManager.SetScene(GetID());
+                    }
                 }
+
+               
             }
             else
             {

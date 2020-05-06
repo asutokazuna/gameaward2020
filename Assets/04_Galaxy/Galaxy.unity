@@ -716,7 +716,7 @@ GameObject:
   - component: {fileID: 601020082}
   - component: {fileID: 601020083}
   - component: {fileID: 601020084}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: CameraObj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12010,7 +12010,7 @@ PrefabInstance:
     - target: {fileID: 3569627955562705577, guid: c709f6f17ab6b2446ab085b411887dbb,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5805490903664516449, guid: c709f6f17ab6b2446ab085b411887dbb,
         type: 3}
@@ -12081,6 +12081,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Planet
+      objectReference: {fileID: 0}
+    - target: {fileID: 7771685165157571060, guid: c709f6f17ab6b2446ab085b411887dbb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c709f6f17ab6b2446ab085b411887dbb, type: 3}
@@ -12187,7 +12192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8adf4301730991c49920caa76ef6b11b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nowScene: 0
+  _nowScene: 1
   _oldScene: 0
   _reroad: 0
   _isDebug: 0
@@ -12329,7 +12334,7 @@ GameObject:
   - component: {fileID: 1796474332}
   - component: {fileID: 1796474331}
   - component: {fileID: 1796474334}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -12629,6 +12634,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Planet
+      objectReference: {fileID: 0}
+    - target: {fileID: 5960052281574557929, guid: fc5862ae44b8f454e8ed650405d092ec,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7272471309761968890, guid: fc5862ae44b8f454e8ed650405d092ec,
         type: 3}

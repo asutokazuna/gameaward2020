@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class CameraMove : MonoBehaviour
 {
@@ -31,7 +32,7 @@ public class CameraMove : MonoBehaviour
     [SerializeField] private float mouseY;
     private GameObject UI;
     private GameObject StageSelectManager;
-    private SceneMgr SceneManager;
+    //private SceneMgr SceneManager;
 
     public float _offsetY;
 
@@ -44,7 +45,7 @@ public class CameraMove : MonoBehaviour
         UI = GameObject.Find("CanvasUI");
         UI.SetActive(false);
 
-        SceneManager = GameObject.Find("SceneManager").GetComponent<SceneMgr>();
+        //SceneManager = GameObject.Find("SceneManager").GetComponent<SceneMgr>();
 
         _planetData = GameObject.FindGameObjectsWithTag("Planet");
         _camera = this.transform.GetComponentInChildren<Transform>();
@@ -145,45 +146,53 @@ public class CameraMove : MonoBehaviour
         }
 
         //テスト用
-        //if((Input.GetKeyDown(KeyCode.Space)
-        //    || GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
-        //    && _isOrbital)   //シーン遷移処理
-        //{
-        //    switch(_currentID)  
-        //    {
-        //        case 1:     //森
+        if ((Input.GetKeyDown(KeyCode.Space)
+            || GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
+            && _isOrbital)   //シーン遷移処理
+        {
+            SceneManager.LoadScene("Stage01");
 
-        //            //ここにシーン遷移の処理
-        //            SceneManager.SetScene(E_SCENE._1_1);
+            //switch (_currentID)
+            //{
+            //    case 1:     //森
 
-        //            break;
+            //        //ここにシーン遷移の処理
+            //        SceneManager.SetScene(E_SCENE._1_1);
 
-        //        case 2:     //火山
+            //        break;
 
-        //            //ここにシーン遷移の処理
-        //            SceneManager.SetScene(E_SCENE._1_2);
+            //    case 2:     //火山
 
-        //            break;
+            //        //ここにシーン遷移の処理
+            //        SceneManager.SetScene(E_SCENE._1_2);
 
-        //        case 3:     //キノコ
+            //        break;
 
-        //            //ここにシーン遷移の処理
-        //            SceneManager.SetScene(E_SCENE._1_3);
+            //    case 3:     //キノコ
 
-        //            break;
-        //    }
-        //}
+            //        //ここにシーン遷移の処理
+            //        SceneManager.SetScene(E_SCENE._1_3);
 
-        //switch
+            //        break;
+            //}
+        }
+
+       
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.GetComponent<revolution>().PlanetID == _currentID)
+        if (other == null)
+            return;
+        if(other.GetComponent<revolution>())
         {
-            _isOrbital = true;
-            //Vector3 _axis = _camera.position - _currentPlanet.transform.position;
+            if (other.GetComponent<revolution>().PlanetID == _currentID)
+            {
+                _isOrbital = true;
+                //Vector3 _axis = _camera.position - _currentPlanet.transform.position;
+            }
         }
+        
     }
 
     private float CheckAngle(float angle)
