@@ -38,6 +38,7 @@ public class MainCamera : MonoBehaviour
     bool _systemflg;//!<クリア演出のフラグ
     bool _initFlg=false;//!<Start演出後のInitフラグ
     bool _cameraMove = false;
+    bool _setCameraRotFlg = false;
     int _listCnt = 0;//!<リストの要素数カウント
     float _TimeCnt = 1.0f;
     float _time2 = 0;//!<演出用タイマー
@@ -52,7 +53,8 @@ public class MainCamera : MonoBehaviour
     Quaternion _holdCameraRotate;//!<CameraのRotate保存
     Vector3 _lookAtObject; //!<<!追跡オブジェクト
     Vector3Int _direct;//!<プレイヤーの方向取得　複数キャラバグの予感
-    
+    [SerializeField] float _gameOverTime = 0.5f;//!<ゲームオーバー時のカメラ移動時間
+
 
     [SerializeField] float _rotateTimeClear = 8;//!<!（手ブレ軽減用(数字が大きいほど手ブレが減り回転が遅くなる))
     [SerializeField] float _rotateSpeedClear = 2;//!<回転するはやさ（数字が小さいほど回転が早くなる）
@@ -95,9 +97,12 @@ public class MainCamera : MonoBehaviour
     {
         StartCamera();//!<スタート演出の関数
         _direct = _direct = GameObject.FindWithTag("Player").GetComponent<Player>()._direct;//Playerの方向取得　ここじゃなくてもいいかもしれない
-        GameClear();//!<クリア演出の関数
-        GameOver();//!<ゲームオーバー演出の関数
-        CameraRotate();//!<ゲーム中のカメラ回転の関数
+        if (_initFlg && _skipTime < 0)
+        {
+            GameClear();//!<クリア演出の関数
+            GameOver();//!<ゲームオーバー演出の関数
+            CameraRotate();//!<ゲーム中のカメラ回転の関数
+        }
     }
     /**
          * @brief 関数概要　カメラの初期値設定
@@ -113,7 +118,7 @@ public class MainCamera : MonoBehaviour
         myTransform.position = _setCameraPos;  //!< 座標を設定
         _cameraPos = _setCameraPos;//!<カメラ座標
       
-            myTransform.transform.rotation = _holdCameraRotate;//!<カメラの向き
+        myTransform.transform.rotation = _holdCameraRotate;//!<カメラの向き
     }
     /**
          * @brief 関数概要　フィールド中心座標取得
@@ -197,7 +202,6 @@ public class MainCamera : MonoBehaviour
             }
             else if (_TimeCnt < 0)
             {
-                Sequence _seq = DOTween.Sequence();
                 _gameObjectPlayer = GameObject.FindGameObjectWithTag("Player");//!< タグだと個別フォーカスできないかも？
                 if (_focusClear)
                 {
@@ -209,15 +213,12 @@ public class MainCamera : MonoBehaviour
                      _lookAtObject = _fieldPos;//!<追跡対象の設定（フィールド中心）
                     _lookAtObject.y = 1;//!<y座標の補正
                 }
-                float _time = 0;
-                _time += Time.deltaTime * _rotateTimeClear;//1フレーム？あたりの移動時間取得（細かすぎると手ブレするので最低8倍）
-
+               
                 _time2 += Time.deltaTime / _rotateSpeedClear;//sin,cosの移動先計算用
                
                 Vector3 _setPos = new Vector3(_fieldPos.x + _circleSizeClear.x * Mathf.Sin(_time2),
                     _fieldPos.y + _circleSizeClear.y, _fieldPos.z + _circleSizeClear.z * Mathf.Cos(_time2));//!<次の移動先座標計算
-                _seq.Append(myTransform.DOMove(_setPos, _time));//移動
-                
+                myTransform.transform.position = _setPos;
                 myTransform.LookAt(_lookAtObject);  //!< 向きを設定
                 
             }
@@ -236,22 +237,26 @@ public class MainCamera : MonoBehaviour
     void GameOver()
     {
         _gameOver = GameObject.FindWithTag("Map").GetComponent<Map>()._gameOver;
-
         if (_gameOver)
         {
-            // _waitTime -= Time.deltaTime;
-            //  if (_waitTime < 0)//ゲームオーバーにディレイが必要な場合
-            //{
-            Transform myTransform = this.transform;//!<変数に取得
-                                                   //!< タグだと個別フォーカスできないかも？
-            _gameObjectOver = GameObject.FindWithTag("Map").GetComponent<Map>().GetGameOverObjects();//ゲームオーバーの原因のオブジェクトを取得
-            _listCnt = _gameObjectOver.Count;//リスト数確認
-            _cameraPos = _gameObjectOver[_listCnt].transform.position - _direct + _correctionValueOver;//!<追跡対象の上にカメラ位置を設定
-            _lookAtObject = _gameObjectOver[_listCnt].transform.position;//!<追跡対象にフォーカス
 
-            myTransform.transform.DOMove(_cameraPos, 1);//移動
-            myTransform.LookAt(_lookAtObject);  //!< 向きを設定
-           // }
+
+            if (!_systemflg)
+            {
+                // _waitTime -= Time.deltaTime;
+                //  if (_waitTime < 0)//ゲームオーバーにディレイが必要な場合
+                //{
+                Transform myTransform = this.transform;//!<変数に取得
+                _gameObjectOver = GameObject.FindWithTag("Map").GetComponent<Map>().GetGameOverObjects();//ゲームオーバーの原因のオブジェクトを取得
+                _listCnt = _gameObjectOver.Count;//リスト数確認
+                _cameraPos = _gameObjectOver[_listCnt - 1].transform.position - _direct + _correctionValueOver;//!<追跡対象の上にカメラ位置を設定
+                _lookAtObject = _gameObjectOver[_listCnt - 1].transform.position;//!<追跡対象にフォーカス
+
+                myTransform.transform.DOMove(_cameraPos, _gameOverTime);//移動
+                _systemflg = true;
+                // }
+            }
+                myTransform.LookAt(_lookAtObject);  //!< 向きを設定
         }
     }
     /**
@@ -313,7 +318,6 @@ public class MainCamera : MonoBehaviour
         if (!_initFlg)
         {
             UnityEngine.Debug.Log("Start");
-            Sequence _seq = DOTween.Sequence();
             _gameObjectPlayer = GameObject.FindGameObjectWithTag("Player");//!< タグだと個別フォーカスできないかも？
             if (_focusStart)
             {
@@ -329,7 +333,6 @@ public class MainCamera : MonoBehaviour
             float _time = 0;
             _time += Time.deltaTime;//1フレーム？あたりの移動時間取得
             _startHigh -= (_holdStartHigh - _setCameraPos.y) / (_holdStartTime / _time);//1回の移動量計算
-            _time *= _rotateTimeStart;//移動時間（細かすぎると手ブレするので最低8倍）
             _time2 += Time.deltaTime / _rotateSpeedStart;
             _startTime -= Time.deltaTime;//!<スタート演出時間減算
             if(_startHigh<_cameraPos.y)//例外処理（何らかのバグによって下に行き過ぎないように
@@ -338,9 +341,8 @@ public class MainCamera : MonoBehaviour
             }
             Vector3 _setPos = new Vector3(_fieldPos.x - _circleSizeStart.x * Mathf.Sin(_time2),
                 _startHigh, _fieldPos.z - _circleSizeStart.z * Mathf.Cos(_time2));//!<移動先計算
-           
-            _seq.Append(myTransform.DOMove(_setPos, _time));//移動
 
+            myTransform.transform.position = _setPos;
             myTransform.LookAt(_lookAtObject);  //!< 向きを設定
         }
         if (!_initFlg)//初期化してなければ
@@ -355,9 +357,10 @@ public class MainCamera : MonoBehaviour
         {
             _skipTime -= Time.deltaTime;
             myTransform.LookAt(_lookAtObject);//!<注視点
-            if (_skipTime < 0)
+            if (_skipTime < 0&&!_setCameraRotFlg)
             {
                 myTransform.transform.rotation = _holdCameraRotate;//!<どうしてもカメラ飛んじゃうかも
+                _setCameraRotFlg = true;
             }
         }
     }
