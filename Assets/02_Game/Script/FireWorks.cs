@@ -11,10 +11,16 @@ public class FireWorks : MonoBehaviour
 
     [SerializeField]
     private float _speed;
+
+    [SerializeField]
+    private float EXP_min;
+    [SerializeField]
+    private float EXP_max;
     // Start is called before the first frame update
     void Start()
     {
         EXP_timer = EXP_TIME;
+        EXP_timer += Random.Range(EXP_min, EXP_max);
     }
 
     // Update is called once per frame
