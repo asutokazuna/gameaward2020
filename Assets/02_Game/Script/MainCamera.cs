@@ -71,6 +71,7 @@ public class MainCamera : MonoBehaviour
     float _holdStartTime;//!<スタート演出の秒数保存
     float _holdStartHigh;//!<スタート演出のカメラの高さ保存
 
+    public bool _startMove { get; private set; }
 
 
 
@@ -87,6 +88,7 @@ public class MainCamera : MonoBehaviour
         _holdStartHigh = _startHigh;//!<スタート演出のカメラの高さ保存
         _flameMoveSpeed = (_startHigh - _setCameraPos.y) / (_startTime / time); //!<1タイムあたりの移動量計算
         UnityEngine.Debug.Log(_flameMoveSpeed);//!<画面最大化するとずれるのでデバッグで確認
+        _startMove = true;
         Init();//Init
     }
 
@@ -345,9 +347,12 @@ public class MainCamera : MonoBehaviour
         }
         if (!_initFlg)//初期化してなければ
         {
-            if (_startTime < 0 ||Input.anyKeyDown)//ゲーム開始初期座標に移動（anyKeyでスタート演出スキップ）
-            {
-                myTransform.DOMove(_setCameraPos, _skipTime);
+            if (_startTime < 0 ||Input.anyKeyDown)
+             {//ゲーム開始初期座標に移動（anyKeyでスタート演出スキップ）
+                myTransform.DOMove(_setCameraPos, _skipTime).OnComplete(() =>
+                {
+                    _startMove = false;
+                });
                 _initFlg = true;
             }
         }
