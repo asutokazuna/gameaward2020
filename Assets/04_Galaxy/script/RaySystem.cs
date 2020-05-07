@@ -7,7 +7,8 @@ public class RaySystem : MonoBehaviour
    // [SerializeField] private List<GameObject> _stageObject = default;
     CameraMove _cameraMove;
     SceneMgr _sceneManager;
-    private E_SCENE _stageID = 0;//ID置き場
+    private E_SCENE _stageID = 0;   //ID置き場
+    private int     _level = 1;     //レベル置き場
 
     public float dist;
     public GameObject pointer;
@@ -56,6 +57,7 @@ public class RaySystem : MonoBehaviour
                 {
                     Debug.Log(target.collider.gameObject.GetComponent<StageID>()._stageID);
                     SetID(target.collider.gameObject.GetComponent<StageID>()._stageID);
+                    _level = target.collider.gameObject.GetComponent<StageID>()._level; // レベル取得
 
                     if (target.collider.gameObject != oldtarget.collider.gameObject) //当たった瞬間のみ
                     {
@@ -97,5 +99,10 @@ public class RaySystem : MonoBehaviour
    public E_SCENE GetID()
     {
         return _stageID;
+    }
+
+    public int GetLevel()
+    {
+        return _level;
     }
 }

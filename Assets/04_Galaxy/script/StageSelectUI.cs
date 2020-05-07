@@ -2,7 +2,8 @@
  * @file    StageSelectUI.cs
  * @brief   ステージ番号管理用
  * @author  Risa Ito
- * @date    2020/03/30(月)  作成
+ * @date    2020/05/05(火)  作成
+ * @date    2020/05/07(木)  レベル表示対応
  */
 using System.Collections;
 using System.Collections.Generic;
@@ -19,6 +20,10 @@ public class StageSelectUI : MonoBehaviour
     E_SCENE     _oldStageId;            //!< 選ばれてるステージID管理用
     E_SCENE     _stageId;               //!< 選ばれてるステージID管理用
     Animator    _stageSelectAnim;       //!< アニメーター取得用
+    RaySystem   _selectStage;           //!< 選択情報取得用
+    int         _planetID;              //!< 惑星管理用
+    int         _level;                 //!< レベル管理用
+    LevelImage  _levelImage;            //!< レベル画像セット用
 
     // Start is called before the first frame update
     void Start()
@@ -26,14 +31,18 @@ public class StageSelectUI : MonoBehaviour
         // 初期化処理
         _stageSelectAnim = GetComponent<Animator>();
         _stageSelectImage = GameObject.Find("CanvasUI").GetComponent<NumberImage>();
-        _stageId = GameObject.Find("CameraObj").GetComponent<RaySystem>().GetID();
+        _levelImage = GameObject.Find("CanvasUI").GetComponent<LevelImage>();
+        _selectStage = GameObject.Find("CameraObj").GetComponent<RaySystem>();
+        _stageId = 0;
+        _oldStageId = 0;
+        _planetID = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
         // 選択されているIDの取得
-        _stageId = GameObject.Find("CameraObj").GetComponent<RaySystem>().GetID();
+        _stageId = _selectStage.GetID();
 
         // 選択対象が変更されたらUI変更
         if (_stageId != _oldStageId)
@@ -51,11 +60,13 @@ public class StageSelectUI : MonoBehaviour
     {
         // ステージIDをステージ番号に計算
         int stageNo = (int)_stageId - 1;
+        _planetID = 0;
 
         // 星の数分ステージ番号を補正
-        while(stageNo > _stageNum)
+        while (stageNo > _stageNum)
         {
             stageNo -= _stageNum;
+            _planetID++;
         }
 
         if (stageNo > 0)
@@ -64,15 +75,27 @@ public class StageSelectUI : MonoBehaviour
             if (_stageSelectAnim.GetBool("Change"))
             {
                 _oldStageId = _stageId;
+                //_level = _selectStage.GetLevel();
                 _stageSelectImage.SetValue(stageNo);
+                _levelImage.SetLevel(_planetID,_level);
                 _stageSelectAnim.SetBool("Select", true);
             }
         }
         else
         {
             // 島の選択が外れた場合
-            _oldStageId = _stageId;
-            _stageSelectAnim.SetBool("Select", false);
+            SetSelectFinish();
         }
+    }
+
+    /**
+    * @brief        ステージセレクトのUI表示管理
+    * @return       なし
+    * @details      ステージが選択されて無い場合に表示をOffにする関数です
+    */
+    public void SetSelectFinish()
+    {
+        _oldStageId = _stageId;
+        _stageSelectAnim.SetBool("Select", false);
     }
 }

@@ -6,6 +6,8 @@ public class StageID : MonoBehaviour
 {
     public E_SCENE _stageID = 0;//!<例外処理シーンほしい
     E_SCENE _stageId = 0;
+    public int _level = 1;
+
     // Start is called before the first frame update
     void Start()
     {
