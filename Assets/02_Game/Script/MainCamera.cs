@@ -71,7 +71,7 @@ public class MainCamera : MonoBehaviour
     float _holdStartTime;
     float _holdStartHigh;
 
-    public bool _nowMove { get; private set; }
+    public bool _startMove { get; private set; }
 
 
 
@@ -83,7 +83,7 @@ public class MainCamera : MonoBehaviour
         time += Time.deltaTime;
         _holdStartTime=_startTime;
         _holdStartHigh = _startHigh;
-        _nowMove = true;
+        _startMove = true;
 
         myTransform = this.transform;
         _flameMoveSpeed = (_startHigh - _setCameraPos.y) / (_startTime / time);
@@ -316,7 +316,7 @@ public class MainCamera : MonoBehaviour
              {
                 myTransform.DOMove(_setCameraPos, _skipTime).OnComplete(() =>
                 {
-                    _nowMove = false;
+                    _startMove = false;
                 });
                 _initFlg = true;
             }
