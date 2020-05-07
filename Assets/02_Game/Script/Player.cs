@@ -68,7 +68,8 @@ public class Player : BaseObject
         _haveObject = new SquareInfo();
         _map        = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>();                      // コンポーネントの取得
         _mgr        = GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>();  // コンポーネントの取得
-        _input      = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();             // コンポーネントの取得
+        if (_input == null)
+            _input = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();
 
         // 座標の補正
         _position = _oldPosition = new Vector3Int(
@@ -130,10 +131,7 @@ public class Player : BaseObject
      */
     override public void Update()
     {
-        if (_haveObject._myObject == E_OBJECT.PLAYER_01)
-        {
-            Debug.Log(name + " がプレイヤー持ってます!!!!!!!");
-        }
+
     }
 
 

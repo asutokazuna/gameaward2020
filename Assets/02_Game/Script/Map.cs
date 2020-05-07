@@ -153,6 +153,10 @@ public class Map : MonoBehaviour
         {
             CallDebug(E_OBJECT.PLAYER_01);
         }
+        if (GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainCamera>()._nowMove)
+        {// カメラ移動中やで動くな(スタート時だけ)
+            return;
+        }
         foreach (Player obj in _player)
         {
             if (obj._isMove || !obj.isAnim())
