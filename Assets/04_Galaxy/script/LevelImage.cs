@@ -98,7 +98,7 @@ public class LevelImage : MonoBehaviour
             _setImage.SetParent(this.transform, false);                                                         // 親の選択
             _setImage.localPosition = new Vector2(                                                              // ポジション指定
                 _setImage.localPosition.x + _setImage.sizeDelta.x * (i % _turnBackNum) / 2,                     // X
-                _setImage.localPosition.y - _setImage.sizeDelta.y * (i / _turnBackNum));                        // Y
+                _setImage.localPosition.y - _setImage.sizeDelta.y * (i / _turnBackNum) / 2);                    // Y
             _setImage.GetComponent<Image>().sprite = _image;                                                    // 対応数値の選択
         }
     }
