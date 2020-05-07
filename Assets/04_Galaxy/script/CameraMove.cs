@@ -45,7 +45,8 @@ public class CameraMove : MonoBehaviour
     {
         StageSelectManager = GameObject.Find("StageSelectManager");
         UI = GameObject.Find("CanvasUI");
-        UI.SetActive(false);
+        //UI.SetActive(false);
+        StageSelectManager.GetComponent<UICange>().PlanerNameOff();
 
         //SceneManager = GameObject.Find("SceneManager").GetComponent<SceneMgr>();
 
@@ -99,11 +100,12 @@ public class CameraMove : MonoBehaviour
         {
             _agent.destination = _currentPlanet.transform.position;
             _cameraSpd = _cameraRotateSpd;
-            UI.SetActive(false);
+            //UI.SetActive(false);
         }
         else
         {
-            UI.SetActive(true);
+            //UI.SetActive(true);
+            StageSelectManager.GetComponent<UICange>().PlanerNameOn();
             _cameraSpd = 1.0f;
 
             _angleX += Input.GetAxis("Mouse X") * _rotateSpeed;
