@@ -17,8 +17,8 @@ public class OutlineOnOff : MonoBehaviour
         _meshRend.material.SetFloat("_Outline_Width", 0.0f);
         _meshRend.material.SetColor("_Outline_Color", _outlineColor);
 
-        Invoke("OutlineOn", 5.0f);
-        Invoke("OutlineOff", 10.0f);
+        //Invoke("OutlineOn", 5.0f);
+        //Invoke("OutlineOff", 10.0f);
 
     }
 

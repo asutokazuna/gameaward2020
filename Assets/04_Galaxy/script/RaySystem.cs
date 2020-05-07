@@ -12,6 +12,9 @@ public class RaySystem : MonoBehaviour
     public float dist;
     public GameObject pointer;
 
+    RaycastHit target;
+    RaycastHit oldtarget;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,9 +44,8 @@ public class RaySystem : MonoBehaviour
         //Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         //Debug.Log(_center);
 
+        oldtarget = target;
 
-
-        RaycastHit target;
         if (Physics.Raycast(_ray, out target))
         {
             if (target.collider.tag != "mask")
@@ -54,6 +56,12 @@ public class RaySystem : MonoBehaviour
                 {
                     Debug.Log(target.collider.gameObject.GetComponent<StageID>()._stageID);
                     SetID(target.collider.gameObject.GetComponent<StageID>()._stageID);
+
+                    if (target.collider.gameObject != oldtarget.collider.gameObject) //当たった瞬間のみ
+                    {
+                        target.collider.gameObject.GetComponent<OutlineOnOff>().OutlineOn();
+                    }
+
                     if (Input.GetKey(KeyCode.Return))
                     {
                         
@@ -62,12 +70,15 @@ public class RaySystem : MonoBehaviour
                     }
                 }
 
-               
             }
             else
             {
                 pointer.transform.position = new Vector3(0.0f, 0.0f, 0.0f); //マスクとあたった場合
                 SetID(0);
+                if (target.collider.gameObject != oldtarget.collider.gameObject) //当たった瞬間のみ
+                {
+                    oldtarget.collider.gameObject.GetComponent<OutlineOnOff>().OutlineOff();
+                }
             }
 
             // Debug.Log(Vector3.Distance(target.point, transform.position));
