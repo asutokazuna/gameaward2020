@@ -89,9 +89,7 @@ public class LevelImage : MonoBehaviour
         Sprite _image = _levelImage[_planetID];
 
         // 一つ目
-        GameObject _gameObject = GameObject.Find(_levelObject);
-        Transform _target = _gameObject.transform.Find("Level");
-        _target.GetComponent<Image>().sprite = _image;
+        GameObject.Find(_levelObject).GetComponent<Image>().sprite = _image;
 
         // 指定個数分描画
         for (int i = 1; i < _value; i++)
@@ -101,7 +99,7 @@ public class LevelImage : MonoBehaviour
             _setImage.localPosition = new Vector2(                                                              // ポジション指定
                 _setImage.localPosition.x + _setImage.sizeDelta.x * (i % _turnBackNum) / 2,                     // X
                 _setImage.localPosition.y - _setImage.sizeDelta.y * (i / _turnBackNum));                        // Y
-            _setImage.GetComponent<Image>().sprite = _image;                                                    // 画像のセット
+            _setImage.GetComponent<Image>().sprite = _image;                                                    // 対応数値の選択
         }
     }
 }
