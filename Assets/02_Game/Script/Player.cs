@@ -45,6 +45,18 @@ public class Player : BaseObject
     Controller                      _input;         //!< 入力キー
     public bool _putUpdate;
 
+    /*
+     * sound
+     */
+    private AudioSource _audioSource;
+    public AudioClip _SEMove;
+    public AudioClip _SEjump;
+    public AudioClip _SEPut;
+    public AudioClip _SEBoxBreak;
+    public AudioClip _SETrampoline;
+    public AudioClip _SEGameClear;
+    public AudioClip _SEGameOver;
+
 
     /**
      * @brief 移動中かどうかの判定
@@ -100,6 +112,8 @@ public class Player : BaseObject
 
         _mode       = E_OBJECT_MODE.WAIT;
         _isMove     = false;
+
+        _audioSource = GetComponent<AudioSource>();
 
         _animation = GameObject.Find(name).GetComponent<PlayerAnimation>();
         _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
@@ -285,16 +299,19 @@ public class Player : BaseObject
         {// 何かの上に上る時
             _position = new Vector3Int(_position.x, _position.y + 1, _position.z);
             _mode = E_OBJECT_MODE.GET_UP;
+            _audioSource.PlayOneShot(_SEjump);
         }
         else if (_map.isGetoff(_position))
         {// 一段下に降りる時
          //_position = new Vector3Int(_position.x, _position.y - 1, _position.z);
             _position = _map.GetoffPos(_position);
             _mode = E_OBJECT_MODE.GET_OFF;
+            _audioSource.PlayOneShot(_SEjump);
         }
         else
         {// 正面への移動
             _mode = E_OBJECT_MODE.MOVE;
+            _audioSource.PlayOneShot(_SEMove);
         }
         
         // 後で修正

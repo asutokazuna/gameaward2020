@@ -78,6 +78,10 @@ public class WaterFlow : MonoBehaviour
 
     private float _adjust = 0.5f;
 
+    AudioSource _audioSource;
+    public AudioClip SEFullWater;
+    public AudioClip SEFullWaterLift;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -102,6 +106,8 @@ public class WaterFlow : MonoBehaviour
 
         UICtrl = GameObject.Find("UICanvas");
         UIScript = UICtrl.GetComponent<CountBoxUI>();
+
+        _audioSource = GetComponent<AudioSource>();
 
         EmissionScript = this.GetComponent<BoxEmission>();
 
@@ -145,6 +151,8 @@ public class WaterFlow : MonoBehaviour
 
                 PlayChildParticle();
                 CreateFullPS();
+
+                _audioSource.PlayOneShot(SEFullWater);
                 //PlayChildFullPS();
             }
             else if (_currentWater < _maxWater - 10 && _isFullWater.Equals(true))
@@ -155,6 +163,7 @@ public class WaterFlow : MonoBehaviour
                 CountBoxScript._fullWaterBlockCnt--; //全体の水箱-
                 UIScript.AddFullBox(-1);
 
+                _audioSource.PlayOneShot(SEFullWaterLift);
                 StopChildParticle();
             }
 
