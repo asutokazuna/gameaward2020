@@ -77,7 +77,7 @@ public class StageSelectUI : MonoBehaviour
                 _oldStageId = _stageId;
                 _level = _selectStage.GetLevel();
                 _stageSelectImage.SetValue(stageNo);
-                _levelImage.SetLevel(_planetID,_level);
+                _levelImage.SetImage(_planetID,_level);
                 _stageSelectAnim.SetBool("Select", true);
             }
         }

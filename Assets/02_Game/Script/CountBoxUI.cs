@@ -36,6 +36,7 @@ public class CountBoxUI : MonoBehaviour
         _countTatalBox = _boxObjects.Length;
 
         // 画像表示
+        _tatalBoxImage.SetNumberColor(new Color(1.0f, 1.0f, 1.0f, 1.0f));
         _tatalBoxImage.SetValue(_countTatalBox);
     }
 
