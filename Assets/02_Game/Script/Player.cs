@@ -291,8 +291,8 @@ public class Player : BaseObject
             else
             {// 落下
                 _mode = E_OBJECT_MODE.FALL;
+                _position = _map.GetFallPos(_position);
             }
-            _position   = _map.GetFallPos(_position);
             _gameOver   = true;
         }
         else if (_map.isGetup(_position))
@@ -324,27 +324,14 @@ public class Player : BaseObject
         }
 
         // 座標移動
-        if (_mode == E_OBJECT_MODE.MOVE)
+        if (_mode == E_OBJECT_MODE.MOVE || _mode == E_OBJECT_MODE.DONT_MOVE || _mode == E_OBJECT_MODE.AREA_FALL)
         {// 移動
             MoveMode(); // アニメーションのセット
         }
-        else if (_mode == E_OBJECT_MODE.DONT_MOVE)
-        {
-            MoveMode();
-        }
-        else if (_mode == E_OBJECT_MODE.GET_UP)
+        else if (_mode == E_OBJECT_MODE.GET_UP || _mode == E_OBJECT_MODE.GET_OFF || _mode == E_OBJECT_MODE.FALL)
         {// ジャンプで登る
-         //transform.DOJump(endValue, jumpPower, numJumps, duration)
             JumpMode(); // アニメーションのセット
 
-        }
-        else if (_mode == E_OBJECT_MODE.GET_OFF)
-        {// ジャンプで降りる
-            JumpMode(); // アニメーションのセット
-        }
-        else if (_mode == E_OBJECT_MODE.FALL || _mode == E_OBJECT_MODE.AREA_FALL)
-        {// ジャンプで落ちる
-            JumpMode(); // アニメーションのセット
         }
     }
 
@@ -613,10 +600,34 @@ public class Player : BaseObject
                 _animation.SetPlayerState(PlayerAnimation.PlayerState.E_BUMP_BOX);
             }
         }
+        else if (_mode == E_OBJECT_MODE.AREA_FALL)
+        {
+            if (_haveObject._myObject == E_OBJECT.NONE ||
+                _haveObject._myObject == E_OBJECT.MAX)
+            {// 何も持っていない時
+                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL);
+            }
+            else if (_haveObject._myObject == E_OBJECT.PLAYER_01)
+            {// プレイヤーを持っている時
+                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL);
+            }
+            else
+            {// 何かを持っている時
+                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL);
+            }
+        }
         //                              移動先座標, 移動時間(秒)
         transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
         {
-            WaitMode();
+            _map._gameOver = true;
+            transform.DOLocalMove(      //取り合えずの数値
+                new Vector3(_nextPos.x, _nextPos.y - 1f, _nextPos.z),// 目的座標
+                _mgr.MoveTime
+            ).OnComplete(() =>
+            {
+                transform.DOScale(new Vector3(), _mgr.OutsideTheEreaTime);
+                WaitMode();
+            });
         });
     }
 
@@ -693,33 +704,6 @@ public class Player : BaseObject
                 _map._gameOver = true;  // ゲームオーバーやで
                 _gameOver = true;
             });
-        }
-        else if (_mode == E_OBJECT_MODE.AREA_FALL)
-        {
-            if (_haveObject._myObject == E_OBJECT.NONE ||
-                _haveObject._myObject == E_OBJECT.MAX)
-            {// 何も持っていない時
-                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL);
-            }
-            else if (_haveObject._myObject == E_OBJECT.PLAYER_01)
-            {// プレイヤーを持っている時
-                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL);
-            }
-            else
-            {// 何かを持っている時
-                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL);
-            }
-            transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
-                (_oldPosition.y - _position.y), // ジャンプパワー
-                1,  // ジャンプ回数
-                _mgr.MoveTime, // 時間
-                false
-                ).OnComplete(() =>
-                {
-                    transform.DOScale(new Vector3(), _mgr.OutsideTheEreaTime);
-                    _map._gameOver = true;  // ゲームオーバーやで
-                    _gameOver = true;
-                });
         }
     }
 
