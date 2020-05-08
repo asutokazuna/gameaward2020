@@ -8,11 +8,8 @@
  */
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using DG.Tweening;
-using System.Diagnostics;
-using Boo.Lang.Environments;
 
 /**
  * @class MainCamera
@@ -72,7 +69,7 @@ public class MainCamera : MonoBehaviour
     int _cameraRotNum = 0;//!<カメラの位置管理
     bool _inputKey = false;//!<キー入力受付状態か
     bool _waitTimeCheck = false;//!<waitが終わってるか
-    public float  _delayTime=1.0f;
+    public float _delayTime = 1.0f;
     /**
      * @brief 初期化処理
      * @return なし
