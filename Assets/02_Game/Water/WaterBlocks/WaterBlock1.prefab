@@ -54,7 +54,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6693871443086729724}
-  m_Mesh: {fileID: -387298209978578080, guid: eb521030121c5b4449f6af321846fe97, type: 3}
+  m_Mesh: {fileID: -387298209978578080, guid: 84db2910051b5c447a2235cb2772cac5, type: 3}
 --- !u!23 &4961205990558192928
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -74,6 +74,8 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 0e462883cd57c664a883edfb5a05d614, type: 2}
+  - {fileID: 2100000, guid: 22c4a32b6df220d4eb6e81b891aadb62, type: 2}
+  - {fileID: 2100000, guid: 3fa6d2a183380334e98c1ce1d7cad285, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4981,6 +4983,9 @@ MonoBehaviour:
   _maxWater: 300
   _isFullWater: 0
   _isWaterSource: 0
+  _isFullPS: 0
+  SEFullWater: {fileID: 0}
+  SEFullWaterLift: {fileID: 0}
 --- !u!114 &2770357649093967411
 MonoBehaviour:
   m_ObjectHideFlags: 0
