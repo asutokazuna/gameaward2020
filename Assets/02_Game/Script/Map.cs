@@ -102,6 +102,7 @@ public class Map : MonoBehaviour
     private AudioSource _audioSource;
     public AudioClip _SEGameclear;
     public AudioClip _SEGameover;
+    public AudioClip _SEBoxBreak;
 
 
     /**
@@ -387,6 +388,7 @@ public class Map : MonoBehaviour
         {// 水槽の場合
             _tankBlock[haveObj._number].transform.parent = null;   // 親子関係を話す
             _tankBlock[haveObj._number].Fall(targetPos);
+            _audioSource.PlayOneShot(_SEBoxBreak);//SE
             UpdateMap(_tankBlock[haveObj._number]);
         }
         else if (haveObj._myObject == E_OBJECT.PLAYER_01)
@@ -469,7 +471,6 @@ public class Map : MonoBehaviour
             }
         }
         // ゲームオーバー
-        _audioSource.PlayOneShot(_SEGameover);
         return true;
     }
 
@@ -857,7 +858,7 @@ public class Map : MonoBehaviour
                 }
             }
         }
-
+        _audioSource.PlayOneShot(_SEGameover);
         return obj;
     }
 

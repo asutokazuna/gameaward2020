@@ -17,13 +17,10 @@ public class BlockDestroy : MonoBehaviour
      * @brief 生成直後に破壊処理を呼び出す
      * @return なし
      */
-    private AudioSource audioSource;
-    public AudioClip _SEBoxBreak;
 
 
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
         destroyObject();
     }
 
@@ -55,7 +52,6 @@ public class BlockDestroy : MonoBehaviour
             r.AddForce(vect, ForceMode.Impulse);
             r.AddTorque(vect, ForceMode.Impulse);
         };
-        audioSource.PlayOneShot(_SEBoxBreak);
         Destroy(gameObject);
     }
 }
