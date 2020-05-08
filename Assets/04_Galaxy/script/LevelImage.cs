@@ -2,7 +2,8 @@
  * @file    LevelImage.cs
  * @brief   レベルの画像表記
  * @author  Risa Ito
- * @date    2020/05/07(木)  作成
+ * @date    2020/05/07(木)   作成
+ * @date    2020/05/08(金)   カラー変更に対応
  */
 
 using System.Collections;
@@ -16,14 +17,15 @@ using UnityEngine.UI;
  */
 public class LevelImage : MonoBehaviour
 {
-    // 表示する数値管理用
+    // 表示する画像管理用
     private const int       MAX_LEVEL = 10;     //!< 最大10
     private int             _value;             //!< 表示する数
-    private int             _planetID;          //!< 表示する数
+    private int             _imageType;         //!< 表示する数
     [SerializeField] int    _turnBackNum;       //!< 折り返す位置(個数)
 
     // 画像管理用
     public Sprite[]         _levelImage;        //!< image画像対応
+    Color                   _imageColor;        //!< 画像のカラー
 
     // タグ指定用
     [SerializeField] string _levelTag;          //!< タグ名保存用
@@ -36,18 +38,19 @@ public class LevelImage : MonoBehaviour
     {
         // 初期化
         _value = 0;
+        _imageColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     /**
     * @brief        画像のセット
-    * @param[in]    int 表示したい画像の種類(惑星番号) int 表示したい個数
+    * @param[in]    int 表示したい画像の種類 int 表示したい個数
     * @return       なし
     * @details      表示したい画像と個数をセットする関数です
     */
-    public void SetLevel(int planetID, int num)
+    public void SetImage(int type, int num)
     {
         // 同じ個数同じ画像なら処理しない
-        if (num != _value || planetID != _planetID)
+        if (num != _value || type != _imageType)
         {
             // 対象となるオブジェクトを探す
             var objs = GameObject.FindGameObjectsWithTag(_levelTag);
@@ -62,7 +65,7 @@ public class LevelImage : MonoBehaviour
             }
 
             _value = num;           // 個数セット
-            _planetID = planetID;   // 画像指定
+            _imageType = type;      // 画像指定
 
             // 上限下限チェック
             if (_value > MAX_LEVEL)
@@ -86,20 +89,33 @@ public class LevelImage : MonoBehaviour
     void View()
     {
         // 画像の指定
-        Sprite _image = _levelImage[_planetID];
+        Sprite _image = _levelImage[_imageType];
 
         // 一つ目
         GameObject.Find(_levelObject).GetComponent<Image>().sprite = _image;
+        GameObject.Find(_levelObject).GetComponent<Image>().color = new Color(_imageColor.r, _imageColor.g, _imageColor.b, _imageColor.a);     // カラーのセット
 
         // 指定個数分描画
         for (int i = 1; i < _value; i++)
         {
-            RectTransform _setImage = (RectTransform)Instantiate(GameObject.Find(_levelObject)).transform;      // 初期ポジション
-            _setImage.SetParent(this.transform, false);                                                         // 親の選択
-            _setImage.localPosition = new Vector2(                                                              // ポジション指定
-                _setImage.localPosition.x + _setImage.sizeDelta.x * (i % _turnBackNum) / 2,                     // X
-                _setImage.localPosition.y - _setImage.sizeDelta.y * (i / _turnBackNum) / 2);                    // Y
-            _setImage.GetComponent<Image>().sprite = _image;                                                    // 対応数値の選択
+            RectTransform _setImage = (RectTransform)Instantiate(GameObject.Find(_levelObject)).transform;                      // 初期ポジション
+            _setImage.SetParent(this.transform, false);                                                                         // 親の選択
+            _setImage.localPosition = new Vector2(                                                                              // ポジション指定
+                _setImage.localPosition.x + _setImage.sizeDelta.x * (i % _turnBackNum) / 2,                                     // X
+                _setImage.localPosition.y - _setImage.sizeDelta.y * (i / _turnBackNum) / 2);                                    // Y
+            _setImage.GetComponent<Image>().sprite = _image;                                                                    // 対応数値の選択
+            _setImage.GetComponent<Image>().color = new Color(_imageColor.r, _imageColor.g, _imageColor.b, _imageColor.a);      // カラーのセット
         }
+    }
+
+    /**
+    * @brief        カラーのセット
+    * @param[in]    Color 画像の色情報
+    * @return       なし
+    * @details      表示したい画像の色をセットする関数です
+    */
+    public void SetImageColor(Color color)
+    {
+        _imageColor = color;
     }
 }

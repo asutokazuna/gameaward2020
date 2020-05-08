@@ -5,6 +5,7 @@
  * @date    2020/04/03(金)  作成
  * @date    2020/04/05(日)  0の時0桁になってしまうバグを修正
  * @date    2020/05/05(火)  値の設定の仕方を変更
+ * @date    2020/05/08(金)  カラー変更に対応
  */
 
 using System.Collections;
@@ -25,6 +26,7 @@ public class NumberImage : MonoBehaviour
     // 画像管理用
     public Sprite[] _numImage;                          //!< image画像対応
     public List<int> _digitList = new List<int>();      //!< 値の各桁保存用
+    Color _numberColor;                                 //!< 画像のカラー
 
     // タグ指定用
     public string _numberTag;               //!< タグ名保存用
@@ -37,6 +39,7 @@ public class NumberImage : MonoBehaviour
     {
         // 初期化
         _value = 0;
+        _numberColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     /**
@@ -99,16 +102,29 @@ public class NumberImage : MonoBehaviour
 
         // 1桁目
         GameObject.Find(_numberObject).GetComponent<Image>().sprite = _numImage[_digitList[0]];
+        GameObject.Find(_numberObject).GetComponent<Image>().color = new Color(_numberColor.r, _numberColor.g, _numberColor.b, _numberColor.a);     // カラーのセット
 
         // 2桁目以降
         for (int i = 1; i < _digitList.Count; i++)
         {
-            RectTransform _numberImage = (RectTransform)Instantiate(GameObject.Find(_numberObject)).transform;      // 初期ポジション
-            _numberImage.SetParent(this.transform, false);                                                          // 親の選択
-            _numberImage.localPosition = new Vector2(                                                               // ポジション指定
-                _numberImage.localPosition.x - _numberImage.sizeDelta.x * i / 2,                                    // X
-                _numberImage.localPosition.y);                                                                      // Y
-            _numberImage.GetComponent<Image>().sprite = _numImage[_digitList[i]];                                   // 対応数値の選択
+            RectTransform _numberImage = (RectTransform)Instantiate(GameObject.Find(_numberObject)).transform;                      // 初期ポジション
+            _numberImage.SetParent(this.transform, false);                                                                          // 親の選択
+            _numberImage.localPosition = new Vector2(                                                                               // ポジション指定
+                _numberImage.localPosition.x - _numberImage.sizeDelta.x * i / 2,                                                    // X
+                _numberImage.localPosition.y);                                                                                      // Y
+            _numberImage.GetComponent<Image>().sprite = _numImage[_digitList[i]];                                                   // 対応数値の選択
+            _numberImage.GetComponent<Image>().color = new Color(_numberColor.r, _numberColor.g, _numberColor.b, _numberColor.a);   // カラーのセット
         }
+    }
+
+    /**
+    * @brief        カラーのセット
+    * @param[in]    Color 画像の色情報
+    * @return       なし
+    * @details      表示したい画像の色をセットする関数です
+    */
+    public void SetNumberColor(Color color)
+    {
+        _numberColor = color;
     }
 }

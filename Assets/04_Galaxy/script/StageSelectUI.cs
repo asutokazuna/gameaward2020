@@ -4,10 +4,12 @@
  * @author  Risa Ito
  * @date    2020/05/05(火)  作成
  * @date    2020/05/07(木)  レベル表示対応
+ * @date    2020/05/08(金)  カラーの変更対応
  */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /*
  * @class StageSelectUI
@@ -15,15 +17,16 @@ using UnityEngine;
  */
 public class StageSelectUI : MonoBehaviour
 {
-    [SerializeField] int _stageNum;     //!< 1惑星当たりのステージ数
-    NumberImage _stageSelectImage;      //!< ステージNoを画像
-    E_SCENE     _oldStageId;            //!< 選ばれてるステージID管理用
-    E_SCENE     _stageId;               //!< 選ばれてるステージID管理用
-    Animator    _stageSelectAnim;       //!< アニメーター取得用
-    RaySystem   _selectStage;           //!< 選択情報取得用
-    int         _planetID;              //!< 惑星管理用
-    int         _level;                 //!< レベル管理用
-    LevelImage  _levelImage;            //!< レベル画像セット用
+    [SerializeField] Color[] _stageColor;   //!< 1惑星当たりのステージ数
+    [SerializeField] int     _stageNum;     //!< 1惑星当たりのステージ数
+    NumberImage _stageSelectImage;          //!< ステージNoを画像
+    E_SCENE     _oldStageId;                //!< 選ばれてるステージID管理用
+    E_SCENE     _stageId;                   //!< 選ばれてるステージID管理用
+    Animator    _stageSelectAnim;           //!< アニメーター取得用
+    RaySystem   _selectStage;               //!< 選択情報取得用
+    int         _planetID;                  //!< 惑星管理用
+    int         _level;                     //!< レベル管理用
+    LevelImage  _levelImage;                //!< レベル画像セット用
 
     // Start is called before the first frame update
     void Start()
@@ -76,8 +79,10 @@ public class StageSelectUI : MonoBehaviour
             {
                 _oldStageId = _stageId;
                 _level = _selectStage.GetLevel();
+                GameObject.Find("Stage").GetComponent<Image>().color = _stageColor[_planetID];
+                _stageSelectImage.SetNumberColor(_stageColor[_planetID]);
                 _stageSelectImage.SetValue(stageNo);
-                _levelImage.SetLevel(_planetID,_level);
+                _levelImage.SetImage(_planetID,_level);
                 _stageSelectAnim.SetBool("Select", true);
             }
         }
