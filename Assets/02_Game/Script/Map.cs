@@ -45,6 +45,7 @@ public enum E_TURN
 {
     WAIT,   // 操作受付
     MOVE,   // 操作実行中
+    END,    // 終わり
 }
 
 
@@ -141,19 +142,22 @@ public class Map : MonoBehaviour
         {
             _gameClear = true;
         }
-        if (_gameOver)
+        if (_gameOver && _turn != E_TURN.END)
         {// 取り合えずここでゲームオーバーの実装
+            _turn = E_TURN.END;
+            _audioSource.PlayOneShot(_SEGameover);
             foreach (GameObject n in GetGameOverObjects())
             {// ゲームオーバーオブジェクトの確認
                 Debug.Log(n.name);
             }
         }
-        if (_gameClear)
+        if (_gameClear && _turn != E_TURN.END)
         {// ゲームクリア時の処理を追加する場所
+            _turn = E_TURN.END;
+            _audioSource.PlayOneShot(_SEGameclear);
             foreach (Player obj in _player)
             {
                 obj.GameClear();
-                _audioSource.PlayOneShot(_SEGameclear);
             }
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
@@ -859,7 +863,6 @@ public class Map : MonoBehaviour
                 }
             }
         }
-        _audioSource.PlayOneShot(_SEGameover);
         return obj;
     }
 
