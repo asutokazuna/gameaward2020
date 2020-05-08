@@ -130,6 +130,7 @@ public class Map : MonoBehaviour
         _turn = E_TURN.WAIT;
         if (_input == null)
             _input = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
