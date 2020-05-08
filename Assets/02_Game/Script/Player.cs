@@ -619,15 +619,22 @@ public class Player : BaseObject
         //                              移動先座標, 移動時間(秒)
         transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
         {
-            _map._gameOver = true;
-            transform.DOLocalMove(      //取り合えずの数値
-                new Vector3(_nextPos.x, _nextPos.y - 1f, _nextPos.z),// 目的座標
-                _mgr.MoveTime
-            ).OnComplete(() =>
-            {
-                transform.DOScale(new Vector3(), _mgr.OutsideTheEreaTime);
+            if (_gameOver)
+            {// ゲームオーバーの時
+                _map._gameOver = true;
+                transform.DOLocalMove(      //取り合えずの数値
+                    new Vector3(_nextPos.x, _nextPos.y - 1f, _nextPos.z),// 目的座標
+                    _mgr.MoveTime
+                ).OnComplete(() =>
+                {
+                    transform.DOScale(new Vector3(), _mgr.OutsideTheEreaTime);
+                    WaitMode();
+                });
+            }
+            else
+            {// そうじゃない場合
                 WaitMode();
-            });
+            }
         });
     }
 
