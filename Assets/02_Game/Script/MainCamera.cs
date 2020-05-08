@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using DG.Tweening;
 using System.Diagnostics;
+using Boo.Lang.Environments;
 
 /**
  * @class MainCamera
@@ -24,7 +25,7 @@ public class MainCamera : MonoBehaviour
     [SerializeField] List<GameObject> _fieldBlock;
  
     public float _angle = 90.0f;                //!< カメラを回転させたときに回転する角度
-    public float _rotateFlame = 60.0f;          //!< 回転時間
+    [SerializeField] float _rotateTime = 1.0f;  //!< 回転時間
     private Vector3 _setCameraPos;               //!< カメラ座標設定
     public Vector3 _correctionValueClear;       //!< クリア時のカメラの補正値
     public Vector3 _correctionValueOver;        //!< ゲームオーバー時のカメラの補正値
@@ -35,18 +36,16 @@ public class MainCamera : MonoBehaviour
     bool _gameOver;                             //!< ゲームオーバー状態
     bool _systemflg;                            //!< クリア演出のフラグ
     bool _initFlg = false;                      //!< Start演出後のInitフラグ
-    bool _cameraMove = false;
     int _listCnt = 0;                           //!< リストの要素数カウント
-    float _TimeCnt = 1.0f;
     float _time2 = 0;                           //!< 演出用タイマー
     //!<float _oldtime = 0;
-    public float _waitTime = 0.0f;
+     float _waitTime = 1.0f;
     List<GameObject> _gameObjectOver;           //!< フォーカスオブジェクト
     GameObject _gameObjectPlayer;               //!< Playerオブジェクトの格納
     Transform myTransform;                      //!< カメラのトランスフォーム
-    Quaternion _setCameraRot = new Quaternion(30, 10, 0, 0); //!< カメラ注視点設定
+    Vector3 _setCameraRot = new Vector3(30, 10, 0); //!< カメラ注視点設定
     Vector3 _cameraPos;　                       //! カメラ座標いじる用
-    Quaternion _holdCameraRotate;               //!< CameraのRotate保存
+    Vector3 _holdCameraRotate;               //!< CameraのRotate保存
     Vector3 _lookAtObject;                      //!< 追跡オブジェクト
     Vector3Int _direct;                         //!< プレイヤーの方向取得　複数キャラバグの予感
     [SerializeField] float _gameOverTime = 0.5f;//!< ゲームオーバー時のカメラ移動時間
@@ -68,6 +67,12 @@ public class MainCamera : MonoBehaviour
 
     public bool _startMove { get; private set; }
 
+    bool _finishStart = false;//!<スタート演出諸々が完全に終了したかのフラグ
+    bool _rotateCheck = false;//!<回転中か
+    int _cameraRotNum = 0;//!<カメラの位置管理
+    bool _inputKey = false;//!<キー入力受付状態か
+    bool _waitTimeCheck = false;//!<waitが終わってるか
+    public float  _delayTime=1.0f;
     /**
      * @brief 初期化処理
      * @return なし
@@ -86,8 +91,9 @@ public class MainCamera : MonoBehaviour
         myTransform = this.transform;                   //!< カメラのトランスフォーム取得
         float time = 0;                                 //!< 計算用タイマー
         time += Time.deltaTime;                         //!< タイム取得
-        _setCameraRot = myTransform.transform.rotation; //!< Rotateの初期値保存
+        _setCameraRot = myTransform.transform.rotation.eulerAngles; //!< Rotateの初期値保存
         _holdCameraRotate = _setCameraRot;              //!< Rotateの初期値保存２
+        UnityEngine.Debug.Log(_holdCameraRotate);
         _holdStartTime =_startTime;                     //!< スタート演出の秒数保存
         _holdStartHigh = _startHigh;                    //!< スタート演出のカメラの高さ保存
         _startMove = true;
@@ -102,12 +108,12 @@ public class MainCamera : MonoBehaviour
     void Update()
     {
         _direct = _direct = GameObject.FindWithTag("Player").GetComponent<Player>()._direct;//Playerの方向取得　ここじゃなくてもいいかもしれない
-        UnityEngine.Debug.Log("init" + _initFlg);
-        UnityEngine.Debug.Log("skipTime" + _skipTime);
+        //UnityEngine.Debug.Log("init" + _initFlg);
+        //UnityEngine.Debug.Log("skipTime" + _skipTime);
 
-        if (_initFlg)
+        if (_finishStart)
         {
-            GameClear();        //!< クリア演出の関数
+            DelayTime();        //!< クリア演出の関数
             GameOver();         //!< ゲームオーバー演出の関数
             CameraRotate();     //!< ゲーム中のカメラ回転の関数
         }
@@ -132,8 +138,8 @@ public class MainCamera : MonoBehaviour
     {
         Transform myTransform = this.transform;                 //!< 変数に取得
         _cameraPos = _setCameraPos;                             //!< カメラ座標
-      
-        myTransform.transform.rotation = _holdCameraRotate;     //!< カメラの向き
+
+        myTransform.transform.DORotate(_holdCameraRotate, 0.0f);     //!< カメラの向き
     }
 
     /**
@@ -181,13 +187,7 @@ public class MainCamera : MonoBehaviour
      */
     void GameClear()
     {
-        _gameClear = GameObject.FindWithTag("Map").GetComponent<Map>()._gameClear;  //!<クリア状態の取得
-        if(_gameClear == false)
-        {
-            return;
-        }
-        
-        _gameObjectPlayer = GameObject.FindGameObjectWithTag("Player"); //!< タグだと個別フォーカスできないかも？
+           _gameObjectPlayer = GameObject.FindGameObjectWithTag("Player"); //!< タグだと個別フォーカスできないかも？
         _lookAtObject = _gameObjectPlayer.transform.position;   //!< 追跡対象の設定（プレイヤー）
         _lookAtObject.y = _gameObjectPlayer.transform.position.y + _correctionValueClear.y; // y座標の補正
         //myTransform.LookAt(_lookAtObject);  //!< 向きを設定    
@@ -196,60 +196,85 @@ public class MainCamera : MonoBehaviour
         if (_systemflg == false)
         {
             _systemflg = true;
-            transform.DOLookAt(new Vector3(4,6,-11), _waitTime);
-            myTransform.DOMove(_clearStartPos, _waitTime);
+            if (_focusClear)//フォーカス対象の設定(インスペクタで切り替え）
+            {
+                _lookAtObject = _gameObjectPlayer.transform.position;   //!< 追跡対象の設定（プレイヤー）
+                _lookAtObject.y = _gameObjectPlayer.transform.position.y + _correctionValueClear.y; // y座標の補正
+            }
+            else
+            {
+                _lookAtObject = _fieldPos;     //!<追跡対象の設定（フィールド中心）
+                _lookAtObject.y = 1;            //!<y座標の補正
+            }
+            myTransform.DOMove(_clearStartPos, _waitTime).OnComplete(() =>//カメラ吹っ飛ばないように移動（ホントはいらないはず）
+            {
+                _waitTimeCheck = true;
+            });
+        }
+        else if (_systemflg == true)
+        {
+            transform.DOLookAt(_lookAtObject, 0.0f);
         }
 
-        //if (!_systemflg)  //クリアかつシステムフラグFalseなら
-        //{
-        //    if (_waitTime > 0 && !_cameraMove)//カメラが吹っ飛ばないように
-        //    {
-        //        _time2 += Time.deltaTime;
-
-        //        _cameraMove = true;
-        //    }
-        //    _waitTime -= Time.deltaTime;
-        //    if (_waitTime < 0)//他演出とのディレイ
-        //    {
-        //        //!< UnityEngine.Debug.Break();
-        //        myTransform = this.transform;
-        //        _systemflg = true;
-
-        //    }
-        //    //myTransform.LookAt(_fieldPos);
-
-        //}
-        //else if (_systemflg)  //システムフラグtrue
-        //{
-        //    if (_TimeCnt > 0)   //ディレイない場合の保険で1秒は待てるように
-        //    {
-        //        _TimeCnt -= Time.deltaTime;
-        //    }
-        //    else if (_TimeCnt < 0)
-        //    {
-        //        if (_focusClear)
-        //        {
-        //            _lookAtObject = _gameObjectPlayer.transform.position;   //!< 追跡対象の設定（プレイヤー）
-        //            _lookAtObject.y = _gameObjectPlayer.transform.position.y + _correctionValueClear.y; // y座標の補正
-        //        }
-        //        else
-        //        {
-        //             _lookAtObject = _fieldPos;     //!<追跡対象の設定（フィールド中心）
-        //            _lookAtObject.y = 1;            //!<y座標の補正
-        //        }
-               
-        //        _time2 += Time.deltaTime / _rotateSpeedClear;   //sin,cosの移動先計算用
-               
-        //        Vector3 _setPos = new Vector3(_fieldPos.x + _circleSizeClear.x * Mathf.Sin(_time2),
-        //            _fieldPos.y + _circleSizeClear.y, _fieldPos.z + _circleSizeClear.z * Mathf.Cos(_time2));//!<次の移動先座標計算
-        //        myTransform.transform.position = _setPos;
-        //        myTransform.LookAt(_lookAtObject);  //!< 向きを設定     
-        //    }
+        if (_waitTimeCheck == true)
+        {
+           _time2 += Time.deltaTime / _rotateSpeedClear;   //sin,cosの移動先計算用
+            Vector3 _setPos = new Vector3(_fieldPos.x + _circleSizeClear.x * Mathf.Sin(_time2),
+                _fieldPos.y + _circleSizeClear.y, _fieldPos.z + _circleSizeClear.z * Mathf.Cos(_time2));//!<次の移動先座標計算
+            myTransform.transform.position = _setPos;
+           // myTransform.DOLookAt(_lookAtObject, 0.0f);  //!< 向きを設定     
 
 
-        //}
+            //if (!_systemflg)  //クリアかつシステムフラグFalseなら
+            //{
+            //    if (_waitTime > 0 && !_cameraMove)//カメラが吹っ飛ばないように
+            //    {
+            //        _time2 += Time.deltaTime;
+
+            //        _cameraMove = true;
+            //    }
+            //    _waitTime -= Time.deltaTime;
+            //    if (_waitTime < 0)//他演出とのディレイ
+            //    {
+            //        //!< UnityEngine.Debug.Break();
+            //        myTransform = this.transform;
+            //        _systemflg = true;
+
+            //    }
+            //    //myTransform.LookAt(_fieldPos);
+
+            //}
+            //else if (_systemflg)  //システムフラグtrue
+            //{
+            //    if (_TimeCnt > 0)   //ディレイない場合の保険で1秒は待てるように
+            //    {
+            //        _TimeCnt -= Time.deltaTime;
+            //    }
+            //    else if (_TimeCnt < 0)
+            //    {
+            //        if (_focusClear)
+            //        {
+            //            _lookAtObject = _gameObjectPlayer.transform.position;   //!< 追跡対象の設定（プレイヤー）
+            //            _lookAtObject.y = _gameObjectPlayer.transform.position.y + _correctionValueClear.y; // y座標の補正
+            //        }
+            //        else
+            //        {
+            //             _lookAtObject = _fieldPos;     //!<追跡対象の設定（フィールド中心）
+            //            _lookAtObject.y = 1;            //!<y座標の補正
+            //        }
+
+            //        _time2 += Time.deltaTime / _rotateSpeedClear;   //sin,cosの移動先計算用
+
+            //        Vector3 _setPos = new Vector3(_fieldPos.x + _circleSizeClear.x * Mathf.Sin(_time2),
+            //            _fieldPos.y + _circleSizeClear.y, _fieldPos.z + _circleSizeClear.z * Mathf.Cos(_time2));//!<次の移動先座標計算
+            //        myTransform.transform.position = _setPos;
+            //        myTransform.LookAt(_lookAtObject);  //!< 向きを設定     
+            //    }
+
+
+            //}
+        }
     }
-
     /**
      * @brief ゲームオーバー演出
      * @return なし
@@ -270,7 +295,8 @@ public class MainCamera : MonoBehaviour
             //{
             _gameObjectOver = GameObject.FindWithTag("Map").GetComponent<Map>().GetGameOverObjects();//ゲームオーバーの原因のオブジェクトを取得
             _listCnt = _gameObjectOver.Count;//リスト数確認
-            _cameraPos = _gameObjectOver[_listCnt - 1].transform.position - _direct + _correctionValueOver;//!<追跡対象の上にカメラ位置を設定
+            //            _cameraPos = _gameObjectOver[_listCnt - 1].transform.position - _direct + _correctionValueOver;//!<追跡対象の上にカメラ位置を設定
+            _cameraPos = _gameObjectOver[_listCnt - 1].transform.position  +    _direct + _correctionValueOver;//!<追跡対象の上にカメラ位置を設定
             _lookAtObject = _gameObjectOver[_listCnt - 1].transform.position;   //!< 追跡対象にフォーカス
 
             myTransform.transform.DOMove(_cameraPos, _gameOverTime);            // 移動
@@ -288,41 +314,49 @@ public class MainCamera : MonoBehaviour
      */
     void CameraRotate()
     {
-        //!< カウンター初期化
-        if (_cnt == 0 && _angle == 0.0f)
-        {
-            _cnt = (int)_rotateFlame / 1;
-        }
 
-        //!< 左右矢印キーで回転
-        if (_cnt == (int)_rotateFlame / 1)//!<回転中じゃなければ
+        Vector3[] _pos = { new Vector3(-4, 6, -10), new Vector3(-10, 6, -1), new Vector3(-1, 6, 5), new Vector3(5, 6, -4), };
+
+        if (!_rotateCheck&&!_inputKey)//!<回転中じゃなければ
         {
             if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
-                .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_LEFT))
+                .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_LEFT))//押されたら
             {
-                _angle = 90.0f / _rotateFlame;      //!< 1フレームあたりの回転角度
+                _inputKey = true;//キー入力受付拒否
+                _cameraRotNum++;//回転先座標
+                if (_cameraRotNum > 3)//補正
+                {
+                    _cameraRotNum = 0;
+                }
+
             }
             else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
-                .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_RIGHT))
+                .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_RIGHT))//押されたら
             {
-                _angle = -90.0f / _rotateFlame;     //!< 1フレームあたりの回転角度
+                _inputKey = true;//キー入力拒否
+                _cameraRotNum--;//回転先座標
+                if (_cameraRotNum < 0)//補正
+                {
+                    _cameraRotNum = 3;
+                }
             }
         }
-        //! カウント中は回転
-        if (_cnt > 0 && _angle != 0)
+        else if(_inputKey)//キー入力されたら
         {
-            //! カメラを回転させる
-            transform.RotateAround(_fieldPos, Vector3.up, _angle);
+            _inputKey = false;//キー入力受付
+            _rotateCheck = true;//回転中
+            myTransform.DOMove(_pos[_cameraRotNum], _rotateTime).OnComplete(() =>//回転が終わったら
+            {
+                _rotateCheck = false;//回転中じゃない
 
-            _cnt -= 1;      //!<カウンター減算
+            });
+            //myTransform.DORotate(new Vector3(_holdCameraRotate.x * 100, _holdCameraRotate.y * 100 + (_cameraRotNum * 90), _holdCameraRotate.z * 100), _rotateTime);
+            //myTransform.DORotate(new Vector3(30, 10 + (_cameraRotNum * 90), 0), _rotateTime);
+
+            myTransform.DORotate(new Vector3(_holdCameraRotate.x, _holdCameraRotate.y + (_cameraRotNum * 90), 0.0f), _rotateTime);//回転
+            //UnityEngine.Debug.Log(_holdCameraRotate);
         }
-        //! 回転フレーム数終了で初期化
-        else if (_cnt <= 0 && _angle != 0)
-        {
-            _cnt = (int)_rotateFlame / 1;       //!<カウンター初期化
-            _angle = 0.0f;
-        }
-        //!<  Debug.Log(_cnt);
+
     }
 
     /**
@@ -357,11 +391,27 @@ public class MainCamera : MonoBehaviour
             myTransform.DOMove(_setCameraPos, _skipTime).OnComplete(() =>
             {
                 _startMove = false;
+                _finishStart = true;
             });
-            myTransform.DORotateQuaternion(_holdCameraRotate, _skipTime);
+            myTransform.DORotate(_holdCameraRotate, _skipTime);
         }
         
     }
+
+    void DelayTime()
+    {
+        _gameClear = GameObject.FindWithTag("Map").GetComponent<Map>()._gameClear;  //!<クリア状態の取得
+        if (_gameClear == false)
+        {
+            return;
+        }
+        _delayTime -= Time.deltaTime;
+        if (_delayTime < 0)//!<他演出とのディレイ
+        {
+            GameClear();
+        }
+    }
+
 }
 
 // EOF
