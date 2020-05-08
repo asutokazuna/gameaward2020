@@ -13,8 +13,9 @@ public class RaySystem : MonoBehaviour
     public float dist;
     public GameObject pointer;
 
-    RaycastHit target;
-    RaycastHit oldtarget;
+    RaycastHit _newTarget;
+    RaycastHit _oldTarget;
+    E_SCENE _oldStageID;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +27,9 @@ public class RaySystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(_cameraMove._isOrbital)
+        _oldTarget = _newTarget;
+        _oldStageID = _stageID;
+        if (_cameraMove._isOrbital)
         {
             RayTest();
         }
@@ -34,6 +37,19 @@ public class RaySystem : MonoBehaviour
         {
             SetID(0);
         }
+
+        if(_stageID != _oldStageID)
+        {
+            if(_stageID != 0)
+            {
+                _newTarget.collider.gameObject.GetComponent<OutlineOnOff>().OutlineOn();
+            }
+            else
+            {
+                _oldTarget.collider.gameObject.GetComponent<OutlineOnOff>().OutlineOff();
+            }
+        }
+
     }
     void RayTest()
     {
@@ -45,42 +61,29 @@ public class RaySystem : MonoBehaviour
         //Ray _ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         //Debug.Log(_center);
 
-        oldtarget = target;
-
-        if (Physics.Raycast(_ray, out target))
+        if (Physics.Raycast(_ray, out _newTarget))
         {
-            if (target.collider.tag != "mask")
+            if (_newTarget.collider.tag != "mask")
             {
-                pointer.transform.position = target.point;  //当たった場合
+                pointer.transform.position = _newTarget.point;  //当たった場合
 
-                if(target.collider.gameObject.GetComponent<StageID>())
+                if(_newTarget.collider.gameObject.GetComponent<StageID>())
                 {
-                    Debug.Log(target.collider.gameObject.GetComponent<StageID>()._stageID);
-                    SetID(target.collider.gameObject.GetComponent<StageID>()._stageID);
-                    _level = target.collider.gameObject.GetComponent<StageID>()._level; // レベル取得
-
-                    if (target.collider.gameObject != oldtarget.collider.gameObject) //当たった瞬間のみ
-                    {
-                        target.collider.gameObject.GetComponent<OutlineOnOff>().OutlineOn();
-                    }
+                    Debug.Log(_newTarget.collider.gameObject.GetComponent<StageID>()._stageID);
+                    SetID(_newTarget.collider.gameObject.GetComponent<StageID>()._stageID);
+                    _level = _newTarget.collider.gameObject.GetComponent<StageID>()._level; // レベル取得
 
                     if (Input.GetKey(KeyCode.Return))
                     {
-                        
                         //_sceneManager.SetScene(E_SCENE._1_1);
                         _sceneManager.SetScene(GetID());
                     }
                 }
-
             }
             else
             {
                 pointer.transform.position = new Vector3(0.0f, 0.0f, 0.0f); //マスクとあたった場合
                 SetID(0);
-                if (target.collider.gameObject != oldtarget.collider.gameObject) //当たった瞬間のみ
-                {
-                    oldtarget.collider.gameObject.GetComponent<OutlineOnOff>().OutlineOff();
-                }
             }
 
             // Debug.Log(Vector3.Distance(target.point, transform.position));
