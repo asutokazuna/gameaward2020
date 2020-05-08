@@ -52,7 +52,6 @@ public class Player : BaseObject
     public AudioClip _SEMove;
     public AudioClip _SEjump;
     public AudioClip _SEPut;
-    public AudioClip _SEBoxBreak;
     public AudioClip _SETrampoline;
     public AudioClip _SEGameClear;
     public AudioClip _SEGameOver;
@@ -240,6 +239,7 @@ public class Player : BaseObject
         else
         {// 物を下す
             Put();
+            _audioSource.PlayOneShot(_SEPut);
         }
 
         _oldPosition = _position;

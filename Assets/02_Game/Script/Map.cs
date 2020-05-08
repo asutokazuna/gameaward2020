@@ -99,6 +99,10 @@ public class Map : MonoBehaviour
     public int                  _fullWaterBlockCnt;
     public E_TURN               _turn;                  //!< ターン制
 
+    private AudioSource _audioSource;
+    public AudioClip _SEGameclear;
+    public AudioClip _SEGameover;
+
 
     /**
      * @brief Awake
@@ -147,6 +151,7 @@ public class Map : MonoBehaviour
             foreach (Player obj in _player)
             {
                 obj.GameClear();
+                _audioSource.PlayOneShot(_SEGameclear);
             }
         }
         if (Input.GetKeyDown(KeyCode.Alpha0))
@@ -464,6 +469,7 @@ public class Map : MonoBehaviour
             }
         }
         // ゲームオーバー
+        _audioSource.PlayOneShot(_SEGameover);
         return true;
     }
 
