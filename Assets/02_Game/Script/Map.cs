@@ -239,7 +239,6 @@ public class Map : MonoBehaviour
         {
             obj.GetComponent<Player>().Rotate();
         }
-
         offsetDirect();
         PlayerSort();   // ソートと更新
         _turn = E_TURN.MOVE;
