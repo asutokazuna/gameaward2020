@@ -138,10 +138,6 @@ public class Map : MonoBehaviour
     void Update()
     {
 #if MODE_MAP
-        if(isGameClear())
-        {
-            _gameClear = true;
-        }
         if (_gameOver && _turn != E_TURN.END)
         {// 取り合えずここでゲームオーバーの実装
             _turn = E_TURN.END;
@@ -151,8 +147,9 @@ public class Map : MonoBehaviour
                 Debug.Log(n.name);
             }
         }
-        if (_gameClear && _turn != E_TURN.END)
+        if (isGameClear() && _turn != E_TURN.END)
         {// ゲームクリア時の処理を追加する場所
+            _gameClear = true;
             _turn = E_TURN.END;
             _audioSource.PlayOneShot(_SEGameclear);
             foreach (Player obj in _player)
@@ -160,21 +157,26 @@ public class Map : MonoBehaviour
                 obj.GameClear();
             }
         }
+
         if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
+        {// デバッグ表記
             CallDebug(E_OBJECT.PLAYER_01);
         }
+
         if (GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainCamera>()._startMove)
         {// カメラ移動中やで動くな(スタート時だけ)
             return;
         }
-        foreach (Player obj in _player)
+
+        if (!isUpdate())
+            return;
+
+        if (_turn == E_TURN.MOVE)
         {
-            if (obj._isMove || !obj.isAnim())
-            {// まだ移動中のプレイヤーがいれば、操作を受け付けない
-                return;
-            }
+            _turn = E_TURN.WAIT;
+            return;
         }
+
         foreach (Player obj in _player)
         {
             if (obj._putUpdate)
@@ -182,17 +184,19 @@ public class Map : MonoBehaviour
                 HandAction(true);
             }
         }
-        if (_turn == E_TURN.MOVE)
-        {
-            _turn = E_TURN.WAIT;
-            return;
-        }
 
         if (_turn == E_TURN.WAIT)
         {
             MoveObject();
             HandAction();
             RotateObject();
+        }
+        if (_turn == E_TURN.MOVE)
+        {
+            foreach (BlockTank obj in _tankBlock)
+                obj.MapUpdate();
+            foreach (Player obj in _player)
+                obj.MapUpdate();
         }
 #endif
     }
@@ -257,11 +261,23 @@ public class Map : MonoBehaviour
             if (obj.isCenter())
             {
                 obj._putUpdate = true;
+                Debug.Log(obj.name + " が真ん中にいます");
             }
         }
         foreach (Player obj in _player)
         {
-            obj.HandAction(flag);
+            if (flag)
+            {
+                if (obj._putUpdate)
+                {
+                    obj.HandAction();
+                    Debug.Log(obj.name + " がもう一回置くよ");
+                }
+            }
+            else
+            {
+                obj.HandAction();
+            }
         }
         foreach (Player obj in _player)
         {
@@ -366,13 +382,13 @@ public class Map : MonoBehaviour
     {
         if (haveObj._myObject == E_OBJECT.BLOCK_TANK)
         {// 水槽の場合
-            _tankBlock[haveObj._number].transform.parent = null;   // 親子関係を話す
+            //_tankBlock[haveObj._number].transform.parent = null;   // 親子関係を話す
             _tankBlock[haveObj._number].Puted(targetPos);
             UpdateMap(_tankBlock[haveObj._number]);
         }
         else if (haveObj._myObject == E_OBJECT.PLAYER_01)
         {// プレイヤーの場合
-            _player[haveObj._number].transform.parent = null;   // 親子関係を話す
+            //_player[haveObj._number].transform.parent = null;   // 親子関係を話す
             _player[haveObj._number].Puted(targetPos);
             UpdateMap(_player[haveObj._number]);
             Debug.Log(_player[haveObj._number].name + " が降ろされた");
@@ -408,18 +424,19 @@ public class Map : MonoBehaviour
      * @brief プレイヤーへ追従
      * @param1 プレイヤーが所持しているオブジェクト情報
      * @param2 プレイヤーのオブジェクト座標
+     * @param3 モード
      * @return なし
      */
-    public void Follow(SquareInfo haveObj, Vector3Int playerPos, Vector3Int direct)
+    public void Follow(SquareInfo haveObj, Vector3Int playerPos, Vector3Int direct, E_OBJECT_MODE mode)
     {
         if (haveObj._myObject == E_OBJECT.BLOCK_TANK)
         {// 水槽の場合
-            _tankBlock[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z), direct);
+            _tankBlock[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z), direct, mode);
             UpdateMap(_tankBlock[haveObj._number]);
         }
         else if (haveObj._myObject == E_OBJECT.PLAYER_01)
         {// 水槽の場合
-            _player[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z), direct);
+            _player[haveObj._number].Follow(new Vector3Int(playerPos.x, playerPos.y + 1, playerPos.z), direct, mode);
             UpdateMap(_player[haveObj._number]);
         }
     }
@@ -687,6 +704,23 @@ public class Map : MonoBehaviour
             pos.z >= MAX_OBJECT || pos.z < 0)
             return true;
         return false;
+    }
+
+
+    /**
+     * @brief 更新許可
+     * @return プレイヤーの操作受付が可能なら true
+     */
+    private bool isUpdate()
+    {
+        foreach (BlockTank obj in _tankBlock)
+            if (obj._isMove)
+                return false;
+        foreach (Player obj in _player)
+            if (obj._isMove || !obj.isAnim())
+                return false;
+
+        return true;
     }
 
 
