@@ -74,6 +74,8 @@ public class BaseObject : MonoBehaviour
     [SerializeField] public bool                _gameOver       //!< ゲームオーバー
     { get; protected set; }
 
+    private Vector3 offSetRot = new Vector3();
+
     /**
      * @brief 移動中かどうかの判定
      */
@@ -134,72 +136,9 @@ public class BaseObject : MonoBehaviour
     * @brief 向きを変える
     * @return ベクトル
     */
-    public Vector3Int Rotate()
+    virtual public Vector3Int Rotate()
     {
-        #region Rotate
-
-        if (_lifted != E_HANDS_ACTION.NONE ||
-            _isMove ||
-            GameObject.FindGameObjectWithTag("Map").GetComponent<Map>()._gameClear ||
-            GameObject.FindGameObjectWithTag("Map").GetComponent<Map>()._gameOver)
-        {// 取り合えずここに書き込む
-            return _direct;
-        }
-
-        float y = GameObject.FindGameObjectWithTag("MainCamera").transform.localEulerAngles.y;
-
-        if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
-            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT))
-        {// 右
-            if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  1, 0,  0);   //  90
-            else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0,  1);   //   0
-            else if (y > 150 && y < 210)                    _direct = new Vector3Int( -1, 0,  0);   // -90
-            else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0, -1);   // 180
-            _isMove = true;
-            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
-            offsetRotate(_direct);
-        }
-        else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
-            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT))
-        {// 左
-            if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int( -1, 0,  0);   // -90
-            else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0, -1);   // 180
-            else if (y > 150 && y < 210)                    _direct = new Vector3Int(  1, 0,  0);   //  90
-            else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0,  1);   //   0
-            _isMove = true;
-            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
-            offsetRotate(_direct);
-        }
-        else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
-            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
-        {// 奥
-            if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0,  1);   //   0
-            else if (y > 240 && y < 300)                    _direct = new Vector3Int( -1, 0,  0);   // -90
-            else if (y > 150 && y < 210)                    _direct = new Vector3Int(  0, 0, -1);   // 180
-            else if (y > 60 && y < 120)                     _direct = new Vector3Int(  1, 0,  0);   //  90
-            _isMove = true;
-            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
-            offsetRotate(_direct);
-        }
-        else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
-            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
-        {// 手前
-            if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0, -1);   // 180
-            else if (y > 240 && y < 300)                    _direct = new Vector3Int(  1, 0,  0);   //  90
-            else if (y > 150 && y < 210)                    _direct = new Vector3Int(  0, 0,  1);   //   0
-            else if (y > 60 && y < 120)                     _direct = new Vector3Int( -1, 0,  0);   // -90
-            _isMove = true;
-            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
-            offsetRotate(_direct);
-        }
-        if (_mode == E_OBJECT_MODE.ROTATE)
-        {// 回転の動き
-            RotateMove();
-        }
-
-        return _direct;
-
-        #endregion
+        return new Vector3Int();
     }
 
 
@@ -215,24 +154,25 @@ public class BaseObject : MonoBehaviour
 
     virtual public void MapUpdate()
     {
-        offSetTransform();
-        offsetRotate(_direct);
-        if (_mode == E_OBJECT_MODE.MOVE || _mode == E_OBJECT_MODE.DONT_MOVE || _mode == E_OBJECT_MODE.AREA_FALL)
-        {// 移動
-            MoveMode(); // アニメーションのセット
-        }
-        else if (_mode == E_OBJECT_MODE.GET_UP || _mode == E_OBJECT_MODE.GET_OFF || _mode == E_OBJECT_MODE.FALL)
-        {// ジャンプ
-            JumpMode(); // アニメーションのセット
-        }
-        else if (_mode == E_OBJECT_MODE.LIFTED)
-        {
-            JumpMode();   // 持ち上げられる
-        }
-        else if (_mode == E_OBJECT_MODE.PUTED)
-        {
-            JumpMode();    // 置かれる
-        }
+        //if (_mode == E_OBJECT_MODE.MOVE || _mode == E_OBJECT_MODE.DONT_MOVE || _mode == E_OBJECT_MODE.AREA_FALL)
+        //{// 移動
+        //    MoveMode(); // アニメーションのセット
+        //}
+        //else if (_mode == E_OBJECT_MODE.GET_UP || _mode == E_OBJECT_MODE.GET_OFF || _mode == E_OBJECT_MODE.FALL)
+        //{// ジャンプ
+        //    offSetTransform();
+        //    JumpMode(); // アニメーションのセット
+        //}
+        //else if (_mode == E_OBJECT_MODE.LIFTED)
+        //{
+        //    offSetTransform();
+        //    JumpMode();   // 持ち上げられる
+        //}
+        //else if (_mode == E_OBJECT_MODE.PUTED)
+        //{
+        //    offSetTransform();
+        //    JumpMode();    // 置かれる
+        //}
     }
 
 
@@ -247,9 +187,7 @@ public class BaseObject : MonoBehaviour
     {
         _oldPosition    = _position;
         _position       = pos;
-        _direct         = direct;
-        _mode           = mode;
-        offsetRotate(_direct);
+        _direct = direct;
     }
 
 
@@ -263,6 +201,8 @@ public class BaseObject : MonoBehaviour
         _lifted         = E_HANDS_ACTION.NOW_PLAY;
         _mode           = E_OBJECT_MODE.FALL;
         _isMove         = true;
+        offSetTransform();
+        JumpMode(); // アニメーションのセット
     }
 
 
@@ -278,6 +218,8 @@ public class BaseObject : MonoBehaviour
         _lifted         = E_HANDS_ACTION.NOW_PLAY;
         _mode           = E_OBJECT_MODE.LIFTED;
         _isMove         = true;
+        offSetTransform();
+        JumpMode(); // アニメーションのセット
     }
 
 
@@ -293,6 +235,8 @@ public class BaseObject : MonoBehaviour
         _lifted         = E_HANDS_ACTION.NOW_PLAY;
         _mode           = E_OBJECT_MODE.PUTED;
         _isMove         = true;
+        offSetTransform();
+        JumpMode(); // アニメーションのセット
     }
 
 
@@ -414,29 +358,28 @@ public class BaseObject : MonoBehaviour
      * @param1 向き
      * @return なし
      */
-    protected void offsetRotate(Vector3Int direct)
+    virtual protected void offsetRotate(Vector3Int direct)
     {
-        Debug.Log(name + "回転して");
-        if (direct.z == -1)
-        {
-            transform.DORotate(
-                new Vector3(0f, 180, 0f),
-                GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime
-                ).OnComplete(() =>
-            {
-                WaitMode();
-            });
-        }
-        else
-        {
-            transform.DORotate(
-                new Vector3(0f, 90f * direct.x, 0f),
-                GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime
-                ).OnComplete(() =>
-            {
-                WaitMode();
-            });
-        }
+        //if (direct.z == -1)
+        //{
+        //    transform.DORotate(
+        //        new Vector3(0f, transform.localEulerAngles.y + 180, 0f),
+        //        GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime
+        //        ).OnComplete(() =>
+        //    {
+        //        WaitMode();
+        //    });
+        //}
+        //else
+        //{
+        //    transform.DORotate(
+        //        new Vector3(0f, transform.localEulerAngles.y + (90f * direct.x), 0f),
+        //        GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime
+        //        ).OnComplete(() =>
+        //    {
+        //        WaitMode();
+        //    });
+        //}
     }
 
 

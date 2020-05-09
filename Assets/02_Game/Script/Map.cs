@@ -163,13 +163,11 @@ public class Map : MonoBehaviour
             CallDebug(E_OBJECT.PLAYER_01);
         }
 
-        if (GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainCamera>()._startMove)
-        {// カメラ移動中やで動くな(スタート時だけ)
+        if (GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainCamera>()._startMove || !isUpdate())
+        {// 操作受付拒否
             return;
         }
 
-        if (!isUpdate())
-            return;
 
         if (_turn == E_TURN.MOVE)
         {
@@ -261,7 +259,6 @@ public class Map : MonoBehaviour
             if (obj.isCenter())
             {
                 obj._putUpdate = true;
-                Debug.Log(obj.name + " が真ん中にいます");
             }
         }
         foreach (Player obj in _player)
@@ -270,15 +267,23 @@ public class Map : MonoBehaviour
             {
                 if (obj._putUpdate)
                 {
-                    obj.HandAction();
-                    Debug.Log(obj.name + " がもう一回置くよ");
+                    obj.HandAction(E_OBJECT_MODE.PUT);
                 }
             }
             else
             {
-                obj.HandAction();
+                obj.HandAction(E_OBJECT_MODE.PUT);
             }
         }
+        if (!flag)
+        {
+            foreach (Player obj in _player)
+            {
+                if (!obj._isMove)
+                    obj.HandAction(E_OBJECT_MODE.LIFT);
+            }
+        }
+
         foreach (Player obj in _player)
         {
             UpdateMap(obj);
@@ -382,7 +387,7 @@ public class Map : MonoBehaviour
     {
         if (haveObj._myObject == E_OBJECT.BLOCK_TANK)
         {// 水槽の場合
-            //_tankBlock[haveObj._number].transform.parent = null;   // 親子関係を話す
+            _tankBlock[haveObj._number].transform.parent = null;   // 親子関係を話す
             _tankBlock[haveObj._number].Puted(targetPos);
             UpdateMap(_tankBlock[haveObj._number]);
         }
@@ -413,7 +418,7 @@ public class Map : MonoBehaviour
         }
         else if (haveObj._myObject == E_OBJECT.PLAYER_01)
         {// プレイヤーの場合
-            _player[haveObj._number].transform.parent = null;   // 親子関係を話す
+            //_player[haveObj._number].transform.parent = null;   // 親子関係を話す
             _player[haveObj._number].Fall(targetPos);
             UpdateMap(_player[haveObj._number]);
         }

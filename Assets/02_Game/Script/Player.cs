@@ -138,22 +138,92 @@ public class Player : BaseObject
     }
 
 
+   /**
+    * @brief 向きを変える
+    * @return ベクトル
+    */
+    override public Vector3Int Rotate()
+    {
+        #region Rotate
+
+        if (_lifted != E_HANDS_ACTION.NONE || _isMove || _map._gameClear || _map._gameOver)
+        {// 取り合えずここに書き込む
+            return _direct;
+        }
+
+        float y = GameObject.FindGameObjectWithTag("MainCamera").transform.localEulerAngles.y;
+
+        if (_input.GetComponent<Controller>()
+            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT))
+        {// 右
+            if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  1, 0,  0);   //  90
+            else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0,  1);   //   0
+            else if (y > 150 && y < 210)                    _direct = new Vector3Int( -1, 0,  0);   // -90
+            else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0, -1);   // 180
+            _isMove = true;
+            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
+            offsetRotate(_direct);
+        }
+        else if (_input.GetComponent<Controller>()
+            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT))
+        {// 左
+            if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int( -1, 0,  0);   // -90
+            else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0, -1);   // 180
+            else if (y > 150 && y < 210)                    _direct = new Vector3Int(  1, 0,  0);   //  90
+            else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0,  1);   //   0
+            _isMove = true;
+            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
+            offsetRotate(_direct);
+        }
+        else if (_input.GetComponent<Controller>()
+            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
+        {// 奥
+            if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0,  1);   //   0
+            else if (y > 240 && y < 300)                    _direct = new Vector3Int( -1, 0,  0);   // -90
+            else if (y > 150 && y < 210)                    _direct = new Vector3Int(  0, 0, -1);   // 180
+            else if (y > 60 && y < 120)                     _direct = new Vector3Int(  1, 0,  0);   //  90
+            _isMove = true;
+            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
+            offsetRotate(_direct);
+        }
+        else if (_input.GetComponent<Controller>()
+            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
+        {// 手前
+            if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0, -1);   // 180
+            else if (y > 240 && y < 300)                    _direct = new Vector3Int(  1, 0,  0);   //  90
+            else if (y > 150 && y < 210)                    _direct = new Vector3Int(  0, 0,  1);   //   0
+            else if (y > 60 && y < 120)                     _direct = new Vector3Int( -1, 0,  0);   // -90
+            _isMove = true;
+            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
+            offsetRotate(_direct);
+        }
+        if (_mode == E_OBJECT_MODE.ROTATE)
+        {// 回転の動き
+            RotateMove();
+        }
+
+        return _direct;
+
+        #endregion
+    }
+
+
     /**
      * @brief 物を持ち上げる、下す
+     * @param1 モード
      * @return なし
      */
-    public void HandAction()
+    public void HandAction(E_OBJECT_MODE mode)
     {
         if (_isMove || _lifted != E_HANDS_ACTION.NONE)
         {// 取り合えずここに書き込む
             return;
         }
-
-        if (_haveObject._myObject == E_OBJECT.NONE)
+        if (mode == E_OBJECT_MODE.LIFT && _haveObject._myObject == E_OBJECT.NONE)
         {// 物を持ち上げる
             Lift();
         }
-        else
+        else if (mode == E_OBJECT_MODE.PUT && _haveObject._myObject != E_OBJECT.NONE)
         {// 物を下す
             Put();
             _audioSource.PlayOneShot(_SEPut);
@@ -409,6 +479,37 @@ public class Player : BaseObject
             (_position.y + _map._offsetPos.y) - 0.5f,
             (_position.z + _map._offsetPos.z)
             );
+    }
+
+
+    /**
+     * @brief 向きの調整
+     * @param1 向き
+     * @return なし
+     */
+    override protected void offsetRotate(Vector3Int direct)
+    {
+        Debug.Log(name + "回転して");
+        if (direct.z == -1)
+        {
+            transform.DORotate(
+                new Vector3(0f, 180, 0f),
+                GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime
+                ).OnComplete(() =>
+            {
+                WaitMode();
+            });
+        }
+        else
+        {
+            transform.DORotate(
+                new Vector3(0f, 90f * direct.x, 0f),
+                GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime
+                ).OnComplete(() =>
+            {
+                WaitMode();
+            });
+        }
     }
 
 
@@ -692,7 +793,7 @@ public class Player : BaseObject
 
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
-                //GameObject.Find(_map.GetLiftObject(_haveObject).name).transform.parent = transform; // 追従
+                GameObject.Find(_map.GetLiftObject(_haveObject).name).transform.parent = transform; // 追従
                 WaitMode();
             });
         }
