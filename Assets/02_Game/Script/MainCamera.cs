@@ -70,6 +70,8 @@ public class MainCamera : MonoBehaviour
     bool _inputKey = false;//!<キー入力受付状態か
     bool _waitTimeCheck = false;//!<waitが終わってるか
     public float _delayTime = 1.0f;
+
+    private AudioSource _audioSource;
     /**
      * @brief 初期化処理
      * @return なし
@@ -95,6 +97,7 @@ public class MainCamera : MonoBehaviour
         _holdStartHigh = _startHigh;                    //!< スタート演出のカメラの高さ保存
         _startMove = true;
         _systemflg = false;
+        _audioSource = GetComponent<AudioSource>();
         Init();
     }
 
@@ -184,10 +187,13 @@ public class MainCamera : MonoBehaviour
      */
     void GameClear()
     {
-           _gameObjectPlayer = GameObject.FindGameObjectWithTag("Player"); //!< タグだと個別フォーカスできないかも？
+        
+        _gameObjectPlayer = GameObject.FindGameObjectWithTag("Player"); //!< タグだと個別フォーカスできないかも？
         _lookAtObject = _gameObjectPlayer.transform.position;   //!< 追跡対象の設定（プレイヤー）
         _lookAtObject.y = _gameObjectPlayer.transform.position.y + _correctionValueClear.y; // y座標の補正
         //myTransform.LookAt(_lookAtObject);  //!< 向きを設定    
+        //BGMを止める
+        _audioSource.Stop();
 
         Vector3 _clearStartPos = new Vector3(_fieldPos.x + _circleSizeClear.x * Mathf.Sin(_time2), _fieldPos.y + _circleSizeClear.y, _fieldPos.z + _circleSizeClear.z * Mathf.Cos(_time2));
         if (_systemflg == false)
@@ -270,6 +276,7 @@ public class MainCamera : MonoBehaviour
 
 
             //}
+
         }
     }
     /**
@@ -301,7 +308,8 @@ public class MainCamera : MonoBehaviour
             // }
         }
         myTransform.LookAt(_lookAtObject);  //!< 向きを設定
-        
+        //BGMを止める
+        _audioSource.Stop();
     }
 
     /**
