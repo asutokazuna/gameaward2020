@@ -72,6 +72,9 @@ public class MainCamera : MonoBehaviour
     public float _delayTime = 1.0f;
 
     private AudioSource _audioSource;
+
+    StageNameUI _stageNameUI;   //!< ステージ名のフェードアウトセット
+
     /**
      * @brief 初期化処理
      * @return なし
@@ -98,6 +101,7 @@ public class MainCamera : MonoBehaviour
         _startMove = true;
         _systemflg = false;
         _audioSource = GetComponent<AudioSource>();
+        _stageNameUI = GameObject.Find("StageName").GetComponent<StageNameUI>();
         Init();
     }
 
@@ -397,6 +401,7 @@ public class MainCamera : MonoBehaviour
             {
                 _startMove = false;
                 _finishStart = true;
+                _stageNameUI.FadeOutStageName();
             });
             myTransform.DORotate(_holdCameraRotate, _skipTime);
         }

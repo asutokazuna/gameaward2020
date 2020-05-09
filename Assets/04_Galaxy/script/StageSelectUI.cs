@@ -33,8 +33,8 @@ public class StageSelectUI : MonoBehaviour
     {
         // 初期化処理
         _stageSelectAnim = GetComponent<Animator>();
-        _stageSelectImage = GameObject.Find("CanvasUI").GetComponent<NumberImage>();
-        _levelImage = GameObject.Find("CanvasUI").GetComponent<LevelImage>();
+        _stageSelectImage = GetComponent<NumberImage>();
+        _levelImage = GetComponent<LevelImage>();
         _selectStage = GameObject.Find("CameraObj").GetComponent<RaySystem>();
         _stageId = 0;
         _oldStageId = 0;
@@ -82,6 +82,7 @@ public class StageSelectUI : MonoBehaviour
                 GameObject.Find("Stage").GetComponent<Image>().color = _stageColor[_planetID];
                 _stageSelectImage.SetNumberColor(_stageColor[_planetID]);
                 _stageSelectImage.SetValue(stageNo);
+                _levelImage.SetImageColor(new Color(1.0f,1.0f,1.0f,0.0f));
                 _levelImage.SetImage(_planetID,_level);
                 _stageSelectAnim.SetBool("Select", true);
             }
