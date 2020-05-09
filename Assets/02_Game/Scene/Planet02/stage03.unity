@@ -6672,23 +6672,20 @@ MonoBehaviour:
   - {fileID: 1064222243}
   - {fileID: 1086510234}
   _angle: 90
-  _rotateFlame: 60
-  _setCameraPos: {x: -4, y: 6, z: -10}
+  _rotateTime: 1
   _correctionValueClear: {x: 0, y: 0.5, z: 0}
   _correctionValueOver: {x: 0, y: 10, z: 0}
-  _waitTime: 1
   _gameOverTime: 0.5
-  _rotateTimeClear: 8
   _rotateSpeedClear: 2
-  _circleSizeClear: {x: 4, y: 2, z: 4}
+  _circleSizeClear: {x: 8, y: 5, z: 8}
   _focusClear: 1
-  _rotateTimeStart: 8
   _rotateSpeedStart: 1.3
   _circleSizeStart: {x: 8, y: 0, z: 8}
   _focusStart: 1
   _startHigh: 14
   _startTime: 8
   _skipTime: 2
+  _delayTime: 1
 --- !u!82 &963194230
 AudioSource:
   m_ObjectHideFlags: 0
@@ -13086,7 +13083,8 @@ AudioSource:
   m_GameObject: {fileID: 1835315809}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 8677575849062442179, guid: c1e6e28d8832f4448a9eef40fbd6ca72,
+    type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
