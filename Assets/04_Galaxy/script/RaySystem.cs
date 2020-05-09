@@ -17,6 +17,8 @@ public class RaySystem : MonoBehaviour
     RaycastHit _oldTarget;
     E_SCENE _oldStageID;
 
+    public bool _isSelect = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -66,8 +68,9 @@ public class RaySystem : MonoBehaviour
             if (_newTarget.collider.tag != "mask")
             {
                 pointer.transform.position = _newTarget.point;  //当たった場合
+                pointer.transform.LookAt(transform.position);
 
-                if(_newTarget.collider.gameObject.GetComponent<StageID>())
+                if (_newTarget.collider.gameObject.GetComponent<StageID>())
                 {
                     Debug.Log(_newTarget.collider.gameObject.GetComponent<StageID>()._stageID);
                     SetID(_newTarget.collider.gameObject.GetComponent<StageID>()._stageID);
@@ -77,6 +80,7 @@ public class RaySystem : MonoBehaviour
                     {
                         //_sceneManager.SetScene(E_SCENE._1_1);
                         _sceneManager.SetScene(GetID());
+                        _isSelect = true;
                     }
                 }
             }
