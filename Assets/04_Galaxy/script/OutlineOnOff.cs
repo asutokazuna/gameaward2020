@@ -8,7 +8,8 @@ public class OutlineOnOff : MonoBehaviour
     private MeshRenderer _meshRend;
     [SerializeField] float _outlineWidth;
     [SerializeField] Color _outlineColor;
-
+    [SerializeField] Color _color1;
+    [SerializeField] Color _color2;
 
     // Start is called before the first frame update
     void Start()
@@ -22,10 +23,15 @@ public class OutlineOnOff : MonoBehaviour
 
     }
 
+    private void Update()
+    {
+        _outlineColor = Color.Lerp(_color1, _color2, Mathf.PingPong(Time.time, 1));
+        _meshRend.material.SetColor("_Outline_Color", _outlineColor);
+    }
+
     public void OutlineOn()
     {
         _meshRend.material.SetFloat("_Outline_Width", _outlineWidth);
-        _meshRend.material.SetColor("_Outline_Color", _outlineColor);
     }
 
     public void OutlineOff()
