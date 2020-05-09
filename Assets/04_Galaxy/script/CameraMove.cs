@@ -38,6 +38,8 @@ public class CameraMove : MonoBehaviour
 
     public float _offsetY;
 
+    private RaySystem _rayScript;
+
    
 
     // Start is called before the first frame update
@@ -54,27 +56,33 @@ public class CameraMove : MonoBehaviour
         _camera = this.transform.GetComponentInChildren<Transform>();
         _isOrbital = false;
         _currentID = 1;
+
+        _rayScript = GetComponent<RaySystem>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Q)
-            || GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT)
-            )
+        if (!_rayScript._isSelect)
         {
-            _currentID--;
-            _isOrbital = false;
-            StageSelectManager.GetComponent<UICange>().ChangePlanetName(true);
+            if (Input.GetKeyDown(KeyCode.Q)
+           || GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT)
+           )
+            {
+                _currentID--;
+                _isOrbital = false;
+                StageSelectManager.GetComponent<UICange>().ChangePlanetName(true);
+            }
+            if (Input.GetKeyDown(KeyCode.E)
+                || GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT)
+                )
+            {
+                _currentID++;
+                _isOrbital = false;
+                StageSelectManager.GetComponent<UICange>().ChangePlanetName(false);
+            }
         }
-        if (Input.GetKeyDown(KeyCode.E)
-            || GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT)
-            )
-        {
-            _currentID++;
-            _isOrbital = false;
-            StageSelectManager.GetComponent<UICange>().ChangePlanetName(false);
-        }
+           
 
         if(_currentID >= 4)
         {
@@ -108,20 +116,25 @@ public class CameraMove : MonoBehaviour
             StageSelectManager.GetComponent<UICange>().PlanerNameOn();
             _cameraSpd = 1.0f;
 
-            _angleX += Input.GetAxis("Mouse X") * _rotateSpeed;
-            _angleX += GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()._RStick._now_H * _rotateControllerSpeed;
-            CheckAngle(_angleX);
+            if(!_rayScript._isSelect)
+            {
+                _angleX += Input.GetAxis("Mouse X") * _rotateSpeed;
+                _angleX += GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()._RStick._now_H * _rotateControllerSpeed;
+                CheckAngle(_angleX);
 
-            _angleY += Input.GetAxis("Mouse Y") * _rotateSpeed;
-            _angleY += GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()._RStick._now_V * _rotateControllerSpeed;
-            if(_angleY * _rotateSpeed <= 0)
-            {
-                _angleY = 0;
+                _angleY += Input.GetAxis("Mouse Y") * _rotateSpeed;
+                _angleY += GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()._RStick._now_V * _rotateControllerSpeed;
+                if (_angleY * _rotateSpeed <= 0)
+                {
+                    _angleY = 0;
+                }
+                if (_angleY >= 3)
+                {
+                    _angleY = 3;
+                }
             }
-            if (_angleY  >= 3)
-            {
-                _angleY = 3;
-            }
+
+           
 
             mouseY = _angleY;
 

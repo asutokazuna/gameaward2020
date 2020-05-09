@@ -17,6 +17,8 @@ public class RaySystem : MonoBehaviour
     RaycastHit _oldTarget;
     E_SCENE _oldStageID;
 
+    public bool _isSelect = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -77,6 +79,7 @@ public class RaySystem : MonoBehaviour
                     {
                         //_sceneManager.SetScene(E_SCENE._1_1);
                         _sceneManager.SetScene(GetID());
+                        _isSelect = true;
                     }
                 }
             }
