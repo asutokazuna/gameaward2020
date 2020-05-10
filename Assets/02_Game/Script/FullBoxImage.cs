@@ -3,6 +3,7 @@
  * @brief   与えられた数値を画像で表示
  * @author  Risa Ito
  * @date    2020/04/05(日)  作成
+ * @date    2020/05/09(土)  カラー変更対応
  */
 
 using System.Collections;
@@ -21,8 +22,9 @@ public class FullBoxImage : MonoBehaviour
     private int _fullBoxNum;					         //!< 表示する値
 
     // 画像管理用
-    public Sprite[] _fullBoxImage;                                     //!< image画像対応
-    public List<int> _fullBoxDigitList = new List<int>();              //!< 値の各桁保存用
+    public Sprite[]     _fullBoxImage;                              //!< image画像対応
+    public List<int>    _fullBoxDigitList = new List<int>();        //!< 値の各桁保存用
+    Color               _numberColor;                               //!< 画像のカラー
 
     // タグ指定用
     public string _fullBoxImageTag;                      //!< タグ名保存用
@@ -35,6 +37,7 @@ public class FullBoxImage : MonoBehaviour
     {
         // 初期化
         _fullBoxNum = 0;
+        _numberColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     /**
@@ -97,16 +100,29 @@ public class FullBoxImage : MonoBehaviour
 
         // 1桁目
         GameObject.Find(_fullBoxImageObject).GetComponent<Image>().sprite = _fullBoxImage[_fullBoxDigitList[0]];
+        GameObject.Find(_fullBoxImageObject).GetComponent<Image>().color = new Color(_numberColor.r, _numberColor.g, _numberColor.b, _numberColor.a);     // カラーのセット
 
         // 2桁目以降
         for (int i = 1; i < _fullBoxDigitList.Count; i++)
         {
-            RectTransform _fullImage = (RectTransform)Instantiate(GameObject.Find(_fullBoxImageObject)).transform;      // 初期ポジション
-            _fullImage.SetParent(this.transform, false);                                                                // 親の選択
-            _fullImage.localPosition = new Vector2(                                                                     // ポジション指定
-                _fullImage.localPosition.x - _fullImage.sizeDelta.x * i / 2,                                            // X
-                _fullImage.localPosition.y);                                                                            // Y
-            _fullImage.GetComponent<Image>().sprite = _fullBoxImage[_fullBoxDigitList[i]];                              // 対応数値の選択
+            RectTransform _fullImage = (RectTransform)Instantiate(GameObject.Find(_fullBoxImageObject)).transform;                  // 初期ポジション
+            _fullImage.SetParent(this.transform, false);                                                                            // 親の選択
+            _fullImage.localPosition = new Vector2(                                                                                 // ポジション指定
+                _fullImage.localPosition.x - _fullImage.sizeDelta.x * i / 2,                                                        // X
+                _fullImage.localPosition.y);                                                                                        // Y
+            _fullImage.GetComponent<Image>().sprite = _fullBoxImage[_fullBoxDigitList[i]];                                          // 対応数値の選択
+            _fullImage.GetComponent<Image>().color = new Color(_numberColor.r, _numberColor.g, _numberColor.b, _numberColor.a);     // カラーのセット
         }
+    }
+
+    /**
+    * @brief        カラーのセット
+    * @param[in]    Color 画像の色情報
+    * @return       なし
+    * @details      表示したい画像の色をセットする関数です
+    */
+    public void SetFullBoxColor(Color color)
+    {
+        _numberColor = color;
     }
 }

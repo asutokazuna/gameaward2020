@@ -15,7 +15,7 @@ public class UICange : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _stageSelectUI = GameObject.Find("Number").GetComponent<StageSelectUI>();
+        _stageSelectUI = GameObject.Find("StageName").GetComponent<StageSelectUI>();
 
         _planetNo = 0;
         PlanerNameOff();

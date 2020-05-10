@@ -50,7 +50,7 @@ public class LevelImage : MonoBehaviour
     public void SetImage(int type, int num)
     {
         // 同じ個数同じ画像なら処理しない
-        if (num != _value || type != _imageType)
+        //if (num != _value || type != _imageType)
         {
             // 対象となるオブジェクトを探す
             var objs = GameObject.FindGameObjectsWithTag(_levelTag);
