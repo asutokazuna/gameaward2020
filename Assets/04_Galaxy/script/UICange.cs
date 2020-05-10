@@ -11,20 +11,24 @@ public class UICange : MonoBehaviour
     [SerializeField] int _planetNo;
     [SerializeField] int MAX_UI;
     private StageSelectUI _stageSelectUI;
+    private GameObject _setUI;
 
     // Start is called before the first frame update
     void Start()
     {
         _stageSelectUI = GameObject.Find("StageName").GetComponent<StageSelectUI>();
-
+        _setUI = GameObject.Find("PlanetUI");
         _planetNo = 0;
-        PlanerNameOff();
+        for (int i = 0; i < MAX_UI + 1; i++)
+        {
+            _gameObject[i].SetActive(false);
+        }
+        _gameObject[_planetNo].SetActive(true);
     }
 
     public void ChangePlanetName(bool b)    //false : 左, true : 右
     {
         _stageSelectUI.SetSelectFinish();
-        //_gameObject[_planetNo].SetActive(false);
 
         _gameObject[_planetNo].SetActive(false);
 
@@ -40,19 +44,16 @@ public class UICange : MonoBehaviour
             _planetNo = 0;
         }
 
-        //_gameObject[_planetNo].SetActive(true);
+        _gameObject[_planetNo].SetActive(true);
     }
 
-    public void PlanerNameOff()
+    public void PlanetNameOff()
     {
-        for (int i = 0; i < _planetNo; i++)
-        {
-            _gameObject[i].SetActive(false);
-        }
+        _setUI.SetActive(false);
     }
 
     public void PlanerNameOn()
     {
-        _gameObject[_planetNo].SetActive(true);
+        _setUI.SetActive(true);
     }
 }
