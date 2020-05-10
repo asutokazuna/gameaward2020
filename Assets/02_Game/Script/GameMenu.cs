@@ -28,7 +28,7 @@ public class GameMenu : MonoBehaviour
     void Start()
     {
         _select = 0;
-        _sceneManager = GameObject.FindWithTag("SceneManger");
+        _sceneManager = GameObject.FindWithTag("SceneManager");
     }
 
     // Update is called once per frame
