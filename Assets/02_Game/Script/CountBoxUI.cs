@@ -57,6 +57,7 @@ public class CountBoxUI : MonoBehaviour
     */
     public void AddFullBox(int fullBoxNum)
     {
+        _fullBoxImage.SetFullBoxColor(_countNumColor[_stageNameUI.PlanetID]);
         _fullBoxImage.AddFullBox(fullBoxNum);
     }
 }
