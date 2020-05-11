@@ -12377,22 +12377,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fieldBlock: []
   _angle: 90
-  _rotateFlame: 60
-  _setCameraPos: {x: -4, y: 6, z: -10}
+  _rotateTime: 1
   _correctionValueClear: {x: 0, y: 0.5, z: 0}
   _correctionValueOver: {x: 0, y: 10, z: 0}
-  _waitTime: 1
-  _rotateTimeClear: 8
+  _gameOverTime: 0.5
   _rotateSpeedClear: 2
   _circleSizeClear: {x: 4, y: 2, z: 4}
   _focusClear: 1
-  _rotateTimeStart: 8
   _rotateSpeedStart: 1.3
   _circleSizeStart: {x: 8, y: 0, z: 8}
   _focusStart: 1
   _startHigh: 14
   _startTime: 8
   _skipTime: 2
+  _delayTime: 1
 --- !u!82 &963194230
 AudioSource:
   m_ObjectHideFlags: 0
@@ -18740,6 +18738,7 @@ MonoBehaviour:
   _countBoxTag: WaterBlock
   _tatalBoxImage: {fileID: 1184877088}
   _fullBoxImage: {fileID: 1184877089}
+  _countNumColor: []
 --- !u!114 &1184877088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27841,6 +27840,9 @@ MonoBehaviour:
   _offsetPos: {x: 0, y: 0, z: 0}
   _fullWaterBlockCnt: 0
   _turn: 0
+  _SEGameclear: {fileID: 0}
+  _SEGameover: {fileID: 0}
+  _SEBoxBreak: {fileID: 0}
 --- !u!114 &1835315811
 MonoBehaviour:
   m_ObjectHideFlags: 0
