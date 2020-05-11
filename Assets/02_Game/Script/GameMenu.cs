@@ -88,12 +88,15 @@ public class GameMenu : MonoBehaviour
 
             _selectBG.transform.position = UIPanel[_select].transform.position;
 
+            
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                switch(_select)
+                Time.timeScale = 1.0f;
+                _isMenu = false;
+                switch (_select)
                 {
                     case 0: //ポーズ画面を閉じる
-                        _isMenu = false;
+                        //_isMenu = false;
                         break;
                     case 1: //セレクト画面に遷移
                         _sceneManager.GetComponent<SceneMgr>().SetScene(E_SCENE.STAGE_SELECT);
