@@ -63,7 +63,7 @@ public class CameraMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!_rayScript._isSelect)
+        if (!_rayScript._isSelect && _isOrbital)
         {
             if (Input.GetKeyDown(KeyCode.Q)
            || GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT)
@@ -202,12 +202,15 @@ public class CameraMove : MonoBehaviour
     {
         if (other == null)
             return;
-        if(other.GetComponent<revolution>())
+        if(other.GetComponent<revolution>() && !_isOrbital)
         {
             if (other.GetComponent<revolution>().PlanetID == _currentID)
             {
                 _isOrbital = true;
                 //Vector3 _axis = _camera.position - _currentPlanet.transform.position;
+
+                _angleX = 0.0f;
+                _angleY = 1.5f;
             }
         }
         

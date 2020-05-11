@@ -12,6 +12,7 @@ public class RaySystem : MonoBehaviour
 
     public float dist;
     public GameObject pointer;
+    private GameObject Ring_FX = default;
 
     RaycastHit _newTarget;
     RaycastHit _oldTarget;
@@ -19,11 +20,17 @@ public class RaySystem : MonoBehaviour
 
     public bool _isSelect = false;
 
+    [SerializeField]
+    private float _pointerDelay;
+    private float _pointerTimer;
+    private bool _isEmit;
+
     // Start is called before the first frame update
     void Start()
     {
         _sceneManager = GameObject.FindWithTag("SceneManager").GetComponent<SceneMgr>();
         _cameraMove = GameObject.Find("CameraObj").GetComponent<CameraMove>();
+        Ring_FX = (GameObject)Resources.Load("Ring_FX");
     }
 
     // Update is called once per frame
@@ -40,11 +47,34 @@ public class RaySystem : MonoBehaviour
             SetID(0);
         }
 
+        if(_pointerTimer > _pointerDelay)
+        {
+            if(!_isEmit)
+            {
+                pointer.GetComponent<ParticleSystem>().Play(false);
+                _isEmit = true;
+            }
+            
+            
+        }
+        else
+        {
+            _pointerTimer += Time.deltaTime;
+        }
+
         if(_stageID != _oldStageID)
         {
             if(_stageID != 0)
             {
                 _newTarget.collider.gameObject.GetComponent<OutlineOnOff>().OutlineOn();
+
+                _pointerTimer = 0.0f;
+                pointer.GetComponent<ParticleSystem>().Stop();
+                pointer.GetComponent<ParticleSystem>().Clear();
+                _isEmit = false;
+
+                GameObject _obj = Instantiate(Ring_FX, pointer.transform.position, pointer.transform.rotation);
+                _obj.transform.parent = pointer.transform;
             }
             else
             {
