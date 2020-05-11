@@ -420,10 +420,13 @@ public class MainCamera : MonoBehaviour
                 _finishStart = true;
                 _stageNameUI.FadeOutStageName();
                 //myTransform.DOLookAt(_gazingPoint.transform.position, _skipTime);
-
-            });
+           });
             //myTransform.DORotate(_holdCameraRotate, _skipTime);
-           // myTransform.DOLookAt(_gazingPoint.transform.position, _skipTime);
+            //myTransform.DOLookAt(_gazingPoint.transform.position, _skipTime);
+        }
+        if(!_finishStart)
+        {
+            myTransform.LookAt(_gazingPoint.transform.position);
         }
         
     }
