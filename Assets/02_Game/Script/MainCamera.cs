@@ -119,7 +119,6 @@ public class MainCamera : MonoBehaviour
         _calDirect = new Vector3(_direct.x * _gameOverDistance, _direct.y * _gameOverDistance, _direct.z * _gameOverDistance);
         //UnityEngine.Debug.Log("init" + _initFlg);
         //UnityEngine.Debug.Log("skipTime" + _skipTime);
-        myTransform.LookAt(_gazingPoint.transform.position);
         if (_finishStart)
         {
             DelayTime();        //!< クリア演出の関数
@@ -329,6 +328,8 @@ public class MainCamera : MonoBehaviour
     {
         if (!_gameClear && !_gameOver)
         {
+            myTransform.LookAt(_gazingPoint.transform.position);
+
             Vector3[] _pos = { new Vector3(-4, 6, -10), new Vector3(-10, 6, -1), new Vector3(-1, 6, 5), new Vector3(5, 6, -4), };
 
             if (!_rotateCheck && !_inputKey)//!<回転中じゃなければ
