@@ -20,6 +20,7 @@ public class MainCamera : MonoBehaviour
     //! フィールドブロックを変数に格納
     //! 配列にしたかったけどやり方わからなかった
     [SerializeField] List<GameObject> _fieldBlock;
+
  
     public float _angle = 90.0f;                //!< カメラを回転させたときに回転する角度
     [SerializeField] float _rotateTime = 1.0f;  //!< 回転時間
@@ -326,60 +327,61 @@ public class MainCamera : MonoBehaviour
      */
     void CameraRotate()
     {
-
-        Vector3[] _pos = { new Vector3(-4, 6, -10), new Vector3(-10, 6, -1), new Vector3(-1, 6, 5), new Vector3(5, 6, -4), };
-
-        if (!_rotateCheck&&!_inputKey)//!<回転中じゃなければ
+        if (!_gameClear && !_gameOver)
         {
-            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
-                .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_LEFT))//押されたら
-            {
-                _inputKey = true;//キー入力受付拒否
-                _cameraRotNum++;//回転先座標
-                if (_cameraRotNum > 3)//補正
-                {
-                    _cameraRotNum = 0;
-                }
+            Vector3[] _pos = { new Vector3(-4, 6, -10), new Vector3(-10, 6, -1), new Vector3(-1, 6, 5), new Vector3(5, 6, -4), };
 
-            }
-            else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
-                .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_RIGHT))//押されたら
+            if (!_rotateCheck && !_inputKey)//!<回転中じゃなければ
             {
-                _inputKey = true;//キー入力拒否
-                _cameraRotNum--;//回転先座標
-                if (_cameraRotNum < 0)//補正
+                if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+                    .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_LEFT))//押されたら
                 {
-                    _cameraRotNum = 3;
+                    _inputKey = true;//キー入力受付拒否
+                    _cameraRotNum++;//回転先座標
+                    if (_cameraRotNum > 3)//補正
+                    {
+                        _cameraRotNum = 0;
+                    }
+
+                }
+                else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+                    .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_RIGHT))//押されたら
+                {
+                    _inputKey = true;//キー入力拒否
+                    _cameraRotNum--;//回転先座標
+                    if (_cameraRotNum < 0)//補正
+                    {
+                        _cameraRotNum = 3;
+                    }
                 }
             }
-        }
-        else if(_inputKey)//キー入力されたら
-        {
-            _inputKey = false;//キー入力受付
-            _rotateCheck = true;//回転中
-            _rotTimer = _rotateTime;
-            myTransform.DOMove(_pos[_cameraRotNum], _rotateTime).OnComplete(() =>//回転が終わったら
+            else if (_inputKey)//キー入力されたら
             {
-                _rotateCheck = false;//回転中じゃない
-                //myTransform.DORotate(new Vector3(_holdCameraRotate.x, _holdCameraRotate.y + (_cameraRotNum * 90), 0.0f), 0.1f);//回転
+                _inputKey = false;//キー入力受付
+                _rotateCheck = true;//回転中
+                _rotTimer = _rotateTime;
+                myTransform.DOMove(_pos[_cameraRotNum], _rotateTime).OnComplete(() =>//回転が終わったら
+                {
+                    _rotateCheck = false;//回転中じゃない
+                                         //myTransform.DORotate(new Vector3(_holdCameraRotate.x, _holdCameraRotate.y + (_cameraRotNum * 90), 0.0f), 0.1f);//回転
 
             });
-            //myTransform.DORotate(new Vector3(_holdCameraRotate.x * 100, _holdCameraRotate.y * 100 + (_cameraRotNum * 90), _holdCameraRotate.z * 100), _rotateTime);
-            //myTransform.DORotate(new Vector3(30, 10 + (_cameraRotNum * 90), 0), _rotateTime);
+                //myTransform.DORotate(new Vector3(_holdCameraRotate.x * 100, _holdCameraRotate.y * 100 + (_cameraRotNum * 90), _holdCameraRotate.z * 100), _rotateTime);
+                //myTransform.DORotate(new Vector3(30, 10 + (_cameraRotNum * 90), 0), _rotateTime);
 
-           // myTransform.DORotate(new Vector3(_holdCameraRotate.x, _holdCameraRotate.y + (_cameraRotNum * 90), 0.0f), _rotateTime);//回転
-            //UnityEngine.Debug.Log(_holdCameraRotate);
-        }
-        if (_rotateCheck)
-        {
-            _rotTimer -= Time.deltaTime;
-            if (_rotTimer > 0)
+                // myTransform.DORotate(new Vector3(_holdCameraRotate.x, _holdCameraRotate.y + (_cameraRotNum * 90), 0.0f), _rotateTime);//回転
+                //UnityEngine.Debug.Log(_holdCameraRotate);
+            }
+            if (_rotateCheck)
             {
+                _rotTimer -= Time.deltaTime;
+                if (_rotTimer > 0)
+                {
 
-                myTransform.LookAt(_gazingPoint.transform.position);
+                    myTransform.LookAt(_gazingPoint.transform.position);
+                }
             }
         }
-
     }
 
     /**
