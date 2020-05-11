@@ -125,6 +125,11 @@ public class MainCamera : MonoBehaviour
             GameOver();         //!< ゲームオーバー演出の関数
             CameraRotate();     //!< ゲーム中のカメラ回転の関数
         }
+        else if (!_finishStart)
+        {
+            myTransform.LookAt(_gazingPoint.transform.position);
+        }
+
     }
 
     /**
@@ -364,7 +369,7 @@ public class MainCamera : MonoBehaviour
                 myTransform.DOMove(_pos[_cameraRotNum], _rotateTime).OnComplete(() =>//回転が終わったら
                 {
                     _rotateCheck = false;//回転中じゃない
-                                         //myTransform.DORotate(new Vector3(_holdCameraRotate.x, _holdCameraRotate.y + (_cameraRotNum * 90), 0.0f), 0.1f);//回転
+                    //myTransform.DORotate(new Vector3(_holdCameraRotate.x, _holdCameraRotate.y + (_cameraRotNum * 90), 0.0f), 0.1f);//回転
 
             });
                 //myTransform.DORotate(new Vector3(_holdCameraRotate.x * 100, _holdCameraRotate.y * 100 + (_cameraRotNum * 90), _holdCameraRotate.z * 100), _rotateTime);
@@ -391,6 +396,7 @@ public class MainCamera : MonoBehaviour
      */
     void StartCamera()
     {
+       
         if (_initFlg)
         {
             return;
@@ -424,10 +430,7 @@ public class MainCamera : MonoBehaviour
             //myTransform.DORotate(_holdCameraRotate, _skipTime);
             //myTransform.DOLookAt(_gazingPoint.transform.position, _skipTime);
         }
-        if(!_finishStart)
-        {
-            myTransform.LookAt(_gazingPoint.transform.position);
-        }
+      
         
     }
 
