@@ -106,7 +106,10 @@ public class GameMenu : MonoBehaviour
                         break;
                     case 3: //ゲーム終了
                         Application.Quit();
-                        //UnityEditor.EditorApplication.isPlaying = false;
+#if UNITY_ENGINE
+                        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+
                         break;
                 }
             }
