@@ -96,8 +96,9 @@ public class MainCamera : MonoBehaviour
         myTransform = this.transform;                   //!< カメラのトランスフォーム取得
         float time = 0;                                 //!< 計算用タイマー
         time += Time.deltaTime;                         //!< タイム取得
-        _setCameraRot = myTransform.transform.rotation.eulerAngles; //!< Rotateの初期値保存
         _gazingPoint = GameObject.Find("GazingPoint");
+        myTransform.LookAt(_gazingPoint.transform.position);
+        _setCameraRot = myTransform.transform.rotation.eulerAngles; //!< Rotateの初期値保存
         _holdCameraRotate = _setCameraRot;              //!< Rotateの初期値保存２
         //UnityEngine.Debug.Log(_holdCameraRotate);
         _holdStartTime =_startTime;                     //!< スタート演出の秒数保存
@@ -125,11 +126,6 @@ public class MainCamera : MonoBehaviour
             GameOver();         //!< ゲームオーバー演出の関数
             CameraRotate();     //!< ゲーム中のカメラ回転の関数
         }
-        else if (!_finishStart)
-        {
-            myTransform.LookAt(_gazingPoint.transform.position);
-        }
-
     }
 
     /**
@@ -140,6 +136,19 @@ public class MainCamera : MonoBehaviour
     private void FixedUpdate()
     {
         StartCamera();          //!< スタート演出の関数
+    }
+
+    /**
+     * @brief 更新処理
+     * @return なし
+     * @details 一番最後に呼ばれる更新処理
+     */
+    private void LateUpdate()
+    {
+        if (!_gameClear && !_gameOver)
+        {
+            myTransform.LookAt(_gazingPoint.transform.position);
+        }
     }
 
     /**
@@ -331,64 +340,59 @@ public class MainCamera : MonoBehaviour
      */
     void CameraRotate()
     {
-        if (!_gameClear && !_gameOver)
+        if (_gameClear || _gameOver)
         {
-            myTransform.LookAt(_gazingPoint.transform.position);
+            return;
+        }
 
-            Vector3[] _pos = { new Vector3(-4, 6, -10), new Vector3(-10, 6, -1), new Vector3(-1, 6, 5), new Vector3(5, 6, -4), };
+        Vector3[] _pos = { new Vector3(-4, 6, -10), new Vector3(-10, 6, -1), new Vector3(-1, 6, 5), new Vector3(5, 6, -4), };
 
-            if (!_rotateCheck && !_inputKey)//!<回転中じゃなければ
+        if (!_rotateCheck && !_inputKey)//!<回転中じゃなければ
+        {
+            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+                .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_LEFT))//押されたら
             {
-                if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
-                    .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_LEFT))//押されたら
+                _inputKey = true;//キー入力受付拒否
+                _cameraRotNum++;//回転先座標
+                if (_cameraRotNum > 3)//補正
                 {
-                    _inputKey = true;//キー入力受付拒否
-                    _cameraRotNum++;//回転先座標
-                    if (_cameraRotNum > 3)//補正
-                    {
-                        _cameraRotNum = 0;
-                    }
-
+                    _cameraRotNum = 0;
                 }
-                else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
-                    .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_RIGHT))//押されたら
-                {
-                    _inputKey = true;//キー入力拒否
-                    _cameraRotNum--;//回転先座標
-                    if (_cameraRotNum < 0)//補正
-                    {
-                        _cameraRotNum = 3;
-                    }
-                }
+
             }
-            else if (_inputKey)//キー入力されたら
+            else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+                .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_RIGHT))//押されたら
             {
-                _inputKey = false;//キー入力受付
-                _rotateCheck = true;//回転中
-                _rotTimer = _rotateTime;
-                myTransform.DOMove(_pos[_cameraRotNum], _rotateTime).OnComplete(() =>//回転が終わったら
+                _inputKey = true;//キー入力拒否
+                _cameraRotNum--;//回転先座標
+                if (_cameraRotNum < 0)//補正
                 {
-                    _rotateCheck = false;//回転中じゃない
-                    //myTransform.DORotate(new Vector3(_holdCameraRotate.x, _holdCameraRotate.y + (_cameraRotNum * 90), 0.0f), 0.1f);//回転
-
-            });
-                //myTransform.DORotate(new Vector3(_holdCameraRotate.x * 100, _holdCameraRotate.y * 100 + (_cameraRotNum * 90), _holdCameraRotate.z * 100), _rotateTime);
-                //myTransform.DORotate(new Vector3(30, 10 + (_cameraRotNum * 90), 0), _rotateTime);
-
-                // myTransform.DORotate(new Vector3(_holdCameraRotate.x, _holdCameraRotate.y + (_cameraRotNum * 90), 0.0f), _rotateTime);//回転
-                //UnityEngine.Debug.Log(_holdCameraRotate);
-            }
-            if (_rotateCheck)
-            {
-                _rotTimer -= Time.deltaTime;
-                if (_rotTimer > 0)
-                {
-
-                    myTransform.LookAt(_gazingPoint.transform.position);
+                    _cameraRotNum = 3;
                 }
             }
         }
+
+        if (_inputKey)//キー入力されたら
+        {
+            _inputKey = false;//キー入力受付
+            _rotateCheck = true;//回転中
+            _rotTimer = _rotateTime;
+            myTransform.DOMove(_pos[_cameraRotNum], _rotateTime).OnComplete(() =>//回転が終わったら
+            {
+                _rotateCheck = false;//回転中じゃない
+                //myTransform.DORotate(new Vector3(_holdCameraRotate.x, _holdCameraRotate.y + (_cameraRotNum * 90), 0.0f), 0.1f);//回転
+
+            });
+
+            //myTransform.DORotate(rot, _rotateTime);
+            //myTransform.DORotate(new Vector3(_holdCameraRotate.x * 100, _holdCameraRotate.y * 100 + (_cameraRotNum * 90), _holdCameraRotate.z * 100), _rotateTime);
+            //myTransform.DORotate(new Vector3(30, 10 + (_cameraRotNum * 90), 0), _rotateTime);
+
+            // myTransform.DORotate(new Vector3(_holdCameraRotate.x, _holdCameraRotate.y + (_cameraRotNum * 90), 0.0f), _rotateTime);//回転
+            //UnityEngine.Debug.Log(_holdCameraRotate);
+        }
     }
+    
 
     /**
      * @brief スタート演出
@@ -414,7 +418,7 @@ public class MainCamera : MonoBehaviour
             _startHigh, _fieldPos.z - _circleSizeStart.z * Mathf.Cos(_time2));  //!< 移動先計算
 
         myTransform.transform.position = _setPos;
-        myTransform.LookAt(_lookAtObject);  //!< 向きを設定
+        myTransform.LookAt(_gazingPoint.transform.position);  //!< 向きを設定
 
         if (_startTime < 0 || Input.anyKeyDown)
         { // ゲーム開始初期座標に移動（anyKeyでスタート演出スキップ）
@@ -425,9 +429,8 @@ public class MainCamera : MonoBehaviour
                 _startMove = false;
                 _finishStart = true;
                 _stageNameUI.FadeOutStageName();
-                //myTransform.DOLookAt(_gazingPoint.transform.position, _skipTime);
            });
-            //myTransform.DORotate(_holdCameraRotate, _skipTime);
+            myTransform.DORotate(_holdCameraRotate, _skipTime);
             //myTransform.DOLookAt(_gazingPoint.transform.position, _skipTime);
         }
       
