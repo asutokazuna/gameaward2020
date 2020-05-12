@@ -29,21 +29,21 @@ public class FootSmoke : MonoBehaviour
      */
     void Update()
     {
-        if(_animation.GetPlayerState() == PlayerAnimation.PlayerState.E_WALK || 
-           _animation.GetPlayerState() == PlayerAnimation.PlayerState.E_WALK_BOX ||
-           _animation.GetPlayerState() == PlayerAnimation.PlayerState.E_WALK_CHARA)
-        {// プレイヤーが移動したら
-            if(!_footSmoke.isEmitting)
-            {// 再生
-                _footSmoke.Play();
-            }
-        }
-        else
-        {// プレイヤーが止まったら
-            if(_footSmoke.isEmitting)
-            {// 停止
-                _footSmoke.Stop();
-            }
-        }
+        //if(_animation.GetPlayerState() == PlayerAnimation.PlayerState.E_WALK) //|| 
+        //   //_animation.GetPlayerState() == PlayerAnimation.PlayerState.E_WALK_BOX ||
+        //   //_animation.GetPlayerState() == PlayerAnimation.PlayerState.E_WALK_CHARA)
+        //{// プレイヤーが移動したら
+        //    if(!_footSmoke.isEmitting)
+        //    {// 再生
+        //        _footSmoke.Play();
+        //    }
+        //}
+        //else
+        //{// プレイヤーが止まったら
+        //    if(_footSmoke.isEmitting)
+        //    {// 停止
+        //        _footSmoke.Stop();
+        //    }
+        //}
     }
 }
