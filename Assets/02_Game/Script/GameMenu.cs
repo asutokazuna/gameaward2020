@@ -105,10 +105,12 @@ public class GameMenu : MonoBehaviour
                         _sceneManager.GetComponent<SceneMgr>().SetScene(E_SCENE.TITLE);
                         break;
                     case 3: //ゲーム終了
-                        Application.Quit();
-#if UNITY_ENGINE
+#if UNITY_EDITOR
                         UnityEditor.EditorApplication.isPlaying = false;
 #endif
+
+                        Application.Quit();
+
 
                         break;
                 }
