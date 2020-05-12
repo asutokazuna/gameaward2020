@@ -48,7 +48,7 @@ public class CameraMove : MonoBehaviour
         StageSelectManager = GameObject.Find("StageSelectManager");
         UI = GameObject.Find("CanvasUI");
         //UI.SetActive(false);
-        StageSelectManager.GetComponent<UICange>().PlanetNameOff();
+       // StageSelectManager.GetComponent<UICange>().PlanetNameOff();
 
         //SceneManager = GameObject.Find("SceneManager").GetComponent<SceneMgr>();
 
@@ -57,7 +57,7 @@ public class CameraMove : MonoBehaviour
         _isOrbital = false;
         _currentID = 1;
 
-        _rayScript = GetComponent<RaySystem>();
+        _rayScript = this.gameObject.GetComponent<RaySystem>();
     }
 
     // Update is called once per frame
