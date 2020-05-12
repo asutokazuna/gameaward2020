@@ -33,6 +33,7 @@ public class PlayerAnim : MonoBehaviour
     // アニメーション管理用
     Animator    _playerAnimator;        //!< アニメーター取得用
     PlayerState _playerState;           //!< プレイヤーの状態管理用
+    WaitState[] _waitState;
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +42,21 @@ public class PlayerAnim : MonoBehaviour
         _playerAnimator = GetComponent<Animator>();
         _playerState = PlayerState.E_WAIT;
         _playerAnimator.SetBool("Finish", true);
+        _waitState = _playerAnimator.GetBehaviours<WaitState>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        // 待機ステートに入ったかチェック
+        for (int i = 0; i < _waitState.Length; ++i)
+        {
+            if(_waitState[i]._isWait)
+            {
+                _waitState[i]._isWait = false;
+                Invoke("SetAnimFinish", 0.2f);
+            }
+        }
     }
 
     /**
@@ -108,5 +124,15 @@ public class PlayerAnim : MonoBehaviour
     public bool GetAnimFinish()
     {
         return _playerAnimator.GetBool("Finish");
+    }
+
+    /**
+    * @brief        アニメーション終了セット
+    * @return       なし
+    * @details      アニメーションの終了をセットする関数です
+    */
+    void SetAnimFinish()
+    {
+        _playerAnimator.SetBool("Finish", true);
     }
 }
