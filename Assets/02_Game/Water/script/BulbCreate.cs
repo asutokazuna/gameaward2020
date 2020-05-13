@@ -32,8 +32,16 @@ public class BulbCreate : MonoBehaviour
         {
             bFirst = false;
             bFill = false;
-            this.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
-            this.GetComponent<ParticleSystem>().Clear(true);
+            
+
+            foreach (Transform childTransform in this.transform)
+            {
+                if (childTransform.tag == "WaterLeak")
+                {
+                    childTransform.GetComponent<ParticleSystem>().Stop(false, ParticleSystemStopBehavior.StopEmitting);
+                    childTransform.GetComponent<ParticleSystem>().Clear(true);
+                }
+            }
 
             if (nOldWater > 0)
             {
