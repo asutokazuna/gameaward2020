@@ -171,6 +171,15 @@ public class Map : MonoBehaviour
 
         if (_turn == E_TURN.MOVE)
         {
+            foreach (Player obj in _player)
+            {
+                // アニメーション中
+                if (obj._isMove || !obj.isAnim())
+                {
+                    return;
+                }
+            }
+
             _turn = E_TURN.WAIT;
             return;
         }

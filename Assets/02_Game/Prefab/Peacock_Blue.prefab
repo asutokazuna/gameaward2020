@@ -5429,7 +5429,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _footSmoke: {fileID: 6869229966089323872}
-  _animation: {fileID: 5845894944030789618}
+  _animation: {fileID: 0}
 --- !u!1 &946693751681330612
 GameObject:
   m_ObjectHideFlags: 0
@@ -9369,7 +9369,7 @@ GameObject:
   - component: {fileID: 6433375576992791653}
   - component: {fileID: 6112931830119810618}
   - component: {fileID: 6082601265264749879}
-  - component: {fileID: 5845894944030789618}
+  - component: {fileID: -4656269473469668197}
   - component: {fileID: 8396692437481446211}
   m_Layer: 0
   m_Name: Peacock_Blue
@@ -9406,7 +9406,7 @@ Animator:
   m_GameObject: {fileID: 8006459885820759670}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 9c1e5677eb0a01c488032038ea0c825c, type: 2}
+  m_Controller: {fileID: 9100000, guid: 4fc24c95728befd41a94d68e0d56a6bf, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -9435,16 +9435,14 @@ MonoBehaviour:
   _direct: {x: 0, y: 0, z: 0}
   _lifted: 0
   _mode: 0
-  _animation: {fileID: 0}
   _putUpdate: 0
   _SEMove: {fileID: 8300000, guid: 6f56661e0f6b2c6498ee0e4b9bf6b543, type: 3}
   _SEjump: {fileID: 8300000, guid: cd7b754ec88d35a49b9f4bdf4501af7d, type: 3}
   _SEPut: {fileID: 8300000, guid: 936432f05da97ea488b232cb5a5818d8, type: 3}
-  _SEBoxBreak: {fileID: 8300000, guid: ba3e2a825c7f570488b5ecd317cbe501, type: 3}
   _SETrampoline: {fileID: 8300000, guid: 6536d511a6371ea40a358d32e464ca56, type: 3}
   _SEGameClear: {fileID: 8300000, guid: d9ad84130c5019249bd01a5fdd521698, type: 3}
   _SEGameOver: {fileID: 8300000, guid: e3bbae6297857a54c8a68727e6fa629e, type: 3}
---- !u!114 &5845894944030789618
+--- !u!114 &-4656269473469668197
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9453,11 +9451,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8006459885820759670}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b67657bb30b6b0147a9e882a796c28b2, type: 3}
+  m_Script: {fileID: 11500000, guid: 8208b4368fcd8954593fad8d2cd635f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerState: 0
-  _trampolineAnim: {fileID: 0}
 --- !u!82 &8396692437481446211
 AudioSource:
   m_ObjectHideFlags: 0

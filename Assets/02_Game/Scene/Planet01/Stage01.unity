@@ -5453,11 +5453,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1938399017}
     m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4273337630640619665, guid: 43074db5db4376c409b29ef8582001ed,
         type: 3}
       propertyPath: m_UseCustomVertexStreams
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6112931830119810618, guid: 43074db5db4376c409b29ef8582001ed,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 4fc24c95728befd41a94d68e0d56a6bf, type: 2}
     - target: {fileID: 6433375576992791653, guid: 43074db5db4376c409b29ef8582001ed,
         type: 3}
       propertyPath: m_LocalPosition.x
