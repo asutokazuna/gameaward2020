@@ -74,8 +74,7 @@ public class BaseObject : MonoBehaviour
     [SerializeField] public bool                _gameOver       //!< ゲームオーバー
     { get; protected set; }
 
-    private Vector3 offSetRot = new Vector3();
-
+    
     /**
      * @brief 移動中かどうかの判定
      */

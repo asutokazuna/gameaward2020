@@ -426,6 +426,7 @@ public class Player : BaseObject
      */
     public void Put()
     {
+        bool flag = false;
         Vector3Int putPos;              //!< 降ろすオブジェクトを探索するための座標
         putPos = new Vector3Int( _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z);
         if (_map.isGameOver(putPos, E_OBJECT_MODE.PUT))
@@ -448,8 +449,13 @@ public class Player : BaseObject
                 _haveObject = new SquareInfo();         // オブジェクトを手放す
                 _isMove = true;
                 _putUpdate = false;
+                flag = true;
                 break;
             }
+        }
+        if (_putUpdate && !flag)
+        {
+            _putUpdate = false;
         }
     }
 
