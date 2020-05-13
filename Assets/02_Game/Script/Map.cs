@@ -254,6 +254,7 @@ public class Map : MonoBehaviour
     public void HandAction(bool flag = false)
     {
         if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A) && !flag) return;
+
         foreach (Player obj in _player)
         {
             if (obj.isCenter())
