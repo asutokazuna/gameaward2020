@@ -54,6 +54,7 @@ public class PlayerAnim : MonoBehaviour
             if(_waitState[i]._isWait)
             {
                 _waitState[i]._isWait = false;
+                _playerState = PlayerState.E_WAIT;
                 Invoke("SetAnimFinish", 0.2f);
             }
         }
