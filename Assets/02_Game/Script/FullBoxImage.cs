@@ -4,6 +4,7 @@
  * @author  Risa Ito
  * @date    2020/04/05(日)  作成
  * @date    2020/05/09(土)  カラー変更対応
+ * @date    2020/05/14(木)  バグを修正
  */
 
 using System.Collections;
@@ -53,10 +54,13 @@ public class FullBoxImage : MonoBehaviour
 
         foreach (var obj in objs)
         {
-            // いままで表示されてたスコアオブジェクト削除(ScoreImageの削除,更新画像の削除)
-            if (0 <= obj.name.LastIndexOf("Clone"))
+            if (0 <= obj.name.IndexOf(_fullBoxImageObject, 0))
             {
-                Destroy(obj);
+                // いままで表示されてたスコアオブジェクト削除(ScoreImageの削除,更新画像の削除)
+                if (0 <= obj.name.LastIndexOf("Clone"))
+                {
+                    Destroy(obj);
+                }
             }
         }
 
