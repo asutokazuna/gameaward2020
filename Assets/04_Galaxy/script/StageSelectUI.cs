@@ -81,7 +81,7 @@ public class StageSelectUI : MonoBehaviour
                 _level = _selectStage.GetLevel();
                 GameObject.Find("Stage").GetComponent<Image>().color = _stageColor[_planetID];
                 _stageSelectImage.SetNumberColor(_stageColor[_planetID]);
-                _stageSelectImage.SetValue(stageNo);
+                _stageSelectImage.SetValue(stageNo, false);
                 _levelImage.SetImageColor(new Color(1.0f,1.0f,1.0f,0.0f));
                 _levelImage.SetImage(_planetID,_level);
                 _stageSelectAnim.SetBool("Select", true);

@@ -44,7 +44,7 @@ public class CountBoxUI : MonoBehaviour
         // 画像表示
         GameObject.Find("Slash").GetComponent<Image>().color = _countNumColor[_stageNameUI.PlanetID];
         _tatalBoxImage.SetNumberColor(_countNumColor[_stageNameUI.PlanetID]);
-        _tatalBoxImage.SetValue(_countTatalBox);
+        _tatalBoxImage.SetValue(_countTatalBox, true);
         _fullBoxImage.SetFullBoxColor(_countNumColor[_stageNameUI.PlanetID]);
         _fullBoxImage.AddFullBox(0);
     }

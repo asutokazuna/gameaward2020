@@ -46,7 +46,7 @@ public class StageNameUI : MonoBehaviour
         _planetName.SetImageColor(new Color(1.0f, 1.0f, 1.0f, 1.0f));
         _planetName.SetImage(_planetID, 1);
         _stageNoImage.SetNumberColor(_stageColor[_planetID]);
-        _stageNoImage.SetValue(_stageNo);
+        _stageNoImage.SetValue(_stageNo, false);
     }
 
     /**

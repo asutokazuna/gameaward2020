@@ -4,6 +4,7 @@
  * @author  Risa Ito
  * @date    2020/05/07(木)   作成
  * @date    2020/05/08(金)   カラー変更に対応
+ * @date    2020/05/14(木)   バグを修正
  */
 
 using System.Collections;
@@ -49,13 +50,12 @@ public class LevelImage : MonoBehaviour
     */
     public void SetImage(int type, int num)
     {
-        // 同じ個数同じ画像なら処理しない
-        //if (num != _value || type != _imageType)
-        {
-            // 対象となるオブジェクトを探す
-            var objs = GameObject.FindGameObjectsWithTag(_levelTag);
+        // 対象となるオブジェクトを探す
+        var objs = GameObject.FindGameObjectsWithTag(_levelTag);
 
-            foreach (var obj in objs)
+        foreach (var obj in objs)
+        {
+            if (0 <= obj.name.IndexOf(_levelObject, 0))
             {
                 // いままで表示されてたオブジェクト削除
                 if (0 <= obj.name.LastIndexOf("Clone"))
@@ -63,22 +63,22 @@ public class LevelImage : MonoBehaviour
                     Destroy(obj);
                 }
             }
-
-            _value = num;           // 個数セット
-            _imageType = type;      // 画像指定
-
-            // 上限下限チェック
-            if (_value > MAX_LEVEL)
-            {
-                _value = MAX_LEVEL;
-            }
-            else if(_value < 1)
-            {
-                _value = 1;
-            }
-
-            View();       // 描画
         }
+
+        _value = num;           // 個数セット
+        _imageType = type;      // 画像指定
+
+        // 上限下限チェック
+        if (_value > MAX_LEVEL)
+        {
+            _value = MAX_LEVEL;
+        }
+        else if (_value < 1)
+        {
+            _value = 1;
+        }
+
+        View();       // 描画   
     }
 
     /**
