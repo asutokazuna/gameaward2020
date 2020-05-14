@@ -42,6 +42,8 @@ public class MainCamera : MonoBehaviour
     List<GameObject> _gameObjectOver;           //!< フォーカスオブジェクト
     GameObject _gameObjectPlayer;               //!< Playerオブジェクトの格納
     Transform myTransform;                      //!< カメラのトランスフォーム
+    Transform _getTransform = default;                    //!<回転先座標計算用
+    Vector3[] _pos= {new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), };                             //!<回転先座標格納
     Vector3 _setCameraRot = new Vector3(30, 10, 0); //!< カメラ注視点設定
     Vector3 _cameraPos;　                       //! カメラ座標いじる用
     Vector3 _holdCameraRotate;               //!< CameraのRotate保存
@@ -199,6 +201,14 @@ public class MainCamera : MonoBehaviour
         _gameClear = GameObject.FindWithTag("Map").GetComponent<Map>()._gameClear;  //!< クリア状態初期化
         _gameOver = false;//!<ゲームオーバー状態の初期化
         _direct = GameObject.FindWithTag("Player").GetComponent<Player>()._direct;  //!<プレイヤーの向き取得
+        _getTransform = myTransform;//エラー回避用の不足情報設定
+        _getTransform.position = _setCameraPos;
+        _pos[0] = _getTransform.position;
+        for (int i = 1; i < 4; i++)
+        {
+            _getTransform.RotateAround(_fieldPos, Vector3.up, 90);
+            _pos[i] = _getTransform.position;
+        }
     }
 
     /**
@@ -345,8 +355,7 @@ public class MainCamera : MonoBehaviour
             return;
         }
 
-        Vector3[] _pos = { new Vector3(-4, 6, -10), new Vector3(-10, 6, -1), new Vector3(-1, 6, 5), new Vector3(5, 6, -4), };
-
+     
         if (!_rotateCheck && !_inputKey)//!<回転中じゃなければ
         {
             if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
@@ -390,6 +399,44 @@ public class MainCamera : MonoBehaviour
 
             // myTransform.DORotate(new Vector3(_holdCameraRotate.x, _holdCameraRotate.y + (_cameraRotNum * 90), 0.0f), _rotateTime);//回転
             //UnityEngine.Debug.Log(_holdCameraRotate);
+
+
+            ////カウンター初期化
+            //if (_cnt == 0 && _angle == 0.0f)
+            //{
+            //    _cnt = (int)_rotateFlame / 1;
+            //}
+
+            ////左右矢印キーで回転
+            //if (_cnt == (int)_rotateFlame / 1)//回転中じゃなければ
+            //{
+            //    if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+            //        .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_LEFT))
+            //    {
+            //        _angle = 90.0f / _rotateFlame;
+            //    }
+            //    else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+            //        .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_RIGHT))
+            //    {
+            //        _angle = -90.0f / _rotateFlame;
+            //    }
+            //}
+            ////カウント中は回転
+            //if (_cnt > 0 && _angle != 0)
+            //{
+            //    //カメラを回転させる
+            //    transform.RotateAround(_fieldPos, Vector3.up, _angle);
+
+            //    _cnt -= 1;//カウンター減算
+            //}
+            ////回転フレーム数終了で初期化
+            //else if (_cnt <= 0 && _angle != 0)
+            //{
+            //    _cnt = (int)_rotateFlame / 1;//カウンター初期化
+            //    _angle = 0.0f;
+            //}
+            ////  Debug.Log(_cnt);
+            //}
         }
     }
     
