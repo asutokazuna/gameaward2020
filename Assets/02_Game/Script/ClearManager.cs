@@ -19,9 +19,8 @@ public class ClearManager : MonoBehaviour
     private GameObject ParticleRight;
     private GameObject ParticleTop;
 
-    private GameObject[] _player;
-    private bool _fade; //!< 連打を防ぐ為の処理(もっといいのがあったらお願いします)
 
+    private GameObject[] _player;
 
     // Start is called before the first frame update
     void Start()
@@ -32,7 +31,6 @@ public class ClearManager : MonoBehaviour
         _isFirst = true;
         _timer = WaitTime;
         _changeDelay = DelayTime;
-        _fade = false;
 
         ParticleLeft = GameObject.Find("ParticleLeft");
         ParticleRight = GameObject.Find("ParticleRight");
@@ -72,7 +70,7 @@ public class ClearManager : MonoBehaviour
 
         if (ClearScript._finishClear)
         {
-            if ((_changeDelay <= 0.0f || Input.anyKey) && !_fade)
+            if (_changeDelay <= 0.0f || Input.anyKey)
             {
                 //if (isGameClear())
                 //{// クリアやで
@@ -84,13 +82,11 @@ public class ClearManager : MonoBehaviour
                     GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
                 {// 次のステージ
                     GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE_MODE.NEXT_STAGE);
-                    _fade = true;
                 }
                 else if (Input.GetKeyDown(KeyCode.C) ||
                     GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.B))
                 {// ステージ選択
                     GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE.STAGE_SELECT);
-                    _fade = true;
                 }
                 //GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene();
             }
