@@ -85,7 +85,7 @@ public enum E_SCENE
     _6_8            = 59,   // 6-8
     _6_9            = 60,   // 6-9
     _6_10           = 61,   // 6-10
-    CLEAR,                  // クリアシーン
+    MAX,                    // クリアシーン
 }
 
 
@@ -117,6 +117,8 @@ public class SceneMgr : MonoBehaviour
     private GameObject _mainCamera; //!<フェード用
     private Fade _fadeScript;
 
+    public static bool[] _stageClear = new bool[(int)E_SCENE.MAX];
+
 
     void Awake()
     {
@@ -124,6 +126,10 @@ public class SceneMgr : MonoBehaviour
         {
             _instance = this;
             DontDestroyOnLoad(gameObject);
+            for (int n = 0; n < (int)E_SCENE.MAX; n++)
+            {
+                _stageClear[n] = false;
+            }
         }
         else
         {
@@ -131,6 +137,7 @@ public class SceneMgr : MonoBehaviour
         }
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
@@ -156,6 +163,33 @@ public class SceneMgr : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //if (Input.GetKeyDown(KeyCode.Alpha9))
+        //{
+        //    CallDebug();
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //{
+        //    if (GetPlanetClear(E_SCENE._1_1))
+        //    {
+        //        Debug.Log("クリアされてます");
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("まだクリアされてません");
+        //    }
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha2))
+        //{
+        //    if (GetPlanetClear(E_SCENE._2_1))
+        //    {
+        //        Debug.Log("クリアされてます");
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("まだクリアされてません");
+        //    }
+        //}
+
         ChangeScene();
     }
 
@@ -210,10 +244,6 @@ public class SceneMgr : MonoBehaviour
                 _nowScene = E_SCENE.STAGE_SELECT;
             }
         }
-        else if (isGameClear())
-        {// 取り合えずベータ版クリア
-            _nowScene = E_SCENE.CLEAR;
-        }
     }
 
 
@@ -242,22 +272,95 @@ public class SceneMgr : MonoBehaviour
     }
 
 
-    private bool isGameClear()
-    {// 取り合えずベータ版クリア
-        if (GameObject.FindGameObjectWithTag("GameClearManager").GetComponent<ClearManager>().isGameClear())
-        {// ゲームクリア
-            return true;
-        }
-        return false;
-    }
-
-
     /**
      * @brief 現在のシーンの取得
      */
     public E_SCENE NowScene //!< 移動フラグ
     {
         get { return _nowScene; }  // ゲッター
+    }
+
+
+    /**
+     * @brief クリアフラグのセット
+     * @return なし
+     */
+    public void SetClear()
+    {
+        _stageClear[(int)_nowScene] = true;
+    }
+
+
+    /**
+     * @brief デバッグ呼び出し
+     * @return なし
+     */
+    public void CallDebug()
+    {
+        for (int n = (int)E_SCENE._1_1; n < (int)E_SCENE.MAX; n++)
+        {
+            if (!_stageClear[n])
+            {// まだ未クリアがあるよ
+                Debug.Log(n + 1 - (int)E_SCENE._1_1 + " 未クリア");
+            }
+            else
+            {
+                Debug.Log(n + 1 - (int)E_SCENE._1_1 + " クリアしてる");
+            }
+        }
+    }
+
+
+    /**
+     * @brief 惑星の全てのステージをクリアしたかの取得
+     * @param1 ステージ列挙(惑星1 なら E_SCENE._1_1 ～ E_SCENE._1_10)
+     * @return 惑星がクリアされていたら true
+     */
+    public bool GetPlanetClear(E_SCENE stage)
+    {
+        if (stage == E_SCENE.TITLE || stage == E_SCENE.STAGE_SELECT || stage == E_SCENE.MAX)
+        {
+            Debug.Log("参照外やで^^");
+            return false;
+        }
+        else if (stage >= E_SCENE._1_1 && stage <= E_SCENE._1_10)
+        { // 惑星1のクリア取得
+            for (int n = (int)E_SCENE._1_1; n <= (int)E_SCENE._1_10; n++)
+                if (!_stageClear[n])
+                    return false;
+        }
+        else if (stage >= E_SCENE._2_1 && stage <= E_SCENE._2_10)
+        {   // 惑星2のクリア取得
+            for (int n = (int)E_SCENE._2_1; n <= (int)E_SCENE._2_10; n++)
+                if (!_stageClear[n])
+                    return false;
+        }
+        else if (stage >= E_SCENE._3_1 && stage <= E_SCENE._3_10)
+        {   // 惑星3のクリア取得
+            for (int n = (int)E_SCENE._3_1; n <= (int)E_SCENE._3_10; n++)
+                if (!_stageClear[n])
+                    return false;
+        }
+        else if (stage >= E_SCENE._4_1 && stage <= E_SCENE._4_10)
+        {   // 惑星4のクリア取得
+            for (int n = (int)E_SCENE._4_1; n <= (int)E_SCENE._4_10; n++)
+                if (!_stageClear[n])
+                    return false;
+        }
+        else if (stage >= E_SCENE._5_1 && stage <= E_SCENE._5_10)
+        { // 惑星5のクリア取得
+            for (int n = (int)E_SCENE._5_1; n <= (int)E_SCENE._5_10; n++)
+                if (!_stageClear[n])
+                    return false;
+        }
+        else if (stage >= E_SCENE._6_1 && stage <= E_SCENE._6_10)
+        { // 惑星6のクリア取得
+            for (int n = (int)E_SCENE._6_1; n <= (int)E_SCENE._6_10; n++)
+                if (!_stageClear[n])
+                    return false;
+        }
+
+        return true;
     }
 }
 
