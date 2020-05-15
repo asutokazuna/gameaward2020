@@ -130,6 +130,12 @@ public class SceneMgr : MonoBehaviour
             {
                 _stageClear[n] = false;
             }
+            //for (int n = (int)E_SCENE._1_1; n <= (int)E_SCENE._1_10; n++)
+            //{
+            //    if (n == (int)E_SCENE._1_1)
+            //        continue;
+            //    _stageClear[n] = true;
+            //}
         }
         else
         {
@@ -163,32 +169,10 @@ public class SceneMgr : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.Alpha9))
-        //{
-        //    CallDebug();
-        //}
-        //if (Input.GetKeyDown(KeyCode.Alpha1))
-        //{
-        //    if (GetPlanetClear(E_SCENE._1_1))
-        //    {
-        //        Debug.Log("クリアされてます");
-        //    }
-        //    else
-        //    {
-        //        Debug.Log("まだクリアされてません");
-        //    }
-        //}
-        //if (Input.GetKeyDown(KeyCode.Alpha2))
-        //{
-        //    if (GetPlanetClear(E_SCENE._2_1))
-        //    {
-        //        Debug.Log("クリアされてます");
-        //    }
-        //    else
-        //    {
-        //        Debug.Log("まだクリアされてません");
-        //    }
-        //}
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            CallDebug();
+        }
 
         ChangeScene();
     }
@@ -264,8 +248,8 @@ public class SceneMgr : MonoBehaviour
      */
     private bool isNextScene()
     {
-        if ((int)_nowScene + 1 <= (int)E_SCENE._1_3)
-        {// 取り合えずの処理
+        if (!GetPlanetClear(_nowScene) || LimitStage())
+        {
             return true;
         }
         return false;
@@ -359,8 +343,26 @@ public class SceneMgr : MonoBehaviour
                 if (!_stageClear[n])
                     return false;
         }
-
         return true;
+    }
+
+
+    /**
+     * @brief 最終ステージクリアの場合、ステージ選択に戻る
+     * @return 今遊んでたのが最終ステージなら true
+     */
+    private bool LimitStage()
+    {
+        if (_nowScene == E_SCENE._1_10 ||
+            _nowScene == E_SCENE._2_10 ||
+            _nowScene == E_SCENE._3_10 ||
+            _nowScene == E_SCENE._4_10 ||
+            _nowScene == E_SCENE._5_10 ||
+            _nowScene == E_SCENE._6_10)
+        {
+            return true;
+        }
+        return false;
     }
 }
 
