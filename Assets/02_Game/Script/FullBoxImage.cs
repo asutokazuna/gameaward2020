@@ -5,6 +5,7 @@
  * @date    2020/04/05(日)  作成
  * @date    2020/05/09(土)  カラー変更対応
  * @date    2020/05/14(木)  バグを修正
+ * @date    2020/05/15(金)  位置座標のズレを修正
  */
 
 using System.Collections;
@@ -112,7 +113,7 @@ public class FullBoxImage : MonoBehaviour
             RectTransform _fullImage = (RectTransform)Instantiate(GameObject.Find(_fullBoxImageObject)).transform;                  // 初期ポジション
             _fullImage.SetParent(this.transform, false);                                                                            // 親の選択
             _fullImage.localPosition = new Vector2(                                                                                 // ポジション指定
-                _fullImage.localPosition.x - _fullImage.sizeDelta.x * i / 2,                                                        // X
+                _fullImage.localPosition.x - _fullImage.sizeDelta.x * _fullImage.localScale.x * i,                                  // X
                 _fullImage.localPosition.y);                                                                                        // Y
             _fullImage.GetComponent<Image>().sprite = _fullBoxImage[_fullBoxDigitList[i]];                                          // 対応数値の選択
             _fullImage.GetComponent<Image>().color = new Color(_numberColor.r, _numberColor.g, _numberColor.b, _numberColor.a);     // カラーのセット

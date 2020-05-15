@@ -5,6 +5,7 @@
  * @date    2020/05/07(木)   作成
  * @date    2020/05/08(金)   カラー変更に対応
  * @date    2020/05/14(木)   バグを修正
+ * @date    2020/05/15(金)   位置座標のズレを修正
  */
 
 using System.Collections;
@@ -101,8 +102,8 @@ public class LevelImage : MonoBehaviour
             RectTransform _setImage = (RectTransform)Instantiate(GameObject.Find(_levelObject)).transform;                      // 初期ポジション
             _setImage.SetParent(this.transform, false);                                                                         // 親の選択
             _setImage.localPosition = new Vector2(                                                                              // ポジション指定
-                _setImage.localPosition.x + _setImage.sizeDelta.x * (i % _turnBackNum) / 2,                                     // X
-                _setImage.localPosition.y - _setImage.sizeDelta.y * (i / _turnBackNum) / 2);                                    // Y
+                _setImage.localPosition.x + _setImage.sizeDelta.x * _setImage.localScale.x * (i % _turnBackNum),                // X
+                _setImage.localPosition.y - _setImage.sizeDelta.y * _setImage.localScale.y * (i / _turnBackNum));               // Y
             _setImage.GetComponent<Image>().sprite = _image;                                                                    // 対応数値の選択
             _setImage.GetComponent<Image>().color = new Color(_imageColor.r, _imageColor.g, _imageColor.b, _imageColor.a);      // カラーのセット
         }
