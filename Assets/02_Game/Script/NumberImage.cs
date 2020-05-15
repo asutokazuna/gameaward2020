@@ -7,6 +7,7 @@
  * @date    2020/05/05(火)  値の設定の仕方を変更
  * @date    2020/05/08(金)  カラー変更に対応
  * @date    2020/05/14(木)  バグを修正
+ * @date    2020/05/15(金)  位置座標のズレを修正
  */
 
 using System.Collections;
@@ -121,7 +122,7 @@ public class NumberImage : MonoBehaviour
             RectTransform _numberImage = (RectTransform)Instantiate(GameObject.Find(_numberObject)).transform;                      // 初期ポジション
             _numberImage.SetParent(this.transform, false);                                                                          // 親の選択
             _numberImage.localPosition = new Vector2(                                                                               // ポジション指定
-                _numberImage.localPosition.x - _numberImage.sizeDelta.x * i / 2,                                                    // X
+                _numberImage.localPosition.x - _numberImage.sizeDelta.x * _numberImage.localScale.x * i,                            // X
                 _numberImage.localPosition.y);                                                                                      // Y
             _numberImage.GetComponent<Image>().sprite = _numImage[_digitList[i]];                                                   // 対応数値の選択
             _numberImage.GetComponent<Image>().color = new Color(_numberColor.r, _numberColor.g, _numberColor.b, _numberColor.a);   // カラーのセット
@@ -165,7 +166,7 @@ public class NumberImage : MonoBehaviour
             RectTransform _numberImage = (RectTransform)Instantiate(GameObject.Find(_numberObject)).transform;                      // 初期ポジション
             _numberImage.SetParent(this.transform, false);                                                                          // 親の選択
             _numberImage.localPosition = new Vector2(                                                                               // ポジション指定
-                _numberImage.localPosition.x + _numberImage.sizeDelta.x * (_digitList.Count - 1 - i) / 2,                                                    // X
+                _numberImage.localPosition.x + _numberImage.sizeDelta.x * _numberImage.localScale.x * (_digitList.Count - 1 - i),   // X
                 _numberImage.localPosition.y);                                                                                      // Y
             _numberImage.GetComponent<Image>().sprite = _numImage[_digitList[i]];                                                   // 対応数値の選択
             _numberImage.GetComponent<Image>().color = new Color(_numberColor.r, _numberColor.g, _numberColor.b, _numberColor.a);   // カラーのセット
