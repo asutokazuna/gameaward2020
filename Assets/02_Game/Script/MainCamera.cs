@@ -19,7 +19,7 @@ public class MainCamera : MonoBehaviour
 {
     //! フィールドブロックを変数に格納
     //! 配列にしたかったけどやり方わからなかった
-    [SerializeField] List<GameObject> _fieldBlock;
+    [SerializeField] List<GameObject> _fieldBlock = default;
 
  
     public float _angle = 90.0f;                //!< カメラを回転させたときに回転する角度
@@ -59,7 +59,6 @@ public class MainCamera : MonoBehaviour
 
     [SerializeField] float _rotateSpeedStart = 1.3f;    //!< 回転するはやさ（数字が小さいほど回転が早くなる）
     [SerializeField] Vector3 _circleSizeStart = new Vector3(8, 0, 8);//!< 回転するときの円の大きさ
-    [SerializeField] bool _focusStart = true;           //!< フォーカス対象の設定（trueがPlayer,falseがFieldCenter)
     [SerializeField] float _startHigh = 14.0f;          //!< スタート演出のカメラの高さ
     [SerializeField] float _startTime = 8.0f;           //!< スタート演出秒数
     [SerializeField] float _skipTime = 2.0f;            //!< スキップ時や最後補正するときのカメラ移動時間

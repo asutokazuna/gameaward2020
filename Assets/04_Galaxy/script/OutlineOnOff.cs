@@ -6,10 +6,10 @@ using UnityEngine;
 public class OutlineOnOff : MonoBehaviour
 {
     private MeshRenderer _meshRend;
-    [SerializeField] float _outlineWidth;
-    [SerializeField] Color _outlineColor;
-    [SerializeField] Color _color1;
-    [SerializeField] Color _color2;
+    [SerializeField] float _outlineWidth = 0.0f;
+    [SerializeField] Color _outlineColor = default;
+    [SerializeField] Color _color1 = default;
+    [SerializeField] Color _color2 = default;
 
     // Start is called before the first frame update
     void Start()

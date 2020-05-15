@@ -20,11 +20,14 @@ public class ClearManager : MonoBehaviour
     private GameObject ParticleTop;
 
 
+    private GameObject[] _player;
+
     // Start is called before the first frame update
     void Start()
     {
         FlgScript = GameObject.Find("Map").GetComponent<Map>();
         ClearScript = GameObject.Find("Clear").GetComponent<Clear>();
+        _player = GameObject.FindGameObjectsWithTag("Player");
         _isFirst = true;
         _timer = WaitTime;
         _changeDelay = DelayTime;
@@ -52,6 +55,12 @@ public class ClearManager : MonoBehaviour
             if(_timer <= 0.0f)
             {
                 SetClear();
+
+
+                foreach (GameObject obj in _player)
+                {
+                    obj.GetComponent<Player>().GameClear();
+                }
             }
             else
             {

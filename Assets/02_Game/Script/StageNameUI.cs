@@ -16,8 +16,8 @@ using UnityEngine.UI;
  */
 public class StageNameUI : MonoBehaviour
 {
-    [SerializeField] Color[] _stageColor;   //!< ステージごと画像のカラー
-    [SerializeField] int     _stageNum;     //!< 1惑星当たりのステージ数
+    [SerializeField] Color[] _stageColor = default;   //!< ステージごと画像のカラー
+    [SerializeField] int     _stageNum = 0; //!< 1惑星当たりのステージ数
     NumberImage _stageNoImage;              //!< ステージ番号画像管理
     LevelImage  _planetName;                //!< 惑星名管理
     int         _stageNo;                   //!< ステージ番号

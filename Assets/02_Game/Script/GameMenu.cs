@@ -16,11 +16,11 @@ public class GameMenu : MonoBehaviour
     public int _select;
     private bool _isMenu;
     [SerializeField]
-    private GameObject _menuUI;
+    private GameObject _menuUI = default;
     [SerializeField]
     private GameObject[] UIPanel = new GameObject[4];
     [SerializeField]
-    private GameObject _selectBG;
+    private GameObject _selectBG = default;
 
     private GameObject _sceneManager;
     

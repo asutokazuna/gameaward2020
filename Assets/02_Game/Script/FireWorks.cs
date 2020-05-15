@@ -5,17 +5,17 @@ using UnityEngine;
 public class FireWorks : MonoBehaviour
 {
     [SerializeField]
-    private float EXP_TIME;
+    private float EXP_TIME = 0.0f;
     [SerializeField]
-    private float EXP_timer;
+    private float EXP_timer =0.0f;
 
     [SerializeField]
-    private float _speed;
+    private float _speed = 0.0f;
 
     [SerializeField]
-    private float EXP_min;
+    private float EXP_min = 0.0f;
     [SerializeField]
-    private float EXP_max;
+    private float EXP_max = 0.0f;
     // Start is called before the first frame update
     void Start()
     {

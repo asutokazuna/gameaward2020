@@ -21,7 +21,7 @@ public class RaySystem : MonoBehaviour
     public bool _isSelect = false;
 
     [SerializeField]
-    private float _pointerDelay;
+    private float _pointerDelay = 0.0f;
     private float _pointerTimer;
     private bool _isEmit;
 

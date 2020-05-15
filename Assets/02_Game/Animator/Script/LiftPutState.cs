@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LiftPutState : StateMachineBehaviour
 {
-    [SerializeField] PlayerAnim.PlayerState _state;   //!< プレイヤーの状態取得用
+    [SerializeField] PlayerAnim.PlayerState _state = default;   //!< プレイヤーの状態取得用
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

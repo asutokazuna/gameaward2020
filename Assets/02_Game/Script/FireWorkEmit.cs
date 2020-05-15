@@ -9,22 +9,23 @@ public class FireWorkEmit : MonoBehaviour
     private Map ClearScript;
 
     [SerializeField]
-    private float EmitDistance;
+    private float EmitDistance = 0.0f;
 
     private GameObject FireWorkObj;
 
     private float _timer = 0;
 
     [SerializeField]
-    private float Delay_min;
+    private float Delay_min = 0.0f;
     [SerializeField]
-    private float Delay_max;
+    private float Delay_max = 0.0f;
 
     // Start is called before the first frame update
     void Start()
     {
         ClearScript = GameObject.FindWithTag("Map").GetComponent<Map>();
         FireWorkObj = (GameObject)Resources.Load("FireWork");
+        this.GetComponent<MeshRenderer>().enabled = false;
     }
 
     // Update is called once per frame

@@ -50,11 +50,11 @@ public class WaterFlow : MonoBehaviour
 
     //回転補正値
     [SerializeField]
-    private int RotateDirection;
+    private int RotateDirection = default;
 
     //補正後の方向
     [SerializeField]
-    int TargetDirection;
+    int TargetDirection = default;
 
     private GameObject MapCtrl;
     private Map CountBoxScript;
@@ -67,14 +67,14 @@ public class WaterFlow : MonoBehaviour
     public int  _currentWater;
     public int   _maxWater;
     [SerializeField]
-    public bool _isFullWater;
+    public bool _isFullWater = default;
     private bool _isMinusWater;
 
     [SerializeField]
-    private bool _isWaterSource;
+    private bool _isWaterSource = default;
 
     [SerializeField]
-    private bool _isFullPS;
+    private bool _isFullPS = default;
 
     private float _adjust = 0.5f;
 

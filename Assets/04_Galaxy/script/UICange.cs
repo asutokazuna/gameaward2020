@@ -8,8 +8,8 @@ using UnityEngine.UI;
 public class UICange : MonoBehaviour
 {
     [SerializeField] GameObject[] _gameObject = default;
-    [SerializeField] int _planetNo;
-    [SerializeField] int MAX_UI;
+    [SerializeField] int _planetNo = 0;
+    [SerializeField] int MAX_UI = 0;
     private StageSelectUI _stageSelectUI;
     private GameObject _setUI;
 
