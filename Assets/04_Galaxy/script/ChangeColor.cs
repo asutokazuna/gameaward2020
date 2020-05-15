@@ -24,10 +24,10 @@ public class ChangeColor : MonoBehaviour
         E_BETWEEN_TWO_COLOR
     }
 
-    [SerializeField] ChangeColorType    _changeColorType;   //!< 変化の仕方  
-    [SerializeField] Color[]            _setColor;          //!< 変化させる色  
-    [SerializeField] AnimationCurve     _setColorCurve;     //!< 変化させ方  
-    [SerializeField] string             _parentName;        //!< 参考にするオブジェクト
+    [SerializeField] ChangeColorType    _changeColorType = default;   //!< 変化の仕方  
+    [SerializeField] Color[]            _setColor = default;          //!< 変化させる色  
+    [SerializeField] AnimationCurve     _setColorCurve = default;     //!< 変化させ方  
+    [SerializeField] string             _parentName = default;        //!< 参考にするオブジェクト
     Color _color;                                           //!< アルファ値管理用
     Color _oldColor;                                        //!< アルファ値管理用
     Image _parentImage;                                     //!< 参考にする画像

@@ -16,7 +16,7 @@ using UnityEngine.Events;
 public class Fade : MonoBehaviour
 {
     Material _appliedMat;
-    [SerializeField] Material[] _fadeMat;
+    [SerializeField] Material[] _fadeMat = default;
     [Range(0, 1)] [SerializeField] float _fadeSpeed = default;
 
 

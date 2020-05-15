@@ -28,7 +28,7 @@ public class CountBoxUI : MonoBehaviour
     // 画像表示用
     public NumberImage          _tatalBoxImage;     //!< 箱全体数画像表示用
     public FullBoxImage         _fullBoxImage;      //!< 箱全体数画像表示用
-    [SerializeField] Color[]    _countNumColor;     //!< 画像のカラー保持
+    [SerializeField] Color[]    _countNumColor = default;     //!< 画像のカラー保持
     StageNameUI                 _stageNameUI;       //!< 現在のステージ取得用
 
     // Start is called before the first frame update

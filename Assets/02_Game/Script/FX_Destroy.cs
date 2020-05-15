@@ -5,7 +5,7 @@ using UnityEngine;
 public class FX_Destroy : MonoBehaviour
 {
     [SerializeField]
-    private float DestroyTime;
+    private float DestroyTime = 0.0f;
     private float _timer;
 
     // Start is called before the first frame update

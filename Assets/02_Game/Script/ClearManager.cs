@@ -21,11 +21,19 @@ public class ClearManager : MonoBehaviour
 
     public static bool[] _stageClear = new bool[(int)E_SCENE.CLEAR];
 
+    private GameObject[] _player;
+    List<PlayerAnim> _playerAnims = new List<PlayerAnim>();
+
     // Start is called before the first frame update
     void Start()
     {
         FlgScript = GameObject.Find("Map").GetComponent<Map>();
         ClearScript = GameObject.Find("Clear").GetComponent<Clear>();
+        _player = GameObject.FindGameObjectsWithTag("Player");
+        foreach (GameObject obj in _player)
+        {
+            _playerAnims.Add(obj.GetComponent<PlayerAnim>());
+        }
         _isFirst = true;
         _timer = WaitTime;
         _changeDelay = DelayTime;
@@ -55,6 +63,12 @@ public class ClearManager : MonoBehaviour
             if(_timer <= 0.0f)
             {
                 SetClear();
+
+
+                foreach (PlayerAnim anim in _playerAnims)
+                {
+                    anim.SetPlayerState(PlayerAnim.PlayerState.E_HAPPY);
+                }
             }
             else
             {

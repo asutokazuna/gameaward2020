@@ -22,17 +22,17 @@ public class LevelImage : MonoBehaviour
     private const int       MAX_LEVEL = 10;     //!< 最大10
     private int             _value;             //!< 表示する数
     private int             _imageType;         //!< 表示する数
-    [SerializeField] int    _turnBackNum;       //!< 折り返す位置(個数)
+    [SerializeField] int    _turnBackNum = 0;       //!< 折り返す位置(個数)
 
     // 画像管理用
     public Sprite[]         _levelImage;        //!< image画像対応
     Color                   _imageColor;        //!< 画像のカラー
 
     // タグ指定用
-    [SerializeField] string _levelTag;          //!< タグ名保存用
+    [SerializeField] string _levelTag = default;//!< タグ名保存用
 
     // オブジェクト指定用
-    [SerializeField] string _levelObject;       //!< オブジェクト名保存用
+    [SerializeField] string _levelObject = default; //!< オブジェクト名保存用
 
     // Start is called before the first frame update
     void Start()
