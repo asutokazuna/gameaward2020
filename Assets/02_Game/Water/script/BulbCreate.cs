@@ -60,8 +60,9 @@ public class BulbCreate : MonoBehaviour
                     Vector3 pos = this.transform.position;
                     pos.y += 0.0f;
 
-
+                    
                     Instantiate(obj, pos, Quaternion.Euler(-90, 0, 0));
+                   
                 }
             }
         }

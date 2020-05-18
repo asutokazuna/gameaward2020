@@ -10,8 +10,8 @@ public class BulbDestroy : MonoBehaviour
     private float fTime;//経過時間
     private bool bFlg;
 
-    public GameObject _parent;
-    private WaterFlow WaterScript;
+    public GameObject _parent = default;
+    private WaterFlow WaterScript = default;
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +19,11 @@ public class BulbDestroy : MonoBehaviour
         fTime = fTargetTime;
         bFlg = false;
 
-        WaterScript = _parent.GetComponent<WaterFlow>();
+        if(_parent != default)
+        {
+            WaterScript = _parent.GetComponent<WaterFlow>();
+        }
+        
     }
 
     // Update is called once per frame
