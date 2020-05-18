@@ -27,6 +27,7 @@ public class StageSelectUI : MonoBehaviour
     int         _planetID;                  //!< 惑星管理用
     int         _level;                     //!< レベル管理用
     LevelImage  _levelImage;                //!< レベル画像セット用
+    PlayMovie   _playMovie;                 //!< 動画再生用
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +40,7 @@ public class StageSelectUI : MonoBehaviour
         _stageId = 0;
         _oldStageId = 0;
         _planetID = 0;
+        _playMovie = GameObject.Find("PlayVideo").GetComponent<PlayMovie>();
     }
 
     // Update is called once per frame
@@ -85,6 +87,7 @@ public class StageSelectUI : MonoBehaviour
                 _levelImage.SetImageColor(new Color(1.0f,1.0f,1.0f,0.0f));
                 _levelImage.SetImage(_planetID,_level);
                 _stageSelectAnim.SetBool("Select", true);
+                _playMovie.SetVideo(stageNo);       //動画再生
             }
         }
         else
@@ -103,5 +106,6 @@ public class StageSelectUI : MonoBehaviour
     {
         _oldStageId = _stageId;
         _stageSelectAnim.SetBool("Select", false);
+        _playMovie.SetAlpha0();
     }
 }
