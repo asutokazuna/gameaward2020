@@ -217,15 +217,20 @@ public class Player : BaseObject
      */
     public void HandAction(E_OBJECT_MODE mode)
     {
-        if (_isMove || _lifted != E_HANDS_ACTION.NONE)
-        {// 取り合えずここに書き込む
-            return;
-        }
-        if (mode == E_OBJECT_MODE.LIFT && _haveObject._myObject == E_OBJECT.NONE)
+        //if (_isMove || _lifted != E_HANDS_ACTION.NONE)
+        //{// 取り合えずここに書き込む
+        //    return;
+        //}
+        if (!_isMove && mode == E_OBJECT_MODE.LIFT && _haveObject._myObject == E_OBJECT.NONE)
         {// 物を持ち上げる
+            if (_lifted == E_HANDS_ACTION.DO &&
+                _map.GetObject(_map.GetObject(new Vector3Int(_position.x, _position.y - 1, _position.z)))._mode == E_OBJECT_MODE.PUTED)
+            {
+                return;
+            }
             Lift();
         }
-        else if (mode == E_OBJECT_MODE.PUT && _haveObject._myObject != E_OBJECT.NONE)
+        else if (!_isMove && mode == E_OBJECT_MODE.PUT && _haveObject._myObject != E_OBJECT.NONE)
         {// 物を下す
             Put();
             _audioSource.PlayOneShot(_SEPut);
@@ -252,8 +257,6 @@ public class Player : BaseObject
         _oldPosition    = _position;      //!< 座標の保持
         _position       = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
         _isMove         = true;
-
-        Debug.Log(name + " が処理しました");
 
         if (_map.isTrampline(new Vector3Int(_oldPosition.x, _oldPosition.y - 1, _oldPosition.z)))
         {
@@ -508,7 +511,6 @@ public class Player : BaseObject
      */
     override protected void offsetRotate(Vector3Int direct)
     {
-        Debug.Log(name + "回転して");
         if (direct.z == -1)
         {
             transform.DORotate(
@@ -572,6 +574,11 @@ public class Player : BaseObject
         _isMove     = false;
 
         _oldPosition = _position;
+
+        if (_map.isUse(new Vector3Int(_position.x, _position.y - 1, _position.z), E_OBJECT.PLAYER_01))
+        {
+            _lifted = E_HANDS_ACTION.DO;
+        }
 
         //if (_haveObject._myObject == E_OBJECT.NONE ||
         //    _haveObject._myObject == E_OBJECT.MAX)

@@ -70,7 +70,7 @@ public class BaseObject : MonoBehaviour
 
     [SerializeField] public E_HANDS_ACTION      _lifted;        //!< 何かに持ち上げられいる時 = true
 
-    [SerializeField] protected E_OBJECT_MODE    _mode;          //!< オブジェクトの状態
+    [SerializeField] public E_OBJECT_MODE    _mode;          //!< オブジェクトの状態
     [SerializeField] public bool                _gameOver       //!< ゲームオーバー
     { get; protected set; }
 

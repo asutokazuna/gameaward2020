@@ -53,9 +53,10 @@ public enum E_TURN
 /**
  * @brief 一マスあたりの情報
  */
+ [SerializeField]
 public struct SquareInfo {
-    public E_OBJECT         _myObject;  //!< マスが持つオブジェクト情報
-    public int              _number;    //!< オブジェクトナンバー
+    [SerializeField] public E_OBJECT         _myObject;  //!< マスが持つオブジェクト情報
+    [SerializeField] public int              _number;    //!< オブジェクトナンバー
 }
 
 
@@ -179,7 +180,7 @@ public class Map : MonoBehaviour
                     return;
                 }
             }
-
+            PlayerSort();
             _turn = E_TURN.WAIT;
             return;
         }
@@ -271,6 +272,7 @@ public class Map : MonoBehaviour
                 obj._putUpdate = true;
             }
         }
+        PlayerSort(false);
         foreach (Player obj in _player)
         {
             if (flag)
@@ -699,10 +701,18 @@ public class Map : MonoBehaviour
      * @param1 フィールド座標
      * @return 指定のフィールド座標にオブジェクトがあれば true
      */
-    public bool isUse(Vector3Int pos)
+    public bool isUse(Vector3Int pos, E_OBJECT obj = E_OBJECT.NONE)
     {
-        if (!isLimitField(pos) && _map[pos.x, pos.y, pos.z]._myObject != E_OBJECT.NONE)
-            return true;
+        if (obj == E_OBJECT.NONE)
+        {
+            if (!isLimitField(pos) && _map[pos.x, pos.y, pos.z]._myObject != E_OBJECT.NONE)
+                return true;
+        }
+        else if (obj != E_OBJECT.NONE)
+        {
+            if (!isLimitField(pos) && _map[pos.x, pos.y, pos.z]._myObject == obj)
+                return true;
+        }
         return false;
     }
 
@@ -916,10 +926,40 @@ public class Map : MonoBehaviour
 
 
     /**
+     * @brief 指定したマップ座標のオブジェクト情報取得
+     * @param マップ座標
+     * @return オブジェクト情報
+     */
+    public SquareInfo GetObject(Vector3Int pos)
+    {
+        if (isUse(pos))
+        {
+            return _map[pos.x, pos.y, pos.z];
+        }
+        return new SquareInfo();
+    }
+
+
+    /**
+     * @brief 指定したオブジェクト情報のスクリプト取得
+     * @param オブジェクト情報
+     * @return オブジェクト情報
+     */
+    public BaseObject GetObject(SquareInfo obj)
+    {
+        if (obj._myObject == E_OBJECT.PLAYER_01)
+        {
+            return _player[obj._number];
+        }
+        return new BaseObject();
+    }
+
+
+    /**
      * @brief プレイヤーのソート
      * @return なし
      */
-    private void PlayerSort()
+    private void PlayerSort(bool flag = true)
     {
         if (_playerCnt <= 1)
         {// プレイヤーが一体しかいない場合
@@ -930,11 +970,23 @@ public class Map : MonoBehaviour
         {
             for (int j = 0; j < i; j++)
             {
-                if (isSort(_player[j], _player[j + 1]))
+                if (flag)
                 {
-                    work            = _player[j];
-                    _player[j]      = _player[j + 1];
-                    _player[j + 1]  = work;
+                    if (isSort(_player[j], _player[j + 1]))
+                    {
+                        work = _player[j];
+                        _player[j] = _player[j + 1];
+                        _player[j + 1] = work;
+                    }
+                }
+                else
+                {
+                    if (isSort(_player[j], _player[j + 1], false))
+                    {
+                        work = _player[j];
+                        _player[j] = _player[j + 1];
+                        _player[j + 1] = work;
+                    }
                 }
             }
         }
@@ -953,32 +1005,41 @@ public class Map : MonoBehaviour
     }
 
 
-
     /**
      * @brief 入れ替えができるかの判定
      * @return 入れ替えが行われるなら true
      */
-    private bool isSort(Player i, Player j)
+    private bool isSort(Player i, Player j, bool flag = true)
     {
-        if (_direct.x > 0 &&
-            (i._position.x < j._position.x))
-        {// 右方
-            return true;
+        if (flag)
+        {
+            if (_direct.x > 0 &&
+                (i._position.x < j._position.x))
+            {// 右方
+                return true;
+            }
+            else if (_direct.x < 0 &&
+                (i._position.x > j._position.x))
+            {// 左方
+                return true;
+            }
+            else if (_direct.z > 0 &&
+                (i._position.z < j._position.z))
+            {// 前方
+                return true;
+            }
+            else if (_direct.z < 0 &&
+                (i._position.z > j._position.z))
+            {// 後方
+                return true;
+            }
         }
-        else if (_direct.x < 0 &&
-            (i._position.x > j._position.x))
-        {// 左方
-            return true;
-        }
-        else if (_direct.z > 0 &&
-            (i._position.z < j._position.z))
-        {// 前方
-            return true;
-        }
-        else if (_direct.z < 0 &&
-            (i._position.z > j._position.z))
-        {// 後方
-            return true;
+        else
+        {
+            if (i._position.y > j._position.y)
+            {
+                return true;
+            }
         }
         return false;
     }
