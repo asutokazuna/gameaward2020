@@ -29,10 +29,14 @@ public class BulbDestroy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(WaterScript._currentWater == 0)
+        if(WaterScript != default)
         {
-            fTime = 0.0f;
+            if (WaterScript._currentWater == 0)
+            {
+                fTime = 0.0f;
+            }
         }
+        
 
         fTime -= Time.deltaTime;
 
