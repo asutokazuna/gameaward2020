@@ -1,6 +1,6 @@
 ﻿/**
  * @file BlockDestoroy.cs
- * @brief ぶっ壊れた箱の処理
+ * @brief ゲームオーバー時の箱の処理
  * @author Kondo katsutoshi
  * 
  * @date 2020/04/25 パリン
@@ -11,21 +11,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class BlockDestroy : MonoBehaviour
 {
-    /**
-     * @brief 生成直後に破壊処理を呼び出す
-     * @return なし
-     */
-
 
     void Start()
     {
-        destroyObject();
+
     }
 
     /**
-     * @brief なにも
+     * @brief 縮小
      */
     void Update()
     {
@@ -34,24 +30,30 @@ public class BlockDestroy : MonoBehaviour
 
     /**
      * @brief 破片を飛び散らせるしょり
+     * @param[in] ハコの位置
      * @return なし
-     * @details 子の情報を取得し力を加えて吹っ飛ばす
+     * @details 箱がエリア内なら破片を生成し力を加えて吹っ飛ばす
      */
-    public void destroyObject()
+    public void destroyObject(Vector3 _pos)
     {
-        var _random = new System.Random();
-        var _min = -3;
-        var _max = 3;
-
-
-        foreach (Rigidbody r in gameObject.GetComponentsInChildren<Rigidbody>())
+        if (_pos.y > 0)
         {
-            r.isKinematic = false;
-            r.transform.SetParent(null);
-            var vect = new Vector3(_random.Next(_min, _max), _random.Next(0, _max), _random.Next(_min, _max));
-            r.AddForce(vect, ForceMode.Impulse);
-            r.AddTorque(vect, ForceMode.Impulse);
-        };
-        Destroy(gameObject);
+            var _random = new System.Random();
+            var _min = -3;
+            var _max = 3;
+
+            this.gameObject.SetActive(false);       //割れた箱を非表示に
+            GameObject _Debris = Instantiate((GameObject)Resources.Load("Debris"), _pos, Quaternion.identity);       //箱の破片を生成
+
+            foreach (Rigidbody r in _Debris.GetComponentsInChildren<Rigidbody>())
+            {
+                r.isKinematic = false;
+                r.transform.SetParent(null);
+                var vect = new Vector3(_random.Next(_min, _max), _random.Next(0, _max), _random.Next(_min, _max));
+                r.AddForce(vect, ForceMode.Impulse);
+                r.AddTorque(vect, ForceMode.Impulse);
+            };
+            Destroy(_Debris);
+        }
     }
 }
