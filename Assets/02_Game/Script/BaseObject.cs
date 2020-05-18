@@ -328,9 +328,9 @@ public class BaseObject : MonoBehaviour
             {
                 _lifted = E_HANDS_ACTION.NONE;
                 WaitMode();
-                this.gameObject.SetActive(false);       //割れた箱を非表示に
-                Instantiate((GameObject)Resources.Load("Debris"), _nextPos, Quaternion.identity);       //箱の破片を生成
-                GameObject.FindGameObjectWithTag("Map").GetComponent<Map>()._gameOver = true;  // ゲームオーバーやで
+                BlockDestroy _blockDestroy = this.gameObject.AddComponent<BlockDestroy>();
+                _blockDestroy.destroyObject(_nextPos); //箱破壊の処理
+                GameObject.FindGameObjectWithTag("Map").GetComponent<Map>()._gameOver = true;
                 _gameOver = true;
             });
         }
