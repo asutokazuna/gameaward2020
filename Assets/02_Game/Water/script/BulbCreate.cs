@@ -68,7 +68,7 @@ public class BulbCreate : MonoBehaviour
 
         if (script._currentWater > nTargetCnt)
         {
-            if(!bFirst && gameObject.tag == "WaterBlock")
+            if (!bFirst && gameObject.tag == "WaterBlock")
             {
                 bFirst = true;
 
@@ -77,8 +77,9 @@ public class BulbCreate : MonoBehaviour
                 Vector3 pos = this.transform.position;
                 pos.y -= 0.2f;
 
-
-                Instantiate(obj, pos, Quaternion.Euler(-90, 0, 0));
+                GameObject _instantObj;
+                _instantObj = Instantiate(obj, pos, Quaternion.Euler(-90, 0, 0));
+                _instantObj.GetComponent<BulbDestroy>()._parent = this.gameObject;
             }
         }
 

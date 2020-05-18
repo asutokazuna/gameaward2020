@@ -41,11 +41,11 @@ public class WaterFlow : MonoBehaviour
      */
 
     //穴の方向の情報
-    [NamedArrayAttribute(new string[] { "FRONT", "RIGHT", "BACK", "LEFT", "UP", "DOWN" })]
+    [NamedArrayAttribute(new string[] { "FRONT", "LEFT", "BACK", "RIGHT", "UP", "DOWN" })]
     public bool[] direction = new bool[6];
 
     //水漏れの方向
-    [NamedArrayAttribute(new string[] { "FRONT", "RIGHT", "BACK", "LEFT", "UP", "DOWN" })]
+    [NamedArrayAttribute(new string[] { "FRONT", "LEFT", "BACK", "RIGHT", "UP", "DOWN" })]
     public bool[] WaterLeak = new bool[6];
 
     //回転補正値
@@ -88,6 +88,7 @@ public class WaterFlow : MonoBehaviour
         _isMinusWater = false;
 
         RotateDirection = (int)(this.gameObject.transform.localEulerAngles.y / 90.0f + 0.5f);
+        // RotateDirection = (int)((360.0f - this.gameObject.transform.localEulerAngles.y) / 90.0f + 0.5f);
 
         for (int i = 0;i < 6;i++)
         {
@@ -118,10 +119,17 @@ public class WaterFlow : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         RotateDirection = (int)(this.gameObject.transform.localEulerAngles.y / 90.0f + 0.5f);
+        // RotateDirection = (int)(this.gameObject.transform.localEulerAngles.y / 90.0f + 0.5f);
+
+
         if (!_isWaterSource)
         {
+            if(this.GetComponent<BlockTank>()._lifted > 0)
+            {
+                _currentWater = 0;
+            }
+
             if (_isFullWater)
             {
                 MinusWater();
@@ -200,8 +208,8 @@ public class WaterFlow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         RotateDirection = (int)(this.gameObject.transform.localEulerAngles.y / 90.0f + 0.5f);
+        // RotateDirection = (int)((360.0f - this.gameObject.transform.localEulerAngles.y) / 90.0f + 0.5f);
 
 
 
@@ -449,7 +457,7 @@ public class WaterFlow : MonoBehaviour
                 
                 if (direction[i])
                 {
-                    TargetDirection = (i + RotateDirection) % 4;
+                    TargetDirection = (i - RotateDirection + 4) % 4;
                    
                     switch (TargetDirection)
                     {
