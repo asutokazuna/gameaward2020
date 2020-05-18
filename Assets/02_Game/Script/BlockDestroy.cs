@@ -25,10 +25,7 @@ public class BlockDestroy : MonoBehaviour
      */
     void Update()
     {
-        if (this.gameObject.transform.localScale.y >= 0)
-        {
-            this.gameObject.transform.localScale -= Vector3.one;
-        }
+
     }
 
     /**
