@@ -209,7 +209,7 @@ public class CameraMove : MonoBehaviour
                 _isOrbital = true;
                 //Vector3 _axis = _camera.position - _currentPlanet.transform.position;
 
-                _angleX = 0.0f;
+                _angleX = -0.5f;
                 _angleY = 1.5f;
             }
         }
