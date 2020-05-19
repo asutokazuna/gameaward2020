@@ -45,6 +45,7 @@ public class Player : BaseObject
     PlayerManager                   _mgr;           //!< プレイヤー管理スクリプト
     Controller                      _input;         //!< 入力キー
     public bool _putUpdate;
+    public bool _liftedMove;
 
     /*
      * sound
@@ -102,6 +103,7 @@ public class Player : BaseObject
 
         _mode       = E_OBJECT_MODE.WAIT;
         _isMove     = false;
+        _liftedMove = false;
 
         _audioSource = GetComponent<AudioSource>();
 
@@ -225,6 +227,10 @@ public class Player : BaseObject
         {// 物を持ち上げる
             if (_lifted == E_HANDS_ACTION.DO &&
                 _map.GetObject(_map.GetObject(new Vector3Int(_position.x, _position.y - 1, _position.z)))._mode == E_OBJECT_MODE.PUTED)
+            {
+                return;
+            }
+            if (_liftedMove)
             {
                 return;
             }
@@ -389,6 +395,7 @@ public class Player : BaseObject
         _position       = pos;
         _lifted         = E_HANDS_ACTION.NOW_PLAY;
         _mode           = E_OBJECT_MODE.PUTED;
+        _liftedMove     = true;
         // 持っているオブジェクトの追従
         if (_haveObject._myObject != E_OBJECT.NONE)
         {// 何か持っている時
@@ -572,6 +579,7 @@ public class Player : BaseObject
     {
         _mode       = E_OBJECT_MODE.WAIT;
         _isMove     = false;
+        _liftedMove = false;
 
         _oldPosition = _position;
 
