@@ -17,8 +17,8 @@ using UnityEngine.UI;
  */
 public class StageSelectUI : MonoBehaviour
 {
-    [SerializeField] Color[] _stageColor = default;   //!< 1惑星当たりのステージ数
-    [SerializeField] int     _stageNum = 0;     //!< 1惑星当たりのステージ数
+    [SerializeField] Color[] _stageColor = default;     //!< ステージ表記のカラー
+    [SerializeField] int     _stageNum = 0;             //!< 1惑星当たりのステージ数
     NumberImage _stageSelectImage;          //!< ステージNoを画像
     E_SCENE     _oldStageId;                //!< 選ばれてるステージID管理用
     E_SCENE     _stageId;                   //!< 選ばれてるステージID管理用
@@ -27,6 +27,7 @@ public class StageSelectUI : MonoBehaviour
     int         _planetID;                  //!< 惑星管理用
     int         _level;                     //!< レベル管理用
     LevelImage  _levelImage;                //!< レベル画像セット用
+    LevelImage  _backDecoImage;             //!< ステージ表示の飾り画像セット用
     PlayMovie   _playMovie;                 //!< 動画再生用
 
     // Start is called before the first frame update
@@ -36,6 +37,7 @@ public class StageSelectUI : MonoBehaviour
         _stageSelectAnim = GetComponent<Animator>();
         _stageSelectImage = GetComponent<NumberImage>();
         _levelImage = GetComponent<LevelImage>();
+        _backDecoImage = GameObject.Find("StageBackUI").GetComponent<LevelImage>();
         _selectStage = GameObject.Find("CameraObj").GetComponent<RaySystem>();
         _stageId = 0;
         _oldStageId = 0;
@@ -86,8 +88,10 @@ public class StageSelectUI : MonoBehaviour
                 _stageSelectImage.SetValue(stageNo, false);
                 _levelImage.SetImageColor(new Color(1.0f,1.0f,1.0f,0.0f));
                 _levelImage.SetImage(_planetID,_level);
+                _backDecoImage.SetImageColor(_stageColor[_planetID]);
+                _backDecoImage.SetImage(_planetID, 1);
                 _stageSelectAnim.SetBool("Select", true);
-                _playMovie.SetVideo(stageNo);       //動画再生
+                _playMovie.SetVideo((int)_stageId - 2);       //動画再生
             }
         }
         else
@@ -106,6 +110,5 @@ public class StageSelectUI : MonoBehaviour
     {
         _oldStageId = _stageId;
         _stageSelectAnim.SetBool("Select", false);
-        _playMovie.SetAlpha0();
     }
 }
