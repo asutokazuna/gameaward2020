@@ -920,6 +920,37 @@ public class Player : BaseObject
 
 
     /**
+     * @brief 複数持ち上げてる判定
+     * @return 複数持っているなら true
+     */
+    public bool isMultiHave()
+    {
+        if (_map.GetObject(new Vector3Int(_position.x, _position.y + 1, _position.z))._myObject == E_OBJECT.PLAYER_01 &&
+            _map.GetObject(new Vector3Int(_position.x, _position.y + 2, _position.z))._myObject != E_OBJECT.NONE)
+        {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * @brief 乗っているトランポリンのオブジェクト取得
+     * @return トランポリンに乗っているならそのオブジェクト情報を返す
+     */
+    public GameObject GetRidingTrampoline()
+    {
+        if (_map.GetObject(new Vector3Int(_position.x, _position.y - 1, _position.z))._myObject == E_OBJECT.BLOCK_TRAMPLINE)
+        {
+            return _map._trampoline[
+                _map.GetObject(new Vector3Int(_position.x, _position.y - 1, _position.z))._number
+                ].gameObject;
+        }
+        return null;
+    }
+
+
+    /**
      * @brief アニメーション中かどうかの判定
      * @return _animation.AnimFinish
      */
