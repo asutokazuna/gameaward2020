@@ -12,14 +12,16 @@ public class PutSmoke : MonoBehaviour
 {
     // 変数宣言
     [SerializeField] private ParticleSystem _putSmoke = default;     //!< 置いた時のパーティクルシステム
-    E_HANDS_ACTION a;
+    private Map                              _map;                    //!< マップ情報
+    E_HANDS_ACTION _oldState;                                        //!< 箱の前回の状態取得用
 
     /**
      * 初期化
      */
     void Start()
     {
-        a = this.transform.parent.GetComponent<BlockTank>()._lifted;
+        _map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>();                      // コンポーネントの取得
+        _oldState = this.transform.parent.GetComponent<BlockTank>()._lifted;
     }
 
     /**
@@ -27,10 +29,15 @@ public class PutSmoke : MonoBehaviour
      */
     void Update()
     {
-        if(a == E_HANDS_ACTION.NOW_PLAY && this.transform.parent.GetComponent<BlockTank>()._lifted == E_HANDS_ACTION.NONE)
+        if(_map._gameOver)
+        {// 箱が落ちた・割れたなら再生しない
+            return;
+        }
+
+        if(_oldState == E_HANDS_ACTION.NOW_PLAY && this.transform.parent.GetComponent<BlockTank>()._lifted == E_HANDS_ACTION.NONE)
         {// 箱が置かれると
             _putSmoke.Play();     // 再生
         }
-        a = this.transform.parent.GetComponent<BlockTank>()._lifted;
+        _oldState = this.transform.parent.GetComponent<BlockTank>()._lifted;
     }
 }
