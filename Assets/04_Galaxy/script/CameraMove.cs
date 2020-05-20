@@ -40,7 +40,7 @@ public class CameraMove : MonoBehaviour
 
     private RaySystem _rayScript;
 
-    
+    [SerializeField]
     private GameObject _particleUI;
 
     // Start is called before the first frame update
@@ -92,13 +92,13 @@ public class CameraMove : MonoBehaviour
         }
            
 
-        if(_currentID >= 4)
+        if(_currentID >= 7)
         {
             _currentID = 1;
         }
         if (_currentID <= 0)
         {
-            _currentID = 3;
+            _currentID = 6;
         }
 
 
@@ -116,7 +116,7 @@ public class CameraMove : MonoBehaviour
         {
             if (_particleUI)
             {
-                _particleUI.GetComponent<ParticleSystem>().Play();
+                _particleUI.GetComponent<ParticleSystem>().Play(); Debug.Log("play");
             }
             
             _agent.destination = _currentPlanet.transform.position;
