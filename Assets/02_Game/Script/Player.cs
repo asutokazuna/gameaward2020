@@ -308,7 +308,14 @@ public class Player : BaseObject
         }
         else
         {// 正面への移動
-            _mode = E_OBJECT_MODE.MOVE;
+            if (_map.isTrampline(new Vector3Int(_oldPosition.x, _oldPosition.y - 1, _oldPosition.z)))
+            {// トランポリンからの移動の場合はジャンプモードへ移行する
+                _mode = E_OBJECT_MODE.GET_UP;
+            }
+            else
+            {
+                _mode = E_OBJECT_MODE.MOVE;
+            }
             _audioSource.PlayOneShot(_SEMove);
         }
 
@@ -331,7 +338,6 @@ public class Player : BaseObject
         else if (_mode == E_OBJECT_MODE.GET_UP || _mode == E_OBJECT_MODE.GET_OFF || _mode == E_OBJECT_MODE.FALL)
         {// ジャンプ
             JumpMode(); // アニメーションのセット
-
         }
         else if (_mode == E_OBJECT_MODE.LIFTED)
         {
@@ -715,7 +721,7 @@ public class Player : BaseObject
             //}
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
 
-            transform.DOJump(_nextPos, 1, 1, _mgr.MoveTime, false).OnComplete(() =>
+            transform.DOJump(_nextPos, _position.y - _oldPosition.y, 1, _mgr.MoveTime, false).OnComplete(() =>
             {
                 WaitMode();
             });
@@ -737,7 +743,7 @@ public class Player : BaseObject
             //}
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
 
-            transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z), 1, 1, _mgr.MoveTime, false).OnComplete(() =>
+            transform.DOJump(_nextPos, _oldPosition.y - _position.y, 1, _mgr.MoveTime, false).OnComplete(() =>
             {
                 WaitMode();
             });
