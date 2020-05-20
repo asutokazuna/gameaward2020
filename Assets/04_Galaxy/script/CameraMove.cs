@@ -40,7 +40,8 @@ public class CameraMove : MonoBehaviour
 
     private RaySystem _rayScript;
 
-   
+    
+    private GameObject _particleUI;
 
     // Start is called before the first frame update
     void Start()
@@ -58,6 +59,13 @@ public class CameraMove : MonoBehaviour
         _currentID = 1;
 
         _rayScript = this.gameObject.GetComponent<RaySystem>();
+
+        _particleUI = GameObject.Find("Concentrate");
+        if(_particleUI)
+        {
+            _particleUI.GetComponent<ParticleSystem>().Stop();
+        }
+        
     }
 
     // Update is called once per frame
@@ -106,13 +114,25 @@ public class CameraMove : MonoBehaviour
         
         if (!_isOrbital)
         {
+            if (_particleUI)
+            {
+                _particleUI.GetComponent<ParticleSystem>().Play();
+            }
+            
             _agent.destination = _currentPlanet.transform.position;
             _cameraSpd = _cameraRotateSpd;
             //UI.SetActive(false);
             StageSelectManager.GetComponent<UICange>().PlanetNameOff();
+            
         }
         else
         {
+            if (_particleUI)
+            {
+                _particleUI.GetComponent<ParticleSystem>().Stop();
+                _particleUI.GetComponent<ParticleSystem>().Clear();
+            }
+            
             //UI.SetActive(true);
             StageSelectManager.GetComponent<UICange>().PlanerNameOn();
             _cameraSpd = 1.0f;
