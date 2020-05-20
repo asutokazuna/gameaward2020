@@ -136,4 +136,14 @@ public class PlayerAnim : MonoBehaviour
     {
         _playerAnimator.SetBool("Finish", true);
     }
+
+    /**
+   * @brief        プレイヤーの状態の取得
+   * @return       _playerState　プレイヤーの状態
+   * @details      プレイヤーの状態を取得する関数です
+   */
+    public PlayerState GetPlayerState()
+    {
+        return _playerState;
+    }
 }
