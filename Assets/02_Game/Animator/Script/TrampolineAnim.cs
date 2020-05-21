@@ -31,6 +31,12 @@ public class TrampolineAnim : MonoBehaviour
     */
     public void StartWaitTP()
     {
+        Invoke("StartWaitTPAnim", 0.3f);
+
+    }
+
+    void StartWaitTPAnim()
+    {
         _TPAnimator.SetBool("FinishWaitTP", false);     // アニメータにセット
         _TPAnimator.SetBool("StartWaitTP", true);       // アニメータにセット
     }
@@ -44,6 +50,10 @@ public class TrampolineAnim : MonoBehaviour
     {
         _TPAnimator.SetBool("StartWaitTP", false);     // アニメータにセット
         _TPAnimator.SetBool("StartJumpTP", true);      // アニメータにセット
+        _TPAnimator.SetBool("Jump", true);          // アニメータにセット
+        _countShrink = 0;
+        _TPAnimator.SetInteger("Count", _countShrink);
+        //Invoke("FinishTP", 0.2f);
     }
 
     /**
@@ -54,7 +64,7 @@ public class TrampolineAnim : MonoBehaviour
     void FinishJumpTP()
     {
         _TPAnimator.SetBool("StartJumpTP", false);     // アニメータにセット
-        _TPAnimator.SetBool("FinishJumpTP", true);     // アニメータにセット
+        //_TPAnimator.SetBool("FinishJumpTP", true);     // アニメータにセット
     }
 
     /**
@@ -62,14 +72,13 @@ public class TrampolineAnim : MonoBehaviour
     * @return       なし
     * @details      トランポリンアニメーションの終了をセットするアニメーション関数です
     */
-    void FinishTP()
+    void CountTP()
     {
-        _countShrink++;
-        if (_countShrink == _maxShrink)
+        if (_TPAnimator.GetBool("Jump"))
         {
-            _countShrink = 0;
-            _TPAnimator.SetBool("FinishJumpTP", false);     // アニメータにセット
-            _TPAnimator.SetBool("FinishTP", true);          // アニメータにセット
+            _countShrink++;
+            _TPAnimator.speed /= 1.3f;
+            _TPAnimator.SetInteger("Count", _countShrink);
         }
     }
 }

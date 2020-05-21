@@ -638,6 +638,10 @@ public class Player : BaseObject
             //{// プレイヤー以外を持っている時
             //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK_BOX);
             //}
+            if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
+            {
+                _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP);
+            }
 
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_WALK);
         }
@@ -692,6 +696,11 @@ public class Player : BaseObject
             }
             else
             {// そうじゃない場合
+                if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
+                {
+                    //_animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP);
+                    _animation.SetTrampolineAnim(GetRidingTrampoline());
+                }
                 WaitMode();
             }
         });
@@ -719,10 +728,29 @@ public class Player : BaseObject
             //{// 何かを持っている時
             //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
             //}
+
+            if (_animation.GetTPFlag())
+            {
+                _animation.SetJumpTrampolineAnim();
+            }
+            else if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
+            {
+                _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP);
+            }
+
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
 
             transform.DOJump(_nextPos, _position.y - _oldPosition.y, 1, _mgr.MoveTime, false).OnComplete(() =>
             {
+                if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
+                {
+                    //_animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP);
+                    _animation.SetTrampolineAnim(GetRidingTrampoline());
+                }
+                else
+                {
+                    _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP_FALSE);
+                }
                 WaitMode();
             });
         }
@@ -741,10 +769,24 @@ public class Player : BaseObject
             //{// 何かを持っている時
             //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
             //}
+            if (_animation.GetTPFlag())
+            {
+                _animation.SetJumpTrampolineAnim();
+            }
+
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
 
             transform.DOJump(_nextPos, _oldPosition.y - _position.y, 1, _mgr.MoveTime, false).OnComplete(() =>
             {
+                if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
+                {
+                    _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP);
+                    _animation.SetTrampolineAnim(GetRidingTrampoline());
+                }
+                else
+                {
+                    _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP_FALSE);
+                }
                 WaitMode();
             });
         }

@@ -4916,7 +4916,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7838810763184735828}
   - component: {fileID: 7838810763184735829}
-  - component: {fileID: 7838810763184735819}
   - component: {fileID: 7838810763184735818}
   - component: {fileID: -4332958909430658648}
   m_Layer: 0
@@ -4963,20 +4962,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &7838810763184735819
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7838810763184735816}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b67657bb30b6b0147a9e882a796c28b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerState: 0
-  _trampolineAnim: {fileID: 0}
 --- !u!114 &7838810763184735818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4998,6 +4983,7 @@ MonoBehaviour:
   _lifted: 0
   _mode: 0
   _putUpdate: 0
+  _liftedMove: 0
   _SEMove: {fileID: 0}
   _SEjump: {fileID: 0}
   _SEPut: {fileID: 0}

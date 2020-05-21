@@ -28,12 +28,15 @@ public class PlayerAnim : MonoBehaviour
         E_BOX,
         E_CHARA,
         E_OVER,
+
+        E_TP_FALSE,
     }
 
     // アニメーション管理用
     Animator    _playerAnimator;        //!< アニメーター取得用
     PlayerState _playerState;           //!< プレイヤーの状態管理用
     WaitState[] _waitState;
+    TrampolineAnim _trampolineAnim;
 
     // Start is called before the first frame update
     void Start()
@@ -49,13 +52,14 @@ public class PlayerAnim : MonoBehaviour
     void Update()
     {
         // 待機ステートに入ったかチェック
-        for (int i = 0; i < _waitState.Length; ++i)
+        for (int i = 0; i < _waitState.Length; i++)
         {
             if(_waitState[i]._isWait)
             {
                 _waitState[i]._isWait = false;
                 _playerState = PlayerState.E_WAIT;
                 Invoke("SetAnimFinish", 0.2f);
+                break;
             }
         }
     }
@@ -103,6 +107,9 @@ public class PlayerAnim : MonoBehaviour
             case PlayerInfo.E_OVER:
                 _playerAnimator.SetBool("Over", true);
                 break;
+            case PlayerInfo.E_TP_FALSE:
+                _playerAnimator.SetBool("TP", false);
+                break;
         }
     }
 
@@ -135,6 +142,42 @@ public class PlayerAnim : MonoBehaviour
     void SetAnimFinish()
     {
         _playerAnimator.SetBool("Finish", true);
+    }
+
+    
+    /**
+    * @brief        トランポリンのアニメーションをセット
+    * @return       なし
+    * @details      トランポリンのアニメーションをセットするアニメーションイベントの関数です
+    */
+    public void SetTrampolineAnim(GameObject trampoline)
+    {
+        if(trampoline == null)
+        {
+            return;
+        }
+        _trampolineAnim = trampoline.GetComponent<TrampolineAnim>();
+        _trampolineAnim.StartWaitTP();        // トランポリンアニメーションを開始
+    }
+
+    /**
+    * @brief        ジャンプした際のトランポリンのアニメーションをセット
+    * @return       なし
+    * @details      トランポリンのアニメーションをセットするアニメーションイベントの関数です
+    */
+    public void SetJumpTrampolineAnim()
+    {
+        _trampolineAnim.StartJumpTP();        // トランポリンアニメーションを開始
+    }
+
+    /**
+    * @brief        アニメーション終了取得
+    * @return       bool アニメーション終了フラグ
+    * @details      アニメーションの終了を取得する関数です
+    */
+    public bool GetTPFlag()
+    {
+        return _playerAnimator.GetBool("TP");
     }
 
     /**
