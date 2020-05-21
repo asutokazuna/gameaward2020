@@ -6,11 +6,16 @@ public class TrampolineShrinkState : StateMachineBehaviour
 {
     [SerializeField] int _maxShrinkCount = 1;
     float _speed;
+    bool _init = true;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        _speed = animator.speed;
+        if (_init)
+        {
+            _speed = animator.speed;
+            _init = false;
+        }
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -21,7 +26,6 @@ public class TrampolineShrinkState : StateMachineBehaviour
             if(animator.GetInteger("Count") >= _maxShrinkCount)
             {
                 animator.SetBool("FinishTP", true);
-                animator.speed = _speed;
             }
         }
     }
@@ -33,6 +37,7 @@ public class TrampolineShrinkState : StateMachineBehaviour
         {
             animator.SetBool("FinishTP", false);
             animator.SetBool("Jump", false);
+            animator.speed = _speed;
         }
         animator.SetBool("StartJumpTP", false);
     }

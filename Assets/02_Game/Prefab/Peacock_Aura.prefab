@@ -5429,7 +5429,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _footSmoke: {fileID: 6869229966089323872}
-  _animation: {fileID: 5845894944030789618}
+  _animation: {fileID: 0}
 --- !u!1 &946693751681330612
 GameObject:
   m_ObjectHideFlags: 0
@@ -9369,7 +9369,7 @@ GameObject:
   - component: {fileID: 6433375576992791653}
   - component: {fileID: 6112931830119810618}
   - component: {fileID: 6082601265264749879}
-  - component: {fileID: 5845894944030789618}
+  - component: {fileID: 3110084157293890401}
   - component: {fileID: -975802494320673312}
   - component: {fileID: -688885912319825019}
   m_Layer: 0
@@ -9407,7 +9407,7 @@ Animator:
   m_GameObject: {fileID: 8006459885820759670}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 03c698345b29ad642be9370d6e341109, type: 2}
+  m_Controller: {fileID: 9100000, guid: 4fc24c95728befd41a94d68e0d56a6bf, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -9436,8 +9436,15 @@ MonoBehaviour:
   _direct: {x: 0, y: 0, z: 0}
   _lifted: 0
   _mode: 0
-  _animation: {fileID: 0}
---- !u!114 &5845894944030789618
+  _putUpdate: 0
+  _liftedMove: 0
+  _SEMove: {fileID: 0}
+  _SEjump: {fileID: 0}
+  _SEPut: {fileID: 0}
+  _SETrampoline: {fileID: 0}
+  _SEGameClear: {fileID: 0}
+  _SEGameOver: {fileID: 0}
+--- !u!114 &3110084157293890401
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9446,10 +9453,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8006459885820759670}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b67657bb30b6b0147a9e882a796c28b2, type: 3}
+  m_Script: {fileID: 11500000, guid: 8208b4368fcd8954593fad8d2cd635f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerState: 0
 --- !u!199 &-975802494320673312
 ParticleSystemRenderer:
   serializedVersion: 6

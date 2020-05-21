@@ -77,7 +77,7 @@ public class TrampolineAnim : MonoBehaviour
         if (_TPAnimator.GetBool("Jump"))
         {
             _countShrink++;
-            _TPAnimator.speed /= 1.1f;
+            _TPAnimator.speed /= 1.3f;
             _TPAnimator.SetInteger("Count", _countShrink);
         }
     }

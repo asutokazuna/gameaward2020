@@ -180,10 +180,10 @@ public class PlayerAnimation : MonoBehaviour
     * @return       なし
     * @details      トランポリンのアニメーションをセットするアニメーションイベントの関数です
     */
-    void SetTrampolineAnim()
-    {
-        _trampolineAnim.StartWaitTP();        // トランポリンアニメーションを開始
-    }
+    //void SetTrampolineAnim()
+    //{
+    //    _trampolineAnim.StartWaitTP();        // トランポリンアニメーションを開始
+    //}
 
     /**
     * @brief        ジャンプした際のトランポリンのアニメーションをセット
