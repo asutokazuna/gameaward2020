@@ -20,6 +20,10 @@ public class FireWorkEmit : MonoBehaviour
     [SerializeField]
     private float Delay_max = 0.0f;
 
+    public Color[] _color1 = new Color[3];
+    public Color[] _color2 = new Color[3];
+    public Color[] _color3 = new Color[3];
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,7 +50,27 @@ public class FireWorkEmit : MonoBehaviour
                 _pos.x = EmitDistance * Mathf.Sin(_angle);
                 _pos.z = EmitDistance * Mathf.Cos(_angle);
 
-                Instantiate(FireWorkObj, _pos, Quaternion.identity);
+                GameObject _obj;
+                _obj = Instantiate(FireWorkObj, _pos, Quaternion.identity);
+
+                switch(Random.Range(0,3))
+                {
+                    case 0:
+                        _obj.GetComponent<FireWorks>()._color = _color1;
+                        break;
+
+                    case 1:
+                        _obj.GetComponent<FireWorks>()._color = _color2;
+                        break;
+
+                    case 2:
+                        _obj.GetComponent<FireWorks>()._color = _color3;
+                        break;
+                }
+                
+               
+               
+
                 _timer = Random.Range(Delay_min, Delay_max);
             }
             
