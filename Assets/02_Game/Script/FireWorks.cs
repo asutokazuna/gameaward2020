@@ -16,6 +16,10 @@ public class FireWorks : MonoBehaviour
     private float EXP_min = 0.0f;
     [SerializeField]
     private float EXP_max = 0.0f;
+
+    public Color[] _color;
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,8 +46,17 @@ public class FireWorks : MonoBehaviour
         else
         {
             GameObject obj;
+            GameObject Instant;
             obj = (GameObject)Resources.Load("FireWork_FX");
-            Instantiate(obj, transform.position, Quaternion.identity);
+            Instant = Instantiate(obj, transform.position, Quaternion.identity);
+
+            var _setColor0 = Instant.GetComponent<ParticleSystem>().main;
+            _setColor0.startColor = _color[0];
+            var _setColor1 = Instant.transform.GetChild(0).GetComponent<ParticleSystem>().main;
+            _setColor1.startColor = _color[1];
+            var _setColor2 = Instant.transform.GetChild(1).GetComponent<ParticleSystem>().main;
+            _setColor2.startColor = _color[2];
+
             Destroy(gameObject);
         }
     }
