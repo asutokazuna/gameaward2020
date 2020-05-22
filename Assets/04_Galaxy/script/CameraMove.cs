@@ -230,7 +230,7 @@ public class CameraMove : MonoBehaviour
                 //Vector3 _axis = _camera.position - _currentPlanet.transform.position;
 
                 _angleX = -0.5f;
-                _angleY = 1.5f;
+                _angleY = 1.3f;
             }
         }
         
