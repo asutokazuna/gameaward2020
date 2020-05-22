@@ -79,6 +79,9 @@ public class MainCamera : MonoBehaviour
 
     StageNameUI _stageNameUI;   //!< ステージ名のフェードアウトセット
     GameObject _gazingPoint;
+
+   public bool _reroad;
+
     /**
      * @brief 初期化処理
      * @return なし
@@ -136,7 +139,9 @@ public class MainCamera : MonoBehaviour
      */
     private void FixedUpdate()
     {
-        StartCamera();          //!< スタート演出の関数
+        
+            StartCamera();          //!< スタート演出の関数
+     
     }
 
     /**
@@ -446,41 +451,59 @@ public class MainCamera : MonoBehaviour
      */
     void StartCamera()
     {
-       
-        if (_initFlg)
+            if (_initFlg)
+            {
+                return;
+            }
+        _reroad = GameObject.FindWithTag("SceneManager").GetComponent<SceneMgr>()._stageReroad;
+        Debug.Log(GameObject.FindWithTag("SceneManager").GetComponent<SceneMgr>()._stageReroad);
+        if (!_reroad)
         {
-            return;
+            // プレイヤーが複数いる場合がめんどくさいのでとりあえずフィールドを注視点に 要検討
+            _lookAtObject = _fieldPos;
+            _lookAtObject.y = 1;
+
+            // 座標の計算
+            _startHigh -= (_holdStartHigh - _setCameraPos.y) / (_holdStartTime / 0.02f); // 1回の移動量計算
+            _time2 += 0.02f / _rotateSpeedStart;
+            _startTime -= 0.02f; // スタート演出時間減算
+            Vector3 _setPos = new Vector3(_fieldPos.x - _circleSizeStart.x * Mathf.Sin(_time2),
+                _startHigh, _fieldPos.z - _circleSizeStart.z * Mathf.Cos(_time2));  //!< 移動先計算
+
+            myTransform.transform.position = _setPos;
+            myTransform.LookAt(_gazingPoint.transform.position);  //!< 向きを設定
+
+            if (_startTime < 0 || Input.anyKeyDown)
+            { // ゲーム開始初期座標に移動（anyKeyでスタート演出スキップ）
+                _startTime = 0.0f;
+                _initFlg = true;
+                myTransform.DOMove(_setCameraPos, _skipTime).OnComplete(() =>
+                {
+                    _startMove = false;
+                    _finishStart = true;
+                    _stageNameUI.FadeOutStageName();
+                });
+                myTransform.DORotate(_holdCameraRotate, _skipTime);
+                //myTransform.DOLookAt(_gazingPoint.transform.position, _skipTime);
+            }
+        
         }
-
-        // プレイヤーが複数いる場合がめんどくさいのでとりあえずフィールドを注視点に 要検討
-        _lookAtObject = _fieldPos;
-        _lookAtObject.y = 1;
-
-        // 座標の計算
-        _startHigh -= (_holdStartHigh - _setCameraPos.y) / (_holdStartTime / 0.02f); // 1回の移動量計算
-        _time2 += 0.02f / _rotateSpeedStart;
-        _startTime -= 0.02f; // スタート演出時間減算
-        Vector3 _setPos = new Vector3(_fieldPos.x - _circleSizeStart.x * Mathf.Sin(_time2),
-            _startHigh, _fieldPos.z - _circleSizeStart.z * Mathf.Cos(_time2));  //!< 移動先計算
-
-        myTransform.transform.position = _setPos;
-        myTransform.LookAt(_gazingPoint.transform.position);  //!< 向きを設定
-
-        if (_startTime < 0 || Input.anyKeyDown)
-        { // ゲーム開始初期座標に移動（anyKeyでスタート演出スキップ）
+        else
+        {
             _startTime = 0.0f;
             _initFlg = true;
-            myTransform.DOMove(_setCameraPos, _skipTime).OnComplete(() =>
+            myTransform.DOMove(_setCameraPos,0.0f).OnComplete(() =>
             {
                 _startMove = false;
                 _finishStart = true;
                 _stageNameUI.FadeOutStageName();
-           });
-            myTransform.DORotate(_holdCameraRotate, _skipTime);
+            });
+            myTransform.DORotate(_holdCameraRotate, 0.0f);
+                GameObject.FindWithTag("SceneManager").GetComponent<SceneMgr>()._stageReroad = false;
             //myTransform.DOLookAt(_gazingPoint.transform.position, _skipTime);
         }
-      
-        
+
+
     }
 
     void DelayTime()

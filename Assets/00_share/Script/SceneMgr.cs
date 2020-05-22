@@ -119,7 +119,7 @@ public class SceneMgr : MonoBehaviour
 
     public static bool[] _stageClear = new bool[(int)E_SCENE.MAX];
 
-
+    public bool _stageReroad = false;     //!< スタート演出カット用
     void Awake()
     {
         if (_instance == null)
@@ -159,7 +159,6 @@ public class SceneMgr : MonoBehaviour
         int nowHandle = SceneManager.GetActiveScene().buildIndex;
         Debug.Log("ハンドル値" + nowHandle);
         _nowScene = _oldScene = (E_SCENE)nowHandle;
-
         //_mainCamera = GameObject.Find("Main Camera");
         //_fadeScript = _mainCamera.GetComponent<Fade>();
         //_fadeScript = GetComponent<Fade>();
@@ -215,6 +214,7 @@ public class SceneMgr : MonoBehaviour
         if (mode == E_SCENE_MODE.RELOAD)
         {// シーンの再読み込み
             _reroad = true;
+            _stageReroad = true;
             return;
         }
         else if (mode == E_SCENE_MODE.NEXT_STAGE)
@@ -364,6 +364,7 @@ public class SceneMgr : MonoBehaviour
         }
         return false;
     }
+
 }
 
 
