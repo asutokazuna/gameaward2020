@@ -740,7 +740,7 @@ public class Player : BaseObject
 
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
 
-            transform.DOJump(_nextPos, _position.y - _oldPosition.y, 1, _mgr.MoveTime, false).OnComplete(() =>
+            transform.DOJump(_nextPos, Mathf.Abs(_position.y - _oldPosition.y), 1, _mgr.MoveTime, false).OnComplete(() =>
             {
                 if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
                 {
@@ -776,7 +776,7 @@ public class Player : BaseObject
 
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
 
-            transform.DOJump(_nextPos, _oldPosition.y - _position.y, 1, _mgr.MoveTime, false).OnComplete(() =>
+            transform.DOJump(_nextPos, Mathf.Abs(_oldPosition.y - _position.y), 1, _mgr.MoveTime, false).OnComplete(() =>
             {
                 if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
                 {
