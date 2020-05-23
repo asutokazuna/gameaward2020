@@ -417,9 +417,20 @@ public class Player : BaseObject
     public void Lift()
     {
         Vector3Int havePos;             //!< 持ち上げるオブジェクトを探索するための座標
-        havePos = new Vector3Int(       // 向いてる方向の一段上から
+
+        if (_lifted == E_HANDS_ACTION.NOW_PLAY)
+        {
+            havePos = new Vector3Int(       // 向いてる方向の一段上から
+            _oldPosition.x + _direct.x, _oldPosition.y + _direct.y + 1, _oldPosition.z + _direct.z
+            );
+        }
+        else
+        {
+            havePos = new Vector3Int(       // 向いてる方向の一段上から
             _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z
             );
+        }
+
         for (int n = 0; n <= 2; n++, havePos.y -= 1)
         {// 一段上から一段下まで、探索をする
             if (_map.isLimitField(havePos))
@@ -428,7 +439,6 @@ public class Player : BaseObject
                 continue;
             }
             _haveObject = _map.isLift(havePos);
-
 
             if(_haveObject._myObject == E_OBJECT.PLAYER_01)
             {
