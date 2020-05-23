@@ -188,6 +188,7 @@ public class SceneMgr : MonoBehaviour
 
         //OnFinishedCoroutine();
         //StartCoroutine(_fadeScript.FadeOut(OnFinishedCoroutine)); // ごめん分からない...
+        _fadeScript.SetFadeSpeed(0.01f);
         _fadeScript.StartFadeOut(OnFinishedCoroutine);
     }
 

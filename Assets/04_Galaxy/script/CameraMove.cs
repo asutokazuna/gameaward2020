@@ -233,8 +233,19 @@ public class CameraMove : MonoBehaviour
                 _angleY = 1.3f;
             }
         }
-        
+        if (other.CompareTag("FadeColl") && !_isOrbital)
+        {
+            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Fade>().SetFadeSpeed(0.2f);
+            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Fade>().StartFadeOut(OnFinishedCoroutine);
+        }
     }
+
+    public void OnFinishedCoroutine()
+    {
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Fade>().SetFadeSpeed(0.05f);
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Fade>().StartFadeIn();
+    }
+
 
     private float CheckAngle(float angle)
     {

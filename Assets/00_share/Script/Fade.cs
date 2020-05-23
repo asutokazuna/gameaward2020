@@ -85,5 +85,15 @@ public class Fade : MonoBehaviour
     {
         _appliedMat = _fadeMat[Type];
     }
+
+    /**
+    * @brief フェード速度変更
+    * @return なし
+    */
+    public void SetFadeSpeed(float speed)
+    {
+        _fadeSpeed = speed;
+    }
+
 }
 
