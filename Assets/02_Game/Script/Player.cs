@@ -290,7 +290,9 @@ public class Player : BaseObject
             {// 落下
                 _mode = E_OBJECT_MODE.FALL;
                 _position = _map.GetFallPos(_position);
+                _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FAINT);
             }
+            _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FALL);
             _gameOver   = true;
         }
         else if (_map.isGetup(_position))
@@ -802,19 +804,23 @@ public class Player : BaseObject
         }
         else if (_mode == E_OBJECT_MODE.FALL)
         {// 降りのジャンプ
-            if (_haveObject._myObject == E_OBJECT.NONE ||
-                _haveObject._myObject == E_OBJECT.MAX)
-            {// 何も持っていない時
-                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL_FAINT);
-            }
-            else if (_haveObject._myObject == E_OBJECT.PLAYER_01)
-            {// プレイヤーを持っている時
-                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL_FAINT);
-            }
-            else
-            {// 何かを持っている時
-                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL_FAINT);
-            }
+            //if (_haveObject._myObject == E_OBJECT.NONE ||
+            //    _haveObject._myObject == E_OBJECT.MAX)
+            //{// 何も持っていない時
+            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL_FAINT);
+            //}
+            //else if (_haveObject._myObject == E_OBJECT.PLAYER_01)
+            //{// プレイヤーを持っている時
+            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL_FAINT);
+            //}
+            //else
+            //{// 何かを持っている時
+            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL_FAINT);
+            //}
+
+            _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FALL);
+            _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
+
             transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
                 (_oldPosition.y - _position.y), // ジャンプパワー
                 1,  // ジャンプ回数
