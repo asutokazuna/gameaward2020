@@ -503,6 +503,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af64055e93a07c14f97f261256c865c2, type: 3}
+--- !u!1 &162636283 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4949242738481516331, guid: af64055e93a07c14f97f261256c865c2,
+    type: 3}
+  m_PrefabInstance: {fileID: 162636282}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &196532776 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8283359777183612216, guid: af64055e93a07c14f97f261256c865c2,
@@ -5748,6 +5754,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af64055e93a07c14f97f261256c865c2, type: 3}
+--- !u!1 &468623666 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4949242738481516331, guid: af64055e93a07c14f97f261256c865c2,
+    type: 3}
+  m_PrefabInstance: {fileID: 468623665}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &538783658 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3387210977650872728, guid: eb6483bbbe7e22544896ef21a56177f5,
@@ -5988,7 +6000,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: NaN, y: 0, z: NaN, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -6111,6 +6123,7 @@ MonoBehaviour:
   _oldScene: 2
   _reroad: 0
   _isDebug: 0
+  _stageReroad: 0
 --- !u!114 &740214760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6574,10 +6587,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fieldBlock:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 468623666}
+  - {fileID: 162636283}
+  - {fileID: 1835662702}
+  - {fileID: 977561199}
   _angle: 90
   _rotateTime: 1
   _correctionValueClear: {x: 0, y: 0.5, z: 0}
@@ -6593,6 +6606,7 @@ MonoBehaviour:
   _startTime: 8
   _skipTime: 2
   _delayTime: 1
+  _reroad: 0
 --- !u!82 &963194230
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6773,6 +6787,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af64055e93a07c14f97f261256c865c2, type: 3}
+--- !u!1 &977561199 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4949242738481516331, guid: af64055e93a07c14f97f261256c865c2,
+    type: 3}
+  m_PrefabInstance: {fileID: 977561198}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &994881228 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7691639383044527087, guid: 6f6eb81db2e4aa34cb7518a05a1d5606,
@@ -12712,6 +12732,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af64055e93a07c14f97f261256c865c2, type: 3}
+--- !u!1 &1835662702 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4949242738481516331, guid: af64055e93a07c14f97f261256c865c2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1835662701}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1840692449
 GameObject:
   m_ObjectHideFlags: 0
