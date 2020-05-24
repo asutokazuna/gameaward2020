@@ -28,6 +28,8 @@ public class PlayerAnim : MonoBehaviour
         E_BOX,
         E_CHARA,
         E_OVER,
+        E_FALL,
+        E_FAINT,
 
         E_TP_FALSE,
     }
@@ -106,6 +108,12 @@ public class PlayerAnim : MonoBehaviour
                 break;
             case PlayerInfo.E_OVER:
                 _playerAnimator.SetBool("Over", true);
+                break;
+            case PlayerInfo.E_FALL:
+                _playerAnimator.SetBool("Fall", true);
+                break;
+            case PlayerInfo.E_FAINT:
+                _playerAnimator.SetBool("Faint", true);
                 break;
             case PlayerInfo.E_TP_FALSE:
                 _playerAnimator.SetBool("TP", false);
