@@ -468,7 +468,7 @@ public class Map : MonoBehaviour
     {
         for (; pos.y > 0; pos.y--)
         {
-            if (isUse(pos))
+            if (isUse(pos) && GetObject(pos)._myObject != E_OBJECT.PLAYER_01)
             {// 落下地点の一個上
                 return new Vector3Int(pos.x, pos.y + 1, pos.z);
             }

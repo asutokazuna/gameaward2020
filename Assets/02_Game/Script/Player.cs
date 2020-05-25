@@ -289,7 +289,6 @@ public class Player : BaseObject
             else
             {// 落下
                 _mode = E_OBJECT_MODE.FALL;
-                _position = _map.GetFallPos(_position);
                 _animation._faintFlag = true;
             }
             _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FALL);
@@ -820,9 +819,7 @@ public class Player : BaseObject
             _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FALL);
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
 
-            transform.DOJump(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
-                (_oldPosition.y - _position.y), // ジャンプパワー
-                1,  // ジャンプ回数
+            transform.DOMove(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
                 _mgr.MoveTime, // 時間
                 false
                 ).OnComplete(() =>
@@ -832,6 +829,15 @@ public class Player : BaseObject
                     _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FAINT);
                 }
 
+                _position = _map.GetFallPos(_position);
+                offSetTransform();
+                transform.DOLocalMove(      //取り合えずの数値
+                    new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),// 目的座標
+                    _mgr.MoveTime
+                ).OnComplete(() =>
+                {
+                    WaitMode();
+                });
                 WaitMode();
                 _map._gameOver = true;  // ゲームオーバーやで
                 _gameOver = true;
