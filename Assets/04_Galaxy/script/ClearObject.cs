@@ -22,7 +22,7 @@ public class ClearObject : MonoBehaviour
     {
         _sceneMgr = GameObject.Find("SceneManager").GetComponent<SceneMgr>();
 
-        for(int i = (int)E_SCENE._1_1;i < (int)E_SCENE.MAX - 1;i++)
+        for (int i = (int)E_SCENE._1_1; i < (int)E_SCENE.MAX; i++) 
         {
             if(_gameObjects.Length - 1 < i - (int)E_SCENE._1_1)
             {
