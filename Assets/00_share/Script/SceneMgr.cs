@@ -220,7 +220,11 @@ public class SceneMgr : MonoBehaviour
         }
         else if (mode == E_SCENE_MODE.NEXT_STAGE)
         {// 次のシーンへ移行
-            if (isNextScene())
+            if (isLimitStage())
+            {
+                _nowScene = E_SCENE.STAGE_SELECT;
+            }
+            else if (isNextScene())
             {// まだ同じ星の中でステージがある
                 _nowScene += 1;
             }
@@ -249,7 +253,7 @@ public class SceneMgr : MonoBehaviour
      */
     private bool isNextScene()
     {
-        if (!GetPlanetClear(_nowScene) || isLimitStage())
+        if (!GetPlanetClear(_nowScene))
         {
             return true;
         }
