@@ -44,15 +44,19 @@ public class GameOverManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _map = GameObject.Find("Map").GetComponent<Map>();
-        _gameover = GameObject.Find("Gameover").GetComponent<Gameover>();
+        // オブジェクトの代入
+        _map            = GameObject.FindWithTag("Map").GetComponent<Map>();
+        _gameover       = GameObject.Find("Gameover").GetComponent<Gameover>();
+        _sceneManager   = GameObject.FindWithTag("SceneManager");
+        
+        _continueButton = GameObject.Find("contine");
+        _selectButton   = GameObject.Find("Select");
+        _titleButton    = GameObject.Find("title");
+        _finishButton   = GameObject.Find("finish");
 
-        _sceneManager = GameObject.FindWithTag("SceneManager");
 
-        _continueButton.SetActive(false);
-        _selectButton.SetActive(false);
-        _titleButton.SetActive(false);
-        _finishButton.SetActive(false);
+        // 変数の初期化
+        SetGameOverUI(false);
 
         _isOnce = false;
         _selectnum = 0;
@@ -73,50 +77,45 @@ public class GameOverManager : MonoBehaviour
         if (_map._gameOver && !_isOnce)
         {
             //UIの表示
-            _continueButton.SetActive(true);
-            _selectButton.SetActive(true);
-            _titleButton.SetActive(true);
-            _finishButton.SetActive(true);
+            SetGameOverUI(true);
 
             _isOnce = true;
         }
 
+
         if (_map._gameOver)
-        {
-            SetGameOver();
+        {// ゲームオーバー中の処理
+            SetGameOver();  // セット
 
             if (Input.GetKeyDown(KeyCode.W))
-            {
+            {// カーソルを上に移動
                 if (_selectnum < (int)GameoverMenu.E_CONTINUE)
                 {
                     _selectnum--;
-                    Debug.Log("w--");
-
+                    //Debug.Log("w--");
                 }
                 else
                 {
                     _selectnum = (int)GameoverMenu.E_TITLE;
-                    Debug.Log("--w");
-
+                    //Debug.Log("--w");
                 }
             }
             else if (Input.GetKeyDown(KeyCode.S))
-            {
+            {// カーソルを下に移動
                 if (_selectnum > (int)GameoverMenu.MAX_MENU)
                 {
-                    Debug.Log("s--");
-
                     _selectnum = (int)GameoverMenu.E_CONTINUE;
+                    //Debug.Log("s--");
                 }
                 else
                 {
-                    Debug.Log("--s");
                     _selectnum++;
+                    //Debug.Log("--s");
                 }
             }
 
             if (Input.GetKeyDown(KeyCode.Space))
-            {
+            {// 決定キーを押した時の処理
                 switch (_selectnum)
                 {
                     //つづけるへ
@@ -144,7 +143,7 @@ public class GameOverManager : MonoBehaviour
 
                 }
                 _map._gameOver = false;
-                UIReset();
+                SetGameOverUI(false);
             }
         }
 
@@ -180,6 +179,11 @@ public class GameOverManager : MonoBehaviour
         */
     }
 
+
+    /**
+     * @brief ゲームオーバーのセット
+     * @return なし
+     */
     private void SetGameOver()
     {
         /*
@@ -190,14 +194,29 @@ public class GameOverManager : MonoBehaviour
         }
          */
         _gameover.StartGameover();
-
     }
 
-    private void UIReset()
+
+    /**
+     * @brief UIのセット
+     * @param bool型
+     * @return なし
+     */
+    private void SetGameOverUI(bool flag)
     {
-        _continueButton.SetActive(false);
-        _selectButton.SetActive(false);
-        _titleButton.SetActive(false);
-        _finishButton.SetActive(false);
+        _continueButton.SetActive(flag);
+        _selectButton.SetActive(flag);
+        _titleButton.SetActive(flag);
+        _finishButton.SetActive(flag);
     }
+
+
+    // 中上皓太が消しました
+    //private void UIReset()
+    //{
+    //    _continueButton.SetActive(false);
+    //    _selectButton.SetActive(false);
+    //    _titleButton.SetActive(false);
+    //    _finishButton.SetActive(false);
+    //}
 }
