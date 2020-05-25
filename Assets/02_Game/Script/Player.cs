@@ -290,7 +290,7 @@ public class Player : BaseObject
             {// 落下
                 _mode = E_OBJECT_MODE.FALL;
                 _position = _map.GetFallPos(_position);
-                _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FAINT);
+                _animation._faintFlag = true;
             }
             _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FALL);
             _gameOver   = true;
@@ -710,7 +710,6 @@ public class Player : BaseObject
             {// そうじゃない場合
                 if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
                 {
-                    //_animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP);
                     _animation.SetTrampolineAnim(GetRidingTrampoline());
                 }
                 WaitMode();
@@ -828,6 +827,11 @@ public class Player : BaseObject
                 false
                 ).OnComplete(() =>
             {
+                if (_animation._faintFlag)
+                {
+                    _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FAINT);
+                }
+
                 WaitMode();
                 _map._gameOver = true;  // ゲームオーバーやで
                 _gameOver = true;
