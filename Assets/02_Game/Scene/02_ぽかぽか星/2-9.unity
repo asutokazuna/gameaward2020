@@ -6541,7 +6541,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: -10.55629}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -6595,6 +6595,7 @@ MonoBehaviour:
   _oldScene: 2
   _reroad: 0
   _isDebug: 0
+  _stageReroad: 0
 --- !u!114 &740214760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7097,11 +7098,11 @@ MonoBehaviour:
   _focusClear: 1
   _rotateSpeedStart: 1.3
   _circleSizeStart: {x: 8, y: 0, z: 8}
-  _focusStart: 1
   _startHigh: 14
   _startTime: 8
   _skipTime: 2
   _delayTime: 1
+  _reroad: 0
 --- !u!82 &963194230
 AudioSource:
   m_ObjectHideFlags: 0
@@ -13318,12 +13319,12 @@ PrefabInstance:
     - target: {fileID: 8116014395279784054, guid: 7db2e43e24527b8499b6771cd3988ade,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 2.03
       objectReference: {fileID: 0}
     - target: {fileID: 8116014395279784054, guid: 7db2e43e24527b8499b6771cd3988ade,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 8116014395279784054, guid: 7db2e43e24527b8499b6771cd3988ade,
         type: 3}
