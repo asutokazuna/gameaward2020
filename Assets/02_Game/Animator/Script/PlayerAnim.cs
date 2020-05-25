@@ -39,6 +39,7 @@ public class PlayerAnim : MonoBehaviour
     PlayerState _playerState;           //!< プレイヤーの状態管理用
     WaitState[] _waitState;
     TrampolineAnim _trampolineAnim;
+    public bool _faintFlag;
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +49,7 @@ public class PlayerAnim : MonoBehaviour
         _playerState = PlayerState.E_WAIT;
         _playerAnimator.SetBool("Finish", true);
         _waitState = _playerAnimator.GetBehaviours<WaitState>();
+        _faintFlag = false;
     }
 
     // Update is called once per frame
