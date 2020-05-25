@@ -133,7 +133,10 @@ public class GameOverManager : MonoBehaviour
                         break;
 　　　　　　　　　　//ゲーム終了へ
                     case 3:
+#if UNITY_EDITOR
                         UnityEditor.EditorApplication.isPlaying = false;
+#endif
+                        Application.Quit();
                         break;
 
                     default:
