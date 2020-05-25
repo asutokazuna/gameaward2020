@@ -25,6 +25,11 @@ public class SignChange : StateMachineBehaviour
             if (Input.GetKeyDown(_keyCodes[_count]))
             {
                 _count++;
+
+                if(_keyCodes.Length - 1 < _count)
+                {
+                    _count = _keyCodes.Length - 1;
+                }
                 animator.SetBool("Change", true);
             }
         }

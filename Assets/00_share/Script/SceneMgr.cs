@@ -370,6 +370,12 @@ public class SceneMgr : MonoBehaviour
         return false;
     }
 
+    public bool GetStageClear(E_SCENE stage)
+    {
+        //int num = (int)(stage - E_SCENE._1_1);
+        return _stageClear[(int)stage];
+    }
+
 }
 
 
