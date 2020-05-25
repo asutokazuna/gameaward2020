@@ -624,9 +624,9 @@ public class Map : MonoBehaviour
      * @param2 ベクトル
      * @return 移動先座標
      */
-    public Vector3Int GetTramplinepPos(Vector3Int playerPos,Vector3Int vec = new Vector3Int())
+    public Vector3Int GetTramplinepPos(Vector3Int playerPos)
     {
-        Vector3Int pos = new Vector3Int(playerPos.x + vec.x, playerPos.y + vec.y, playerPos.z + vec.x );
+        Vector3Int pos = new Vector3Int(playerPos.x, playerPos.y, playerPos.z);
         for(int n = MAX_OBJECT - 1;n >= 0;n--)
         {
             if (isUse(new Vector3Int(pos.x, n, pos.z)))
@@ -634,7 +634,8 @@ public class Map : MonoBehaviour
                 return new Vector3Int(pos.x, n + 1, pos.z);
             }
         }
-        return new Vector3Int();
+        // エリア外にいったねぇ
+        return new Vector3Int(playerPos.x, playerPos.y, playerPos.z);
     }
 
 
