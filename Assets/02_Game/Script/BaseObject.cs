@@ -134,21 +134,23 @@ public class BaseObject : MonoBehaviour
 
    /**
     * @brief 向きを変える
-    * @return ベクトル
+    * @param ベクトル
+    * @return なし
     */
-    virtual public Vector3Int Rotate()
+    virtual public void Rotate(Vector3Int direct)
     {
-        return new Vector3Int();
+
     }
 
 
     /**
      * @brief オブジェクトの移動
+     * @param ベクトル
      * @return なし
      */
-    virtual public void Move()
+    virtual public void Move(Vector3Int direct)
     {
-
+        
     }
 
 
