@@ -144,15 +144,16 @@ public class Player : BaseObject
 
    /**
     * @brief 向きを変える
-    * @return ベクトル
+    * @param ベクトル
+    * @return なし
     */
-    override public Vector3Int Rotate(Vector3Int direct)
+    override public void Rotate(Vector3Int direct)
     {
         #region Rotate
 
         if (_lifted != E_HANDS_ACTION.NONE || _isMove || _map._gameClear || _map._gameOver)
         {// 取り合えずここに書き込む
-            return _direct;
+            return;
         }
 
         float y = GameObject.FindGameObjectWithTag("MainCamera").transform.localEulerAngles.y;
@@ -160,50 +161,32 @@ public class Player : BaseObject
 
         if (_direct.x > 0)
         {// 右
-            //if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  1, 0,  0);   //  90
-            //else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0,  1);   //   0
-            //else if (y > 150 && y < 210)                    _direct = new Vector3Int( -1, 0,  0);   // -90
-            //else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0, -1);   // 180
             _isMove = true;
-            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
+            _mode = E_OBJECT_MODE.ROTATE;   // 回転モードセット
             offsetRotate(_direct);
         }
         else if (_direct.x < 0)
         {// 左
-            //if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int( -1, 0,  0);   // -90
-            //else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0, -1);   // 180
-            //else if (y > 150 && y < 210)                    _direct = new Vector3Int(  1, 0,  0);   //  90
-            //else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0,  1);   //   0
             _isMove = true;
-            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
+            _mode = E_OBJECT_MODE.ROTATE;   // 回転モードセット
             offsetRotate(_direct);
         }
         else if (_direct.z > 0)
         {// 奥
-            //if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0,  1);   //   0
-            //else if (y > 240 && y < 300)                    _direct = new Vector3Int( -1, 0,  0);   // -90
-            //else if (y > 150 && y < 210)                    _direct = new Vector3Int(  0, 0, -1);   // 180
-            //else if (y > 60 && y < 120)                     _direct = new Vector3Int(  1, 0,  0);   //  90
             _isMove = true;
-            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
+            _mode = E_OBJECT_MODE.ROTATE;   // 回転モードセット
             offsetRotate(_direct);
         }
         else if (_direct.z < 0)
         {// 手前
-            //if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0, -1);   // 180
-            //else if (y > 240 && y < 300)                    _direct = new Vector3Int(  1, 0,  0);   //  90
-            //else if (y > 150 && y < 210)                    _direct = new Vector3Int(  0, 0,  1);   //   0
-            //else if (y > 60 && y < 120)                     _direct = new Vector3Int( -1, 0,  0);   // -90
             _isMove = true;
-            _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
+            _mode = E_OBJECT_MODE.ROTATE;   // 回転モードセット
             offsetRotate(_direct);
         }
         if (_mode == E_OBJECT_MODE.ROTATE)
         {// 回転の動き
             RotateMove();
         }
-
-        return _direct;
 
         #endregion
     }
@@ -244,7 +227,7 @@ public class Player : BaseObject
 
 
     /**
-     * @brief 通常ブロックの動き
+     * @brief 移動
      * @param1 ベクトル
      * @return なし
      */
