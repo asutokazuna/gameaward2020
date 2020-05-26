@@ -225,13 +225,15 @@ public class Map : MonoBehaviour
         {
             return;
         }
-        _direct = new Vector3Int();
-
         offsetDirect();
         PlayerSort();   // ソートと更新
         foreach (Player obj in _player)
         {
-            obj.Move();
+            obj.Rotate(_direct);
+        }
+        foreach (Player obj in _player)
+        {
+            obj.Move(_direct);
             UpdateMap(obj);
         }
         _turn = E_TURN.MOVE;
@@ -245,13 +247,22 @@ public class Map : MonoBehaviour
      */
     private void RotateObject()
     {
-        if (!_input.isInput(E_INPUT_MODE.BUTTON, E_INPUT.LB)) return;
+        if (!_input.isInput(E_INPUT_MODE.BUTTON, E_INPUT.LB))
+            return;
+
+        if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT) &&
+            !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT) &&
+            !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP) &&
+            !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
+            return;
+
+        Debug.Log("通ってるのよねぇ？");
+        offsetDirect();
 
         foreach (Player obj in _player)
         {
-            obj.GetComponent<Player>().Rotate();
+            obj.GetComponent<Player>().Rotate(_direct);
         }
-        offsetDirect();
         PlayerSort();   // ソートと更新
         _turn = E_TURN.MOVE;
     }
@@ -1053,7 +1064,7 @@ public class Map : MonoBehaviour
     private void offsetDirect()
     {
         float y = GameObject.FindGameObjectWithTag("MainCamera").transform.localEulerAngles.y;
-
+        _direct = new Vector3Int();
         if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT))
         {// 右方
             if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(VAL_FIELD_MOVE, 0,  0);

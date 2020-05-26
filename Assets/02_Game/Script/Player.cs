@@ -146,7 +146,7 @@ public class Player : BaseObject
     * @brief 向きを変える
     * @return ベクトル
     */
-    override public Vector3Int Rotate()
+    override public Vector3Int Rotate(Vector3Int direct)
     {
         #region Rotate
 
@@ -156,47 +156,44 @@ public class Player : BaseObject
         }
 
         float y = GameObject.FindGameObjectWithTag("MainCamera").transform.localEulerAngles.y;
+        _direct = direct;
 
-        if (_input.GetComponent<Controller>()
-            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT))
+        if (_direct.x > 0)
         {// 右
-            if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  1, 0,  0);   //  90
-            else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0,  1);   //   0
-            else if (y > 150 && y < 210)                    _direct = new Vector3Int( -1, 0,  0);   // -90
-            else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0, -1);   // 180
+            //if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  1, 0,  0);   //  90
+            //else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0,  1);   //   0
+            //else if (y > 150 && y < 210)                    _direct = new Vector3Int( -1, 0,  0);   // -90
+            //else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0, -1);   // 180
             _isMove = true;
             _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
             offsetRotate(_direct);
         }
-        else if (_input.GetComponent<Controller>()
-            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT))
+        else if (_direct.x < 0)
         {// 左
-            if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int( -1, 0,  0);   // -90
-            else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0, -1);   // 180
-            else if (y > 150 && y < 210)                    _direct = new Vector3Int(  1, 0,  0);   //  90
-            else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0,  1);   //   0
+            //if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int( -1, 0,  0);   // -90
+            //else if (y > 240 && y < 300)                    _direct = new Vector3Int(  0, 0, -1);   // 180
+            //else if (y > 150 && y < 210)                    _direct = new Vector3Int(  1, 0,  0);   //  90
+            //else if (y > 60 && y < 120)                     _direct = new Vector3Int(  0, 0,  1);   //   0
             _isMove = true;
             _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
             offsetRotate(_direct);
         }
-        else if (_input.GetComponent<Controller>()
-            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
+        else if (_direct.z > 0)
         {// 奥
-            if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0,  1);   //   0
-            else if (y > 240 && y < 300)                    _direct = new Vector3Int( -1, 0,  0);   // -90
-            else if (y > 150 && y < 210)                    _direct = new Vector3Int(  0, 0, -1);   // 180
-            else if (y > 60 && y < 120)                     _direct = new Vector3Int(  1, 0,  0);   //  90
+            //if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0,  1);   //   0
+            //else if (y > 240 && y < 300)                    _direct = new Vector3Int( -1, 0,  0);   // -90
+            //else if (y > 150 && y < 210)                    _direct = new Vector3Int(  0, 0, -1);   // 180
+            //else if (y > 60 && y < 120)                     _direct = new Vector3Int(  1, 0,  0);   //  90
             _isMove = true;
             _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
             offsetRotate(_direct);
         }
-        else if (_input.GetComponent<Controller>()
-            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
+        else if (_direct.z < 0)
         {// 手前
-            if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0, -1);   // 180
-            else if (y > 240 && y < 300)                    _direct = new Vector3Int(  1, 0,  0);   //  90
-            else if (y > 150 && y < 210)                    _direct = new Vector3Int(  0, 0,  1);   //   0
-            else if (y > 60 && y < 120)                     _direct = new Vector3Int( -1, 0,  0);   // -90
+            //if (y > -30 && y < 30 || y > 330 && y < 390)    _direct = new Vector3Int(  0, 0, -1);   // 180
+            //else if (y > 240 && y < 300)                    _direct = new Vector3Int(  1, 0,  0);   //  90
+            //else if (y > 150 && y < 210)                    _direct = new Vector3Int(  0, 0,  1);   //   0
+            //else if (y > 60 && y < 120)                     _direct = new Vector3Int( -1, 0,  0);   // -90
             _isMove = true;
             _mode = E_OBJECT_MODE.ROTATE;                                                           // 回転モードセット
             offsetRotate(_direct);
@@ -251,17 +248,16 @@ public class Player : BaseObject
      * @param1 ベクトル
      * @return なし
      */
-    override public void Move()
+    override public void Move(Vector3Int direct)
     {
-        if (_isMove || _lifted != E_HANDS_ACTION.NONE || _map._gameClear || _map._gameOver)
+        if (_lifted != E_HANDS_ACTION.NONE || _map._gameClear || _map._gameOver)
         {// 取り合えずここに書き込む
             return;
         }
 
-        Vector3Int movement = Rotate();       // 向きたいほうに回転
-
+        _direct         = direct;
         _oldPosition    = _position;      //!< 座標の保持
-        _position       = new Vector3Int(_position.x + movement.x, _position.y + movement.y, _position.z + movement.z);
+        _position       = new Vector3Int(_position.x + _direct.x, _position.y + _direct.y, _position.z + _direct.z);
         _isMove         = true;
 
         if (_map.isTrampline(new Vector3Int(_oldPosition.x, _oldPosition.y - 1, _oldPosition.z)))
