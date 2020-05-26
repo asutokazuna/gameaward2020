@@ -24,6 +24,12 @@ public class ChangeMaterial : MonoBehaviour
             _count = 1;
         }
 
+        if(_count >= _materials.Length)
+        {
+            _count = _materials.Length - 1;
+        }
+        Debug.Log(_count);
+        Debug.Log(_materials.Length);
         _changeObject.GetComponent<Renderer>().material = _materials[_count];
     }
 }
