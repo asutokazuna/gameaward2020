@@ -452,6 +452,7 @@ public class Player : BaseObject
 
             if (_haveObject._myObject != E_OBJECT.NONE)
             {// 何かのオブジェクトを持てる場合
+                _isMove = true;
                 _map.LiftToObject(_haveObject, new Vector3Int(_position.x, _position.y + 1, _position.z));
                 LiftMode(n);    // アニメーションのセット
                 break;
@@ -570,21 +571,8 @@ public class Player : BaseObject
             _map.Follow(_haveObject, _position, _direct, _mode);    // 追従させる
         }
 
-        //if (_haveObject._myObject == E_OBJECT.NONE ||
-        //    _haveObject._myObject == E_OBJECT.MAX)
-        //{// 何も持っていない時
-        //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK);
-        //}
-        //else if (_haveObject._myObject == E_OBJECT.PLAYER_01)
-        //{// プレイヤーを持っている時
-        //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK_CHARA);
-        //}
-        //else if (_haveObject._myObject == E_OBJECT.PLAYER_01)
-        //{// プレイヤー以外を持っている時
-        //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK);
-        //}
-
-        _animation.SetPlayerState(PlayerAnim.PlayerState.E_WALK);
+        if (_lifted != E_HANDS_ACTION.DO)
+            _animation.SetPlayerState(PlayerAnim.PlayerState.E_WALK);
     }
 
 
@@ -604,27 +592,6 @@ public class Player : BaseObject
         {
             _lifted = E_HANDS_ACTION.DO;
         }
-
-        //if (_haveObject._myObject == E_OBJECT.NONE ||
-        //    _haveObject._myObject == E_OBJECT.MAX)
-        //{// 何も持っていない時
-        //    //if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
-        //    //{
-        //    //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT_TP);
-        //    //}
-        //    //else
-        //    {
-        //        _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
-        //    }
-        //}
-        //else if (_haveObject._myObject == E_OBJECT.PLAYER_01)
-        //{// プレイヤーを持ち上げたとき
-        //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT_CHARA);
-        //}
-        //else
-        //{// 何かを持っている時
-        //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT_BOX);
-        //}
     }
 
 
@@ -636,42 +603,15 @@ public class Player : BaseObject
     {
         if (_mode == E_OBJECT_MODE.MOVE)
         {
-            //if (_haveObject._myObject == E_OBJECT.NONE ||
-            //    _haveObject._myObject == E_OBJECT.MAX)
-            //{// 何も持っていない時
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK);
-            //}
-            //else if (_haveObject._myObject == E_OBJECT.PLAYER_01)
-            //{// プレイヤーを持っている時
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK_CHARA);
-            //}
-            //else
-            //{// プレイヤー以外を持っている時
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_WALK_BOX);
-            //}
             if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
             {
                 _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP);
             }
-
-            _animation.SetPlayerState(PlayerAnim.PlayerState.E_WALK);
+            if (_lifted != E_HANDS_ACTION.DO)
+                _animation.SetPlayerState(PlayerAnim.PlayerState.E_WALK);
         }
         else if (_mode == E_OBJECT_MODE.DONT_MOVE)
         {
-            //if (_haveObject._myObject == E_OBJECT.NONE ||
-            //    _haveObject._myObject == E_OBJECT.MAX)
-            //{// 何も持っていない時
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_BUMP);
-            //}
-            //else if (_haveObject._myObject == E_OBJECT.PLAYER_01)
-            //{// プレイヤーを持っている時
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_BUMP_CHARA);
-            //}
-            //else
-            //{// プレイヤー以外を持っている時
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_BUMP_BOX);
-            //}
-
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_BUMP);
         }
         else if (_mode == E_OBJECT_MODE.AREA_FALL)
@@ -725,30 +665,17 @@ public class Player : BaseObject
     {
         if (_mode == E_OBJECT_MODE.GET_UP)
         {// 登りのジャンプ
-            //if (_haveObject._myObject == E_OBJECT.NONE ||
-            //    _haveObject._myObject == E_OBJECT.MAX)
-            //{// 何も持っていない時
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP);
-            //}
-            //else if (_haveObject._myObject == E_OBJECT.PLAYER_01)
-            //{// プレイヤーを持っている時
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_CHARA);
-            //}
-            //else
-            //{// 何かを持っている時
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
-            //}
-
             if (_animation.GetTPFlag())
             {
                 _animation.SetJumpTrampolineAnim();
             }
             else if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
             {
-                _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP);
+                if (_lifted != E_HANDS_ACTION.DO)
+                    _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP);
             }
-
-            _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
+            if (_lifted != E_HANDS_ACTION.DO)
+                _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
 
             transform.DOJump(_nextPos, Mathf.Abs(_position.y - _oldPosition.y), 1, _mgr.MoveTime, false).OnComplete(() =>
             {
@@ -759,65 +686,47 @@ public class Player : BaseObject
                 }
                 else
                 {
-                    _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP_FALSE);
+                    if (_lifted != E_HANDS_ACTION.DO)
+                        _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP_FALSE);
                 }
                 WaitMode();
             });
         }
-        else if(_mode == E_OBJECT_MODE.GET_OFF)
+        else if (_mode == E_OBJECT_MODE.GET_OFF)
         {// 降りのジャンプ
-            //if (_haveObject._myObject == E_OBJECT.NONE ||
-            //    _haveObject._myObject == E_OBJECT.MAX)
-            //{// 何も持っていない時
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP);
-            //}
-            //else if (_haveObject._myObject == E_OBJECT.PLAYER_01)
-            //{// プレイヤーを持っている時
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_CHARA);
-            //}
-            //else
-            //{// 何かを持っている時
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_JUMP_BOX);
-            //}
             if (_animation.GetTPFlag())
             {
                 _animation.SetJumpTrampolineAnim();
             }
 
-            _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
+            if (_lifted != E_HANDS_ACTION.DO)
+                _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
 
             transform.DOJump(_nextPos, Mathf.Abs(_oldPosition.y - _position.y), 1, _mgr.MoveTime, false).OnComplete(() =>
             {
                 if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
                 {
-                    _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP);
-                    _animation.SetTrampolineAnim(GetRidingTrampoline());
+                    if (_lifted != E_HANDS_ACTION.DO)
+                    {
+                        _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP);
+                        _animation.SetTrampolineAnim(GetRidingTrampoline());
+                    }
                 }
                 else
                 {
-                    _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP_FALSE);
+                    if (_lifted != E_HANDS_ACTION.DO)
+                        _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP_FALSE);
                 }
                 WaitMode();
             });
         }
         else if (_mode == E_OBJECT_MODE.FALL)
         {// 降りのジャンプ
-            //if (_haveObject._myObject == E_OBJECT.NONE ||
-            //    _haveObject._myObject == E_OBJECT.MAX)
-            //{// 何も持っていない時
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL_FAINT);
-            //}
-            //else if (_haveObject._myObject == E_OBJECT.PLAYER_01)
-            //{// プレイヤーを持っている時
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL_FAINT);
-            //}
-            //else
-            //{// 何かを持っている時
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL_FAINT);
-            //}
-
-            _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FALL);
-            _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
+            if (_lifted != E_HANDS_ACTION.DO)
+            {
+                _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FALL);
+                _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
+            }
 
             transform.DOMove(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
                 _mgr.MoveTime, // 時間
@@ -826,14 +735,17 @@ public class Player : BaseObject
             {
                 if (_animation._faintFlag)
                 {
-                    _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FAINT);
+
+                    if (_lifted != E_HANDS_ACTION.DO)
+                        _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FAINT);
                 }
 
                 _position = _map.GetFallPos(_position);
                 offSetTransform();
                 transform.DOLocalMove(      //取り合えずの数値
                     new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),// 目的座標
-                    _mgr.MoveTime
+     
+                _mgr.MoveTime
                 ).OnComplete(() =>
                 {
                     WaitMode();
