@@ -15,9 +15,19 @@ public class ClearManager : MonoBehaviour
     private float _timer;
     private float _changeDelay;
 
-    private GameObject ParticleLeft;
-    private GameObject ParticleRight;
-    private GameObject ParticleTop;
+    private GameObject[] ParticleLeft = new GameObject[3];
+   
+    private GameObject[] ParticleRight = new GameObject[3];
+   
+    private GameObject[] ParticleTop = new GameObject[3];
+   
+    [SerializeField]
+    private Material[] _color = new Material[3];
+    [SerializeField]
+    private float _rateMultiplier;
+    [SerializeField]
+    private float _size;
+
 
     private GameObject[] _player;
     private bool _fade;
@@ -34,19 +44,73 @@ public class ClearManager : MonoBehaviour
         _changeDelay = DelayTime;
         _fade = false;
 
-        ParticleLeft = GameObject.Find("ParticleLeft");
-        ParticleRight = GameObject.Find("ParticleRight");
-        ParticleTop = GameObject.Find("ParticleTop");
+        ParticleLeft[0] = GameObject.Find("ParticleLeft");
+        ParticleRight[0] = GameObject.Find("ParticleRight");
+        ParticleTop[0] = GameObject.Find("ParticleTop");
 
-        ParticleLeft.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
-        ParticleLeft.GetComponent<ParticleSystem>().Clear(true);
+        ParticleLeft[1] = Instantiate(ParticleLeft[0], ParticleLeft[0].transform.position, ParticleLeft[0].transform.rotation);
+        ParticleLeft[2] = Instantiate(ParticleLeft[0], ParticleLeft[0].transform.position, ParticleLeft[0].transform.rotation);
 
-        ParticleRight.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
-        ParticleRight.GetComponent<ParticleSystem>().Clear(true);
+        ParticleLeft[1].transform.parent = ParticleLeft[0].transform;
+        ParticleLeft[2].transform.parent = ParticleLeft[0].transform;
 
-        ParticleTop.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
-        ParticleTop.GetComponent<ParticleSystem>().Clear(true);
+        ParticleRight[1] = Instantiate(ParticleRight[0], ParticleRight[0].transform.position, ParticleRight[0].transform.rotation);
+        ParticleRight[2] = Instantiate(ParticleRight[0], ParticleRight[0].transform.position, ParticleRight[0].transform.rotation);
 
+        ParticleRight[1].transform.parent = ParticleLeft[0].transform;
+        ParticleRight[2].transform.parent = ParticleLeft[0].transform;
+
+        ParticleTop[1] = Instantiate(ParticleTop[0], ParticleTop[0].transform.position, ParticleTop[0].transform.rotation);
+        ParticleTop[2] = Instantiate(ParticleTop[0], ParticleTop[0].transform.position, ParticleTop[0].transform.rotation);
+
+        ParticleTop[1].transform.parent = ParticleLeft[0].transform;
+        ParticleTop[2].transform.parent = ParticleLeft[0].transform;
+
+
+        ParticleLeft[0].GetComponent<ParticleSystemRenderer>().material = _color[0];
+        ParticleLeft[1].GetComponent<ParticleSystemRenderer>().material = _color[1];
+        ParticleLeft[2].GetComponent<ParticleSystemRenderer>().material = _color[2];
+
+        ParticleRight[0].GetComponent<ParticleSystemRenderer>().material = _color[0];
+        ParticleRight[1].GetComponent<ParticleSystemRenderer>().material = _color[1];
+        ParticleRight[2].GetComponent<ParticleSystemRenderer>().material = _color[2];
+
+        ParticleTop[0].GetComponent<ParticleSystemRenderer>().material = _color[0];
+        ParticleTop[1].GetComponent<ParticleSystemRenderer>().material = _color[1];
+        ParticleTop[2].GetComponent<ParticleSystemRenderer>().material = _color[2];
+
+        
+        ParticleSystem.MainModule _main;
+        ParticleSystem.EmissionModule _emission;
+        for (int i = 0;i < 3;i++)
+        {
+            ParticleLeft[i].GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            ParticleLeft[i].GetComponent<ParticleSystem>().Clear(true);
+
+            _main = ParticleLeft[i].GetComponent<ParticleSystem>().main;
+            //_emission = ParticleLeft[i].GetComponent<ParticleSystem>().emission;
+            _main.startSize = _size;
+           // _emission.rateOverTimeMultiplier = _rateMultiplier;
+
+            ParticleRight[i].GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            ParticleRight[i].GetComponent<ParticleSystem>().Clear(true);
+
+            _main = ParticleRight[i].GetComponent<ParticleSystem>().main;
+           // _emission = ParticleRight[i].GetComponent<ParticleSystem>().emission;
+            _main.startSize = _size;
+           // _emission.rateOverTimeMultiplier = _rateMultiplier;
+
+            ParticleTop[i].GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            ParticleTop[i].GetComponent<ParticleSystem>().Clear(true);
+
+            _main = ParticleTop[i].GetComponent<ParticleSystem>().main;
+            _emission = ParticleTop[i].GetComponent<ParticleSystem>().emission;
+            _main.startSize = _size;
+            _emission.rateOverTimeMultiplier = _rateMultiplier;
+        }
+
+
+        
     }
 
     // Update is called once per frame
@@ -109,10 +173,13 @@ public class ClearManager : MonoBehaviour
             ClearScript.StartClear();
             _isFirst = false;
 
-            ParticleLeft.GetComponent<ParticleSystem>().Play(true);
-            ParticleRight.GetComponent<ParticleSystem>().Play(true);
-            ParticleTop.GetComponent<ParticleSystem>().Play(true);
-
+            for (int i = 0; i < 3; i++)
+            {
+                ParticleLeft[i].GetComponent<ParticleSystem>().Play(true);
+                ParticleRight[i].GetComponent<ParticleSystem>().Play(true);
+                ParticleTop[i].GetComponent<ParticleSystem>().Play(true);
+            }
+            
             // ここでクリアしたよを呼ぶ
             GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetClear();
             //_stageClear[(int)GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().NowScene] = true;

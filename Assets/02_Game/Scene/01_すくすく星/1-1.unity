@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.41808498, g: 0.6202031, b: 0.7880958, a: 1}
+  m_IndirectSpecularColor: {r: 0.4179979, g: 0.6202186, b: 0.7881763, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -11131,6 +11131,7 @@ MonoBehaviour:
   _oldScene: 2
   _reroad: 0
   _isDebug: 0
+  _stageReroad: 0
 --- !u!114 &740214760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11482,6 +11483,7 @@ MonoBehaviour:
   _startTime: 8
   _skipTime: 2
   _delayTime: 1
+  _reroad: 0
 --- !u!82 &963194230
 AudioSource:
   m_ObjectHideFlags: 0
@@ -16469,6 +16471,12 @@ MonoBehaviour:
   ClearSwitch: 1
   WaitTime: 2
   DelayTime: 5
+  _color:
+  - {fileID: 2100000, guid: 74a8004800c0e064f90fbc82050b325b, type: 2}
+  - {fileID: 2100000, guid: d8ec8b3dc43ee274187b964fbec88451, type: 2}
+  - {fileID: 2100000, guid: 2a95930d340b729438b133739dd6f1d4, type: 2}
+  _rateMultiplier: 1
+  _size: 0.05
 --- !u!1001 &1152798670
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18029,9 +18037,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d756629755e0ff489752293066e9800, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameOverSwitch: 1
-  WaitTime: 0.2
-  DelayTime: 2
+  _continueButton: {fileID: 0}
+  _selectButton: {fileID: 0}
+  _titleButton: {fileID: 0}
+  _finishButton: {fileID: 0}
 --- !u!1001 &2079482377
 PrefabInstance:
   m_ObjectHideFlags: 0
