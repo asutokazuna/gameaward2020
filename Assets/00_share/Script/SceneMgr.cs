@@ -220,18 +220,18 @@ public class SceneMgr : MonoBehaviour
         }
         else if (mode == E_SCENE_MODE.NEXT_STAGE)
         {// 次のシーンへ移行
-            if (isLimitStage())
-            {
+            //if (isLimitStage())
+            //{
+            //    _nowScene = E_SCENE.STAGE_SELECT;
+            //}
+            //else if (isNextScene())
+            //{// まだ同じ星の中でステージがある
+            //    _nowScene += 1;
+            //}
+            //else
+            //{// ステージ選択へ戻る
                 _nowScene = E_SCENE.STAGE_SELECT;
-            }
-            else if (isNextScene())
-            {// まだ同じ星の中でステージがある
-                _nowScene += 1;
-            }
-            else
-            {// ステージ選択へ戻る
-                _nowScene = E_SCENE.STAGE_SELECT;
-            }
+            //}
         }
     }
 
