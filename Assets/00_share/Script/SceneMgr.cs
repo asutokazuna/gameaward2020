@@ -110,6 +110,8 @@ public class SceneMgr : MonoBehaviour
     static private SceneMgr _instance;                              //!< 自身のインスタンス
     [SerializeField] private E_SCENE _nowScene = E_SCENE.TITLE;     //!< 今のシーン
     [SerializeField] private E_SCENE _oldScene = E_SCENE.TITLE;     //!< 前のシーン
+    [NonSerialized] public E_SCENE _lastScene = E_SCENE.TITLE;                      //!< 過去のシーン
+
     [SerializeField] private bool _reroad = false;
 
     [SerializeField] private bool _isDebug = false;     //!< かとしゅん頼む
@@ -243,6 +245,7 @@ public class SceneMgr : MonoBehaviour
      */
     public void SetScene(E_SCENE scene)
     {
+        _lastScene = _nowScene;
         _nowScene = scene;
     }
 

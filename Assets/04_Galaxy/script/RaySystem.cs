@@ -86,7 +86,7 @@ public class RaySystem : MonoBehaviour
     void RayTest()
     {
         //Rayの作成　　　　　　　↓Rayを飛ばす原点　　　↓Rayを飛ばす方向    ↓位置をずらす
-        Vector3 _center = new Vector3(Screen.width / 2, Screen.height / 2 - 100);
+        Vector3 _center = new Vector3(Screen.width / 2, Screen.height / 2 - (Screen.height / 5.0f));
         //Rayが当たったオブジェクトの情報を入れる箱   
         Ray _ray = Camera.main.ScreenPointToRay(_center);
 
