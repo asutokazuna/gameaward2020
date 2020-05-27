@@ -36,12 +36,17 @@ public class CameraMove : MonoBehaviour
     private GameObject StageSelectManager;
     //private SceneMgr SceneManager;
 
-    public float _offsetY;
+    public float _offsetY = 0.0f;
 
-    private RaySystem _rayScript;
+    private RaySystem _rayScript = default;
 
     [SerializeField]
-    private GameObject _particleUI;
+    private GameObject _particleUI = default;
+
+    private SceneMgr _sceneManager = default;
+
+    [SerializeField]
+    private Vector2[] _cameraPos = new Vector2[(int)E_SCENE.MAX];
 
     // Start is called before the first frame update
     void Start()
@@ -55,7 +60,7 @@ public class CameraMove : MonoBehaviour
 
         _planetData = GameObject.FindGameObjectsWithTag("Planet");
         _camera = this.transform.GetComponentInChildren<Transform>();
-        _isOrbital = false;
+        _isOrbital = true;
         _currentID = 1;
 
         _rayScript = this.gameObject.GetComponent<RaySystem>();
@@ -65,7 +70,25 @@ public class CameraMove : MonoBehaviour
         {
             _particleUI.GetComponent<ParticleSystem>().Stop();
         }
-        
+
+        _sceneManager = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>();
+
+        if(_sceneManager._lastScene == E_SCENE.TITLE)
+        {
+            _angleX = _cameraPos[(int)E_SCENE._1_1].x;
+            _angleY = _cameraPos[(int)E_SCENE._1_1].y;
+           // Debug.Log("title_true");
+        }
+        else
+        {
+            _angleX = _cameraPos[(int)_sceneManager._lastScene].x;
+            _angleY = _cameraPos[(int)_sceneManager._lastScene].y;
+           // Debug.Log("title_false");
+        }
+
+       // Debug.Log(_sceneManager._lastScene);
+
+
     }
 
     // Update is called once per frame
@@ -116,7 +139,7 @@ public class CameraMove : MonoBehaviour
         {
             if (_particleUI)
             {
-                _particleUI.GetComponent<ParticleSystem>().Play(); Debug.Log("play");
+                _particleUI.GetComponent<ParticleSystem>().Play(); //Debug.Log("play");
             }
             
             _agent.destination = _currentPlanet.transform.position;
@@ -260,4 +283,11 @@ public class CameraMove : MonoBehaviour
 
         return angle;
     }
+
+    //private Vector2 GetStartPos(E_SCENE _oldScene)
+    //{
+    //    Vector2 _pos;
+
+    //    _pos = _
+    //}
 }
