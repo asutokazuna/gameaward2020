@@ -256,7 +256,6 @@ public class Map : MonoBehaviour
             !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
             return;
 
-        Debug.Log("通ってるのよねぇ？");
         offsetDirect();
 
         foreach (Player obj in _player)
@@ -479,7 +478,7 @@ public class Map : MonoBehaviour
     {
         for (; pos.y > 0; pos.y--)
         {
-            if (isUse(pos) && GetObject(pos)._myObject != E_OBJECT.PLAYER_01)
+            if (isUse(pos))
             {// 落下地点の一個上
                 return new Vector3Int(pos.x, pos.y + 1, pos.z);
             }
@@ -501,6 +500,12 @@ public class Map : MonoBehaviour
         {// 移動時
             for (int n = 0; n <= MAX_OBJECT; n++, pos.y--)
             {// 2マス以上落下した場合
+                if (isUse(new Vector3Int(pos.x, pos.y - 1, pos.z)) &&
+                _map[pos.x, pos.y - 1, pos.z]._myObject == E_OBJECT.PLAYER_01 &&
+                _player[_map[pos.x, pos.y - 1, pos.z]._number]._haveObject._myObject == E_OBJECT.NONE)
+                {
+                    return true;
+                }
                 if (isTrampline(pos))
                 {
                     return false;
@@ -515,10 +520,17 @@ public class Map : MonoBehaviour
         {// 物を置くとき
             for (int n = 0; n <= VAL_FALL + 1; n++, pos.y--)
             {// 2マス以上落下した場合
+                if (isUse(new Vector3Int(pos.x, pos.y - 1, pos.z)) && 
+                    _map[pos.x, pos.y - 1, pos.z]._myObject == E_OBJECT.PLAYER_01 &&
+                    _player[_map[pos.x, pos.y - 1, pos.z]._number]._haveObject._myObject == E_OBJECT.NONE)
+                {
+                    return true;
+                }
                 if (isUse(pos))
                     return false;
             }
         }
+
         // ゲームオーバー
         return true;
     }
@@ -698,8 +710,7 @@ public class Map : MonoBehaviour
     private bool isRideon(Vector3Int pos)
     {
         if (_map[pos.x, pos.y, pos.z]._myObject == E_OBJECT.NONE      ||
-            _map[pos.x, pos.y, pos.z]._myObject == E_OBJECT.MAX       ||
-            _map[pos.x, pos.y, pos.z]._myObject == E_OBJECT.PLAYER_01
+            _map[pos.x, pos.y, pos.z]._myObject == E_OBJECT.MAX
             )
         {
             return false;
