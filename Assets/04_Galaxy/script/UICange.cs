@@ -8,18 +8,17 @@ using UnityEngine.UI;
 public class UICange : MonoBehaviour
 {
     [SerializeField] GameObject[] _gameObject = default;
-    [SerializeField] int _planetNo = 0;
-    [SerializeField] int MAX_UI = 0;
-    private StageSelectUI _stageSelectUI;
-    private GameObject _setUI;
+    private int             _planetNo = 0;
+    private StageSelectUI   _stageSelectUI;
+    private GameObject      _setUI;
 
     // Start is called before the first frame update
     void Start()
     {
         _stageSelectUI = GameObject.Find("StageName").GetComponent<StageSelectUI>();
         _setUI = GameObject.Find("PlanetUI");
-        _planetNo = 0;
-        for (int i = 0; i < MAX_UI + 1; i++)
+        _planetNo = GameObject.Find("CameraObj").GetComponent<CameraMove>()._currentID - 1;
+        for (int i = 0; i < _gameObject.Length; i++)
         {
             _gameObject[i].SetActive(false);
         }
@@ -38,9 +37,9 @@ public class UICange : MonoBehaviour
             _planetNo++;
         }
         if(_planetNo < 0) {
-            _planetNo = MAX_UI;
+            _planetNo = _gameObject.Length - 1;
         }
-        if(_planetNo > MAX_UI) {
+        if(_planetNo > _gameObject.Length - 1) {
             _planetNo = 0;
         }
 

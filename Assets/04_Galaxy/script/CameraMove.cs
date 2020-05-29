@@ -48,13 +48,14 @@ public class CameraMove : MonoBehaviour
     [SerializeField]
     private Vector2[] _cameraPos = new Vector2[(int)E_SCENE.MAX];
 
+    private UICange _uiChange;
+
     // Start is called before the first frame update
     void Start()
     {
         StageSelectManager = GameObject.Find("StageSelectManager");
         UI = GameObject.Find("CanvasUI");
-        //UI.SetActive(false);
-       // StageSelectManager.GetComponent<UICange>().PlanetNameOff();
+        _uiChange = StageSelectManager.GetComponent<UICange>();
 
         //SceneManager = GameObject.Find("SceneManager").GetComponent<SceneMgr>();
 
@@ -119,8 +120,6 @@ public class CameraMove : MonoBehaviour
                 break;
             }
         }
-
-
     }
 
     // Update is called once per frame
@@ -134,7 +133,7 @@ public class CameraMove : MonoBehaviour
             {
                 _currentID--;
                 _isOrbital = false;
-                StageSelectManager.GetComponent<UICange>().ChangePlanetName(true);
+                _uiChange.ChangePlanetName(true);
             }
             if (Input.GetKeyDown(KeyCode.E)
                 || GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT)
@@ -142,7 +141,7 @@ public class CameraMove : MonoBehaviour
             {
                 _currentID++;
                 _isOrbital = false;
-                StageSelectManager.GetComponent<UICange>().ChangePlanetName(false);
+               _uiChange.ChangePlanetName(false);
             }
         }
            
@@ -154,9 +153,7 @@ public class CameraMove : MonoBehaviour
         if (_currentID <= 0)
         {
             _currentID = 6;
-        }
-
-
+        }       
 
         for (int i = _planetData.Length - 1;i >= 0;i--)
         {
@@ -177,7 +174,7 @@ public class CameraMove : MonoBehaviour
             _agent.destination = _currentPlanet.transform.position;
             _cameraSpd = _cameraRotateSpd;
             //UI.SetActive(false);
-            StageSelectManager.GetComponent<UICange>().PlanetNameOff();
+            _uiChange.PlanetNameOff();
             
         }
         else
@@ -187,9 +184,9 @@ public class CameraMove : MonoBehaviour
                 _particleUI.GetComponent<ParticleSystem>().Stop();
                 _particleUI.GetComponent<ParticleSystem>().Clear();
             }
-            
+
             //UI.SetActive(true);
-            StageSelectManager.GetComponent<UICange>().PlanerNameOn();
+            _uiChange.PlanerNameOn();
             _cameraSpd = 1.0f;
 
             if(!_rayScript._isSelect)
