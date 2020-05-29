@@ -327,6 +327,16 @@ public class Player : BaseObject
         {
             PutedMode();    // 置かれる
         }
+
+        // 複数持っているかチェック
+        if (isMultiHave())
+        {
+            _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_OVER);
+        }
+        else
+        {
+            _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_OVER_FALSE);
+        }
     }
 
 
