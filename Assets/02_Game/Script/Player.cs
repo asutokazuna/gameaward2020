@@ -900,7 +900,7 @@ public class Player : BaseObject
      */
     public bool isMultiHave()
     {
-        if (_map.GetObject(new Vector3Int(_position.x, _position.y + 1, _position.z))._myObject == E_OBJECT.PLAYER_01 &&
+        if (_map.GetObject(new Vector3Int(_position.x, _position.y + 1, _position.z))._myObject != E_OBJECT.NONE &&
             _map.GetObject(new Vector3Int(_position.x, _position.y + 2, _position.z))._myObject != E_OBJECT.NONE)
         {
             return true;
