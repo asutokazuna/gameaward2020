@@ -86,7 +86,39 @@ public class CameraMove : MonoBehaviour
            // Debug.Log("title_false");
         }
 
-       // Debug.Log(_sceneManager._lastScene);
+        if(_sceneManager._lastScene < E_SCENE._2_1)
+        {
+            _currentID = 1;
+        }
+        else if (_sceneManager._lastScene < E_SCENE._3_1)
+        {
+            _currentID = 2;
+        }
+        else if (_sceneManager._lastScene < E_SCENE._4_1)
+        {
+            _currentID = 3;
+        }
+        else if (_sceneManager._lastScene < E_SCENE._5_1)
+        {
+            _currentID = 4;
+        }
+        else if (_sceneManager._lastScene < E_SCENE._6_1)
+        {
+            _currentID = 5;
+        }
+        else
+        {
+            _currentID = 6;
+        }
+
+        for (int i = _planetData.Length - 1; i >= 0; i--)
+        {
+            if (_planetData[i].GetComponent<revolution>().PlanetID == _currentID)
+            {
+                _currentPlanet = _planetData[i];
+                break;
+            }
+        }
 
 
     }
