@@ -16,7 +16,7 @@
     {
         Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
 
-		//Blend SrcAlpha OneMinusSrcAlpha
+		Blend SrcAlpha OneMinusSrcAlpha
 		//ZWrite Off
 
 
@@ -68,7 +68,7 @@
 				float existingDepthLinear = LinearEyeDepth(existingDepth01);	//非線形深度を線形に変換
 
 				float depthDifference = existingDepthLinear - i.screenPos.w;	//水面からの相対へ
-				depthDifference -= _A;
+				depthDifference *= _A;
 
 				fixed4 grabColor = tex2Dproj(_GrabPassTexture, UNITY_PROJ_COORD(i.grabPos));
 
@@ -76,7 +76,7 @@
 
 				float4 waterColor = lerp(grabColor, _Color, waterDepthDifference01);
 
-				return depthDifference;
+				return waterColor;
 			}
             ENDCG
         }
