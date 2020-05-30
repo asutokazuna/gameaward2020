@@ -325,8 +325,8 @@ public class Controller : MonoBehaviour
             if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.Space);
             if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.Space);
         }
-        else if (key == E_INPUT.LB)
-        {// LBボタン
+        else if (key == E_INPUT.B)
+        {// Bボタン
             if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.LeftShift);
             if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.LeftShift);
             if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.LeftShift);

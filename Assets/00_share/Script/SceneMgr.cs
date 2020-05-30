@@ -120,6 +120,7 @@ public class SceneMgr : MonoBehaviour
     private Fade _fadeScript;
 
     public static bool[] _stageClear = new bool[(int)E_SCENE.MAX];
+    public static bool _tutorial;
 
     public bool _stageReroad = false;     //!< スタート演出カット用
     void Awake()
@@ -132,6 +133,7 @@ public class SceneMgr : MonoBehaviour
             {
                 _stageClear[n] = false;
             }
+            _tutorial = true;
             //for (int n = (int)E_SCENE._1_1; n <= (int)E_SCENE._1_10; n++)
             //{
             //    if (n == (int)E_SCENE._1_1)
@@ -232,6 +234,10 @@ public class SceneMgr : MonoBehaviour
             //}
             //else
             //{// ステージ選択へ戻る
+            if (_nowScene == E_SCENE._1_1)
+            {
+                _tutorial = false;
+            }
                 _nowScene = E_SCENE.STAGE_SELECT;
             //}
         }
@@ -379,6 +385,15 @@ public class SceneMgr : MonoBehaviour
         return _stageClear[(int)stage];
     }
 
+
+    public bool GetTutorial()
+    {
+        if (_tutorial && _nowScene == E_SCENE._1_1)
+        {
+            return true;
+        }
+        return false;
+    }
 }
 
 
