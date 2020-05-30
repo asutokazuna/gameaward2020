@@ -715,15 +715,20 @@ public class Player : BaseObject
         {
             transform.DOJump(_nextPos, 1, 1, _mgr.MoveTime, false).OnComplete(() =>
             {
-                _position = _map.GetFallPos(_position);
-                offSetTransform();
-                transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
+                transform.DOLocalMove(transform.position, 0.2f).OnComplete(() =>
                 {
-                    WaitMode();
+                    _position.y -= _mgr.OutsideTheEreaDistance;
+                    offSetTransform();
+                    // カメラ演出的に小さくなるの違和感に感じるシーンがあるかも
+                    transform.DOScale(0, _mgr.OutsideTheEreaTime * 2f);
+                    transform.DOLocalMove(_nextPos, _mgr.OutsideTheEreaTime).OnComplete(() =>
+                    {
+                        WaitMode();
+                    });
                 });
-                WaitMode();
                 _map._gameOver = true;  // ゲームオーバーやで
                 _gameOver = true;
+                WaitMode();
             });
         }
     }

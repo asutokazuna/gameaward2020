@@ -23,6 +23,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] float _putTime;                //!< 置く時間
     [SerializeField] float _jumpTime;               //!< ジャンプ時間
     [SerializeField] float _outsideTheAreaTime;     //!< エリア外落下時間
+    [SerializeField] int   _outsideTheAreaDistance; //!< エリア外落下距離
     [SerializeField] bool _debug = default;
 
 
@@ -48,6 +49,10 @@ public class PlayerManager : MonoBehaviour
         if (_outsideTheAreaTime <= 0)
         {// 移動時間が0を下回った状態でセットされていたら
             _outsideTheAreaTime = 1;
+        }
+        if (_outsideTheAreaDistance <= 0)
+        {// 移動距離が0を下回った状態でセットされていたら
+            _outsideTheAreaDistance = 3;
         }
     }
 
@@ -99,6 +104,15 @@ public class PlayerManager : MonoBehaviour
     public float OutsideTheEreaTime
     {
         get { return _outsideTheAreaTime; }
+    }
+
+
+    /**
+     * @brief 移動距離変数の取得
+     */
+    public int OutsideTheEreaDistance
+    {
+        get { return _outsideTheAreaDistance; }
     }
 
 
