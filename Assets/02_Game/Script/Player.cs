@@ -710,10 +710,14 @@ public class Player : BaseObject
                         _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FAINT);
                 }
 
-                _position = _map.GetFallPos(_position);
+                _position = _map.GetFallPos(new Vector3Int(_position.x, _position.y - 1, _position.z));
                 offSetTransform();
                 transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
                 {
+                    if (_haveObject._myObject == E_OBJECT.BLOCK_TANK)
+                    {
+                        _map.HakoWarimasu(_haveObject);
+                    }
                     WaitMode();
                 });
                 WaitMode();

@@ -321,7 +321,6 @@ public class BaseObject : MonoBehaviour
         }
         else if (_mode == E_OBJECT_MODE.FALL)
         {// 落ちる時
-            _position.y += 1;
             offSetTransform();
             transform.DOJump(
                 _nextPos,   // 目的座標
@@ -333,13 +332,19 @@ public class BaseObject : MonoBehaviour
             {
                 _lifted = E_HANDS_ACTION.NONE;
                 WaitMode();
-                BlockDestroy _blockDestroy = this.gameObject.AddComponent<BlockDestroy>();
-                _blockDestroy.destroyObject(_nextPos); //箱破壊の処理
-                transform.DOScale(Vector3.zero, _timeScale);
+                Waremasu();
                 GameObject.FindGameObjectWithTag("Map").GetComponent<Map>()._gameOver = true;
                 _gameOver = true;
             });
         }
+    }
+
+
+    public void Waremasu()
+    {
+        BlockDestroy _blockDestroy = this.gameObject.AddComponent<BlockDestroy>();
+        _blockDestroy.destroyObject(transform.position); //箱破壊の処理
+        transform.DOScale(Vector3.zero, _timeScale);
     }
 
 

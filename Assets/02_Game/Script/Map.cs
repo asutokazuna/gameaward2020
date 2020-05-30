@@ -487,6 +487,13 @@ public class Map : MonoBehaviour
     }
 
 
+    public void HakoWarimasu(SquareInfo obj)
+    {
+        if (obj._myObject != E_OBJECT.BLOCK_TANK) return;
+        _tankBlock[obj._number].Waremasu();
+    }
+
+
     /**
      * @brief ゲームオーバー判定
      * @param1 移動先座標
