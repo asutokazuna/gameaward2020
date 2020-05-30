@@ -28,6 +28,7 @@ GameObject:
   - component: {fileID: 3096823854667681027}
   - component: {fileID: -7156662218057074220}
   - component: {fileID: -4196157809012647512}
+  - component: {fileID: -326617107911924711}
   m_Layer: 0
   m_Name: WaterBlock5
   m_TagString: WaterBlock
@@ -5126,6 +5127,82 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-326617107911924711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 140086742371360325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7255a483229aece4fbf6689f96f34010, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _setColor:
+  - {r: 0.05757724, g: 0, b: 0.6698113, a: 1}
+  - {r: 0.2704254, g: 0.78343993, b: 0.9716981, a: 1}
+  _setColorCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -2
+      outSlope: 0
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5
+      value: 1
+      inSlope: -0
+      outSlope: -0.7692308
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.8
+      value: 0
+      inSlope: -0.7692308
+      outSlope: 0
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 2.2
+      value: 0
+      inSlope: -0
+      outSlope: 0.7692308
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 3.5
+      value: 1
+      inSlope: 0.7692308
+      outSlope: 0
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 4
+      value: 1
+      inSlope: -0
+      outSlope: 2
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 1
+    m_RotationOrder: 4
+  _materialNo: 1
 --- !u!1001 &3561229595419598889
 PrefabInstance:
   m_ObjectHideFlags: 0
