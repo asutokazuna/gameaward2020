@@ -32,6 +32,7 @@ public class PlayerAnim : MonoBehaviour
         E_FAINT,
 
         E_TP_FALSE,
+        E_OVER_FALSE,
     }
 
     // アニメーション管理用
@@ -119,6 +120,9 @@ public class PlayerAnim : MonoBehaviour
                 break;
             case PlayerInfo.E_TP_FALSE:
                 _playerAnimator.SetBool("TP", false);
+                break;
+            case PlayerInfo.E_OVER_FALSE:
+                _playerAnimator.SetBool("Over", false);
                 break;
         }
     }

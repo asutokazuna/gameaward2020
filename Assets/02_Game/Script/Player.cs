@@ -327,6 +327,16 @@ public class Player : BaseObject
         {
             PutedMode();    // 置かれる
         }
+
+        // 複数持っているかチェック
+        if (isMultiHave())
+        {
+            _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_OVER);
+        }
+        else
+        {
+            _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_OVER_FALSE);
+        }
     }
 
 
@@ -890,7 +900,7 @@ public class Player : BaseObject
      */
     public bool isMultiHave()
     {
-        if (_map.GetObject(new Vector3Int(_position.x, _position.y + 1, _position.z))._myObject == E_OBJECT.PLAYER_01 &&
+        if (_map.GetObject(new Vector3Int(_position.x, _position.y + 1, _position.z))._myObject != E_OBJECT.NONE &&
             _map.GetObject(new Vector3Int(_position.x, _position.y + 2, _position.z))._myObject != E_OBJECT.NONE)
         {
             return true;
