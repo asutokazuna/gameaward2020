@@ -101,6 +101,8 @@ public class Map : MonoBehaviour
     public int                  _fullWaterBlockCnt;
     public E_TURN               _turn;                  //!< ターン制
 
+    private Tutorial _tutorial = new Tutorial();
+
     private AudioSource _audioSource;
     public AudioClip _SEGameclear;
     public AudioClip _SEGameover;
@@ -216,15 +218,26 @@ public class Map : MonoBehaviour
      */
     private void MoveObject()
     {
-        // 移動キーを何も押してなかったら
-        if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT) &&
-            !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT) &&
-            !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP) &&
-            !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN) ||
-            _input.isInput(E_INPUT_MODE.BUTTON, E_INPUT.LB))
+        if (GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().GetTutorial())
         {
-            return;
+            if (!_tutorial.isKey(E_OBJECT_MODE.MOVE))
+            {
+                return;
+            }
         }
+        else
+        {
+            // 移動キーを何も押してなかったら
+            if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT) &&
+                !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT) &&
+                !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP) &&
+                !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN) ||
+                _input.isInput(E_INPUT_MODE.BUTTON, E_INPUT.B))
+            {
+                return;
+            }
+        }
+
         offsetDirect();
         PlayerSort();   // ソートと更新
         foreach (Player obj in _player)
@@ -247,14 +260,24 @@ public class Map : MonoBehaviour
      */
     private void RotateObject()
     {
-        if (!_input.isInput(E_INPUT_MODE.BUTTON, E_INPUT.LB))
-            return;
+        if (GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().GetTutorial())
+        {
+            if (!_tutorial.isKey(E_OBJECT_MODE.ROTATE))
+            {
+                return;
+            }
+        }
+        else
+        {
+            if (!_input.isInput(E_INPUT_MODE.BUTTON, E_INPUT.B))
+                return;
 
-        if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT) &&
-            !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT) &&
-            !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP) &&
-            !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
-            return;
+            if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT) &&
+                !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT) &&
+                !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP) &&
+                !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
+                return;
+        }
 
         offsetDirect();
 
@@ -273,7 +296,17 @@ public class Map : MonoBehaviour
      */
     public void HandAction(bool flag = false)
     {
-        if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A) && !flag) return;
+        if (GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().GetTutorial())
+        {
+            if (!_tutorial.isKey(E_OBJECT_MODE.LIFT))
+            {
+                return;
+            }
+        }
+        else
+        {
+            if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A) && !flag) return;
+        }
 
         foreach (Player obj in _player)
         {
@@ -1200,5 +1233,64 @@ public class Map : MonoBehaviour
 
 #endif
 }
+
+
+
+public class Tutorial
+{
+    private int _cnt = default;
+
+
+    public Tutorial()
+    {
+        _cnt = 0;
+    }
+
+
+    public bool isKey(E_OBJECT_MODE mode)
+    {
+        if (!GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().GetTutorial())
+        {
+            return false;
+        }
+
+        else if (mode == E_OBJECT_MODE.MOVE && _cnt == 0)
+        {// 移動
+            // 移動キーを何も押してなかったら
+            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
+                    isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT) &&
+                !GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
+                    isInput(E_INPUT_MODE.BUTTON, E_INPUT.B))
+            {
+                _cnt++;
+                return true;
+            }
+        }
+        else if (mode == E_OBJECT_MODE.ROTATE && _cnt == 2)
+        {// 回転
+            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
+                    isInput(E_INPUT_MODE.BUTTON, E_INPUT.B) && 
+                GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
+                    isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT))
+            {
+                _cnt++;
+                return true;
+            }
+        }
+        else if (mode == E_OBJECT_MODE.LIFT && (_cnt == 1 || _cnt == 3))
+        {// 持つ、離す
+            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
+                    isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
+            {
+                _cnt++;
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+
 
 // EOF
