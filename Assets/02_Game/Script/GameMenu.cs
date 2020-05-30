@@ -14,7 +14,7 @@ public class GameMenu : MonoBehaviour
     }
 
     public int _select;
-    private bool _isMenu;
+    public bool _isMenu;
     [SerializeField]
     private GameObject _menuUI = default;
     [SerializeField]

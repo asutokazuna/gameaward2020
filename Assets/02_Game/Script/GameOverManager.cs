@@ -16,16 +16,18 @@ public class GameOverManager : MonoBehaviour
         MAX_MENU
     }
 
-    public GameObject _continueButton;
-    public GameObject _selectButton;
-    public GameObject _titleButton;
-    public GameObject _finishButton;
+    private GameObject _backGround;
+    private GameObject _continueButton;
+    private GameObject _selectButton;
+    private GameObject _titleButton;
+    private GameObject _finishButton;
 
     private Map _map;
-    Gameover _gameover;
+    private Gameover _gameover;
 
     private bool _isOnce;
-    private int _selectnum;
+    public int _selectnum;
+    public bool _isSelect;
 
     private GameObject _sceneManager;
     /*
@@ -53,11 +55,14 @@ public class GameOverManager : MonoBehaviour
         _selectButton   = GameObject.Find("Select");
         _titleButton    = GameObject.Find("title");
         _finishButton   = GameObject.Find("finish");
+        _backGround     = GameObject.Find("menuBG");
 
 
         // 変数の初期化
         SetGameOverUI(false);
+        _backGround.SetActive(false);
 
+        _isSelect = false;
         _isOnce = false;
         _selectnum = 0;
         /*
@@ -78,8 +83,22 @@ public class GameOverManager : MonoBehaviour
         {
             //UIの表示
             SetGameOverUI(true);
-
             _isOnce = true;
+        }
+        if (Input.GetKeyDown(KeyCode.Q) && _isOnce)
+        {
+            SetGameOverUI(false);
+            _selectnum = 0;
+            _isSelect = false;
+            _isOnce = false;
+            Time.timeScale = 1.0f;
+        }
+        else if(Input.GetKeyDown(KeyCode.Q))
+        {
+            SetGameOverUI(true);
+            _isSelect = true;
+            _isOnce = true;
+            Time.timeScale = 0.0f;
         }
 
 
@@ -89,28 +108,24 @@ public class GameOverManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.W))
             {// カーソルを上に移動
-                if (_selectnum < (int)GameoverMenu.E_CONTINUE)
+                if (_selectnum <= (int)GameoverMenu.E_CONTINUE)
                 {
-                    _selectnum--;
-                    //Debug.Log("w--");
+                    _selectnum = (int)GameoverMenu.E_EXIT;
                 }
                 else
                 {
-                    _selectnum = (int)GameoverMenu.E_TITLE;
-                    //Debug.Log("--w");
+                    _selectnum--;
                 }
             }
             else if (Input.GetKeyDown(KeyCode.S))
             {// カーソルを下に移動
-                if (_selectnum > (int)GameoverMenu.MAX_MENU)
+                if (_selectnum >= (int)GameoverMenu.E_EXIT)
                 {
                     _selectnum = (int)GameoverMenu.E_CONTINUE;
-                    //Debug.Log("s--");
                 }
                 else
                 {
                     _selectnum++;
-                    //Debug.Log("--s");
                 }
             }
 
@@ -144,6 +159,64 @@ public class GameOverManager : MonoBehaviour
                 }
                 _map._gameOver = false;
                 SetGameOverUI(false);
+                _isOnce = false;
+            }
+        }
+        else if(_isSelect)
+        {
+            if (Input.GetKeyDown(KeyCode.W))
+            {// カーソルを上に移動
+                if (_selectnum <= (int)GameoverMenu.E_CONTINUE)
+                {
+                    _selectnum = (int)GameoverMenu.E_EXIT;
+                }
+                else
+                {
+                    _selectnum--;
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.S))
+            {// カーソルを下に移動
+                if (_selectnum >= (int)GameoverMenu.E_EXIT)
+                {
+                    _selectnum = (int)GameoverMenu.E_CONTINUE;
+                }
+                else
+                {
+                    _selectnum++;
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {// 決定キーを押した時の処理
+                switch (_selectnum)
+                {
+                    //つづけるへ
+                    case 0:
+                        _sceneManager.GetComponent<SceneMgr>().SetScene(E_SCENE_MODE.RELOAD);
+                        break;
+                    //セレクトへ
+                    case 1:
+                        _sceneManager.GetComponent<SceneMgr>().SetScene(E_SCENE.STAGE_SELECT);
+                        break;
+                    //タイトルへ
+                    case 2:
+                        _sceneManager.GetComponent<SceneMgr>().SetScene(E_SCENE.TITLE);
+                        break;
+                    //ゲーム終了へ
+                    case 3:
+#if UNITY_EDITOR
+                        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+                        Application.Quit();
+                        break;
+
+                    default:
+                        break;
+
+                }
+                _isOnce = false;
+                SetGameOverUI(false);
+                Time.timeScale = 1.0f;
             }
         }
 
@@ -204,6 +277,10 @@ public class GameOverManager : MonoBehaviour
      */
     private void SetGameOverUI(bool flag)
     {
+        if(_isSelect || Input.GetKeyDown(KeyCode.Q))
+        {
+            _backGround.SetActive(flag);
+        }
         _continueButton.SetActive(flag);
         _selectButton.SetActive(flag);
         _titleButton.SetActive(flag);

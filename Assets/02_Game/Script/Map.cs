@@ -108,6 +108,7 @@ public class Map : MonoBehaviour
     public AudioClip _SEGameover;
     public AudioClip _SEBoxBreak;
 
+    private GameOverManager _gameOverManager;
 
     /**
      * @brief Awake
@@ -134,6 +135,7 @@ public class Map : MonoBehaviour
         _turn = E_TURN.WAIT;
         if (_input == null)
             _input = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();
+        _gameOverManager = GameObject.Find("GameOverManager").GetComponent<GameOverManager>();
         _audioSource = GetComponent<AudioSource>();
     }
 
@@ -228,7 +230,8 @@ public class Map : MonoBehaviour
         else
         {
             // 移動キーを何も押してなかったら
-            if (!_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT) &&
+            if (_gameOverManager._isSelect ||
+                !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT) &&
                 !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT) &&
                 !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP) &&
                 !_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN) ||
