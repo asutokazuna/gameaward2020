@@ -311,11 +311,12 @@ public class Player : BaseObject
     {
         offSetTransform();
         // 座標移動
-        if (_mode == E_OBJECT_MODE.MOVE || _mode == E_OBJECT_MODE.DONT_MOVE || _mode == E_OBJECT_MODE.AREA_FALL)
+        if (_mode == E_OBJECT_MODE.MOVE || _mode == E_OBJECT_MODE.DONT_MOVE)
         {// 移動
             MoveMode(); // アニメーションのセット
         }
-        else if (_mode == E_OBJECT_MODE.GET_UP || _mode == E_OBJECT_MODE.GET_OFF || _mode == E_OBJECT_MODE.FALL)
+        else if (_mode == E_OBJECT_MODE.GET_UP || _mode == E_OBJECT_MODE.GET_OFF ||
+            _mode == E_OBJECT_MODE.FALL || _mode == E_OBJECT_MODE.AREA_FALL)
         {// ジャンプ
             JumpMode(); // アニメーションのセット
         }
@@ -593,22 +594,6 @@ public class Player : BaseObject
         {
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_BUMP);
         }
-        else if (_mode == E_OBJECT_MODE.AREA_FALL)
-        {
-            if (_haveObject._myObject == E_OBJECT.NONE ||
-                _haveObject._myObject == E_OBJECT.MAX)
-            {// 何も持っていない時
-                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL);
-            }
-            else if (_haveObject._myObject == E_OBJECT.PLAYER_01)
-            {// プレイヤーを持っている時
-                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL);
-            }
-            else
-            {// 何かを持っている時
-                //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_FALL);
-            }
-        }
         //                              移動先座標, 移動時間(秒)
         transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
         {
@@ -707,25 +692,32 @@ public class Player : BaseObject
                 _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
             }
 
-            transform.DOMove(new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),   // 目的座標
-                _mgr.MoveTime, // 時間
-                false
-                ).OnComplete(() =>
+            transform.DOJump(_nextPos, 1, 1, _mgr.MoveTime, false).OnComplete(() =>
             {
                 if (_animation._faintFlag)
                 {
-
                     if (_lifted != E_HANDS_ACTION.DO)
                         _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FAINT);
                 }
 
                 _position = _map.GetFallPos(_position);
                 offSetTransform();
-                transform.DOLocalMove(      //取り合えずの数値
-                    new Vector3(_nextPos.x, _nextPos.y, _nextPos.z),// 目的座標
-     
-                _mgr.MoveTime
-                ).OnComplete(() =>
+                transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
+                {
+                    WaitMode();
+                });
+                WaitMode();
+                _map._gameOver = true;  // ゲームオーバーやで
+                _gameOver = true;
+            });
+        }
+        else if (_mode == E_OBJECT_MODE.AREA_FALL)
+        {
+            transform.DOJump(_nextPos, 1, 1, _mgr.MoveTime, false).OnComplete(() =>
+            {
+                _position = _map.GetFallPos(_position);
+                offSetTransform();
+                transform.DOLocalMove(_nextPos, _mgr.MoveTime).OnComplete(() =>
                 {
                     WaitMode();
                 });
@@ -778,13 +770,6 @@ public class Player : BaseObject
         }
         else if (_haveObject._myObject == E_OBJECT.PLAYER_01)
         {// プレイヤーを持つとき
-            //if (n == 0)
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_UP_CHARA);
-            //else if (n == 1)
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_CHARA);
-            //else if (n == 2)
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_LOW_CHARA);
-
             _animation.SetPlayerInfo(n);
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_LIFT);
 
@@ -796,13 +781,6 @@ public class Player : BaseObject
         }
         else
         {// プレイヤー以外を持つ時
-            //if (n == 0)
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_UP_BOX);
-            //else if (n == 1)
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_BOX);
-            //else if (n == 2)
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_LIFT_LOW_BOX);
-
             _animation.SetPlayerInfo(n);
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_LIFT);
 
@@ -828,15 +806,6 @@ public class Player : BaseObject
         }
         else if (_haveObject._myObject == E_OBJECT.PLAYER_01)
         {// プレイヤーを持つとき
-            //if (n == 0)
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_UP_CHARA);
-            //else if (n == 1)
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_CHARA);
-            //else if (n == 2)
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_LOW_CHARA);
-
-            //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_CHARA);
-
             _animation.SetPlayerInfo(n);
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_PUT);
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
@@ -846,13 +815,6 @@ public class Player : BaseObject
         }
         else
         {// プレイヤー以外を持つ時
-            //if (n == 0)
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_UP_BOX);
-            //else if (n == 1)
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_BOX);
-            //else if (n == 2)
-            //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_PUT_LOW_BOX);
-
             _animation.SetPlayerInfo(n);
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_PUT);
 
@@ -866,21 +828,7 @@ public class Player : BaseObject
 
     public void GameClear()
     {
-        //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_HAPPY);
         _animation.SetPlayerState(PlayerAnim.PlayerState.E_HAPPY);
-        //if (_haveObject._myObject == E_FIELD_OBJECT.NONE ||
-        //    _haveObject._myObject == E_FIELD_OBJECT.MAX)
-        //{// 何も持っていない時
-        //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_HAPPY);
-        //}
-        //else if (_haveObject._myObject == E_FIELD_OBJECT.PLAYER_01)
-        //{// プレイヤーを持つとき
-        //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_HAPPY_CHARA);
-        //}
-        //else
-        //{// プレイヤー以外を持つ時
-        //    _animation.SetPlayerState(PlayerAnimation.PlayerState.E_HAPPY);
-        //}
     }
 
 
