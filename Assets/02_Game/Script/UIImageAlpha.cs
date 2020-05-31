@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class UIImageAlpha : MonoBehaviour
 {
-    public CanvasGroup _continueButton = default;
-    public CanvasGroup _selectButton = default;
-    public CanvasGroup _titleButton = default;
-    public CanvasGroup _finishButton = default;
-    
-    public GameOverManager _gameOverManager = default;
-    public Map _map = default;
+    [SerializeField] private CanvasGroup _continueButton = default;
+    [SerializeField] private CanvasGroup _selectButton = default;
+    [SerializeField] private CanvasGroup _titleButton = default;
+    [SerializeField] private CanvasGroup _finishButton = default;
+
+    [SerializeField] public GameOverManager _gameOverManager = default;
+    [SerializeField] public Map _map = default;
     //private GameMenu _menu;
 
     public float _startalpha = default;
@@ -18,15 +18,18 @@ public class UIImageAlpha : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("あああああああああああああああああああああああああああああああ");
+        _gameOverManager = GameObject.Find("GameOverManager").GetComponent<GameOverManager>();
+        _map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>();
+
+        _continueButton = GameObject.Find("contine").GetComponent<CanvasGroup>();
+        _selectButton = GameObject.Find("Select").GetComponent<CanvasGroup>();
+        _titleButton = GameObject.Find("title").GetComponent<CanvasGroup>();
+        _finishButton = GameObject.Find("finish").GetComponent<CanvasGroup>();
 
         _continueButton.alpha = _startalpha;
         _selectButton.alpha = _startalpha;
         _titleButton.alpha = _startalpha;
         _finishButton.alpha = _startalpha;
-
-        _gameOverManager = GameObject.Find("GameOverManager").GetComponent<GameOverManager>();
-        _map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>();
     }
 
     // Update is called once per frame
