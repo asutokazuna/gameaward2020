@@ -43,7 +43,7 @@ public class BulbCreate : MonoBehaviour
                 }
             }
 
-            if (nOldWater > 10)
+            if (nOldWater > 0)
             {
                 fTimer = WAIT_TIME;
                
