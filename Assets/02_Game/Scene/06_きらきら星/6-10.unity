@@ -197,6 +197,7 @@ MonoBehaviour:
   _putTime: 0
   _jumpTime: 0
   _outsideTheAreaTime: 0
+  _outsideTheAreaDistance: 0
   _debug: 0
 --- !u!114 &51244599
 MonoBehaviour:
@@ -5821,6 +5822,7 @@ MonoBehaviour:
   _oldScene: 2
   _reroad: 0
   _isDebug: 0
+  _stageReroad: 0
 --- !u!114 &740214760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6242,11 +6244,11 @@ MonoBehaviour:
   _focusClear: 1
   _rotateSpeedStart: 1.3
   _circleSizeStart: {x: 8, y: 0, z: 8}
-  _focusStart: 1
   _startHigh: 14
   _startTime: 8
   _skipTime: 2
   _delayTime: 1
+  _reroad: 0
 --- !u!82 &963194230
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6256,8 +6258,9 @@ AudioSource:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 4375fbe21b2d83448b50de7860bcbcd6, type: 3}
+  OutputAudioMixerGroup: {fileID: 2403859898300229678, guid: c1e6e28d8832f4448a9eef40fbd6ca72,
+    type: 2}
+  m_audioClip: {fileID: 8300000, guid: 9531925f901a63747964725bc317ee10, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.101
   m_Pitch: 1
@@ -11295,6 +11298,12 @@ MonoBehaviour:
   ClearSwitch: 1
   WaitTime: 2
   DelayTime: 5
+  _color:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _rateMultiplier: 0
+  _size: 0
 --- !u!1001 &1121129944
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12660,9 +12669,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d756629755e0ff489752293066e9800, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameOverSwitch: 1
-  WaitTime: 0
-  DelayTime: 2
+  _continueButton: {fileID: 0}
+  _selectButton: {fileID: 0}
+  _titleButton: {fileID: 0}
+  _finishButton: {fileID: 0}
 --- !u!1001 &2079482377
 PrefabInstance:
   m_ObjectHideFlags: 0

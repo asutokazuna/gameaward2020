@@ -399,6 +399,7 @@ MonoBehaviour:
   _putTime: 0
   _jumpTime: 0
   _outsideTheAreaTime: 0
+  _outsideTheAreaDistance: 0
   _debug: 0
 --- !u!114 &51244599
 MonoBehaviour:
@@ -6412,7 +6413,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 4.963e-42, y: 1.04e-43, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -7022,9 +7023,9 @@ AudioSource:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: -1657366406379376269, guid: c1e6e28d8832f4448a9eef40fbd6ca72,
+  OutputAudioMixerGroup: {fileID: -5269209028026487797, guid: c1e6e28d8832f4448a9eef40fbd6ca72,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 7b4fd12ee82faa141a17d5a88a830e6e, type: 3}
+  m_audioClip: {fileID: 8300000, guid: a7f6f35b934ee1e4bb5397164f1f9766, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.178
   m_Pitch: 1
@@ -12410,6 +12411,12 @@ MonoBehaviour:
   ClearSwitch: 1
   WaitTime: 2
   DelayTime: 5
+  _color:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _rateMultiplier: 0
+  _size: 0
 --- !u!4 &1179828356 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4186739107142267681, guid: e73a2a9676e424d419d430e277b61e40,
@@ -13767,9 +13774,9 @@ MonoBehaviour:
   _offsetPos: {x: 0, y: 0, z: 0}
   _fullWaterBlockCnt: 0
   _turn: 0
-  _SEGameclear: {fileID: 8300000, guid: d9ad84130c5019249bd01a5fdd521698, type: 3}
-  _SEGameover: {fileID: 8300000, guid: e3bbae6297857a54c8a68727e6fa629e, type: 3}
-  _SEBoxBreak: {fileID: 8300000, guid: ba3e2a825c7f570488b5ecd317cbe501, type: 3}
+  _SEGameclear: {fileID: 8300000, guid: 12b29a9a0d95359478ba49e919fe2ee8, type: 3}
+  _SEGameover: {fileID: 8300000, guid: c5dca3014e46b65428030bfd6ba5ff63, type: 3}
+  _SEBoxBreak: {fileID: 8300000, guid: 8b3bbeb398b2fe84583f1ac257417c0f, type: 3}
 --- !u!114 &1835315811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14293,9 +14300,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d756629755e0ff489752293066e9800, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameOverSwitch: 1
-  WaitTime: 0.2
-  DelayTime: 2
+  _continueButton: {fileID: 0}
+  _selectButton: {fileID: 0}
+  _titleButton: {fileID: 0}
+  _finishButton: {fileID: 0}
 --- !u!1001 &2088366814
 PrefabInstance:
   m_ObjectHideFlags: 0
