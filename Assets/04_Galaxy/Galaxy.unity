@@ -1463,7 +1463,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2050,7 +2050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2509804, g: 0.22352941, b: 1, a: 1}
+  m_Color: {r: 0.2509804, g: 0.22352941, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2093,7 +2093,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _parentName: Menu
+  _parentName: MenuName
   _limitAlpha: 1
 --- !u!1 &484745391
 GameObject:
@@ -3498,7 +3498,7 @@ GameObject:
   - component: {fileID: 711813385}
   - component: {fileID: 711813384}
   m_Layer: 5
-  m_Name: Menu
+  m_Name: MenuName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3536,7 +3536,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -6794,7 +6794,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -6837,7 +6837,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _parentName: Menu
+  _parentName: MenuName
   _limitAlpha: 1
 --- !u!1 &1050443370 stripped
 GameObject:
@@ -7829,6 +7829,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1259936558}
   - component: {fileID: 1259936559}
+  - component: {fileID: 1259936560}
   m_Layer: 5
   m_Name: MenuUI
   m_TagString: Untagged
@@ -7870,6 +7871,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1259936557}
   m_CullTransparentMesh: 0
+--- !u!114 &1259936560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259936557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01e05edbe5cd1644a87c056456652740, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _menuObj: {fileID: 711813384}
+  _setMenuObj:
+  - {fileID: 360883482}
+  - {fileID: 1518473341}
+  - {fileID: 1430191576}
+  _isMenu: 0
 --- !u!1 &1264452801 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7875132408632227847, guid: 1f041354a48c03b488c84a2915dc8c6d,
@@ -14127,7 +14146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -14834,7 +14853,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -20847,7 +20866,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _parentName: Menu
+  _parentName: MenuName
   _limitAlpha: 0.35
 --- !u!114 &1745146576
 MonoBehaviour:
@@ -20862,7 +20881,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.3764706}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
