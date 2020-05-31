@@ -106,7 +106,8 @@ public class RaySystem : MonoBehaviour
                     SetID(_newTarget.collider.gameObject.GetComponent<StageID>()._stageID);
                     _level = _newTarget.collider.gameObject.GetComponent<StageID>()._level; // レベル取得
 
-                    if (Input.GetKey(KeyCode.Return))
+                    if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+                        .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
                     {
                         //_sceneManager.SetScene(E_SCENE._1_1);
                         _sceneManager.SetScene(GetID());
