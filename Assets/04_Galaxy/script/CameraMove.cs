@@ -127,17 +127,15 @@ public class CameraMove : MonoBehaviour
     {
         if (!_rayScript._isSelect && _isOrbital)
         {
-            if (Input.GetKeyDown(KeyCode.Q)
-           || GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_LEFT)
-           )
+            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
+                isInput(E_INPUT_MODE.TRIGGER, E_INPUT.LB))
             {
                 _currentID--;
                 _isOrbital = false;
                 _uiChange.ChangePlanetName(true);
             }
-            if (Input.GetKeyDown(KeyCode.E)
-                || GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_RIGHT)
-                )
+            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
+                isInput(E_INPUT_MODE.TRIGGER, E_INPUT.RB))
             {
                 _currentID++;
                 _isOrbital = false;
@@ -192,11 +190,11 @@ public class CameraMove : MonoBehaviour
             if(!_rayScript._isSelect)
             {
                 _angleX += Input.GetAxis("Mouse X") * _rotateSpeed;
-                _angleX += GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()._RStick._now_H * _rotateControllerSpeed;
+                _angleX += GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()._LStick._now_H * _rotateControllerSpeed;
                 CheckAngle(_angleX);
 
                 _angleY += Input.GetAxis("Mouse Y") * _rotateSpeed;
-                _angleY += GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()._RStick._now_V * _rotateControllerSpeed;
+                _angleY += GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()._LStick._now_V * _rotateControllerSpeed;
                 if (_angleY * _rotateSpeed <= 0)
                 {
                     _angleY = 0;

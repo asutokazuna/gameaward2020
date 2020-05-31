@@ -283,12 +283,12 @@ public class Controller : MonoBehaviour
      */
     public bool isInput(E_INPUT_MODE mode, E_INPUT key)
     {
-        if (inputSystem == E_INPUT_SYSTEM.KEYBOARD)
-        {// キーボード
+        if (isInputKeyboard(key, mode))
+        {
             return isInputKeyboard(key, mode);
         }
-        else if (inputSystem == E_INPUT_SYSTEM.GAME_PAD)
-        {// ゲームパッド
+        else if (isInputGamePad(key, mode))
+        {
             return isInputGamePad(key, mode);
         }
         Debug.Log("入力エラー");
@@ -304,21 +304,74 @@ public class Controller : MonoBehaviour
      */
     private bool isInputKeyboard(E_INPUT key, E_INPUT_MODE mode)
     {
-        if (key == E_INPUT.D_PAD_RIGHT || key == E_INPUT.D_PAD_LEFT ||
-            key == E_INPUT.D_PAD_UP || key == E_INPUT.D_PAD_DOWN)
-        {// 十字キーの場合
-            return isDPad(key, mode);
+        if (key == E_INPUT.LB)
+        {
+            if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.LeftArrow);
+            if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.LeftArrow);
+            if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.LeftArrow);
+        }
+        else if (key == E_INPUT.RB)
+        {
+            if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.RightArrow);
+            if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.RightArrow);
+            if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.RightArrow);
         }
         else if (key == E_INPUT.L_STICK_RIGHT || key == E_INPUT.L_STICK_LEFT ||
                  key == E_INPUT.L_STICK_UP || key == E_INPUT.L_STICK_DOWN)
         {// Lスティックの場合
-            return isLStick(key, mode);
+            if (key == E_INPUT.L_STICK_LEFT)
+            {
+                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.A);
+                if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.A);
+                if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.A);
+            }
+            if (key == E_INPUT.L_STICK_RIGHT)
+            {
+                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.D);
+                if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.D);
+                if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.D);
+            }
+            if (key == E_INPUT.L_STICK_UP)
+            {
+                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.W);
+                if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.W);
+                if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.W);
+            }
+            if (key == E_INPUT.L_STICK_DOWN)
+            {
+                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.S);
+                if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.S);
+                if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.S);
+            }
         }
-        else if (key == E_INPUT.R_STICK_RIGHT || key == E_INPUT.R_STICK_LEFT ||
-                 key == E_INPUT.R_STICK_UP || key == E_INPUT.R_STICK_DOWN)
-        {// Lスティックの場合
-            return isRStick(key, mode);
-        }
+        //else if (key == E_INPUT.R_STICK_RIGHT || key == E_INPUT.R_STICK_LEFT ||
+        //         key == E_INPUT.R_STICK_UP || key == E_INPUT.R_STICK_DOWN)
+        //{// Rスティックの場合
+        //    if (key == E_INPUT.R_STICK_LEFT)
+        //    {
+        //        if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.LeftArrow);
+        //        if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.LeftArrow);
+        //        if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.LeftArrow);
+        //    }
+        //    if (key == E_INPUT.R_STICK_RIGHT)
+        //    {
+        //        if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.RightArrow);
+        //        if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.RightArrow);
+        //        if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.RightArrow);
+        //    }
+        //    if (key == E_INPUT.R_STICK_UP)
+        //    {
+        //        if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.UpArrow);
+        //        if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.UpArrow);
+        //        if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.UpArrow);
+        //    }
+        //    if (key == E_INPUT.R_STICK_DOWN)
+        //    {
+        //        if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.DownArrow);
+        //        if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.DownArrow);
+        //        if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.DownArrow);
+        //    }
+        //}
         else if (key == E_INPUT.A)
         {// Aボタン
             if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.Space);
@@ -396,11 +449,7 @@ public class Controller : MonoBehaviour
      */
     private bool isDPad(E_INPUT key, E_INPUT_MODE mode)
     {
-        if (inputSystem == E_INPUT_SYSTEM.KEYBOARD)
-        {// キーボード
-
-        }
-        else if (inputSystem == E_INPUT_SYSTEM.GAME_PAD)
+        if (inputSystem == E_INPUT_SYSTEM.GAME_PAD)
         {// ゲームパッド
             if (mode == E_INPUT_MODE.BUTTON)
             {
@@ -428,34 +477,6 @@ public class Controller : MonoBehaviour
      */
     private bool isLStick(E_INPUT key, E_INPUT_MODE mode)
     {
-        if (inputSystem == E_INPUT_SYSTEM.KEYBOARD)
-        {// キーボード
-            if (key == E_INPUT.L_STICK_LEFT)
-            {
-                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.A);
-                if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.A);
-                if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.A);
-            }
-            if (key == E_INPUT.L_STICK_RIGHT)
-            {
-                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.D);
-                if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.D);
-                if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.D);
-            }
-            if (key == E_INPUT.L_STICK_UP)
-            {
-                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.W);
-                if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.W);
-                if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.W);
-            }
-            if (key == E_INPUT.L_STICK_DOWN)
-            {
-                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.S);
-                if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.S);
-                if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.S);
-            }
-        }
-        else if (inputSystem == E_INPUT_SYSTEM.GAME_PAD)
         {// ゲームパッド
             if (mode == E_INPUT_MODE.BUTTON)
             {
@@ -483,34 +504,6 @@ public class Controller : MonoBehaviour
      */
     private bool isRStick(E_INPUT key, E_INPUT_MODE mode)
     {
-        if (inputSystem == E_INPUT_SYSTEM.KEYBOARD)
-        {// キーボード
-            if (key == E_INPUT.R_STICK_LEFT)
-            {
-                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.LeftArrow);
-                if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.LeftArrow);
-                if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.LeftArrow);
-            }
-            if (key == E_INPUT.R_STICK_RIGHT)
-            {
-                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.RightArrow);
-                if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.RightArrow);
-                if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.RightArrow);
-            }
-            if (key == E_INPUT.R_STICK_UP)
-            {
-                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.UpArrow);
-                if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.UpArrow);
-                if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.UpArrow);
-            }
-            if (key == E_INPUT.R_STICK_DOWN)
-            {
-                if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.DownArrow);
-                if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.DownArrow);
-                if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.DownArrow);
-            }
-        }
-        else if (inputSystem == E_INPUT_SYSTEM.GAME_PAD)
         {// ゲームパッド
             if (mode == E_INPUT_MODE.BUTTON)
             {
