@@ -11,9 +11,6 @@ GameObject:
   - component: {fileID: 4664041784287948898}
   - component: {fileID: 5618346682550780521}
   - component: {fileID: 5642984765609385460}
-  - component: {fileID: 1577476119286671027}
-  - component: {fileID: 145657163699957474}
-  - component: {fileID: 1878542377364920921}
   m_Layer: 0
   m_Name: K_sima_2 (1)
   m_TagString: Untagged
@@ -82,47 +79,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &1577476119286671027
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593900915702720291}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 2263210421099104487, guid: 425d4a3f3ca42394ea16ae1a9b7563bb, type: 3}
---- !u!114 &145657163699957474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593900915702720291}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54a4494df1411d4438dfbf898554aff8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _stageID: 15
-  _level: 1
---- !u!114 &1878542377364920921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593900915702720291}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43d406c648db0014b85fb8553a47df3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _outlineWidth: 50
-  _outlineColor: {r: 0.043137252, g: 0.8186509, b: 1, a: 0}
-  _color1: {r: 0.043137256, g: 0.82745105, b: 1, a: 0}
-  _color2: {r: 0.4764151, g: 0.905583, b: 1, a: 0}

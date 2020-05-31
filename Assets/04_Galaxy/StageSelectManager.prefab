@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9002398021493753691}
-  - component: {fileID: 9002398021493753692}
   - component: {fileID: 9002398021493753693}
   m_Layer: 0
   m_Name: StageSelectManager
@@ -32,28 +31,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9002398021493753692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9002398021493753690}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3ae0042a2648584a81d52ec031a287f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _stageSelectManager: {fileID: 9002398021493753690}
-  _planetObject:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  rotateSpeed: 4
-  _rotateFlame: 60
-  _setPlanetPos: {x: 8, y: 1.5, z: 8}
-  _setPlanetRot: {x: 0, y: 0, z: 0}
-  _maxPlanet: 3
 --- !u!114 &9002398021493753693
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,5 +48,3 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  _planetNo: 0
-  MAX_UI: 0
