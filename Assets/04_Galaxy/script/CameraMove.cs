@@ -49,6 +49,7 @@ public class CameraMove : MonoBehaviour
     private Vector2[] _cameraPos = new Vector2[(int)E_SCENE.MAX];
 
     private UICange _uiChange;
+    private MenuUI  _menuUI;
 
     // Start is called before the first frame update
     void Start()
@@ -56,6 +57,7 @@ public class CameraMove : MonoBehaviour
         StageSelectManager = GameObject.Find("StageSelectManager");
         UI = GameObject.Find("CanvasUI");
         _uiChange = StageSelectManager.GetComponent<UICange>();
+        _menuUI = GameObject.Find("Menu").GetComponent<MenuUI>();
 
         //SceneManager = GameObject.Find("SceneManager").GetComponent<SceneMgr>();
 
@@ -125,24 +127,26 @@ public class CameraMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!_rayScript._isSelect && _isOrbital)
+        if (!_menuUI._isMenu)
         {
-            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
-                isInput(E_INPUT_MODE.TRIGGER, E_INPUT.LB))
+            if (!_rayScript._isSelect && _isOrbital)
             {
-                _currentID--;
-                _isOrbital = false;
-                _uiChange.ChangePlanetName(true);
-            }
-            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
-                isInput(E_INPUT_MODE.TRIGGER, E_INPUT.RB))
-            {
-                _currentID++;
-                _isOrbital = false;
-               _uiChange.ChangePlanetName(false);
+                if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
+                    isInput(E_INPUT_MODE.TRIGGER, E_INPUT.LB))
+                {
+                    _currentID--;
+                    _isOrbital = false;
+                    _uiChange.ChangePlanetName(true);
+                }
+                if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
+                    isInput(E_INPUT_MODE.TRIGGER, E_INPUT.RB))
+                {
+                    _currentID++;
+                    _isOrbital = false;
+                    _uiChange.ChangePlanetName(false);
+                }
             }
         }
-           
 
         if(_currentID >= 7)
         {
@@ -187,24 +191,26 @@ public class CameraMove : MonoBehaviour
             _uiChange.PlanerNameOn();
             _cameraSpd = 1.0f;
 
-            if(!_rayScript._isSelect)
+            if (!_menuUI._isMenu)
             {
-                _angleX += Input.GetAxis("Mouse X") * _rotateSpeed;
-                _angleX += GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()._LStick._now_H * _rotateControllerSpeed;
-                CheckAngle(_angleX);
+                if (!_rayScript._isSelect)
+                {
+                    _angleX += Input.GetAxis("Mouse X") * _rotateSpeed;
+                    _angleX += GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()._LStick._now_H * _rotateControllerSpeed;
+                    CheckAngle(_angleX);
 
-                _angleY += Input.GetAxis("Mouse Y") * _rotateSpeed;
-                _angleY += GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()._LStick._now_V * _rotateControllerSpeed;
-                if (_angleY * _rotateSpeed <= 0)
-                {
-                    _angleY = 0;
-                }
-                if (_angleY >= 3)
-                {
-                    _angleY = 3;
+                    _angleY += Input.GetAxis("Mouse Y") * _rotateSpeed;
+                    _angleY += GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()._LStick._now_V * _rotateControllerSpeed;
+                    if (_angleY * _rotateSpeed <= 0)
+                    {
+                        _angleY = 0;
+                    }
+                    if (_angleY >= 3)
+                    {
+                        _angleY = 3;
+                    }
                 }
             }
-
            
 
             mouseY = _angleY;

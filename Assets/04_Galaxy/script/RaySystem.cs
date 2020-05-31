@@ -25,12 +25,16 @@ public class RaySystem : MonoBehaviour
     private float _pointerTimer;
     private bool _isEmit;
 
+    private MenuUI _menuUI;
+
     // Start is called before the first frame update
     void Start()
     {
         _sceneManager = GameObject.FindWithTag("SceneManager").GetComponent<SceneMgr>();
         _cameraMove = GameObject.Find("CameraObj").GetComponent<CameraMove>();
         Ring_FX = (GameObject)Resources.Load("Ring_FX");
+
+        _menuUI = GameObject.Find("Menu").GetComponent<MenuUI>();
     }
 
     // Update is called once per frame
@@ -106,12 +110,15 @@ public class RaySystem : MonoBehaviour
                     SetID(_newTarget.collider.gameObject.GetComponent<StageID>()._stageID);
                     _level = _newTarget.collider.gameObject.GetComponent<StageID>()._level; // レベル取得
 
-                    if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
-                        .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
+                    if (!_menuUI._isMenu)
                     {
-                        //_sceneManager.SetScene(E_SCENE._1_1);
-                        _sceneManager.SetScene(GetID());
-                        _isSelect = true;
+                        if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+                            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
+                        {
+                            //_sceneManager.SetScene(E_SCENE._1_1);
+                            _sceneManager.SetScene(GetID());
+                            _isSelect = true;
+                        }
                     }
                 }
             }
