@@ -4,28 +4,29 @@ using UnityEngine;
 
 public class UIImageAlpha : MonoBehaviour
 {
-    public CanvasGroup _continueButton;
-    public CanvasGroup _selectButton;
-    public CanvasGroup _titleButton;
-    public CanvasGroup _finishButton;
-
-    private GameOverManager _gameOverManager;
-    private Map _map;
+    public CanvasGroup _continueButton = default;
+    public CanvasGroup _selectButton = default;
+    public CanvasGroup _titleButton = default;
+    public CanvasGroup _finishButton = default;
+    
+    public GameOverManager _gameOverManager = default;
+    public Map _map = default;
     //private GameMenu _menu;
 
-    public float _startalpha;
+    public float _startalpha = default;
 
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("あああああああああああああああああああああああああああああああ");
+
         _continueButton.alpha = _startalpha;
         _selectButton.alpha = _startalpha;
         _titleButton.alpha = _startalpha;
         _finishButton.alpha = _startalpha;
 
-        //_menu = default;
         _gameOverManager = GameObject.Find("GameOverManager").GetComponent<GameOverManager>();
-        _map = GameObject.FindWithTag("Map").GetComponent<Map>();
+        _map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>();
     }
 
     // Update is called once per frame
