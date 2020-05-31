@@ -78,8 +78,8 @@ public class GameOverManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainCamera>()._startMove ||
-            _map._gameClear)
+        if (_map._gameClear ||
+            GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().GetTutorial())
         {// 操作受付拒否
             return;
         }
