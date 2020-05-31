@@ -29,7 +29,6 @@ public class FireWorkEmit : MonoBehaviour
     {
         ClearScript = GameObject.FindWithTag("Map").GetComponent<Map>();
         FireWorkObj = (GameObject)Resources.Load("FireWork");
-        this.GetComponent<MeshRenderer>().enabled = false;
     }
 
     // Update is called once per frame
