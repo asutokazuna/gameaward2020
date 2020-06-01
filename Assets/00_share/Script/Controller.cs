@@ -295,6 +295,43 @@ public class Controller : MonoBehaviour
     }
 
 
+    public bool isAnyTrigger()
+    {
+        if (Input.anyKey)
+        {
+            return true;
+        }
+        else
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (Input.GetKeyDown(_name[(int)i]))
+                {
+                    return true;
+                }
+            }
+            if (isDPad(E_INPUT.D_PAD_DOWN, E_INPUT_MODE.TRIGGER) ||
+                isDPad(E_INPUT.D_PAD_UP, E_INPUT_MODE.TRIGGER) ||
+                isDPad(E_INPUT.D_PAD_RIGHT, E_INPUT_MODE.TRIGGER) ||
+                isDPad(E_INPUT.D_PAD_LEFT, E_INPUT_MODE.TRIGGER) ||
+
+                isLStick(E_INPUT.D_PAD_DOWN, E_INPUT_MODE.TRIGGER) ||
+                isLStick(E_INPUT.D_PAD_UP, E_INPUT_MODE.TRIGGER) ||
+                isLStick(E_INPUT.D_PAD_RIGHT, E_INPUT_MODE.TRIGGER) ||
+                isLStick(E_INPUT.D_PAD_LEFT, E_INPUT_MODE.TRIGGER) ||
+
+                isRStick(E_INPUT.D_PAD_DOWN, E_INPUT_MODE.TRIGGER) ||
+                isRStick(E_INPUT.D_PAD_UP, E_INPUT_MODE.TRIGGER) ||
+                isRStick(E_INPUT.D_PAD_RIGHT, E_INPUT_MODE.TRIGGER) ||
+                isRStick(E_INPUT.D_PAD_LEFT, E_INPUT_MODE.TRIGGER))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     /**
      * @brief キーボードでの入力
      * @param1 キーコード
@@ -389,7 +426,6 @@ public class Controller : MonoBehaviour
             if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.M);
             if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.M);
         }
-
         Debug.Log("ゲームパッドで設定されてないボタンです");
         return false;   // ゲームパッドで設定されてない値
     }

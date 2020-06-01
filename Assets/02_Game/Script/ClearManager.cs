@@ -144,15 +144,20 @@ public class ClearManager : MonoBehaviour
                 //}
                 //シーン遷移
                 //else
-                if (Input.GetKeyDown(KeyCode.Z) ||
-                    GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
-                {// 次のステージ
-                    GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE_MODE.NEXT_STAGE);
-                    _fade = true;
-                }
-                else if (Input.GetKeyDown(KeyCode.C) ||
-                    GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.B))
-                {// ステージ選択
+                //if (Input.GetKeyDown(KeyCode.Z) ||
+                //    GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
+                //{// 次のステージ
+                //    GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE_MODE.NEXT_STAGE);
+                //    _fade = true;
+                //}
+                //else if (Input.GetKeyDown(KeyCode.C) ||
+                //    GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, E_INPUT.B))
+                //{// ステージ選択
+                //    GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE.STAGE_SELECT);
+                //    _fade = true;
+                //}
+                if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isAnyTrigger())
+                {
                     GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE.STAGE_SELECT);
                     _fade = true;
                 }
