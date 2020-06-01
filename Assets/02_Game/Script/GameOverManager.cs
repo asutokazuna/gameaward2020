@@ -91,7 +91,8 @@ public class GameOverManager : MonoBehaviour
             SetGameOverUI(true);
             _isOnce = true;
         }
-        if (Input.GetKeyDown(KeyCode.Q) && _isOnce)
+        if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y) && _isOnce)
         {
             SetGameOverUI(false);
             _selectnum = 0;
@@ -99,7 +100,8 @@ public class GameOverManager : MonoBehaviour
             _isOnce = false;
             Time.timeScale = 1.0f;
         }
-        else if(Input.GetKeyDown(KeyCode.Q))
+        else if(GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y))
         {
             SetGameOverUI(true);
             _isSelect = true;
@@ -112,7 +114,8 @@ public class GameOverManager : MonoBehaviour
         {// ゲームオーバー中の処理
             SetGameOver();  // セット
 
-            if (Input.GetKeyDown(KeyCode.W))
+            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
             {// カーソルを上に移動
                 if (_selectnum <= (int)GameoverMenu.E_CONTINUE)
                 {
@@ -123,7 +126,8 @@ public class GameOverManager : MonoBehaviour
                     _selectnum--;
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.S))
+            else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
             {// カーソルを下に移動
                 if (_selectnum >= (int)GameoverMenu.E_EXIT)
                 {
@@ -135,7 +139,8 @@ public class GameOverManager : MonoBehaviour
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
             {// 決定キーを押した時の処理
                 switch (_selectnum)
                 {
@@ -170,7 +175,8 @@ public class GameOverManager : MonoBehaviour
         }
         else if(_isSelect)
         {
-            if (Input.GetKeyDown(KeyCode.W))
+            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
             {// カーソルを上に移動
                 if (_selectnum <= (int)GameoverMenu.E_CONTINUE)
                 {
@@ -181,7 +187,8 @@ public class GameOverManager : MonoBehaviour
                     _selectnum--;
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.S))
+            else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
             {// カーソルを下に移動
                 if (_selectnum >= (int)GameoverMenu.E_EXIT)
                 {
@@ -192,7 +199,8 @@ public class GameOverManager : MonoBehaviour
                     _selectnum++;
                 }
             }
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
+            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
             {// 決定キーを押した時の処理
                 switch (_selectnum)
                 {
