@@ -17,14 +17,7 @@ public class Title : MonoBehaviour
     {
         if (_LogoAnimFinish)
         {
-            for (int n = 0; n < (int)E_INPUT.MAX; n++)
-            {
-                if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isInput(E_INPUT_MODE.TRIGGER, (E_INPUT)n))
-                {
-                    GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE.STAGE_SELECT);
-                }
-            }
-            if (Input.anyKey)
+            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isAnyTrigger())
             {
                 GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE.STAGE_SELECT);
             }
