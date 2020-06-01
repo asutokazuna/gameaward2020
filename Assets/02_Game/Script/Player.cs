@@ -199,10 +199,10 @@ public class Player : BaseObject
      */
     public void HandAction(E_OBJECT_MODE mode)
     {
-        //if (_isMove || _lifted != E_HANDS_ACTION.NONE)
-        //{// 取り合えずここに書き込む
-        //    return;
-        //}
+        if (_map.GetObject(new Vector3Int(_position.x, _position.y - 1, _position.z))._myObject == E_OBJECT.BLOCK_TRAMPLINE)
+        {// 取り合えずここに書き込む
+            return;
+        }
         if (!_isMove && mode == E_OBJECT_MODE.LIFT && _haveObject._myObject == E_OBJECT.NONE)
         {// 物を持ち上げる
             if (_lifted == E_HANDS_ACTION.DO &&
