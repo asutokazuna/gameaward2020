@@ -3,6 +3,7 @@
  * @brief   メニューの管理
  * @author  Risa Ito
  * @date    2020/05/31(日)  作成
+ * @date    2020/06/01(月)  キー入力対応
  */
 using System.Collections;
 using System.Collections.Generic;
@@ -17,15 +18,17 @@ public class MenuUI : MonoBehaviour
 {
     [SerializeField] Image     _menuObj;        //!< メニュー表示管理用
     [SerializeField] Image[]   _setMenuImage;   //!< メニュー項目管理用
-    private SceneMgr _sceneManager;             //!< シーンマネージャー取得用
-    public  bool     _isMenu = false;           //!< メニューフラグ
-    private bool     _isKey = false;            //!< キー入力フラグ
-    private int      _selectMenu = 0;           //!< 現在選ばれているメニュー管理用
+    private SceneMgr    _sceneManager;          //!< シーンマネージャー取得用
+    public  bool        _isMenu = false;        //!< メニューフラグ
+    private bool        _isKey = false;         //!< キー入力フラグ
+    private int         _selectMenu = 0;        //!< 現在選ばれているメニュー管理用
+    private Controller  _input;                 //!< 入力取得用
 
     // Start is called before the first frame update
     void Start()
     {
         _sceneManager = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>();
+        _input = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();
     }
 
     // Update is called once per frame
@@ -34,7 +37,7 @@ public class MenuUI : MonoBehaviour
         // メニュー画面が開いてる場合
         if (_isMenu)
         {
-            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
             {
                 _setMenuImage[_selectMenu].color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
                 _selectMenu--;
@@ -46,7 +49,7 @@ public class MenuUI : MonoBehaviour
 
                 _setMenuImage[_selectMenu].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             }
-            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
             {
                 _setMenuImage[_selectMenu].color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
                 _selectMenu++;
@@ -57,7 +60,7 @@ public class MenuUI : MonoBehaviour
                 }
                 _setMenuImage[_selectMenu].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             }
-            else if (Input.GetKeyDown(KeyCode.Space))
+            else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
             {
                 switch (_selectMenu)
                 {
@@ -80,7 +83,7 @@ public class MenuUI : MonoBehaviour
                         break;
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.Y))
+            else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y))
             {
                 _menuObj.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
                 for (int i = 0; i < _setMenuImage.Length; i++)
@@ -102,7 +105,7 @@ public class MenuUI : MonoBehaviour
         // メニュー画面が閉じてる場合
         else
         {
-            if (Input.GetKeyDown(KeyCode.Y))
+            if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y))
             {
                 _isMenu = true;
                 _menuObj.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
