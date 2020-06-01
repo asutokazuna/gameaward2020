@@ -862,12 +862,12 @@ MonoBehaviour:
   _mode: 0
   _putUpdate: 0
   _liftedMove: 0
-  _SEMove: {fileID: 0}
-  _SEjump: {fileID: 0}
-  _SEPut: {fileID: 0}
-  _SETrampoline: {fileID: 0}
-  _SEGameClear: {fileID: 0}
-  _SEGameOver: {fileID: 0}
+  _SEMove: {fileID: 8300000, guid: 96b07f2c41c7f2a4ebafb2de4b7c0dcd, type: 3}
+  _SEjump: {fileID: 8300000, guid: a92945dcba205f341a7664970281893a, type: 3}
+  _SEPut: {fileID: 8300000, guid: f76e26c212d897f4a962cea9aeac1157, type: 3}
+  _SETrampoline: {fileID: 8300000, guid: a92945dcba205f341a7664970281893a, type: 3}
+  _SEGameClear: {fileID: 8300000, guid: 12b29a9a0d95359478ba49e919fe2ee8, type: 3}
+  _SEGameOver: {fileID: 8300000, guid: c5dca3014e46b65428030bfd6ba5ff63, type: 3}
 --- !u!114 &2086370844806287518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -880,6 +880,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8208b4368fcd8954593fad8d2cd635f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _faintFlag: 0
 --- !u!1 &3387210977651776692
 GameObject:
   m_ObjectHideFlags: 0
