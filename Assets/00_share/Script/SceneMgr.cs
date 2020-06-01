@@ -216,6 +216,7 @@ public class SceneMgr : MonoBehaviour
      */
     public void SetScene(E_SCENE_MODE mode)
     {
+        _lastScene = _nowScene;
         if (mode == E_SCENE_MODE.RELOAD)
         {// シーンの再読み込み
             _reroad = true;
@@ -253,6 +254,8 @@ public class SceneMgr : MonoBehaviour
     {
         _lastScene = _nowScene;
         _nowScene = scene;
+
+        //Debug.Log("SceneChange");
     }
 
 
