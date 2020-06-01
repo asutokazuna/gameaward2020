@@ -354,7 +354,8 @@ public class MainCamera : MonoBehaviour
      */
     void CameraRotate()
     {
-        if (_gameClear || _gameOver)
+        if (_gameClear || _gameOver ||
+            GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().GetTutorial())
         {
             return;
         }
