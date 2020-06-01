@@ -358,12 +358,10 @@ public class MainCamera : MonoBehaviour
         {
             return;
         }
-
-     
         if (!_rotateCheck && !_inputKey)//!<回転中じゃなければ
         {
             if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
-                .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_LEFT))//押されたら
+                .isInput(E_INPUT_MODE.RELEASE, E_INPUT.LB))//押されたら
             {
                 _inputKey = true;//キー入力受付拒否
                 _cameraRotNum++;//回転先座標
@@ -374,7 +372,7 @@ public class MainCamera : MonoBehaviour
 
             }
             else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
-                .isInput(E_INPUT_MODE.RELEASE, E_INPUT.R_STICK_RIGHT))//押されたら
+                .isInput(E_INPUT_MODE.RELEASE, E_INPUT.RB))//押されたら
             {
                 _inputKey = true;//キー入力拒否
                 _cameraRotNum--;//回転先座標

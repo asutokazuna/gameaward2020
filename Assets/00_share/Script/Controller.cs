@@ -285,13 +285,12 @@ public class Controller : MonoBehaviour
     {
         if (isInputKeyboard(key, mode))
         {
-            return isInputKeyboard(key, mode);
+            return true;
         }
         else if (isInputGamePad(key, mode))
         {
-            return isInputGamePad(key, mode);
+            return true;
         }
-        Debug.Log("入力エラー");
         return false; // エラー
     }
 
@@ -384,6 +383,12 @@ public class Controller : MonoBehaviour
             if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.LeftShift);
             if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.LeftShift);
         }
+        else if (key == E_INPUT.Y)
+        {// Yボタン
+            if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.M);
+            if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.M);
+            if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.M);
+        }
 
         Debug.Log("ゲームパッドで設定されてないボタンです");
         return false;   // ゲームパッドで設定されてない値
@@ -398,15 +403,21 @@ public class Controller : MonoBehaviour
      */
     private bool isInputGamePad(E_INPUT key, E_INPUT_MODE mode)
     {
-        if (key == E_INPUT.D_PAD_RIGHT || key == E_INPUT.D_PAD_LEFT ||
-            key == E_INPUT.D_PAD_UP || key == E_INPUT.D_PAD_DOWN)
-        {// 十字キーの場合
-            return isDPad(key, mode);
-        }
-        else if (key == E_INPUT.L_STICK_RIGHT || key == E_INPUT.L_STICK_LEFT ||
+        if (key == E_INPUT.L_STICK_RIGHT || key == E_INPUT.L_STICK_LEFT ||
                  key == E_INPUT.L_STICK_UP || key == E_INPUT.L_STICK_DOWN)
         {// Lスティックの場合
-            return isLStick(key, mode);
+            if (isLStick(key, mode))
+            {
+                return true;
+            }
+            else if (isDPad(key, mode))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else if (key == E_INPUT.R_STICK_RIGHT || key == E_INPUT.R_STICK_LEFT ||
                  key == E_INPUT.R_STICK_UP || key == E_INPUT.R_STICK_DOWN)
@@ -449,22 +460,18 @@ public class Controller : MonoBehaviour
      */
     private bool isDPad(E_INPUT key, E_INPUT_MODE mode)
     {
-        if (inputSystem == E_INPUT_SYSTEM.GAME_PAD)
-        {// ゲームパッド
-            if (mode == E_INPUT_MODE.BUTTON)
-            {
-                return _DPad.isButton(key, sensitivity);
-            }
-            else if (mode == E_INPUT_MODE.TRIGGER)
-            {
-                return _DPad.isTrigger(key, sensitivity);
-            }
-            else if (mode == E_INPUT_MODE.RELEASE)
-            {
-                return _DPad.isRelease(key, sensitivity);
-            }
+        if (mode == E_INPUT_MODE.BUTTON)
+        {
+            return _DPad.isButton(key, sensitivity);
         }
-
+        else if (mode == E_INPUT_MODE.TRIGGER)
+        {
+            return _DPad.isTrigger(key, sensitivity);
+        }
+        else if (mode == E_INPUT_MODE.RELEASE)
+        {
+            return _DPad.isRelease(key, sensitivity);
+        }
         return false;
     }
 

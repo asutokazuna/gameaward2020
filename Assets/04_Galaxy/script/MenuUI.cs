@@ -34,7 +34,8 @@ public class MenuUI : MonoBehaviour
         // メニュー画面が開いてる場合
         if (_isMenu)
         {
-            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
+                isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
             {
                 _setMenuImage[_selectMenu].color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
                 _selectMenu--;
@@ -46,7 +47,8 @@ public class MenuUI : MonoBehaviour
 
                 _setMenuImage[_selectMenu].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             }
-            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
+                isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
             {
                 _setMenuImage[_selectMenu].color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
                 _selectMenu++;
@@ -57,7 +59,8 @@ public class MenuUI : MonoBehaviour
                 }
                 _setMenuImage[_selectMenu].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             }
-            else if (Input.GetKeyDown(KeyCode.Space))
+            else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
+                isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
             {
                 switch (_selectMenu)
                 {
@@ -80,7 +83,8 @@ public class MenuUI : MonoBehaviour
                         break;
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.Y))
+            else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
+                isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y))
             {
                 _menuObj.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
                 for (int i = 0; i < _setMenuImage.Length; i++)
@@ -102,7 +106,8 @@ public class MenuUI : MonoBehaviour
         // メニュー画面が閉じてる場合
         else
         {
-            if (Input.GetKeyDown(KeyCode.Y))
+            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().
+                isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y))
             {
                 _isMenu = true;
                 _menuObj.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
