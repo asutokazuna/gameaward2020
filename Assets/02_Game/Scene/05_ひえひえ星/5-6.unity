@@ -6385,7 +6385,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 9.18219}
+  m_BoundingSphereOverride: {x: 6.239e-42, y: 1.04e-43, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -13467,7 +13467,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1669559577}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 306051620271419794, guid: 7f50753a8e8d2ea44ba143abe2bd0766,
         type: 3}
@@ -13507,7 +13507,7 @@ PrefabInstance:
     - target: {fileID: 306051620271419794, guid: 7f50753a8e8d2ea44ba143abe2bd0766,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 306051620271419794, guid: 7f50753a8e8d2ea44ba143abe2bd0766,
         type: 3}
@@ -13531,12 +13531,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f50753a8e8d2ea44ba143abe2bd0766, type: 3}
---- !u!4 &1411422912 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 306051620271419794, guid: 7f50753a8e8d2ea44ba143abe2bd0766,
-    type: 3}
-  m_PrefabInstance: {fileID: 1411422911}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1415814801
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14168,7 +14162,6 @@ Transform:
   - {fileID: 1395340579}
   - {fileID: 1784141664}
   - {fileID: 1686350132}
-  - {fileID: 1411422912}
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
