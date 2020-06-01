@@ -29,6 +29,7 @@ public class StageSelectUI : MonoBehaviour
     LevelImage  _levelImage;                //!< レベル画像セット用
     LevelImage  _backDecoImage;             //!< ステージ表示の飾り画像セット用
     PlayMovie   _playMovie;                 //!< 動画再生用
+    GameObject  _startObj;                  //!< スタートボタン切り替え
 
     // Start is called before the first frame update
     void Start()
@@ -43,6 +44,7 @@ public class StageSelectUI : MonoBehaviour
         _oldStageId = 0;
         _planetID = 0;
         _playMovie = GameObject.Find("PlayVideo").GetComponent<PlayMovie>();
+        _startObj = GameObject.Find("AButtonOff");
     }
 
     // Update is called once per frame
@@ -81,6 +83,7 @@ public class StageSelectUI : MonoBehaviour
             // 島が選択された場合
             if (_stageSelectAnim.GetBool("Change"))
             {
+                _startObj.SetActive(false);
                 _oldStageId = _stageId;
                 _level = _selectStage.GetLevel();
                 GameObject.Find("Stage").GetComponent<Image>().color = _stageColor[_planetID];
@@ -97,6 +100,7 @@ public class StageSelectUI : MonoBehaviour
         else
         {
             // 島の選択が外れた場合
+            _startObj.SetActive(true);
             SetSelectFinish();
         }
     }

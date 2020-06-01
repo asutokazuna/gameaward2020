@@ -38,7 +38,7 @@ public class FireWorks : MonoBehaviour
             Vector3 _pos = transform.position;
             _pos.y += _speed * Time.deltaTime;
 
-            Debug.Log(_speed * Time.deltaTime);
+            //Debug.Log(_speed * Time.deltaTime);
 
             transform.position = _pos;
 
