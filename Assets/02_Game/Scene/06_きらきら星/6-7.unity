@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 936a15b8ff0bacc428b66db0cf8f1805, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: fab8763f6b8a0c74da9440694edf61ef, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.33050308, g: 0.5539476, b: 0.7445769, a: 1}
+  m_IndirectSpecularColor: {r: 0.09167505, g: 0.11790077, b: 0.18295014, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5768,7 +5768,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: NaN, y: 0, z: NaN, w: 0}
+  m_BoundingSphereOverride: {x: 7.97e-43, y: NaN, z: 7.99e-43, w: 9.607127e+11}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -12423,10 +12423,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d756629755e0ff489752293066e9800, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _continueButton: {fileID: 0}
-  _selectButton: {fileID: 0}
-  _titleButton: {fileID: 0}
-  _finishButton: {fileID: 0}
+  _selectnum: 0
+  _isSelect: 0
 --- !u!1001 &2079482377
 PrefabInstance:
   m_ObjectHideFlags: 0
