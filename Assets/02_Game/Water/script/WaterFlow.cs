@@ -123,6 +123,11 @@ public class WaterFlow : MonoBehaviour
         // RotateDirection = (int)(this.gameObject.transform.localEulerAngles.y / 90.0f + 0.5f);
 
 
+        if (GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MainCamera>()._startMove)
+        {
+            return;
+        }
+
         if (!_isWaterSource)
         {
             if(this.GetComponent<BlockTank>()._lifted > 0)
