@@ -321,10 +321,15 @@ public class BaseObject : MonoBehaviour
         }
         else if (_mode == E_OBJECT_MODE.FALL)
         {// 落ちる時
+            power = Mathf.Abs(_oldPosition.y - _position.y);
+            if (power == 0)
+            {
+                power = 1;
+            }
             offSetTransform();
             transform.DOJump(
                 _nextPos,   // 目的座標
-                (_oldPosition.y - _position.y), // ジャンプパワー
+                power, // ジャンプパワー
                 1,  // ジャンプ回数
                 GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime,   // 時間
                 false
