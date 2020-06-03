@@ -22515,20 +22515,6 @@ MonoBehaviour:
   _outlineColor: {r: 1, g: 0.59640867, b: 0, a: 0}
   _color1: {r: 1, g: 0.7694599, b: 0.4292453, a: 0}
   _color2: {r: 1, g: 0.59607846, b: 0, a: 0}
---- !u!114 &1897335457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4731053641209251714}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54a4494df1411d4438dfbf898554aff8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _stageID: 4
-  _level: 1
 --- !u!64 &1897335458
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -22538,7 +22524,7 @@ MeshCollider:
   m_GameObject: {fileID: 4731053641209251714}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Convex: 1
   m_CookingOptions: 30
@@ -31378,7 +31364,7 @@ GameObject:
   - component: {fileID: 2852340184174474155}
   - component: {fileID: 1897335458}
   - component: {fileID: 1897335456}
-  - component: {fileID: 1897335457}
+  - component: {fileID: 4731053641209251715}
   m_Layer: 0
   m_Name: pPlane12
   m_TagString: Untagged
@@ -31386,6 +31372,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &4731053641209251715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4731053641209251714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54a4494df1411d4438dfbf898554aff8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stageID: 4
+  _level: 1
 --- !u!4 &4738638072674804171
 Transform:
   m_ObjectHideFlags: 0
