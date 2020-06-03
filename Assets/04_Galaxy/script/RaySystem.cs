@@ -27,6 +27,10 @@ public class RaySystem : MonoBehaviour
 
     private MenuUI _menuUI;
 
+    private RayTarget _rayTarget = default;
+    private GameObject _targetObj = default;
+    private GameObject _OldTargetObj = default;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,7 +44,7 @@ public class RaySystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _oldTarget = _newTarget;
+        _OldTargetObj = _targetObj;
         _oldStageID = _stageID;
         if (_cameraMove._isOrbital)
         {
@@ -70,7 +74,7 @@ public class RaySystem : MonoBehaviour
         {
             if(_stageID != 0)
             {
-                _newTarget.collider.gameObject.GetComponent<OutlineOnOff>().OutlineOn();
+                _targetObj.GetComponent<OutlineOnOff>().OutlineOn();
 
                 _pointerTimer = 0.0f;
                 pointer.GetComponent<ParticleSystem>().Stop();
@@ -82,7 +86,7 @@ public class RaySystem : MonoBehaviour
             }
             else
             {
-                _oldTarget.collider.gameObject.GetComponent<OutlineOnOff>().OutlineOff();
+                _OldTargetObj.GetComponent<OutlineOnOff>().OutlineOff();
             }
         }
 
@@ -104,11 +108,20 @@ public class RaySystem : MonoBehaviour
                 pointer.transform.position = _newTarget.point;  //当たった場合
                 pointer.transform.LookAt(transform.position);
 
-                if (_newTarget.collider.gameObject.GetComponent<StageID>())
+                
+
+                if(_newTarget.collider.gameObject.GetComponent<RayTarget>())
                 {
-                    Debug.Log(_newTarget.collider.gameObject.GetComponent<StageID>()._stageID);
-                    SetID(_newTarget.collider.gameObject.GetComponent<StageID>()._stageID);
-                    _level = _newTarget.collider.gameObject.GetComponent<StageID>()._level; // レベル取得
+                    _rayTarget = _newTarget.collider.gameObject.GetComponent<RayTarget>();
+                    _targetObj = _rayTarget._targetObj;
+                    _rayTarget.LandMove(true);
+                }
+
+                if (_targetObj.GetComponent<StageID>())
+                {
+                    //Debug.Log(_newTarget.collider.gameObject.GetComponent<StageID>()._stageID);
+                    SetID(_targetObj.GetComponent<StageID>()._stageID);
+                    _level = _targetObj.GetComponent<StageID>()._level; // レベル取得
 
                     if (!_menuUI._isMenu)
                     {
@@ -126,6 +139,7 @@ public class RaySystem : MonoBehaviour
             {
                 pointer.transform.position = new Vector3(0.0f, 0.0f, 0.0f); //マスクとあたった場合
                 SetID(0);
+                _rayTarget.LandMove(false);
             }
 
             // Debug.Log(Vector3.Distance(target.point, transform.position));
