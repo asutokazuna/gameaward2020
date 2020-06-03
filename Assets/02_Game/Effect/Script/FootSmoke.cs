@@ -14,14 +14,14 @@ public class FootSmoke : MonoBehaviour
     // 変数宣言
     [SerializeField] private ParticleSystem _footSmoke = default;     //!< 移動時のパーティクルシステム
     public PlayerAnim                       _animation = default;     //!< プレイヤーのアニメーション
+    private Map                             _map;                     //!< マップ情報
 
     /**
      * 初期化
-     * なし
      */
     void Start()
     {
-        
+        _map = GameObject.FindGameObjectWithTag("Map").GetComponent<Map>();     // コンポーネントの取得
     }
 
     /**
@@ -43,5 +43,11 @@ public class FootSmoke : MonoBehaviour
                 _footSmoke.Stop();
             }
         }
+
+        if (_map._gameOver)
+        {// おならジェット封印
+            _footSmoke.Stop();
+        }
+
     }
 }
