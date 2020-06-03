@@ -28,6 +28,8 @@ public class RaySystem : MonoBehaviour
     private MenuUI _menuUI;
 
     private RayTarget _rayTarget = default;
+    private GameObject _targetObj = default;
+    private GameObject _OldTargetObj = default;
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +44,7 @@ public class RaySystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _oldTarget = _newTarget;
+        _OldTargetObj = _targetObj;
         _oldStageID = _stageID;
         if (_cameraMove._isOrbital)
         {
@@ -72,7 +74,7 @@ public class RaySystem : MonoBehaviour
         {
             if(_stageID != 0)
             {
-                _newTarget.collider.gameObject.GetComponent<OutlineOnOff>().OutlineOn();
+                _targetObj.GetComponent<OutlineOnOff>().OutlineOn();
 
                 _pointerTimer = 0.0f;
                 pointer.GetComponent<ParticleSystem>().Stop();
@@ -84,7 +86,7 @@ public class RaySystem : MonoBehaviour
             }
             else
             {
-                _oldTarget.collider.gameObject.GetComponent<OutlineOnOff>().OutlineOff();
+                _OldTargetObj.GetComponent<OutlineOnOff>().OutlineOff();
             }
         }
 
@@ -106,7 +108,7 @@ public class RaySystem : MonoBehaviour
                 pointer.transform.position = _newTarget.point;  //当たった場合
                 pointer.transform.LookAt(transform.position);
 
-                GameObject _targetObj = default;
+                
 
                 if(_newTarget.collider.gameObject.GetComponent<RayTarget>())
                 {
