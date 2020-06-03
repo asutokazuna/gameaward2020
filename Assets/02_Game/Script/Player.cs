@@ -637,6 +637,11 @@ public class Player : BaseObject
      */
     override protected void JumpMode()
     {
+        if (_lifted != E_HANDS_ACTION.DO)
+        {
+            _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
+        }
+
         if (_mode == E_OBJECT_MODE.GET_UP)
         {// 登りのジャンプ
             if (_animation.GetTPFlag())
@@ -648,8 +653,6 @@ public class Player : BaseObject
                 if (_lifted != E_HANDS_ACTION.DO)
                     _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_TP);
             }
-            if (_lifted != E_HANDS_ACTION.DO)
-                _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
 
             transform.DOJump(_nextPos, Mathf.Abs(_position.y - _oldPosition.y), 1, _mgr.MoveTime, false).OnComplete(() =>
             {
@@ -672,9 +675,6 @@ public class Player : BaseObject
             {
                 _animation.SetJumpTrampolineAnim();
             }
-
-            if (_lifted != E_HANDS_ACTION.DO)
-                _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
 
             transform.DOJump(_nextPos, Mathf.Abs(_oldPosition.y - _position.y), 1, _mgr.MoveTime, false).OnComplete(() =>
             {
@@ -699,7 +699,6 @@ public class Player : BaseObject
             if (_lifted != E_HANDS_ACTION.DO)
             {
                 _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FALL);
-                _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
             }
 
             transform.DOJump(_nextPos, 1, 1, _mgr.MoveTime, false).OnComplete(() =>
@@ -727,6 +726,9 @@ public class Player : BaseObject
         }
         else if (_mode == E_OBJECT_MODE.AREA_FALL)
         {
+
+            _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FALL);
+
             transform.DOJump(_nextPos, 1, 1, _mgr.MoveTime, false).OnComplete(() =>
             {
                 transform.DOLocalMove(transform.position, 0.2f).OnComplete(() =>
