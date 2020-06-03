@@ -530,6 +530,13 @@ public class Map : MonoBehaviour
     }
 
 
+    public void UekaraHuttekita(Vector3Int pos)
+    {
+        Debug.Log(_player[_map[pos.x, pos.y, pos.z]._number].name + "ああああああああああああ");
+        _player[_map[pos.x, pos.y, pos.z]._number]._gameOver = true;
+    }
+
+
     /**
      * @brief ゲームオーバー判定
      * @param1 移動先座標
