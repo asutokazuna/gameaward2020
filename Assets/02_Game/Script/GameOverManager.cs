@@ -103,6 +103,7 @@ public class GameOverManager : MonoBehaviour
         else if(GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
             .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y))
         {
+            _backGround.SetActive(true);
             SetGameOverUI(true);
             _isSelect = true;
             _isOnce = true;
@@ -202,8 +203,13 @@ public class GameOverManager : MonoBehaviour
             if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
             .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
             {// 決定キーを押した時の処理
-                switch (_selectnum)
+                switch (_selectnum - 1)
                 {
+
+                    case -1:
+                        _isSelect = false;
+                        break;
+
                     //つづけるへ
                     case 0:
                         _sceneManager.GetComponent<SceneMgr>().SetScene(E_SCENE_MODE.RELOAD);
@@ -228,6 +234,7 @@ public class GameOverManager : MonoBehaviour
                         break;
 
                 }
+                _backGround.SetActive(false);
                 _isOnce = false;
                 SetGameOverUI(false);
                 Time.timeScale = 1.0f;
