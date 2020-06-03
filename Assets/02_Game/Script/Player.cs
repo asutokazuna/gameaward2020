@@ -46,6 +46,7 @@ public class Player : BaseObject
     Controller                      _input;         //!< 入力キー
     public bool _putUpdate;
     public bool _liftedMove;
+    public bool _uekarahuttekita;
 
     /*
      * sound
@@ -104,6 +105,7 @@ public class Player : BaseObject
         _mode       = E_OBJECT_MODE.WAIT;
         _isMove     = false;
         _liftedMove = false;
+        _uekarahuttekita = false;
 
         _audioSource = GetComponent<AudioSource>();
 
@@ -717,6 +719,10 @@ public class Player : BaseObject
                     if (_haveObject._myObject == E_OBJECT.BLOCK_TANK)
                     {
                         _map.HakoWarimasu(_haveObject);
+                    }
+                    if (_map.GetObject(new Vector3Int(_position.x, _position.y - 1, _position.z))._myObject == E_OBJECT.PLAYER_01)
+                    {
+                        _map.UekaraHuttekita(new Vector3Int(_position.x, _position.y - 1, _position.z));
                     }
                     WaitMode();
                 });

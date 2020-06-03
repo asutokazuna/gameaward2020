@@ -73,7 +73,7 @@ public class BaseObject : MonoBehaviour
 
     [SerializeField] public E_OBJECT_MODE    _mode;          //!< オブジェクトの状態
     [SerializeField] public bool                _gameOver       //!< ゲームオーバー
-    { get; protected set; }
+    { get; set; }
 
     
     /**
@@ -156,25 +156,25 @@ public class BaseObject : MonoBehaviour
 
     virtual public void MapUpdate()
     {
-        //if (_mode == E_OBJECT_MODE.MOVE || _mode == E_OBJECT_MODE.DONT_MOVE || _mode == E_OBJECT_MODE.AREA_FALL)
-        //{// 移動
-        //    MoveMode(); // アニメーションのセット
-        //}
-        //else if (_mode == E_OBJECT_MODE.GET_UP || _mode == E_OBJECT_MODE.GET_OFF || _mode == E_OBJECT_MODE.FALL)
-        //{// ジャンプ
-        //    offSetTransform();
-        //    JumpMode(); // アニメーションのセット
-        //}
-        //else if (_mode == E_OBJECT_MODE.LIFTED)
-        //{
-        //    offSetTransform();
-        //    JumpMode();   // 持ち上げられる
-        //}
-        //else if (_mode == E_OBJECT_MODE.PUTED)
-        //{
-        //    offSetTransform();
-        //    JumpMode();    // 置かれる
-        //}
+        offSetTransform();
+        // 座標移動
+        if (_mode == E_OBJECT_MODE.MOVE || _mode == E_OBJECT_MODE.DONT_MOVE)
+        {// 移動
+            MoveMode(); // アニメーションのセット
+        }
+        else if (_mode == E_OBJECT_MODE.GET_UP || _mode == E_OBJECT_MODE.GET_OFF ||
+            _mode == E_OBJECT_MODE.FALL || _mode == E_OBJECT_MODE.AREA_FALL)
+        {// ジャンプ
+            JumpMode(); // アニメーションのセット
+        }
+        else if (_mode == E_OBJECT_MODE.LIFTED)
+        {
+            JumpMode();   // 持ち上げられる
+        }
+        else if (_mode == E_OBJECT_MODE.PUTED)
+        {
+            JumpMode();    // 置かれる
+        }
     }
 
 
@@ -203,8 +203,6 @@ public class BaseObject : MonoBehaviour
         _lifted         = E_HANDS_ACTION.NOW_PLAY;
         _mode           = E_OBJECT_MODE.FALL;
         _isMove         = true;
-        offSetTransform();
-        JumpMode(); // アニメーションのセット
     }
 
 
@@ -220,8 +218,6 @@ public class BaseObject : MonoBehaviour
         _lifted         = E_HANDS_ACTION.NOW_PLAY;
         _mode           = E_OBJECT_MODE.LIFTED;
         _isMove         = true;
-        offSetTransform();
-        JumpMode(); // アニメーションのセット
     }
 
 
@@ -237,8 +233,6 @@ public class BaseObject : MonoBehaviour
         _lifted         = E_HANDS_ACTION.NOW_PLAY;
         _mode           = E_OBJECT_MODE.PUTED;
         _isMove         = true;
-        offSetTransform();
-        JumpMode(); // アニメーションのセット
     }
 
 
@@ -325,6 +319,12 @@ public class BaseObject : MonoBehaviour
             if (power == 0)
             {
                 power = 1;
+            }
+            if (GameObject.FindGameObjectWithTag("Map").GetComponent<Map>()
+                .GetObject(new Vector3Int(_position.x, _position.y - 1, _position.z))._myObject == E_OBJECT.PLAYER_01)
+            {
+                GameObject.FindGameObjectWithTag("Map").GetComponent<Map>()
+                    .UekaraHuttekita(new Vector3Int(_position.x, _position.y - 1, _position.z));
             }
             offSetTransform();
             transform.DOJump(
