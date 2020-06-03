@@ -9,14 +9,17 @@ public class GameOverManager : MonoBehaviour
 {
     enum GameoverMenu
     {
-        E_CONTINUE = 0,    //ゲームに戻る
-        E_SELECT = 1,      //セレクト
-        E_TITLE = 2,       //タイトル
-        E_EXIT = 3,         //ゲーム終了
+        E_RETRY = -1,
+        E_CONTINUE,    //ゲームに戻る
+        E_SELECT,      //セレクト
+        E_TITLE,       //タイトル
+        E_EXIT,         //ゲーム終了
         MAX_MENU
     }
 
     private GameObject _backGround;
+    private GameObject _menuTitle;
+    private GameObject _retryButton;
     private GameObject _continueButton;
     private GameObject _selectButton;
     private GameObject _titleButton;
@@ -50,7 +53,9 @@ public class GameOverManager : MonoBehaviour
         _map            = GameObject.FindWithTag("Map").GetComponent<Map>();
         _gameover       = GameObject.Find("Gameover").GetComponent<Gameover>();
         _sceneManager   = GameObject.FindWithTag("SceneManager");
-        
+
+        _menuTitle      = GameObject.Find("menuTitle");
+        _retryButton    = GameObject.Find("retry");
         _continueButton = GameObject.Find("contine");
         _selectButton   = GameObject.Find("Select");
         _titleButton    = GameObject.Find("title");
@@ -61,6 +66,8 @@ public class GameOverManager : MonoBehaviour
         // 変数の初期化
         SetGameOverUI(false);
         _backGround.SetActive(false);
+        _menuTitle.SetActive(false);
+        _retryButton.SetActive(false    );
 
         _isSelect = false;
         _isOnce = false;
@@ -89,6 +96,7 @@ public class GameOverManager : MonoBehaviour
         {
             //UIの表示
             SetGameOverUI(true);
+            _selectnum = 0;
             _isOnce = true;
         }
         if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
@@ -107,6 +115,7 @@ public class GameOverManager : MonoBehaviour
             SetGameOverUI(true);
             _isSelect = true;
             _isOnce = true;
+            _selectnum = -1;
             Time.timeScale = 0.0f;
         }
 
@@ -126,6 +135,7 @@ public class GameOverManager : MonoBehaviour
                 {
                     _selectnum--;
                 }
+
             }
             else if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
             .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
@@ -179,7 +189,7 @@ public class GameOverManager : MonoBehaviour
             if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
             .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
             {// カーソルを上に移動
-                if (_selectnum <= (int)GameoverMenu.E_CONTINUE)
+                if (_selectnum <= (int)GameoverMenu.E_RETRY)
                 {
                     _selectnum = (int)GameoverMenu.E_EXIT;
                 }
@@ -193,7 +203,7 @@ public class GameOverManager : MonoBehaviour
             {// カーソルを下に移動
                 if (_selectnum >= (int)GameoverMenu.E_EXIT)
                 {
-                    _selectnum = (int)GameoverMenu.E_CONTINUE;
+                    _selectnum = (int)GameoverMenu.E_RETRY;
                 }
                 else
                 {
@@ -208,6 +218,7 @@ public class GameOverManager : MonoBehaviour
 
                     case -1:
                         _isSelect = false;
+                        _backGround.SetActive(false);
                         break;
 
                     //つづけるへ
@@ -234,7 +245,6 @@ public class GameOverManager : MonoBehaviour
                         break;
 
                 }
-                _backGround.SetActive(false);
                 _isOnce = false;
                 SetGameOverUI(false);
                 Time.timeScale = 1.0f;
@@ -298,23 +308,15 @@ public class GameOverManager : MonoBehaviour
      */
     private void SetGameOverUI(bool flag)
     {
-        if(_isSelect || Input.GetKeyDown(KeyCode.Q))
+        if(_isSelect || Input.GetKeyDown(KeyCode.M))
         {
+            _menuTitle.SetActive(flag);
             _backGround.SetActive(flag);
+            _retryButton.SetActive(flag);
         }
         _continueButton.SetActive(flag);
         _selectButton.SetActive(flag);
         _titleButton.SetActive(flag);
         _finishButton.SetActive(flag);
     }
-
-
-    // 中上皓太が消しました
-    //private void UIReset()
-    //{
-    //    _continueButton.SetActive(false);
-    //    _selectButton.SetActive(false);
-    //    _titleButton.SetActive(false);
-    //    _finishButton.SetActive(false);
-    //}
 }
