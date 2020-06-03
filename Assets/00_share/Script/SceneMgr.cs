@@ -252,6 +252,10 @@ public class SceneMgr : MonoBehaviour
      */
     public void SetScene(E_SCENE scene)
     {
+        if (_nowScene == E_SCENE._1_1)
+        {
+            _tutorial = false;
+        }
         _lastScene = _nowScene;
         _nowScene = scene;
 
