@@ -213,12 +213,14 @@ public class GameOverManager : MonoBehaviour
             if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
             .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
             {// 決定キーを押した時の処理
-                switch (_selectnum - 1)
+                switch (_selectnum)
                 {
 
                     case -1:
                         _isSelect = false;
+                        _menuTitle.SetActive(false);
                         _backGround.SetActive(false);
+                        _retryButton.SetActive(false);
                         break;
 
                     //つづけるへ
