@@ -340,6 +340,12 @@ public class Player : BaseObject
         {
             _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_OVER_FALSE);
         }
+
+        // 上から箱が降ってきたかチェック
+        if(_uekarahuttekita)
+        {
+            _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FAINT);
+        }
     }
 
 
