@@ -7,6 +7,7 @@
  * @date    2020/05/05(火)  NumberImage.csの仕様変更に合わせて一部修正
  * @date    2020/05/09(土)  カラーの変更対応
  * @date    2020/05/30(土)　アイコンのアニメーションを追加
+ * @date    2020/06/04(木)　アイコンのアニメーションのセットの仕方を修正
  */
 
 using System.Collections;
@@ -65,68 +66,35 @@ public class CountBoxUI : MonoBehaviour
     */
     public void AddFullBox(int fullBoxNum)
     {
-        int _waterCount;
-
         _fullBoxImage.SetFullBoxColor(_countNumColor[_stageNameUI.PlanetID]);
         _fullBoxImage.AddFullBox(fullBoxNum);
 
-        if (fullBoxNum > 0)
-        {
-            _waterAnimCount++;
-            _waterCount = _waterAnimCount;
+        _waterAnimCount += fullBoxNum;
 
-            // 水のアニメーションセット
-            if (_waterCount >= _countTatalBox)              // すべての箱に水が入った時
-            {
-                _waterAnim.SetWaterAnim(5);
-            }
-            else if (_waterCount >= _waterAnimQuater * 3)   // 3/4以上の箱に水が入った時
-            {
-                _waterAnim.SetWaterAnim(4);
-            }
-            else if (_waterCount >= _waterAnimQuater * 2)   // 2/4以上の箱に水が入った時
-            {
-                _waterAnim.SetWaterAnim(3);
-            }
-            else if (_waterCount >= _waterAnimQuater)       // 1/4以上の箱に水が入った時
-            {
-                _waterAnim.SetWaterAnim(2);
-            }
-            else if (_waterCount == 1)                      // 1つの箱に水が入った時
-            {
-                _waterAnim.SetWaterAnim(1);
-            }
-            else if (_waterCount == 0)                      // 水の入った箱がひとつもないとき
-            {
-                _waterAnim.SetWaterAnim(0);
-            }
+        // アイコンの水のアニメーションセット
+        if (_waterAnimCount >= _countTatalBox)              // すべての箱に水が入った時
+        {
+            _waterAnim.SetWaterAnim(5);
         }
-        else
+        else if (_waterAnimCount >= _waterAnimQuater * 3)   // 3/4以上の箱に水が入った時
         {
-            _waterCount = _waterAnimCount;
-            _waterAnimCount--;
-
-            // 水のアニメーションセット
-            if (_waterCount == 0)                               // 水の入った箱がひとつもないとき
-            {
-                _waterAnim.SetWaterAnim(0);
-            }
-            else if (_waterCount == 1)                          // 1つの箱に水が入った時
-            {
-                _waterAnim.SetWaterAnim(1);
-            }
-            else if (_waterCount >= _waterAnimQuater)           // 1/4以上の箱に水が入った時
-            {
-                _waterAnim.SetWaterAnim(2);
-            }
-            else if (_waterCount >= _waterAnimQuater * 2)       // 2/4以上の箱に水が入った時
-            {
-                _waterAnim.SetWaterAnim(3);
-            }
-            else if (_waterCount >= _waterAnimQuater * 3)       // 3/4以上の箱に水が入った時
-            {
-                _waterAnim.SetWaterAnim(4);
-            }
+            _waterAnim.SetWaterAnim(4);
+        }
+        else if (_waterAnimCount >= _waterAnimQuater * 2)   // 2/4以上の箱に水が入った時
+        {
+            _waterAnim.SetWaterAnim(3);
+        }
+        else if (_waterAnimCount >= _waterAnimQuater)       // 1/4以上の箱に水が入った時
+        {
+            _waterAnim.SetWaterAnim(2);
+        }
+        else if (_waterAnimCount >= 1)                      // 1つ以上の箱に水が入った時
+        {
+            _waterAnim.SetWaterAnim(1);
+        }
+        else if (_waterAnimCount == 0)                      // 水の入った箱がひとつもないとき
+        {
+            _waterAnim.SetWaterAnim(0);
         }
     }
 }

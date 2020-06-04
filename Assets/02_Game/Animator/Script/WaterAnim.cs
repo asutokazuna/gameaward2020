@@ -3,6 +3,7 @@
  * @brief   水の満たされた箱の個数に応じたUI管理
  * @author  Risa Ito
  * @date    2020/05/30(土)  作成
+ * @date    2020/06/04(木)  減った時の挙動修正
 */
 using System.Collections;
 using System.Collections.Generic;
@@ -60,7 +61,7 @@ public class WaterAnim : MonoBehaviour
         // 減った時
         else
         {
-            for (int i = count; -1 < i; i--)
+            for (int i = _oldCount; count <= i; i--)
             {
                 switch (i)
                 {
