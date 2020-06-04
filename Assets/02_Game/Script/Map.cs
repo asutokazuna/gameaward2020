@@ -534,6 +534,7 @@ public class Map : MonoBehaviour
     {
         Debug.Log(_player[_map[pos.x, pos.y, pos.z]._number].name + "ああああああああああああ");
         _player[_map[pos.x, pos.y, pos.z]._number]._gameOver = true;
+        _player[_map[pos.x, pos.y, pos.z]._number]._uekarahuttekita = true;
     }
 
 
