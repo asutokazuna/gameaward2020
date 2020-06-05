@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Title : MonoBehaviour
 {
     bool _LogoAnimFinish;
-
+    bool _demoPlayState;
+    public bool _ChangeScene = false;
     void Start()
     {
         _LogoAnimFinish = false;
@@ -17,9 +19,14 @@ public class Title : MonoBehaviour
     {
         if (_LogoAnimFinish)
         {
-            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isAnyTrigger())
+            _demoPlayState = GameObject.Find("DemoPlayer").GetComponent<PlayDemo>()._playMovie;
+            if (!_demoPlayState)
             {
-                GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE.STAGE_SELECT);
+                if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isAnyTrigger())
+                {
+                    _ChangeScene = true;
+                    GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE.STAGE_SELECT);
+                }
             }
         }
     }
