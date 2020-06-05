@@ -44,30 +44,6 @@ public class Clear : MonoBehaviour
     */
     public void StartClear()
     {
-        _clearAnimator.SetBool("FinishClear", false);       // アニメータにセット
         _clearAnimator.SetBool("StartClear", true);         // アニメータにセット
-    }
-
-    /**
-    * @brief        クリアアニメーションの開始をセット
-    * @return       なし
-    * @details      クリアアニメーションの開始をセットする関数です
-    */
-    public void SetClearLoop()
-    {
-        _clearAnimator.SetBool("StartClear", false);        // アニメータにセット
-        _clearAnimator.SetBool("StartClearLoop", true);     // アニメータにセット
-    }
-
-    /**
-    * @brief        クリアアニメーションの終了をセット
-    * @return       なし
-    * @details      クリアアニメーションの終了をセットする関数です
-    */
-    public void FinishClear()
-    {
-        _finishClear = false;
-        _clearAnimator.SetBool("StartClearLoop", false);    // アニメータにセット
-        _clearAnimator.SetBool("FinishClear", true);        // アニメータにセット
     }
 }
