@@ -21,12 +21,13 @@ public class PlayDemo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        DemoManager();
     }
 
     void DemoManager()
     {
         _timer += Time.deltaTime;
-        Debug.Log(_timer);
+        //Debug.Log(_timer);
         if (_timer > _waitTime)
         {
             if (_playMovie == false)
@@ -37,15 +38,24 @@ public class PlayDemo : MonoBehaviour
 
                 _playMovie = true;
             }
-            if (_timer > 4 && !_videoPlayer.isPlaying)//isPlayingがディレイ持たせないと正常に動かないので
+            if (_timer > _waitTime + 1 && !_videoPlayer.isPlaying)//isPlayingがディレイ持たせないと正常に動かないので
             {
+                Debug.Log("通った");
                 //フェードアウト
                 _rawImage.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
-
-                _playMovie = false;
                 _waitTime = 10;
                 _timer = 0;
             }
+
+            //何かキーが押されたらデモ終了
+            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isAnyTrigger())
+            {
+                _videoPlayer.Stop();
+            }
+        }
+        else if (_timer > 1) //ディレイ
+        {
+                _playMovie = false;
         }
 
     }

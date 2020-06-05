@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class Title : MonoBehaviour
 {
     bool _LogoAnimFinish;
+    bool _demoPlayState;
 
     void Start()
     {
@@ -17,9 +18,14 @@ public class Title : MonoBehaviour
     {
         if (_LogoAnimFinish)
         {
-            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isAnyTrigger())
+            _demoPlayState = GameObject.Find("DemoPlayer").GetComponent<PlayDemo>()._playMovie;
+            Debug.Log(_demoPlayState);
+            if (!_demoPlayState)
             {
-                GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE.STAGE_SELECT);
+                if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isAnyTrigger())
+                {
+                    GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>().SetScene(E_SCENE.STAGE_SELECT);
+                }
             }
         }
     }
