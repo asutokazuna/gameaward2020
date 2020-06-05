@@ -8,13 +8,19 @@ public class RayTarget : MonoBehaviour
     public Vector3 _dirVector;
     [SerializeField]
     private Vector3 _startPos;
+    private Vector3 _movePos;
 
-    private bool _isFirst = false;
+    private bool _isSelect = false;
+    [SerializeField]
+    private float _count;
     // Start is called before the first frame update
     void Start()
     {
         _dirVector = transform.parent.parent.transform.position - _targetObj.transform.position;
         _startPos = _targetObj.transform.localPosition;
+
+        _movePos = Vector3.MoveTowards(_targetObj.transform.localPosition, new Vector3(0,0,0), -0.04f);
+
     }
 
 
@@ -23,24 +29,29 @@ public class RayTarget : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (_isSelect)
+        {
+            _targetObj.transform.localPosition = Vector3.Lerp(_startPos, _movePos, Mathf.Sin(_count));
+            _count += 0.1f;
+        }
+        else
+        {
+            _targetObj.transform.localPosition = Vector3.Lerp(_movePos, _startPos, 1.0f - Mathf.Sin(_count));
+            _count -= 0.1f;
+        }
+
+        if(_count > 0.5f)
+        {
+            _count = 0.5f;
+        }
+        if (_count < 0.0f)
+        {
+            _count = 0.0f;
+        }
     }
 
     public void LandMove(bool flg)
     {
-        if(flg)
-        {
-            if(!_isFirst)
-            {
-                _targetObj.transform.position = Vector3.MoveTowards(_targetObj.transform.position, transform.parent.parent.transform.position, -0.2f);
-                _isFirst = true;
-            }
-           
-        }
-        else
-        {
-            _targetObj.transform.localPosition = _startPos;
-            _isFirst = false;
-        }
+        _isSelect = flg;
     }
 }
