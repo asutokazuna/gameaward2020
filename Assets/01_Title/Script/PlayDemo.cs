@@ -7,9 +7,10 @@ using UnityEngine.Video;
 public class PlayDemo : MonoBehaviour
 {
     public bool _playMovie = false;
+    bool _changeScene;
     float _timer = 0;
-    VideoPlayer _videoPlayer;   // videoPlayerコンポーネントの取得
     int _waitTime = 3;
+    VideoPlayer _videoPlayer;   // videoPlayerコンポーネントの取得
     RawImage _rawImage;
     // Start is called before the first frame update
     void Start()
@@ -26,8 +27,12 @@ public class PlayDemo : MonoBehaviour
 
     void DemoManager()
     {
-        _timer += Time.deltaTime;
-        //Debug.Log(_timer);
+        _changeScene = GameObject.Find("Logo").GetComponent<Title>()._ChangeScene;
+        if (!_changeScene)
+        {
+            _timer += Time.deltaTime;
+            //Debug.Log(_timer);
+        }
         if (_timer > _waitTime)
         {
             if (_playMovie == false)
@@ -40,7 +45,6 @@ public class PlayDemo : MonoBehaviour
             }
             if (_timer > _waitTime + 1 && !_videoPlayer.isPlaying)//isPlayingがディレイ持たせないと正常に動かないので
             {
-                Debug.Log("通った");
                 //フェードアウト
                 _rawImage.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
                 _waitTime = 10;
