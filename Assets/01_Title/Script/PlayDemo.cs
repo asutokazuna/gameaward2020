@@ -56,14 +56,16 @@ public class PlayDemo : MonoBehaviour
                 _timer = 0;
             }
 
-            //何かキーが押されたらデモ終了
-            if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isAnyTrigger())
+            // 動画が再生されていたら
+            if (_videoPlayer.isPlaying)
             {
-                //フェードアウト
-                _fadeAnim.SetBool("FadeOut", true);
-                _fadeAnim.SetBool("FadeIn", false);
-
-                //_videoPlayer.Stop();
+                //何かキーが押されたらデモ終了
+                if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isAnyTrigger())
+                {
+                    //フェードアウト
+                    _fadeAnim.SetBool("FadeOut", true);
+                    _fadeAnim.SetBool("FadeIn", false);
+                }
             }
         }
         else if (_timer > 1) //ディレイ
@@ -71,6 +73,23 @@ public class PlayDemo : MonoBehaviour
                 _playMovie = false;
         }
 
+        // フェードアウト後に動画を停止
+        if(_fadeAnim.GetBool("FinishFadeOut"))
+        {
+            _fadeAnim.SetBool("FinishFadeOut", false);
+            _videoPlayer.Stop();
+        }
+
+    }
+
+    /**
+    * @brief        フェードアウトの終了をセット
+    * @return       なし
+    * @details      フェードアウトの終了をセットするアニメーションイベント関数です
+    */
+    void FinishFadeOut()
+    {
+        _fadeAnim.SetBool("FinishFadeOut", true);
     }
 
 }
