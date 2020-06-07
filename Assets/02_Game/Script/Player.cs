@@ -472,6 +472,8 @@ public class Player : BaseObject
         {// ゲームオーバー
             _map.FallToObject(_haveObject, _map.GetFallPos(putPos));  // 置く処理
             _isMove = true;
+            _animation.SetPlayerInfo(1);
+            _animation.SetPlayerState(PlayerAnim.PlayerState.E_PUT);
             return;
         }
         for (int n = 0; n <= 2; n++, putPos.y -= 1)
