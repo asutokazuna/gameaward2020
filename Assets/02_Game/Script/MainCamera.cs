@@ -231,6 +231,14 @@ public class MainCamera : MonoBehaviour
         _audioSource.Stop();
 
         Vector3 _clearStartPos = new Vector3(_fieldPos.x + _circleSizeClear.x * Mathf.Sin(_time2), _fieldPos.y + _circleSizeClear.y, _fieldPos.z + _circleSizeClear.z * Mathf.Cos(_time2));
+
+        if (_waitTimeCheck == true)
+        {
+            _time2 += Time.deltaTime / _rotateSpeedClear;   //sin,cosの移動先計算用
+            Vector3 _setPos = new Vector3(_fieldPos.x + _circleSizeClear.x * Mathf.Sin(_time2),
+                _fieldPos.y + _circleSizeClear.y, _fieldPos.z + _circleSizeClear.z * Mathf.Cos(_time2));//!<次の移動先座標計算
+            myTransform.transform.position = _setPos;
+        }
         if (_systemflg == false)
         {
             _systemflg = true;
@@ -251,68 +259,9 @@ public class MainCamera : MonoBehaviour
         }
         else if (_systemflg == true)
         {
-            transform.DOLookAt(_lookAtObject, 0.0f);
+            transform.LookAt(_lookAtObject);
         }
 
-        if (_waitTimeCheck == true)
-        {
-           _time2 += Time.deltaTime / _rotateSpeedClear;   //sin,cosの移動先計算用
-            Vector3 _setPos = new Vector3(_fieldPos.x + _circleSizeClear.x * Mathf.Sin(_time2),
-                _fieldPos.y + _circleSizeClear.y, _fieldPos.z + _circleSizeClear.z * Mathf.Cos(_time2));//!<次の移動先座標計算
-            myTransform.transform.position = _setPos;
-           // myTransform.DOLookAt(_lookAtObject, 0.0f);  //!< 向きを設定     
-
-
-            //if (!_systemflg)  //クリアかつシステムフラグFalseなら
-            //{
-            //    if (_waitTime > 0 && !_cameraMove)//カメラが吹っ飛ばないように
-            //    {
-            //        _time2 += Time.deltaTime;
-
-            //        _cameraMove = true;
-            //    }
-            //    _waitTime -= Time.deltaTime;
-            //    if (_waitTime < 0)//他演出とのディレイ
-            //    {
-            //        //!< UnityEngine.Debug.Break();
-            //        myTransform = this.transform;
-            //        _systemflg = true;
-
-            //    }
-            //    //myTransform.LookAt(_fieldPos);
-
-            //}
-            //else if (_systemflg)  //システムフラグtrue
-            //{
-            //    if (_TimeCnt > 0)   //ディレイない場合の保険で1秒は待てるように
-            //    {
-            //        _TimeCnt -= Time.deltaTime;
-            //    }
-            //    else if (_TimeCnt < 0)
-            //    {
-            //        if (_focusClear)
-            //        {
-            //            _lookAtObject = _gameObjectPlayer.transform.position;   //!< 追跡対象の設定（プレイヤー）
-            //            _lookAtObject.y = _gameObjectPlayer.transform.position.y + _correctionValueClear.y; // y座標の補正
-            //        }
-            //        else
-            //        {
-            //             _lookAtObject = _fieldPos;     //!<追跡対象の設定（フィールド中心）
-            //            _lookAtObject.y = 1;            //!<y座標の補正
-            //        }
-
-            //        _time2 += Time.deltaTime / _rotateSpeedClear;   //sin,cosの移動先計算用
-
-            //        Vector3 _setPos = new Vector3(_fieldPos.x + _circleSizeClear.x * Mathf.Sin(_time2),
-            //            _fieldPos.y + _circleSizeClear.y, _fieldPos.z + _circleSizeClear.z * Mathf.Cos(_time2));//!<次の移動先座標計算
-            //        myTransform.transform.position = _setPos;
-            //        myTransform.LookAt(_lookAtObject);  //!< 向きを設定     
-            //    }
-
-
-            //}
-
-        }
     }
     /**
      * @brief ゲームオーバー演出
