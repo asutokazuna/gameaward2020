@@ -4553,6 +4553,7 @@ GameObject:
   - component: {fileID: -1251485756338170029}
   - component: {fileID: 4696176880962261629}
   - component: {fileID: 278565798937554295}
+  - component: {fileID: 4325504705912642733}
   m_Layer: 0
   m_Name: Peacock_Blue
   m_TagString: Player
@@ -4736,6 +4737,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4325504705912642733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8006459885820759670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47c4a218a81b4b4f8c82bd51f161589, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _meshRend: {fileID: 665907718974853240}
 --- !u!1 &8067184182162663217
 GameObject:
   m_ObjectHideFlags: 0
@@ -5156,7 +5170,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a592ba1810595e249b48b5502a556559, type: 2}
+  - {fileID: 2100000, guid: ca62b96ada971644f83158c142b5ffe2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -1249,7 +1249,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 92a11c0229399fa4293830a327083f11, type: 2}
+  - {fileID: 2100000, guid: ca62b96ada971644f83158c142b5ffe2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1669,6 +1669,7 @@ GameObject:
   - component: {fileID: 4210159275344175461}
   - component: {fileID: 2517376299672739173}
   - component: {fileID: 283120016159647450}
+  - component: {fileID: 5400850613736871524}
   m_Layer: 0
   m_Name: Peacock_Green
   m_TagString: Player
@@ -1852,6 +1853,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5400850613736871524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3961280089345307932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47c4a218a81b4b4f8c82bd51f161589, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _meshRend: {fileID: 5825445780637100818}
 --- !u!1 &4036392320674614300
 GameObject:
   m_ObjectHideFlags: 0

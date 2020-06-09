@@ -828,6 +828,7 @@ GameObject:
   - component: {fileID: 3387210977650872734}
   - component: {fileID: 2086370844806287518}
   - component: {fileID: -2084721790872184151}
+  - component: {fileID: 8314008554645253008}
   m_Layer: 0
   m_Name: Peacock_White
   m_TagString: Player
@@ -1011,6 +1012,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8314008554645253008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3387210977650872732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47c4a218a81b4b4f8c82bd51f161589, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _meshRend: {fileID: 3387210977810517472}
 --- !u!1 &3387210977651776692
 GameObject:
   m_ObjectHideFlags: 0
@@ -1673,7 +1687,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5646bac4a964bf346a2a9b0b85dd7411, type: 2}
+  - {fileID: 2100000, guid: ca62b96ada971644f83158c142b5ffe2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
