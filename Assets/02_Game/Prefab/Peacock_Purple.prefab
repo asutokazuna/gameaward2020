@@ -49,7 +49,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9bc7be74197724d4ca5ac59f9438de95, type: 2}
+  - {fileID: 2100000, guid: ca62b96ada971644f83158c142b5ffe2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -441,6 +441,7 @@ GameObject:
   - component: {fileID: 8902730596893162412}
   - component: {fileID: -3884213281078265944}
   - component: {fileID: -4866887902793438175}
+  - component: {fileID: 6994152618300263907}
   m_Layer: 0
   m_Name: Peacock_Purple
   m_TagString: Player
@@ -624,6 +625,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6994152618300263907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292671061704554715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c47c4a218a81b4b4f8c82bd51f161589, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _meshRend: {fileID: 8633701928422778581}
 --- !u!1 &1344012287511213338
 GameObject:
   m_ObjectHideFlags: 0
