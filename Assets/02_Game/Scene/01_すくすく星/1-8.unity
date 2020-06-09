@@ -5900,12 +5900,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 541902444}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &541902446 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3162736835181751367, guid: 4923a7beb529b5548b09ce499ec0904a,
-    type: 3}
-  m_PrefabInstance: {fileID: 541902444}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &576831868
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6439,7 +6433,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 8.46e-43, y: 5.380782e+13, z: 4.5904e-41, w: 5.3804263e+13}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: -0.0000000027244909}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -6850,7 +6844,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fieldBlock:
   - {fileID: 1035718194}
-  - {fileID: 541902446}
+  - {fileID: 1373203249}
   - {fileID: 1919287610}
   - {fileID: 2120243587}
   _angle: 90
@@ -12221,6 +12215,12 @@ PrefabInstance:
 --- !u!4 &1373203248 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2143455852980067924, guid: 4923a7beb529b5548b09ce499ec0904a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1373203247}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1373203249 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3162736835181751367, guid: 4923a7beb529b5548b09ce499ec0904a,
     type: 3}
   m_PrefabInstance: {fileID: 1373203247}
   m_PrefabAsset: {fileID: 0}
