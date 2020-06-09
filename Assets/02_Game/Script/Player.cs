@@ -612,6 +612,14 @@ public class Player : BaseObject
         }
         else if (_mode == E_OBJECT_MODE.DONT_MOVE)
         {
+            if (_lifted != E_HANDS_ACTION.DO)
+            {
+                _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_LIFTED_FALSE);
+            }
+            else
+            {
+                _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_LIFTED);
+            }
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_BUMP);
         }
         //                              移動先座標, 移動時間(秒)
