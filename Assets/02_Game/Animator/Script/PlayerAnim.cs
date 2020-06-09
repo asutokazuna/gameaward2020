@@ -30,9 +30,11 @@ public class PlayerAnim : MonoBehaviour
         E_OVER,
         E_FALL,
         E_FAINT,
+        E_LIFTED,
 
         E_TP_FALSE,
         E_OVER_FALSE,
+        E_LIFTED_FALSE,
     }
 
     // アニメーション管理用
@@ -118,11 +120,17 @@ public class PlayerAnim : MonoBehaviour
             case PlayerInfo.E_FAINT:
                 _playerAnimator.SetBool("Faint", true);
                 break;
+            case PlayerInfo.E_LIFTED:
+                _playerAnimator.SetBool("Lifted", true);
+                break;
             case PlayerInfo.E_TP_FALSE:
                 _playerAnimator.SetBool("TP", false);
                 break;
             case PlayerInfo.E_OVER_FALSE:
                 _playerAnimator.SetBool("Over", false);
+                break;
+            case PlayerInfo.E_LIFTED_FALSE:
+                _playerAnimator.SetBool("Lifted", false);
                 break;
         }
     }
