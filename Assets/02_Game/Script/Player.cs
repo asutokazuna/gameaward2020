@@ -542,7 +542,8 @@ public class Player : BaseObject
             transform.DORotate(
                 new Vector3(0f, 180, 0f),
                 GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime
-                ).OnComplete(() =>
+                ).SetEase(Ease.Linear)
+                .OnComplete(() =>
             {
                 WaitMode();
             });
@@ -552,7 +553,8 @@ public class Player : BaseObject
             transform.DORotate(
                 new Vector3(0f, 90f * direct.x, 0f),
                 GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime
-                ).OnComplete(() =>
+                ).SetEase(Ease.Linear)
+                .OnComplete(() =>
             {
                 WaitMode();
             });
@@ -633,7 +635,8 @@ public class Player : BaseObject
                 transform.DOLocalMove(      //取り合えずの数値
                     new Vector3(_nextPos.x, _nextPos.y - 1f, _nextPos.z),// 目的座標
                     _mgr.MoveTime
-                ).OnComplete(() =>
+                ).SetEase(Ease.Linear)
+                .OnComplete(() =>
                 {
                     transform.DOScale(new Vector3(), _mgr.OutsideTheEreaTime);
                     WaitMode();
@@ -756,7 +759,9 @@ public class Player : BaseObject
             _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FALL);
             _changeFace.SetFace(2);
 
-            transform.DOJump(_nextPos, 1, 1, _mgr.MoveTime, false).OnComplete(() =>
+            transform.DOJump(_nextPos, 1, 1, _mgr.MoveTime, false)
+                .SetEase(Ease.Linear)
+                .OnComplete(() =>
             {
                 transform.DOLocalMove(transform.position, 0.2f).OnComplete(() =>
                 {
