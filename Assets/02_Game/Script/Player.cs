@@ -594,7 +594,7 @@ public class Player : BaseObject
         }
         if (_haveObject._myObject == E_OBJECT.BLOCK_TANK)
         {// 親父ィィイイ！！！？？？
-            GameObject.Find(_map.GetLiftObject(_haveObject).name).GetComponent<BlockTank>().Untitti();
+            GameObject.Find(_map.GetLiftObject(_haveObject).name).GetComponent<BlockTank>().offSetChildPos();
         }
     }
 
