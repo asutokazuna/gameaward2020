@@ -124,5 +124,4 @@ Shader "Custom/Lit MultiLight" {
 		}
 			Fallback "Custom/Lit Alpha Blend Shadow Fallback"
 				CustomEditor "EMMaterialInspector"
-
 }
