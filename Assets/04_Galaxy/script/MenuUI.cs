@@ -16,8 +16,18 @@ using UnityEngine.UI;
  */
 public class MenuUI : MonoBehaviour
 {
-    [SerializeField] Image     _menuObj;        //!< メニュー表示管理用
-    [SerializeField] Image[]   _setMenuImage;   //!< メニュー項目管理用
+    enum MenuType
+    {
+        E_CONTINUE,
+        E_RETRY,
+        E_TITLE,
+        E_STAGE,
+        E_FINISH,
+    }
+
+    [SerializeField] Image      _menuObj;       //!< メニュー表示管理用
+    [SerializeField] Image[]    _setMenuImage;  //!< メニュー項目管理用
+    [SerializeField] MenuType[] _setMenuType;   //!< メニュー項目管理用
     private SceneMgr    _sceneManager;          //!< シーンマネージャー取得用
     public  bool        _isMenu = false;        //!< メニューフラグ
     private bool        _isKey = false;         //!< キー入力フラグ
@@ -62,26 +72,7 @@ public class MenuUI : MonoBehaviour
             }
             else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
             {
-                switch (_selectMenu)
-                {
-                    case 0: // つづける
-                        _menuObj.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
-                        for (int i = 0; i < _setMenuImage.Length; i++)
-                        {
-                            _setMenuImage[i].color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
-                        }
-                        _isKey = true;
-                        break;
-                    case 1: // タイトルへ遷移
-                        _sceneManager.SetScene(E_SCENE.TITLE);
-                        break;
-                    case 2: // ゲーム終了
-#if UNITY_EDITOR
-                        UnityEditor.EditorApplication.isPlaying = false;
-#endif
-                        Application.Quit();
-                        break;
-                }
+                SetMenu();
             }
             else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y))
             {
@@ -108,6 +99,7 @@ public class MenuUI : MonoBehaviour
             if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y))
             {
                 _isMenu = true;
+                _selectMenu = 0;
                 _menuObj.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
                 _setMenuImage[0].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
                 for (int i = 1; i < _setMenuImage.Length;i++)
@@ -115,6 +107,36 @@ public class MenuUI : MonoBehaviour
                     _setMenuImage[i].color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
                 }
             }
+        }
+    }
+
+    void SetMenu()
+    {
+        switch (_setMenuType[_selectMenu])
+        {
+            case MenuType.E_CONTINUE: // つづける
+                _menuObj.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+                for (int i = 0; i < _setMenuImage.Length; i++)
+                {
+                    _setMenuImage[i].color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+                }
+                _isKey = true;
+                break;
+            case MenuType.E_RETRY:  // リトライ
+                _sceneManager.SetScene(E_SCENE_MODE.RELOAD);
+                break;
+            case MenuType.E_STAGE:  // ステージセレクトへ遷移
+                _sceneManager.SetScene(E_SCENE.STAGE_SELECT);
+                break;
+            case MenuType.E_TITLE:  // タイトルへ遷移
+                _sceneManager.SetScene(E_SCENE.TITLE);
+                break;
+            case MenuType.E_FINISH: // ゲーム終了
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#endif
+                Application.Quit();
+                break;
         }
     }
 }
