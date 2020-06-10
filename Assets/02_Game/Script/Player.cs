@@ -40,8 +40,8 @@ public class Player : BaseObject
 #endif
     public           SquareInfo     _haveObject;    //!< 持っているオブジェクト情報
                      Map            _map;           //!< マップ
-    //public PlayerAnimation          _animation;     //!< プレイヤーのアニメーション
-    PlayerAnim _animation;
+    ChangeFace                      _changeFace;    //!< 表情変更 
+    PlayerAnim                      _animation;     //!< プレイヤーのアニメーション
     PlayerManager                   _mgr;           //!< プレイヤー管理スクリプト
     Controller                      _input;         //!< 入力キー
     public bool _putUpdate;
@@ -109,9 +109,8 @@ public class Player : BaseObject
 
         _audioSource = GetComponent<AudioSource>();
 
-        //_animation = GameObject.Find(name).GetComponent<PlayerAnimation>();
+        _changeFace = GameObject.Find(name).GetComponent<ChangeFace>();
         _animation = GameObject.Find(name).GetComponent<PlayerAnim>();
-        //_animation.SetPlayerState(PlayerAnimation.PlayerState.E_WAIT);
     }
 #endif
 
@@ -335,6 +334,7 @@ public class Player : BaseObject
         if (isMultiHave())
         {
             _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_OVER);
+            _changeFace.SetFace(3);
         }
         else
         {
@@ -345,6 +345,7 @@ public class Player : BaseObject
         if(_uekarahuttekita)
         {
             _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FAINT);
+            _changeFace.SetFace(2);
         }
     }
 
@@ -601,6 +602,7 @@ public class Player : BaseObject
      */
     override protected void MoveMode()
     {
+        _changeFace.SetFace(0);
         if (_mode == E_OBJECT_MODE.MOVE)
         {
             if (_map.isTrampline(new Vector3Int(_position.x, _position.y - 1, _position.z)))
@@ -655,6 +657,7 @@ public class Player : BaseObject
      */
     override protected void JumpMode()
     {
+        _changeFace.SetFace(0);
         if (_lifted != E_HANDS_ACTION.DO)
         {
             _animation.SetPlayerState(PlayerAnim.PlayerState.E_JUMP);
@@ -717,6 +720,7 @@ public class Player : BaseObject
             if (_lifted != E_HANDS_ACTION.DO)
             {
                 _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FALL);
+                _changeFace.SetFace(2);
             }
 
             transform.DOJump(_nextPos, 1, 1, _mgr.MoveTime, false).OnComplete(() =>
@@ -750,6 +754,7 @@ public class Player : BaseObject
         {
 
             _animation.SetPlayerInfo(PlayerAnim.PlayerInfo.E_FALL);
+            _changeFace.SetFace(2);
 
             transform.DOJump(_nextPos, 1, 1, _mgr.MoveTime, false).OnComplete(() =>
             {
@@ -806,6 +811,7 @@ public class Player : BaseObject
      */
     private void LiftMode(int n)
     {
+        _changeFace.SetFace(0);
         if (_haveObject._myObject == E_OBJECT.NONE ||
             _haveObject._myObject == E_OBJECT.MAX)
         {// 何も持っていない時(呼び出し場所の間違えかエラー)
@@ -842,6 +848,7 @@ public class Player : BaseObject
      */
     private void PutMode(int n)
     {
+        _changeFace.SetFace(0);
         if (_haveObject._myObject == E_OBJECT.NONE ||
             _haveObject._myObject == E_OBJECT.MAX)
         {// 何も持っていない時(呼び出し場所の間違えかエラー)
@@ -872,6 +879,7 @@ public class Player : BaseObject
     public void GameClear()
     {
         _animation.SetPlayerState(PlayerAnim.PlayerState.E_HAPPY);
+        _changeFace.SetFace(1);
     }
 
 
