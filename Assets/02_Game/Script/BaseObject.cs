@@ -368,6 +368,18 @@ public class BaseObject : MonoBehaviour
     }
 
 
+    public void offSetChildPos()
+    {
+        transform.localPosition = new Vector3(0f, 1f, 0f);
+    }
+
+
+    public void Message(object obj)
+    {
+        Debug.Log(obj);
+    }
+
+
     /**
      * @brief 向きの調整
      * @param1 向き

@@ -595,6 +595,10 @@ public class Player : BaseObject
         {
             _lifted = E_HANDS_ACTION.DO;
         }
+        if (_haveObject._myObject == E_OBJECT.BLOCK_TANK)
+        {// 親父ィィイイ！！！？？？
+            GameObject.Find(_map.GetLiftObject(_haveObject).name).GetComponent<BlockTank>().offSetChildPos();
+        }
     }
 
 
@@ -841,6 +845,7 @@ public class Player : BaseObject
             transform.DOLocalMove(transform.position, _mgr.MoveTime).OnComplete(() =>
             {//　取り合えずこれで行く
                 GameObject.Find(_map.GetLiftObject(_haveObject).name).transform.parent = transform; // 追従
+                //GameObject.Find(_map.GetLiftObject(_haveObject).name).GetComponent<BlockTank>().Untitti();
                 WaitMode();
             });
         }
