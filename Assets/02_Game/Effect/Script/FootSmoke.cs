@@ -57,8 +57,8 @@ public class FootSmoke : MonoBehaviour
             }
         }
 
-        if (_map._gameOver)
-        {// おならジェット封印
+        if (_map._gameOver || this.transform.parent.parent.parent.GetComponent<Player>()._lifted != E_HANDS_ACTION.NONE)
+        {// おならジェット封印 と 持たれてるプレイヤーが壁にぶつかった時
             _footSmoke.Stop();
         }
         // プレイヤーの前情報取得
