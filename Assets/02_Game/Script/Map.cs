@@ -512,14 +512,15 @@ public class Map : MonoBehaviour
      */
     public Vector3Int GetFallPos(Vector3Int pos)
     {
-        for (; pos.y > 0; pos.y--)
+        Vector3Int p = pos;
+        for (; p.y > 0; p.y--)
         {
-            if (isUse(pos))
+            if (isUse(p))
             {// 落下地点の一個上
-                return new Vector3Int(pos.x, pos.y + 1, pos.z);
+                return new Vector3Int(p.x, p.y + 1, p.z);
             }
         }
-        return pos;    // エリア外への落下
+        return new Vector3Int(pos.x, pos.y - 1, pos.z);    // エリア外への落下
     }
 
 
@@ -532,7 +533,6 @@ public class Map : MonoBehaviour
 
     public void UekaraHuttekita(Vector3Int pos)
     {
-        Debug.Log(_player[_map[pos.x, pos.y, pos.z]._number].name + "ああああああああああああ");
         _player[_map[pos.x, pos.y, pos.z]._number]._gameOver = true;
         _player[_map[pos.x, pos.y, pos.z]._number]._uekarahuttekita = true;
     }
