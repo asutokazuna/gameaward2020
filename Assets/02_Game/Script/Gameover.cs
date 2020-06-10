@@ -17,8 +17,9 @@ using UnityEngine;
 public class Gameover : MonoBehaviour
 {
     // アニメーション管理用
-    Animator        _gameoverAnimator;                      //!< アニメーター取得用
-    public bool     _finishGameover{ get; private set; }    //!< アニメーション終了フラグ
+    private Animator    _gameoverAnimator;                      //!< アニメーター取得用
+    public  bool        _finishGameover{ get; private set; }    //!< アニメーション終了フラグ
+    private Map         _map;                                   //!< ゲームオーバーフラグ取得用
 
     // Start is called before the first frame update
     void Start()
@@ -26,38 +27,15 @@ public class Gameover : MonoBehaviour
         // 初期化処理
         _gameoverAnimator = GetComponent<Animator>();
         _finishGameover = false;
+        _map = GameObject.FindWithTag("Map").GetComponent<Map>();
     }
 
-    /**
-    * @brief        アニメーションの終了をセット
-    * @return       なし
-    * @details      アニメーションの終了をセットするアニメーションイベントの関数です
-    */
-    void SetFinishGameoverAnim()
+    // Update is called once per frame
+    void Update()
     {
-        _finishGameover = true;
-    }
-
-    /**
-    * @brief        ゲームオーバーアニメーションの開始をセット
-    * @return       なし
-    * @details      ゲームオーバーアニメーションの開始をセットする関数です
-    */
-    public void StartGameover()
-    {
-        _gameoverAnimator.SetBool("FinishGameover", false);     // アニメータにセット
-        _gameoverAnimator.SetBool("StartGameover", true);       // アニメータにセット
-    }
-
-    /**
-    * @brief        ゲームオーバーアニメーションの終了をセット
-    * @return       なし
-    * @details      ゲームオーバーアニメーションの終了をセットする関数です
-    */
-    public void FinishGameover()
-    {
-        _finishGameover = false;
-        _gameoverAnimator.SetBool("StartGameover", false);      // アニメータにセット
-        _gameoverAnimator.SetBool("FinishGameover", true);      // アニメータにセット
+        if(_map._gameOver)
+        {
+            _gameoverAnimator.SetBool("StartGameover", true);       // アニメータにセット
+        }
     }
 }
