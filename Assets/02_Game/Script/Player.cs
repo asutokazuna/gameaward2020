@@ -764,7 +764,6 @@ public class Player : BaseObject
             _changeFace.SetFace(2);
 
             transform.DOJump(_nextPos, 1, 1, _mgr.MoveTime, false)
-                .SetEase(Ease.Linear)
                 .OnComplete(() =>
             {
                 transform.DOLocalMove(transform.position, 0.2f).OnComplete(() =>

@@ -201,7 +201,15 @@ public class BaseObject : MonoBehaviour
         _oldPosition    = _position;
         _position       = pos;
         _lifted         = E_HANDS_ACTION.NOW_PLAY;
-        _mode           = E_OBJECT_MODE.FALL;
+        if (GameObject.FindGameObjectWithTag("Map").GetComponent<Map>().
+            GetObject(new Vector3Int(_position.x, _position.y - 1, _position.z))._myObject == E_OBJECT.NONE)
+        {
+            _mode = E_OBJECT_MODE.AREA_FALL;
+        }
+        else
+        {
+            _mode = E_OBJECT_MODE.FALL;
+        }
         _isMove         = true;
     }
 
@@ -335,12 +343,44 @@ public class BaseObject : MonoBehaviour
                 false
                 ).OnComplete(() =>
             {
-                _lifted = E_HANDS_ACTION.NONE;
-                WaitMode();
                 Waremasu();
-                GameObject.FindGameObjectWithTag("Map").GetComponent<Map>()._gameOver = true;
+                _lifted = E_HANDS_ACTION.NONE;
                 _gameOver = true;
+                GameObject.FindGameObjectWithTag("Map").GetComponent<Map>()._gameOver = true;
+                WaitMode();
             });
+        }
+        else if (_mode == E_OBJECT_MODE.AREA_FALL)
+        {// エリア落ちる時
+            power = Mathf.Abs(_oldPosition.y - _position.y);
+            offSetTransform();
+            transform.DOJump(
+                _nextPos,   // 目的座標
+                power, // ジャンプパワー
+                1,  // ジャンプ回数
+                GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>().MoveTime,   // 時間
+                false
+                ).OnComplete(() =>
+                {
+                    transform.DOLocalMove(transform.position, 0.2f).OnComplete(() =>
+                    {
+                        _position.y -= GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>()
+                            .OutsideTheEreaDistance;
+                        offSetTransform();
+                        // カメラ演出的に小さくなるの違和感に感じるシーンがあるかも
+                        transform.DOScale(0, GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>()
+                            .OutsideTheEreaTime * 2f);
+                        transform.DOLocalMove(_nextPos, GameObject.FindGameObjectWithTag("PlayerManager").GetComponent<PlayerManager>()
+                            .OutsideTheEreaTime).OnComplete(() =>
+                            {
+                                WaitMode();
+                            });
+                    });
+                    _lifted = E_HANDS_ACTION.NONE;
+                    _gameOver = true;
+                    GameObject.FindGameObjectWithTag("Map").GetComponent<Map>()._gameOver = true;
+                    WaitMode();
+                });
         }
     }
 
