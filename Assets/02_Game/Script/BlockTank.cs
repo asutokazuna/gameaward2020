@@ -166,6 +166,18 @@ public class BlockTank : BaseObject
 #endif
         return false;
     }
+
+
+    public void Untitti()
+    {
+        transform.localPosition = new Vector3(0f, 1f, 0f);
+    }
+
+
+    public void Message(object obj)
+    {
+        Debug.Log(obj);
+    }
 }
 
 
