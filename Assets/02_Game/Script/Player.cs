@@ -55,6 +55,7 @@ public class Player : BaseObject
     public AudioClip _SEMove;
     public AudioClip _SEjump;
     public AudioClip _SEPut;
+    public AudioClip _SELift;
     public AudioClip _SETrampoline;
     public AudioClip _SEGameClear;
     public AudioClip _SEGameOver;
@@ -454,6 +455,8 @@ public class Player : BaseObject
                 _isMove = true;
                 _map.LiftToObject(_haveObject, new Vector3Int(_position.x, _position.y + 1, _position.z));
                 LiftMode(n);    // アニメーションのセット
+                _audioSource.PlayOneShot(_SELift);
+
                 break;
             }
         }
