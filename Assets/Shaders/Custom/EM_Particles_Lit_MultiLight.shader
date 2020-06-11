@@ -2,7 +2,7 @@
 
 // Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 
-Shader "Custom/Lit MultiLight" {
+Shader "Assets/Shaders/Custom/Lit MultiLight" {
 	Properties{
 		_TintColor("Tint Color", Color) = (0.5,0.5,0.5,0.5)
 		_MainTex("Base (RGB)", 2D) = "white" {}
@@ -123,5 +123,5 @@ Shader "Custom/Lit MultiLight" {
 			ENDCG
 		}
 			Fallback "Custom/Lit Alpha Blend Shadow Fallback"
-				CustomEditor "EMMaterialInspector"
+			CustomEditor "EMMaterialInspector"
 }
