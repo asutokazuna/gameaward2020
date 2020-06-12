@@ -9,9 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7367843279089980648}
-  - component: {fileID: 1631595603076577458}
   m_Layer: 0
-  m_Name: Crack1
+  m_Name: Crack4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,32 +25,13 @@ Transform:
   m_GameObject: {fileID: 1707183130494639512}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.001, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.6, y: 1, z: 1.2}
   m_Children:
   - {fileID: 6013846350965834713}
   - {fileID: 9221242820775852926}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &1631595603076577458
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1707183130494639512}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: be24119ace29ee3438ac31ac1ab93868, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2078357957148164435
 GameObject:
   m_ObjectHideFlags: 0
@@ -80,8 +60,8 @@ Transform:
   m_GameObject: {fileID: 2078357957148164435}
   m_LocalRotation: {x: 0.000000044703484, y: -0.00000008381903, z: -0.000000029802322,
     w: 1}
-  m_LocalPosition: {x: 0, y: 0.00009999995, z: 0}
-  m_LocalScale: {x: 0.00095, y: 0.00095, z: 0.0009500001}
+  m_LocalPosition: {x: 0, y: 0.0001, z: 0}
+  m_LocalScale: {x: 0.00095, y: 0.00095, z: 0.00095}
   m_Children: []
   m_Father: {fileID: 7367843279089980648}
   m_RootOrder: 1
@@ -112,7 +92,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 682e6f62945b7ef40b55b2e67024c724, type: 2}
+  - {fileID: 2100000, guid: 4f8d8ff81262fde429c58767690372de, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -146,8 +126,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _setColor:
-  - {r: 0.8867924, g: 0.6314274, b: 0.33882165, a: 0.7176471}
-  - {r: 0.9433962, g: 0.88849616, b: 0.37824848, a: 0.5254902}
+  - {r: 0.81960785, g: 0.4448635, b: 0.011764692, a: 0.7176471}
+  - {r: 0.8301887, g: 0.7665479, b: 0.14489143, a: 0.5254902}
   _setColorCurve:
     serializedVersion: 2
     m_Curve:
@@ -232,7 +212,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 682e6f62945b7ef40b55b2e67024c724, type: 2}
+  - {fileID: 2100000, guid: 4f8d8ff81262fde429c58767690372de, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -266,8 +246,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _setColor:
-  - {r: 0.8773585, g: 0.19450872, b: 0.20113842, a: 1}
-  - {r: 0.8962264, g: 0.35315746, b: 0.19023676, a: 1}
+  - {r: 0.8207547, g: 0.011614433, b: 0.020759331, a: 1}
+  - {r: 0.8679245, g: 0.2018858, b: 0, a: 1}
   _setColorCurve:
     serializedVersion: 2
     m_Curve:
