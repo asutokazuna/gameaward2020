@@ -15,7 +15,6 @@ public class FootSmoke : MonoBehaviour
 {
     // 変数宣言
     [SerializeField] private ParticleSystem _footSmoke = default;     //!< 移動時のパーティクルシステム
-    public PlayerAnim                       _animation = default;     //!< プレイヤーのアニメーション
     private Map                             _map;                     //!< マップ情報
     E_OBJECT_MODE                           _oldState;                //!< プレイヤーの前回の情報取得用
 
@@ -33,7 +32,8 @@ public class FootSmoke : MonoBehaviour
      */
     void Update()
     {
-        if (_animation.GetPlayerState() == PlayerAnim.PlayerState.E_WALK ||
+        if (this.transform.parent.parent.parent.GetComponent<Player>()._mode == E_OBJECT_MODE.MOVE ||
+            this.transform.parent.parent.parent.GetComponent<Player>()._mode == E_OBJECT_MODE.ROTATE ||
             this.transform.parent.parent.parent.GetComponent<Player>()._mode == E_OBJECT_MODE.DONT_MOVE) 
         {// プレイヤーが足踏み
             if (!_footSmoke.isEmitting)
@@ -49,7 +49,7 @@ public class FootSmoke : MonoBehaviour
                 _footSmoke.Play();
             }
         }
-        else if(_animation.GetPlayerState() == PlayerAnim.PlayerState.E_WAIT)
+        else if(this.transform.parent.parent.parent.GetComponent<Player>()._mode == E_OBJECT_MODE.WAIT)
         {// プレイヤーが待機アニメーションになったら
             if (_footSmoke.isEmitting)
             {// 停止
