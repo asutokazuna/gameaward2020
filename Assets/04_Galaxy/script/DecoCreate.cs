@@ -13,7 +13,7 @@ public class DecoCreate : MonoBehaviour
 
     private SceneMgr _sceneManager = default;
 
-    [SerializeField]
+    
     private E_SCENE _sceneID;
         // Start is called before the first frame update
     void Start()
@@ -22,6 +22,8 @@ public class DecoCreate : MonoBehaviour
         _deco = (GameObject)Resources.Load("deco/" + _decoName);
 
         _sceneManager = GameObject.FindWithTag("SceneManager").GetComponent<SceneMgr>();
+
+        _sceneID = _targetObj.GetComponent<StageID>()._stageID;
     }
 
     // Update is called once per frame
