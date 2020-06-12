@@ -33,10 +33,15 @@ public class MenuUI : MonoBehaviour
     private bool        _isKey = false;         //!< キー入力フラグ
     private int         _selectMenu = 0;        //!< 現在選ばれているメニュー管理用
     private Controller  _input;                 //!< 入力取得用
+    private AudioSource _audioSource;           //!< 音再生管理
+    public  AudioClip   _SEPopUp;               //!< ポップアップ音
+    public  AudioClip   _SESelect;              //!< 選択音
+    public  AudioClip   _SEDecision;            //!< 決定音
 
     // Start is called before the first frame update
     void Start()
     {
+        _audioSource = GetComponent<AudioSource>();
         _sceneManager = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>();
         _input = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();
     }
@@ -49,6 +54,8 @@ public class MenuUI : MonoBehaviour
         {
             if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
             {
+                _audioSource.PlayOneShot(_SESelect);
+
                 _setMenuImage[_selectMenu].color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
                 _selectMenu--;
 
@@ -61,6 +68,8 @@ public class MenuUI : MonoBehaviour
             }
             else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
             {
+                _audioSource.PlayOneShot(_SESelect);
+
                 _setMenuImage[_selectMenu].color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
                 _selectMenu++;
 
@@ -72,10 +81,14 @@ public class MenuUI : MonoBehaviour
             }
             else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
             {
+                _audioSource.PlayOneShot(_SEDecision);
+
                 SetMenu();
             }
             else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y))
             {
+                _audioSource.PlayOneShot(_SEPopUp);
+
                 _menuObj.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
                 for (int i = 0; i < _setMenuImage.Length; i++)
                 {
@@ -98,6 +111,7 @@ public class MenuUI : MonoBehaviour
         {
             if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y))
             {
+                _audioSource.PlayOneShot(_SEPopUp);
                 _isMenu = true;
                 _selectMenu = 0;
                 _menuObj.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
