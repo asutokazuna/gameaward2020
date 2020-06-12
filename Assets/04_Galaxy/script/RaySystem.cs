@@ -37,6 +37,8 @@ public class RaySystem : MonoBehaviour
     public AudioClip _SEStart;
     AudioSource _audioSource;
 
+    bool _firstSound = false;// フェード中にならないよう
+
     // Start is called before the first frame update
     void Start()
     {
@@ -124,8 +126,12 @@ public class RaySystem : MonoBehaviour
                     _rayTarget.LandMove(true);
                     if (_rayTarget != _oldRayTarget)
                     {
-                        _audioSource.PlayOneShot(_SECol);
-                        _oldRayTarget = _rayTarget;
+                        if (_firstSound != false)
+                        {
+                            _audioSource.PlayOneShot(_SECol);
+                        }
+                            _oldRayTarget = _rayTarget;
+                            _firstSound = true;
                     }
                 }
 
@@ -154,6 +160,7 @@ public class RaySystem : MonoBehaviour
                 pointer.transform.position = new Vector3(0.0f, 0.0f, 0.0f); //マスクとあたった場合
                 SetID(0);
                 _rayTarget.LandMove(false);
+                _oldRayTarget = null;
             }
 
             // Debug.Log(Vector3.Distance(target.point, transform.position));
