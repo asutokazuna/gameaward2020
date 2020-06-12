@@ -11,10 +11,10 @@ using UnityEngine;
 public class TrampolineAnim : MonoBehaviour
 {
     // アニメーション管理用
-    Animator    _TPAnimator;        //!< アニメーター取得用
-    bool        _startTPLoop;       //!< アニメーション開始フラグ
-    int         _countShrink;       //!< 最後に揺れる回数カウント
-    public int  _maxShrink;         //!< 最後に揺れる回数
+    private Animator    _TPAnimator;        //!< アニメーター取得用
+    private bool        _startTPLoop;       //!< アニメーション開始フラグ
+    private int         _countShrink;       //!< 最後に揺れる回数カウント
+    public  int         _maxShrink;         //!< 最後に揺れる回数
 
     // Start is called before the first frame update
     void Start()
@@ -37,8 +37,12 @@ public class TrampolineAnim : MonoBehaviour
 
     void StartWaitTPAnim()
     {
-        _TPAnimator.SetBool("FinishWaitTP", false);     // アニメータにセット
-        _TPAnimator.SetBool("StartWaitTP", true);       // アニメータにセット
+        _TPAnimator.SetBool("FinishTP", false);         // アニメータにセット
+        _TPAnimator.SetBool("StartWaitTP", true);
+        _TPAnimator.SetBool("Jump", false);
+        _countShrink = 0;
+        _TPAnimator.SetInteger("Count", _countShrink);
+        _TPAnimator.speed = 1.1f;
     }
 
     /**
@@ -50,21 +54,7 @@ public class TrampolineAnim : MonoBehaviour
     {
         _TPAnimator.SetBool("StartWaitTP", false);     // アニメータにセット
         _TPAnimator.SetBool("StartJumpTP", true);      // アニメータにセット
-        _TPAnimator.SetBool("Jump", true);          // アニメータにセット
-        _countShrink = 0;
-        _TPAnimator.SetInteger("Count", _countShrink);
-        //Invoke("FinishTP", 0.2f);
-    }
-
-    /**
-    * @brief        トランポリンジャンプのアニメーションの終了をセット
-    * @return       なし
-    * @details      トランポリンジャンプの終了をセットする関数です
-    */
-    void FinishJumpTP()
-    {
-        _TPAnimator.SetBool("StartJumpTP", false);     // アニメータにセット
-        //_TPAnimator.SetBool("FinishJumpTP", true);     // アニメータにセット
+        _TPAnimator.SetBool("Jump", true);             // アニメータにセット
     }
 
     /**
