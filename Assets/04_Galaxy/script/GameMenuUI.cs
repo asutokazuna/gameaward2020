@@ -35,10 +35,15 @@ public class GameMenuUI : MonoBehaviour
     private Controller          _input;             //!< 入力取得用
     private Map                 _map;               //!< ゲームオーバーフラグ取得用
     private bool                _gameover;          //!< ゲームオーバーフラグ取得用
+    private AudioSource         _audioSource;       //!< 音再生管理
+    public  AudioClip           _SEPopUp;           //!< ポップアップ音
+    public  AudioClip           _SESelect;          //!< 選択音
+    public  AudioClip           _SEDecision;        //!< 決定音
 
     // Start is called before the first frame update
     void Start()
     {
+        _audioSource = GetComponent<AudioSource>();
         _sceneManager = GameObject.FindGameObjectWithTag("SceneManager").GetComponent<SceneMgr>();
         _input = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();
         _map = GameObject.FindWithTag("Map").GetComponent<Map>();
@@ -52,6 +57,8 @@ public class GameMenuUI : MonoBehaviour
         {
             if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
             {
+                _audioSource.PlayOneShot(_SESelect);
+
                 _setMenuImage[_selectMenu].color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
                 _selectMenu--;
 
@@ -75,6 +82,8 @@ public class GameMenuUI : MonoBehaviour
             }
             else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
             {
+                _audioSource.PlayOneShot(_SESelect);
+
                 _setMenuImage[_selectMenu].color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
                 _selectMenu++;
 
@@ -95,6 +104,8 @@ public class GameMenuUI : MonoBehaviour
             }
             else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
             {
+                _audioSource.PlayOneShot(_SEDecision);
+
                 SetMenu();
             }
             else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y))
@@ -102,6 +113,8 @@ public class GameMenuUI : MonoBehaviour
                 // ゲームオーバーかどうかチェック
                 if (!_gameover)
                 {
+                    _audioSource.PlayOneShot(_SEPopUp);
+
                     _menuObj.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
                     for (int i = 0; i < _setMenuImage.Length; i++)
                     {
@@ -129,6 +142,8 @@ public class GameMenuUI : MonoBehaviour
                 _gameover = false;
                 if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y))
                 {
+                    _audioSource.PlayOneShot(_SEPopUp);
+
                     _isMenu = true;
                     _selectMenu = 0;
                     _menuObj.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
