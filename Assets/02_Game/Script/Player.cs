@@ -469,6 +469,12 @@ public class Player : BaseObject
      */
     public void Put()
     {
+        if (_map.GetObject(new Vector3Int(_position.x, _position.y + 1, _position.z))._myObject == E_OBJECT.BLOCK_TANK &&
+            _map.GetObject(new Vector3Int(_position.x, _position.y + 2, _position.z))._myObject == E_OBJECT.PLAYER_01)
+        {
+            return;
+        }
+
         bool flag = false;
         Vector3Int putPos;              //!< 降ろすオブジェクトを探索するための座標
         putPos = new Vector3Int( _position.x + _direct.x, _position.y + _direct.y + 1, _position.z + _direct.z);
