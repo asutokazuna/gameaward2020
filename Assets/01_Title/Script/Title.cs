@@ -25,7 +25,8 @@ public class Title : MonoBehaviour
             _demoPlayState = GameObject.Find("DemoPlayer").GetComponent<PlayDemo>()._playMovie;
             if (!_demoPlayState)
             {
-                if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isAnyTrigger())
+                if (!_ChangeScene &&
+                    GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>().isAnyTrigger())
                 {
                     _ChangeScene = true;
                     _audioSource.PlayOneShot(_SEStart);
