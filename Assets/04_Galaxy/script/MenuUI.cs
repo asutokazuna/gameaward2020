@@ -52,7 +52,13 @@ public class MenuUI : MonoBehaviour
         // メニュー画面が開いてる場合
         if (_isMenu)
         {
-            if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
+            
+            if (_isKey) // キーの入力終了
+            {
+                _isMenu = false;
+                _isKey = false;
+            }
+            else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
             {
                 _audioSource.PlayOneShot(_SESelect);
 
@@ -81,6 +87,7 @@ public class MenuUI : MonoBehaviour
             }
             else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
             {
+                _isKey = true;
                 _audioSource.PlayOneShot(_SEDecision);
 
                 SetMenu();
@@ -95,15 +102,6 @@ public class MenuUI : MonoBehaviour
                     _setMenuImage[i].color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
                 }
                 _isKey = true;
-            }
-            else
-            {
-                // キーの入力が終わってから
-                if(_isKey)
-                {
-                    _isMenu = false;
-                    _isKey = false;
-                }
             }
         }
         // メニュー画面が閉じてる場合
