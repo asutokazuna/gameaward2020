@@ -31,6 +31,12 @@ public class RaySystem : MonoBehaviour
     private GameObject _targetObj = default;
     private GameObject _OldTargetObj = default;
 
+    private RayTarget _oldRayTarget = default;//SE多重再生回避用
+    //SE再生用変数
+    public AudioClip _SECol;
+    public AudioClip _SEStart;
+    AudioSource _audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +45,8 @@ public class RaySystem : MonoBehaviour
         Ring_FX = (GameObject)Resources.Load("Ring_FX");
 
         _menuUI = GameObject.Find("Menu").GetComponent<MenuUI>();
+
+        _audioSource = GameObject.Find("SoundManager").GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -108,13 +116,17 @@ public class RaySystem : MonoBehaviour
                 pointer.transform.position = _newTarget.point;  //当たった場合
                 pointer.transform.LookAt(transform.position);
 
-                
 
-                if(_newTarget.collider.gameObject.GetComponent<RayTarget>())
+                if (_newTarget.collider.gameObject.GetComponent<RayTarget>())
                 {
                     _rayTarget = _newTarget.collider.gameObject.GetComponent<RayTarget>();
                     _targetObj = _rayTarget._targetObj;
                     _rayTarget.LandMove(true);
+                    if (_rayTarget != _oldRayTarget)
+                    {
+                        _audioSource.PlayOneShot(_SECol);
+                        _oldRayTarget = _rayTarget;
+                    }
                 }
 
                 if (_targetObj.GetComponent<StageID>())
@@ -129,6 +141,8 @@ public class RaySystem : MonoBehaviour
                             .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
                         {
                             //_sceneManager.SetScene(E_SCENE._1_1);
+                            _audioSource.PlayOneShot(_SEStart);
+                            
                             _sceneManager.SetScene(GetID());
                             _isSelect = true;
                         }
