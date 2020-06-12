@@ -38,11 +38,11 @@ public class PlayerAnim : MonoBehaviour
     }
 
     // アニメーション管理用
-    Animator    _playerAnimator;        //!< アニメーター取得用
-    PlayerState _playerState;           //!< プレイヤーの状態管理用
-    WaitState[] _waitState;
-    TrampolineAnim _trampolineAnim;
-    public bool _faintFlag;
+    private Animator        _playerAnimator;        //!< アニメーター取得用
+    private PlayerState     _playerState;           //!< プレイヤーの状態管理用
+    private WaitState[]     _waitState;             //!< アニメーションの終了管理用
+    private TrampolineAnim  _trampolineAnim;        //!< トランポリンアニメーションのセット
+    public  bool            _faintFlag;             //!< 気絶フラグ
 
     // Start is called before the first frame update
     void Start()
@@ -53,6 +53,7 @@ public class PlayerAnim : MonoBehaviour
         _playerAnimator.SetBool("Finish", true);
         _waitState = _playerAnimator.GetBehaviours<WaitState>();
         _faintFlag = false;
+        Random.InitState(System.DateTime.Now.Millisecond);
     }
 
     // Update is called once per frame
@@ -82,13 +83,16 @@ public class PlayerAnim : MonoBehaviour
         // アニメーションの変更を受け付けたか確認
         if (_playerState != state)
         {
-            Debug.Log("Old : " + _playerState);     // ひとつ前の状態をログで確認
+            if(PlayerState.E_HAPPY == state)
+            {
+                int nRand = Random.Range(0, 2);
+
+                _playerAnimator.SetInteger("Clear", nRand);
+            }
 
             // アニメーションを更新
             _playerState = state;                                           // 次のアニメーションをセット
             _playerAnimator.SetInteger("PlayerState", (int)_playerState);   // アニメータにセット
-
-            Debug.Log(_playerState);    // 現在の状態をログで確認
         }
     }
 
