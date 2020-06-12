@@ -9,23 +9,40 @@ public class DecoCreate : MonoBehaviour
     private GameObject _targetObj;
     private GameObject _deco;
 
-    private bool _test;
+    private bool _isFirst = true;
+
+    private SceneMgr _sceneManager = default;
+
+    [SerializeField]
+    private E_SCENE _sceneID;
         // Start is called before the first frame update
     void Start()
     {
         _targetObj = GetComponent<RayTarget>()._targetObj;
         _deco = (GameObject)Resources.Load("deco/" + _decoName);
+
+        _sceneManager = GameObject.FindWithTag("SceneManager").GetComponent<SceneMgr>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(!_test)
+        if(_isFirst && _sceneManager.GetStageClear(_sceneID))
         {
-            _test = true;
+            _isFirst = false;
             GameObject _decoObj;
             _decoObj = Instantiate(_deco, transform.position, _targetObj.transform.rotation);
             _decoObj.transform.parent = _targetObj.transform;
         }
+
+#if UNITY_EDITOR
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            GameObject _decoObj;
+            _decoObj = Instantiate(_deco, transform.position, _targetObj.transform.rotation);
+            _decoObj.transform.parent = _targetObj.transform;
+        }
+#endif
+
     }
 }

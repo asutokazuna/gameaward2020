@@ -16,6 +16,9 @@ public class BulbCreate : MonoBehaviour
 
     public bool ParticleSwitch;
 
+    public AudioClip _SEwaterIn;
+    private AudioSource _audioSource = default;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +26,8 @@ public class BulbCreate : MonoBehaviour
         bFill = false;
         script = this.GetComponent<WaterFlow>();
         this.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -81,6 +86,8 @@ public class BulbCreate : MonoBehaviour
                 GameObject _instantObj;
                 _instantObj = Instantiate(obj, pos, Quaternion.Euler(-90, 0, 0));
                 _instantObj.GetComponent<BulbDestroy>()._parent = this.gameObject;
+
+                _audioSource.PlayOneShot(_SEwaterIn);
             }
         }
 
