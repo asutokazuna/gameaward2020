@@ -27,7 +27,7 @@ public class BulbCreate : MonoBehaviour
         script = this.GetComponent<WaterFlow>();
         this.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
 
-        _audioSource = GameObject.Find("Soundmanage").GetComponent<AudioSource>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
