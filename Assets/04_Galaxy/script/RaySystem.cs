@@ -138,11 +138,11 @@ public class RaySystem : MonoBehaviour
                     if (!_menuUI._isMenu)
                     {
                         if (GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>()
-                            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A))
+                            .isInput(E_INPUT_MODE.TRIGGER, E_INPUT.A) &&
+                            !_isSelect)
                         {
                             //_sceneManager.SetScene(E_SCENE._1_1);
                             _audioSource.PlayOneShot(_SEStart);
-                            
                             _sceneManager.SetScene(GetID());
                             _isSelect = true;
                         }
