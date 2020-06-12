@@ -34,7 +34,7 @@ public class GameMenuUI : MonoBehaviour
     private int                 _selectMenu = 0;    //!< 現在選ばれているメニュー管理用
     private Controller          _input;             //!< 入力取得用
     private Map                 _map;               //!< ゲームオーバーフラグ取得用
-    private bool                _gameover;          //!< ゲームオーバーフラグ取得用
+    private bool                _gameover;          //!< ゲームオーバーフラグ
     private AudioSource         _audioSource;       //!< 音再生管理
     public  AudioClip           _SEPopUp;           //!< ポップアップ音
     public  AudioClip           _SESelect;          //!< 選択音
@@ -139,18 +139,22 @@ public class GameMenuUI : MonoBehaviour
             // ゲームオーバーかどうかチェック
             if (!_map._gameOver)
             {
-                _gameover = false;
-                if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y))
+                // クリアシーンかどうかチェック
+                if (!_map._gameClear)
                 {
-                    _audioSource.PlayOneShot(_SEPopUp);
-
-                    _isMenu = true;
-                    _selectMenu = 0;
-                    _menuObj.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-                    _setMenuImage[0].color = new Color(1.0f, 1.0f, 1.0f, 1.0f); // つづける
-                    for (int i = 1; i < _setMenuImage.Length; i++)
+                    _gameover = false;
+                    if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y))
                     {
-                        _setMenuImage[i].color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+                        _audioSource.PlayOneShot(_SEPopUp);
+
+                        _isMenu = true;
+                        _selectMenu = 0;
+                        _menuObj.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+                        _setMenuImage[0].color = new Color(1.0f, 1.0f, 1.0f, 1.0f); // つづける
+                        for (int i = 1; i < _setMenuImage.Length; i++)
+                        {
+                            _setMenuImage[i].color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+                        }
                     }
                 }
             }
