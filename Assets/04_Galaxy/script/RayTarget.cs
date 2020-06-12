@@ -13,14 +13,17 @@ public class RayTarget : MonoBehaviour
     private bool _isSelect = false;
     [SerializeField]
     private float _count;
+
+    public Quaternion _rotate;
     // Start is called before the first frame update
     void Start()
     {
         _dirVector = transform.parent.parent.transform.position - _targetObj.transform.position;
         _startPos = _targetObj.transform.localPosition;
 
-        _movePos = Vector3.MoveTowards(_targetObj.transform.localPosition, new Vector3(0,0,0), -0.04f);
-
+        _movePos = Vector3.MoveTowards(_targetObj.transform.localPosition, 
+                            _targetObj.transform.localRotation * new Vector3(0, 1, 0), 0.04f);
+        _rotate = _targetObj.transform.localRotation;
     }
 
 
