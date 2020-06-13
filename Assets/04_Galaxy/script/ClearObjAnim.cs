@@ -19,12 +19,15 @@ public class ClearObjAnim : MonoBehaviour
     private int                     _count;         //!< 順番管理用
     private ClearObject             _clearObject;   //!< フラグ取得用
     private StageID                 _stageID;       //!< ステージID取得
+    private AudioSource             _audioSource;   //!< 音再生管理
+    public  AudioClip               _SEPop;         //!< 登場する時の音
 
     // Start is called before the first frame update
     void Start()
     {
         // 初期化
         _clearObject = GameObject.Find("ClearObjectManager").GetComponent<ClearObject>();
+        _audioSource = GetComponent<AudioSource>();
         _stageID = GetComponentInParent<StageID>();
         _count = 0;
 
@@ -52,6 +55,7 @@ public class ClearObjAnim : MonoBehaviour
     */
     void SetObject()
     {
+        _audioSource.PlayOneShot(_SEPop);
         _setObject[_count].SetBool("Set", true);
         _count++;
     }
