@@ -123,9 +123,6 @@ public class SceneMgr : MonoBehaviour
     public static bool _tutorial;
 
     public bool _stageReroad = false;     //!< スタート演出カット用
-
-    public Material[] _fadeMat = new Material[7];   //!<使用するマテリアルここに置いとくことにした
-
     void Awake()
     {
         if (_instance == null)
@@ -190,7 +187,6 @@ public class SceneMgr : MonoBehaviour
         {// シーンの切り替えが発生してないで
             return;
         }
-        SetFadeType();
         _oldScene   = _nowScene;        // 過去シーンの保存
         _reroad     = false;            // リロードしないよ
 
@@ -204,47 +200,6 @@ public class SceneMgr : MonoBehaviour
     public void OnFinishedCoroutine()
     {
         SceneManager.LoadScene((int)_nowScene);
-    }
-
-    /**
-     * @brief 使用フェード指定
-     * @return　なし
-     */
-    private void SetFadeType()
-    {
-        if(_oldScene == E_SCENE.TITLE)
-        {
-            _fadeScript.SetFadeMat(_fadeMat[0]);
-        }
-        else if(_oldScene == E_SCENE.STAGE_SELECT)
-        {
-            //_fadeScript.SetFadeMat(_fadeMat[GameObject.Find("Main Camera").GetComponent<CameraMove>()._currentID]);
-            _fadeScript.SetFadeMat(_fadeMat[0]);
-        }
-        else if (_oldScene < E_SCENE._2_1)
-        {
-            _fadeScript.SetFadeMat(_fadeMat[1]);
-        }
-        else if (_oldScene < E_SCENE._3_1)
-        {
-            _fadeScript.SetFadeMat(_fadeMat[2]);
-        }
-        else if (_oldScene < E_SCENE._4_1)
-        {
-            _fadeScript.SetFadeMat(_fadeMat[3]);
-        }
-        else if (_oldScene < E_SCENE._5_1)
-        {
-            _fadeScript.SetFadeMat(_fadeMat[4]);
-        }
-        else if (_oldScene < E_SCENE._6_1)
-        {
-            _fadeScript.SetFadeMat(_fadeMat[5]);
-        }
-        else
-        {
-            _fadeScript.SetFadeMat(_fadeMat[6]);
-        }
     }
 
 
