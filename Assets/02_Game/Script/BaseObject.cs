@@ -387,6 +387,7 @@ public class BaseObject : MonoBehaviour
 
     public void Waremasu()
     {
+        GameObject.FindGameObjectWithTag("Map").GetComponent<Map>().SE();
         BlockDestroy _blockDestroy = this.gameObject.AddComponent<BlockDestroy>();
         _blockDestroy.destroyObject(transform.position); //箱破壊の処理
         transform.DOScale(Vector3.zero, _timeScale);
