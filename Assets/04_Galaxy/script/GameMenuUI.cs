@@ -25,20 +25,21 @@ public class GameMenuUI : MonoBehaviour
         E_FINISH,
     }
 
-    [SerializeField] Image      _menuObj;           //!< メニュー表示管理用
-    [SerializeField] Image[]    _setMenuImage;      //!< メニュー項目表示管理用
-    [SerializeField] MenuType[] _setMenuType;       //!< メニュー項目内容管理用
-    private SceneMgr            _sceneManager;      //!< シーンマネージャー取得用
-    public  bool                _isMenu = false;    //!< メニューフラグ
-    private bool                _isKey = false;     //!< キー入力フラグ
-    private int                 _selectMenu = 0;    //!< 現在選ばれているメニュー管理用
-    private Controller          _input;             //!< 入力取得用
-    private Map                 _map;               //!< ゲームオーバーフラグ取得用
-    private bool                _gameover;          //!< ゲームオーバーフラグ
-    private AudioSource         _audioSource;       //!< 音再生管理
-    public  AudioClip           _SEPopUp;           //!< ポップアップ音
-    public  AudioClip           _SESelect;          //!< 選択音
-    public  AudioClip           _SEDecision;        //!< 決定音
+    [SerializeField] Image      _menuObj;               //!< メニュー表示管理用
+    [SerializeField] Image[]    _setMenuImage;          //!< メニュー項目表示管理用
+    [SerializeField] MenuType[] _setMenuType;           //!< メニュー項目内容管理用
+    private SceneMgr            _sceneManager;          //!< シーンマネージャー取得用
+    public  bool                _isMenu = false;        //!< メニューフラグ
+    private bool                _isKey = false;         //!< キー入力フラグ
+    private bool                _isDecision = false;    //!< メニュー決定フラグ
+    private int                 _selectMenu = 0;        //!< 現在選ばれているメニュー管理用
+    private Controller          _input;                 //!< 入力取得用
+    private Map                 _map;                   //!< ゲームオーバーフラグ取得用
+    private bool                _gameover;              //!< ゲームオーバーフラグ
+    private AudioSource         _audioSource;           //!< 音再生管理
+    public  AudioClip           _SEPopUp;               //!< ポップアップ音
+    public  AudioClip           _SESelect;              //!< 選択音
+    public  AudioClip           _SEDecision;            //!< 決定音
 
     // Start is called before the first frame update
     void Start()
@@ -57,8 +58,11 @@ public class GameMenuUI : MonoBehaviour
         {
             if (_isKey) // キーの入力終了
             {
-                _isMenu = false;
-                _isKey = false;
+                if (!_isDecision)
+                {
+                    _isMenu = false;
+                    _isKey = false;
+                }
             }
             else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
             {
@@ -136,8 +140,8 @@ public class GameMenuUI : MonoBehaviour
             // ゲームオーバーかどうかチェック
             if (!_map._gameOver)
             {
-                // クリアシーンかどうかチェック
-                if (!_map._gameClear)
+                // クリアシーン・チュートリアルかどうかチェック
+                if (!_map._gameClear && !_sceneManager.GetTutorial())
                 {
                     _gameover = false;
                     if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.Y))
@@ -145,6 +149,7 @@ public class GameMenuUI : MonoBehaviour
                         _audioSource.PlayOneShot(_SEPopUp);
 
                         _isMenu = true;
+                        _isDecision = false;
                         _selectMenu = 0;
                         _menuObj.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
                         _setMenuImage[0].color = new Color(1.0f, 1.0f, 1.0f, 1.0f); // つづける
@@ -159,6 +164,7 @@ public class GameMenuUI : MonoBehaviour
             {
                 _gameover = true;
                 _isMenu = true;
+                _isDecision = false;
                 _selectMenu = 1;
                 _setMenuImage[1].color = new Color(1.0f, 1.0f, 1.0f, 1.0f); 
                 for (int i = 2; i < _setMenuImage.Length; i++)
@@ -187,15 +193,19 @@ public class GameMenuUI : MonoBehaviour
                 _isKey = true;
                 break;
             case MenuType.E_RETRY:  // リトライ
+                _isDecision = true;
                 _sceneManager.SetScene(E_SCENE_MODE.RELOAD);
                 break;
             case MenuType.E_STAGE:  // ステージセレクトへ遷移
+                _isDecision = true;
                 _sceneManager.SetScene(E_SCENE.STAGE_SELECT);
                 break;
             case MenuType.E_TITLE:  // タイトルへ遷移
+                _isDecision = true;
                 _sceneManager.SetScene(E_SCENE.TITLE);
                 break;
             case MenuType.E_FINISH: // ゲーム終了
+                _isDecision = true;
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
 #endif
