@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: NormalFade
-  m_Shader: {fileID: 4800000, guid: fd9de91092ef94a4f93eac901acd1378, type: 3}
+  m_Name: WipeFade06
+  m_Shader: {fileID: 4800000, guid: a3cfaf4fafbf3fe4aa8e63189ba98909, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -23,7 +23,13 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MaskTex:
+        m_Texture: {fileID: 2800000, guid: 914104ae4fdd80144a82d2db1eda329b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Timer: 0.25000072
+    - _Reverse: 0
+    - _Threshold: 0.2
+    - _Timer: 0.00000067055225
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _FillColor: {r: 0, g: 0, b: 0, a: 1}
