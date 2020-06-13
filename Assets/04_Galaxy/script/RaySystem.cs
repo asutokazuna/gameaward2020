@@ -85,6 +85,7 @@ public class RaySystem : MonoBehaviour
             if(_stageID != 0)
             {
                 _targetObj.GetComponent<OutlineOnOff>().OutlineOn();
+                _rayTarget.LandMove(true);
 
                 _pointerTimer = 0.0f;
                 pointer.GetComponent<ParticleSystem>().Stop();
@@ -97,6 +98,7 @@ public class RaySystem : MonoBehaviour
             else
             {
                 _OldTargetObj.GetComponent<OutlineOnOff>().OutlineOff();
+                _rayTarget.LandMove(false);
             }
         }
 
@@ -123,7 +125,6 @@ public class RaySystem : MonoBehaviour
                 {
                     _rayTarget = _newTarget.collider.gameObject.GetComponent<RayTarget>();
                     _targetObj = _rayTarget._targetObj;
-                    _rayTarget.LandMove(true);
                     if (_rayTarget != _oldRayTarget)
                     {
                         if (_firstSound != false)
@@ -159,7 +160,6 @@ public class RaySystem : MonoBehaviour
             {
                 pointer.transform.position = new Vector3(0.0f, 0.0f, 0.0f); //マスクとあたった場合
                 SetID(0);
-                _rayTarget.LandMove(false);
                 _oldRayTarget = null;
             }
 
