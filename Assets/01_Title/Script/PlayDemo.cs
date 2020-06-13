@@ -9,7 +9,7 @@ public class PlayDemo : MonoBehaviour
     public bool _playMovie = false;
     bool _changeScene;
     float _timer = 0;
-    int _waitTime = 6;
+    int _waitTime = 10;
     VideoPlayer _videoPlayer;   // videoPlayerコンポーネントの取得
     Animator _fadeAnim;
 
