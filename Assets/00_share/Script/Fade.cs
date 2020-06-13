@@ -15,8 +15,8 @@ using UnityEngine.Events;
  */
 public class Fade : MonoBehaviour
 {
-    Material _appliedMat = default;
-    SceneMgr _sceneMgr;
+    Material _appliedMat;
+    [SerializeField] Material[] _fadeMat = default;
     [Range(0, 1)] [SerializeField] float _fadeSpeed = default;
 
 
@@ -26,8 +26,7 @@ public class Fade : MonoBehaviour
     */
     void Start()
     {
-        _sceneMgr = GameObject.Find("SceneManager").GetComponent<SceneMgr>();
-        _appliedMat = _sceneMgr._fadeMat[0];
+        _appliedMat = _fadeMat[0];
         _appliedMat.SetFloat("_Timer", 0);
         StartFadeIn();
     }
@@ -71,7 +70,7 @@ public class Fade : MonoBehaviour
     }
     public IEnumerator FadeIn()
     {
-        for (float i = 1; i >= 0.0f; i -= _fadeSpeed)
+        for (float i = 1; i > 0.0f; i -= _fadeSpeed)
         {
             _appliedMat.SetFloat("_Timer", Mathf.Clamp(i, 0, 1.0f));
             yield return null;
@@ -82,9 +81,9 @@ public class Fade : MonoBehaviour
     * @brief フェードタイプ変更
     * @return なし
     */
-    public void SetFadeMat(Material mat)
+    public void SetFadeType(int Type)
     {
-        _appliedMat = mat;
+        _appliedMat = _fadeMat[Type];
     }
 
     /**
