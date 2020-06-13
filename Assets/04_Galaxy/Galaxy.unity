@@ -8631,7 +8631,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -43.999973, y: 19.8}
+  m_AnchoredPosition: {x: 40, y: 19.8}
   m_SizeDelta: {x: 400, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &905949418
@@ -11993,7 +11993,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 39, y: 17.00004}
+  m_AnchoredPosition: {x: -43, y: 17.00004}
   m_SizeDelta: {x: 400, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1020519489
@@ -28304,6 +28304,14 @@ MonoBehaviour:
   _reroad: 0
   _isDebug: 0
   _stageReroad: 0
+  _fadeMat:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!4 &1634372079
 Transform:
   m_ObjectHideFlags: 0
@@ -29690,9 +29698,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55dfbf1054c793e44a9f83d48ec49f69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fadeMat:
-  - {fileID: 2100000, guid: cda7322c3ada9bc4f865e376ef45c0c4, type: 2}
-  - {fileID: 2100000, guid: 77747dc2ff6cd884886e97b52e5f1bce, type: 2}
   _fadeSpeed: 0.01
 --- !u!1001 &1801881567
 PrefabInstance:
