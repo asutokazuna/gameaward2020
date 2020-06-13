@@ -473,7 +473,6 @@ public class Map : MonoBehaviour
         {// 水槽の場合
             _tankBlock[haveObj._number].transform.parent = null;   // 親子関係を話す
             _tankBlock[haveObj._number].Fall(targetPos);
-            _audioSource.PlayOneShot(_SEBoxBreak);//SE
             UpdateMap(_tankBlock[haveObj._number]);
         }
         else if (haveObj._myObject == E_OBJECT.PLAYER_01)
@@ -482,6 +481,12 @@ public class Map : MonoBehaviour
             _player[haveObj._number].Fall(targetPos);
             UpdateMap(_player[haveObj._number]);
         }
+    }
+
+
+    public void SE()
+    {// ほんとはBaseObjectに移したかったけど、シーン60個編集はやる気力なかったからここで呼んだ許して
+        _audioSource.PlayOneShot(_SEBoxBreak);//SE
     }
 
 
