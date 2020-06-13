@@ -31,6 +31,7 @@ public class MenuUI : MonoBehaviour
     private SceneMgr    _sceneManager;          //!< シーンマネージャー取得用
     public  bool        _isMenu = false;        //!< メニューフラグ
     private bool        _isKey = false;         //!< キー入力フラグ
+    private bool        _isDecision = false;    //!< メニュー決定フラグ
     private int         _selectMenu = 0;        //!< 現在選ばれているメニュー管理用
     private Controller  _input;                 //!< 入力取得用
     private AudioSource _audioSource;           //!< 音再生管理
@@ -55,8 +56,12 @@ public class MenuUI : MonoBehaviour
             
             if (_isKey) // キーの入力終了
             {
-                _isMenu = false;
-                _isKey = false;
+                // つづける選択の場合のみ
+                if (!_isDecision)
+                {
+                    _isMenu = false;
+                    _isKey = false;
+                }
             }
             else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
             {
@@ -111,6 +116,7 @@ public class MenuUI : MonoBehaviour
             {
                 _audioSource.PlayOneShot(_SEPopUp);
                 _isMenu = true;
+                _isDecision = false;
                 _selectMenu = 0;
                 _menuObj.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
                 _setMenuImage[0].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -135,15 +141,19 @@ public class MenuUI : MonoBehaviour
                 _isKey = true;
                 break;
             case MenuType.E_RETRY:  // リトライ
+                _isDecision = true;
                 _sceneManager.SetScene(E_SCENE_MODE.RELOAD);
                 break;
             case MenuType.E_STAGE:  // ステージセレクトへ遷移
+                _isDecision = true;
                 _sceneManager.SetScene(E_SCENE.STAGE_SELECT);
                 break;
             case MenuType.E_TITLE:  // タイトルへ遷移
+                _isDecision = true;
                 _sceneManager.SetScene(E_SCENE.TITLE);
                 break;
             case MenuType.E_FINISH: // ゲーム終了
+                _isDecision = true;
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
 #endif
