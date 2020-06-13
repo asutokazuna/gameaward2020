@@ -43,7 +43,7 @@ public class ParticleManager : MonoBehaviour
 
         for (int i = 0; i < _particleNum; i++)
         {
-            if (_particle[i].lifetime <= 0.1f && !_emitParams.particle.Equals(_temp.particle))
+            if (_particle[i].remainingLifetime <= 0.1f && !_emitParams.particle.Equals(_temp.particle))
             {
                 _emitParams.particle = _particle[i];
                 //_emitParams.
