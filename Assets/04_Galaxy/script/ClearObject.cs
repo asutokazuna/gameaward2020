@@ -18,7 +18,7 @@ public class ClearObject : MonoBehaviour
     private SceneMgr                _sceneMgr;                  //!< フラグ取得用
     static  private bool[]          _isClearFlg = new bool[60]; //!< クリア演出管理フラグ
     static  private bool            _isInit = true;             //!< クリア演出管理初期化フラグ
-            public  bool            _isChange;                  //!< クリア演出管理フラグ
+            public  E_SCENE         _scene;                     //!< クリア演出管理フラグ
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +29,7 @@ public class ClearObject : MonoBehaviour
             Init(); // ゲーム全体で一度だけ行う初期化処理
         }
 
-        _isChange = false;
+        _scene = E_SCENE.TITLE;
         _sceneMgr = GameObject.Find("SceneManager").GetComponent<SceneMgr>();
 
         for (int i = (int)E_SCENE._1_1; i < (int)E_SCENE.MAX; i++) 
@@ -42,7 +42,7 @@ public class ClearObject : MonoBehaviour
             // はじめてのクリアかどうかチェック
             else if (_sceneMgr.GetStageClear((E_SCENE)i) && !_isClearFlg[i - (int)E_SCENE._1_1])
             {
-                _isChange = true;   // 演出必要
+                _scene = (E_SCENE)i;   // 演出必要
                 _isClearFlg[i - (int)E_SCENE._1_1] = true;
             }
         }

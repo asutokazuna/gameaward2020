@@ -18,12 +18,14 @@ public class ClearObjAnim : MonoBehaviour
     [SerializeField] float          _startTime;     //!< 開始時間
     private int                     _count;         //!< 順番管理用
     private ClearObject             _clearObject;   //!< フラグ取得用
+    private StageID                 _stageID;       //!< ステージID取得
 
     // Start is called before the first frame update
     void Start()
     {
         // 初期化
         _clearObject = GameObject.Find("ClearObjectManager").GetComponent<ClearObject>();
+        _stageID = GetComponentInParent<StageID>();
         _count = 0;
 
         float time;
@@ -31,7 +33,7 @@ public class ClearObjAnim : MonoBehaviour
         for (int i = 0; i < _setObject.Length; i++)
         {
             // 演出が必要かどうかチェック
-            if (_clearObject._isChange)
+            if (_stageID._stageID == _clearObject._scene)
             {
                 time = _startTime + i * 0.1f;    // タイミング計算
                 Invoke("SetObject", time);
