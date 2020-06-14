@@ -16,6 +16,7 @@ public class ParticleManager : MonoBehaviour
     private ParticleSystem _particleSys;
     private ParticleSystem.Particle[] _particle;
     public int _MaxBrightness = 2;
+    int _maxParticle;
     ParticleSystem.EmitParams _emitParams;
     ParticleSystem.EmitParams _temp;
 
@@ -27,13 +28,14 @@ public class ParticleManager : MonoBehaviour
         _particleSys = GetComponent<ParticleSystem>();
         _emitParams = default;
         _temp = default;
+        _maxParticle = _particleSys.main.maxParticles;
         //_camera = Camera.main;
     }
 
     // Update is called once per frame
     void Update()
     {
-        int _maxParticle  = _particleSys.main.maxParticles;
+        _maxParticle = _particleSys.main.maxParticles;
 
         if (_particle == null || _particle.Length < _maxParticle)
         {
@@ -43,13 +45,13 @@ public class ParticleManager : MonoBehaviour
 
         for (int i = 0; i < _particleNum; i++)
         {
-            if (_particle[i].lifetime <= 0.1f && !_emitParams.particle.Equals(_temp.particle))
+            _temp.particle = _particle[i];
+            if (_particle[i].remainingLifetime <= 0.1f && !_emitParams.particle.Equals(_temp.particle))
             {
                 _emitParams.particle = _particle[i];
                 //_emitParams.
                 _particleSys.Emit(_emitParams,(int)Random.Range(0,_MaxBrightness));
             }
-            _temp.particle = _particle[i];
         }
 
     }
