@@ -6293,7 +6293,7 @@ PrefabInstance:
     - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
-      value: 30
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
@@ -6328,7 +6328,7 @@ PrefabInstance:
     - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
       propertyPath: InitialModule.startSize.scalar
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
@@ -6373,12 +6373,12 @@ PrefabInstance:
     - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
       propertyPath: VelocityModule.x.scalar
-      value: -2
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
       propertyPath: VelocityModule.y.scalar
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
@@ -6405,10 +6405,30 @@ PrefabInstance:
       propertyPath: ShapeModule.m_Rotation.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
+        type: 3}
+      propertyPath: InitialModule.size3D
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
+        type: 3}
+      propertyPath: NoiseModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
+        type: 3}
+      propertyPath: VelocityModule.orbitalX.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
+        type: 3}
+      propertyPath: VelocityModule.orbitalY.scalar
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2426041189435493469, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.2
+      value: 2.55
       objectReference: {fileID: 0}
     - target: {fileID: 2426041189435493469, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
@@ -6418,7 +6438,7 @@ PrefabInstance:
     - target: {fileID: 2426041189435493469, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.83
+      value: 5.15
       objectReference: {fileID: 0}
     - target: {fileID: 2426041189435493469, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
@@ -6469,7 +6489,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 8f80a231f5b1cec4fb6208e5ce6fb197, type: 2}
+      objectReference: {fileID: 2100000, guid: 5ab8d98b17ec71340a3871ce162676b3, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b64f1a163eb9884cb06a48a9a12c1d2, type: 3}
 --- !u!1 &705507993
