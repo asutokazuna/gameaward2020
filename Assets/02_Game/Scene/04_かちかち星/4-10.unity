@@ -13994,22 +13994,22 @@ PrefabInstance:
     - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
       propertyPath: InitialModule.rotation3D
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
-        type: 3}
-      propertyPath: RotationModule.enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
+      propertyPath: RotationModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
+        type: 3}
       propertyPath: RotationModule.curve.scalar
-      value: 0.7853981
+      value: 1.5707963
       objectReference: {fileID: 0}
     - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
       propertyPath: RotationModule.separateAxes
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
@@ -14024,12 +14024,12 @@ PrefabInstance:
     - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
       propertyPath: InitialModule.startSpeed.minScalar
-      value: -3
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
       propertyPath: InitialModule.startSize.minScalar
-      value: 0.4
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
@@ -14045,6 +14045,16 @@ PrefabInstance:
         type: 3}
       propertyPath: InitialModule.maxNumParticles
       value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
+        type: 3}
+      propertyPath: ShapeModule.m_Scale.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2426041189435493468, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
+        type: 3}
+      propertyPath: ShapeModule.m_Scale.y
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2426041189435493469, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
@@ -14106,6 +14116,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: particle_kirakira
       objectReference: {fileID: 0}
+    - target: {fileID: 2426041189435493471, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 817cee449316ea84f81c12be9af4bd15, type: 2}
     - target: {fileID: 8887137172801805562, guid: 1b64f1a163eb9884cb06a48a9a12c1d2,
         type: 3}
       propertyPath: _MaxBrightness
