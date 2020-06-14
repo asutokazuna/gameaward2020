@@ -63,7 +63,7 @@ public class MenuUI : MonoBehaviour
                     _isKey = false;
                 }
             }
-            else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP))
+            else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_UP) || Input.GetKeyDown(KeyCode.UpArrow))
             {
                 _audioSource.PlayOneShot(_SESelect);
 
@@ -77,7 +77,7 @@ public class MenuUI : MonoBehaviour
 
                 _setMenuImage[_selectMenu].color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             }
-            else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN))
+            else if (_input.isInput(E_INPUT_MODE.TRIGGER, E_INPUT.L_STICK_DOWN) || Input.GetKeyDown(KeyCode.DownArrow))
             {
                 _audioSource.PlayOneShot(_SESelect);
 

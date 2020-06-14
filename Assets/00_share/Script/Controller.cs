@@ -396,9 +396,9 @@ public class Controller : MonoBehaviour
         }
         else if (key == E_INPUT.Y)
         {// Yボタン
-            if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.M);
-            if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.M);
-            if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.M);
+            if (mode == E_INPUT_MODE.BUTTON) return Input.GetKey(KeyCode.Escape);
+            if (mode == E_INPUT_MODE.TRIGGER) return Input.GetKeyDown(KeyCode.Escape);
+            if (mode == E_INPUT_MODE.RELEASE) return Input.GetKeyUp(KeyCode.Escape);
         }
         Debug.Log("ゲームパッドで設定されてないボタンです");
         return false;   // ゲームパッドで設定されてない値

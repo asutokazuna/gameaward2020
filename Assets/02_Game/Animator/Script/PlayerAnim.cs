@@ -85,7 +85,7 @@ public class PlayerAnim : MonoBehaviour
         {
             if(PlayerState.E_HAPPY == state)
             {
-                int nRand = Random.Range(0, 2);
+                int nRand = Random.Range(0, 3);
 
                 _playerAnimator.SetInteger("Clear", nRand);
             }
