@@ -27,6 +27,7 @@ public class ChangeFace : MonoBehaviour
     // Update is called once per frame
     void Update()   //仮
     {
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.F1))
         {
             SetFace(0);
@@ -43,7 +44,7 @@ public class ChangeFace : MonoBehaviour
         {
             SetFace(3);
         }
-
+#endif
 
     }
 
