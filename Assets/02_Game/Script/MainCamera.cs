@@ -405,7 +405,7 @@ public class MainCamera : MonoBehaviour
                 return;
             }
         _reroad = GameObject.FindWithTag("SceneManager").GetComponent<SceneMgr>()._stageReroad;
-        Debug.Log(GameObject.FindWithTag("SceneManager").GetComponent<SceneMgr>()._stageReroad);
+        //Debug.Log(GameObject.FindWithTag("SceneManager").GetComponent<SceneMgr>()._stageReroad);
         if (!_reroad)
         {
             // プレイヤーが複数いる場合がめんどくさいのでとりあえずフィールドを注視点に 要検討

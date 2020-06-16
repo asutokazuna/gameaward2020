@@ -433,19 +433,19 @@ public class WaterFlow : MonoBehaviour
         foreach (var item in childTransforms)
         {
             item.GetComponent<ParticleSystem>().Play(true);
-            Debug.Log("play");
+            //Debug.Log("play");
         }
     }
 
     private void StopChildParticle()
     {
-        Debug.Log("in");
+        //Debug.Log("in");
         foreach (Transform childTransform in this.transform)
         {
             if (childTransform.tag == "WaterLeak")
             {
                 childTransform.GetComponent<ParticleSystem>().Play(true);
-                Debug.Log("stop  1");
+                //Debug.Log("stop  1");
             }
         }
     }
@@ -683,7 +683,7 @@ public class WaterFlow : MonoBehaviour
                 item.GetComponent<ParticleSystem>().Play(true);
                 _isFullPS = false;
             }
-            Debug.Log("play  FullPs");
+            //Debug.Log("play  FullPs");
         }
         else
         {
@@ -693,7 +693,7 @@ public class WaterFlow : MonoBehaviour
             {
                 item.GetComponent<ParticleSystem>().Play(false);
             }
-            Debug.Log("stop  FullPs");
+            //Debug.Log("stop  FullPs");
 
         }
     }

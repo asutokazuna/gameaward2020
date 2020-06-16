@@ -417,7 +417,7 @@ public class BaseObject : MonoBehaviour
 
     public void Message(object obj)
     {
-        Debug.Log(obj);
+        //Debug.Log(obj);
     }
 
 

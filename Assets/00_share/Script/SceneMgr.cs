@@ -164,7 +164,7 @@ public class SceneMgr : MonoBehaviour
     void Start()
     {
         int nowHandle = SceneManager.GetActiveScene().buildIndex;
-        Debug.Log("ハンドル値" + nowHandle);
+        //Debug.Log("ハンドル値" + nowHandle);
         _nowScene = _oldScene = (E_SCENE)nowHandle;
         //_mainCamera = GameObject.Find("Main Camera");
         //_fadeScript = _mainCamera.GetComponent<Fade>();
@@ -370,7 +370,7 @@ public class SceneMgr : MonoBehaviour
     {
         if (stage == E_SCENE.TITLE || stage == E_SCENE.STAGE_SELECT || stage == E_SCENE.MAX)
         {
-            Debug.Log("参照外やで^^");
+            //Debug.Log("参照外やで^^");
             return false;
         }
         else if (stage >= E_SCENE._1_1 && stage <= E_SCENE._1_10)

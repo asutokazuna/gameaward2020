@@ -41,8 +41,8 @@ public class ChangeMaterial : MonoBehaviour
             _count = _materials.Length - 1;
         }
 
-        Debug.Log(_count);
-        Debug.Log(_materials.Length);
+        //Debug.Log(_count);
+        //Debug.Log(_materials.Length);
         // マテリアルの変更
         _changeObject.GetComponent<Renderer>().material = _materials[_count];
     }

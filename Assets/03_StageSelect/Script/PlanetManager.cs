@@ -67,7 +67,7 @@ public class PlanetManager : MonoBehaviour
             _planetObject[i].transform.RotateAround(_rotateCenter, Vector3.up, _angle * i);
         }
 
-        Debug.Log("a");
+        //Debug.Log("a");
         _selectPlanet = _planetObject[0];
     }
     /**
@@ -145,7 +145,7 @@ public class PlanetManager : MonoBehaviour
 
     private void ChangeChoicePlanet()
     {
-        Debug.Log(_selectPlanet);
+        //Debug.Log(_selectPlanet);
         if (Input.GetKeyUp(KeyCode.LeftArrow))
         {
             _uiScript.ChangePlanetName(true);
