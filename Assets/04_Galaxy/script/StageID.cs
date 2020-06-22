@@ -19,6 +19,6 @@ public class StageID : MonoBehaviour
     void Update()
     {
         _stageId = GameObject.Find("CameraObj").GetComponent<RaySystem>().GetID();
-        Debug.Log(_stageId);
+        //Debug.Log(_stageId);
     }
 }

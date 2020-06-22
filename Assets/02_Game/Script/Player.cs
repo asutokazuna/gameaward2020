@@ -254,7 +254,7 @@ public class Player : BaseObject
         {// マップ配列へ参照できない値の場合
             _position = _oldPosition;
             _isMove = false;    // 取り合えずの処理
-            Debug.Log("エラー : " + name + " はマップ配列外へ移動した");
+            //Debug.Log("エラー : " + name + " はマップ配列外へ移動した");
         }
         else if (_map.isDontMove(_position, _oldPosition) || _lifted != E_HANDS_ACTION.NONE)
         {// 移動出来ない場合
@@ -436,7 +436,7 @@ public class Player : BaseObject
         {// 一段上から一段下まで、探索をする
             if (_map.isLimitField(havePos))
             {// マップ配列へ参照できない値の場合
-                Debug.Log("エラー : " + name + " はマップ配列外への参照をしようとした");
+                //Debug.Log("エラー : " + name + " はマップ配列外への参照をしようとした");
                 continue;
             }
             _haveObject = _map.isLift(havePos);
@@ -491,7 +491,7 @@ public class Player : BaseObject
         {// 一段上から一段下まで、探索をする
             if (_map.isLimitField(putPos))
             {// マップ配列へ参照できない値の場合
-                Debug.Log("エラー : " + name + " はマップ配列外への参照をしようとした");
+                //Debug.Log("エラー : " + name + " はマップ配列外への参照をしようとした");
                 continue;
             }
             else if (_map.isPut(putPos))

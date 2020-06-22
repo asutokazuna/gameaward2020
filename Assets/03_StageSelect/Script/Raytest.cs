@@ -32,7 +32,7 @@ public class Raytest : MonoBehaviour
             {
                 if (hit.collider.name == _stageObject[i].name)
                 {
-                    Debug.Log(i+1);
+                    //Debug.Log(i+1);
                     if (Input.GetKey(KeyCode.Return))
                     {
                         //Debug.Log("Enter");

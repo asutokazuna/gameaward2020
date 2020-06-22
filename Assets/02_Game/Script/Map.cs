@@ -150,10 +150,10 @@ public class Map : MonoBehaviour
         {// 取り合えずここでゲームオーバーの実装
             _turn = E_TURN.END;
             _audioSource.PlayOneShot(_SEGameover);
-            foreach (GameObject n in GetGameOverObjects())
-            {// ゲームオーバーオブジェクトの確認
-                Debug.Log(n.name);
-            }
+            //foreach (GameObject n in GetGameOverObjects())
+            //{// ゲームオーバーオブジェクトの確認
+            //    Debug.Log(n.name);
+            //}
         }
         if (isGameClear() && _turn != E_TURN.END)
         {// ゲームクリア時の処理を追加する場所
