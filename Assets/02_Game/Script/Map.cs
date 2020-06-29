@@ -7,9 +7,20 @@
  * @data    2020/04/15(水)   プレイヤーの操作ソート
  * @data    2020/04/16(木)   警告文の解決
  * @data    2020/04/18(土)   カメラの向きに合わせたプレイヤーのソート
- * @date	2020/04/21(火)   クリア処理の追加    加藤
+ * @data    2020/06/25(木)   ver1.01開始
+ * 
+ * @author	Shun Kato
+ * @date	2020/04/21(火)   クリア処理の追加
  *
  * @version	1.00
+ * @version 1.01
+ * 
+ * ----------------------------------------------------------------------------------------------------------------- ver1.01メモ
+ * 開始時にプレイヤーの方向を統一させる(最初の1回の為だけに別方向用プログラムを用意するのは怠い)。
+ * プレイヤーに与える命令は動きだけにする、is処理系はこっちで実装し、Playerスクリプトは完結にさせる。
+ * 出来たらBaseObject系はtransformなどの最低限の機能だけにし、MapスクリプトのUpdateでオブジェクトを更新させたい。
+ * -----------------------------------------------------------------------------------------------------------------
+ * 
  */
 
 
@@ -120,9 +131,7 @@ public class Map : MonoBehaviour
         _map        = new SquareInfo[MAX_OBJECT, MAX_OBJECT, MAX_OBJECT];
         _gameOver   = false;
         _gameClear  = false;
-        _fullWaterBlockCnt = 0; 
-        //↑とりあえずここにいれたけど、他にいい場所あったら移動させてください。 4/21 加藤
-        //_input      = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();               // コンポーネントの取得
+        _fullWaterBlockCnt = 0;
     }
 
 
@@ -138,7 +147,6 @@ public class Map : MonoBehaviour
             _input = GameObject.FindGameObjectWithTag("Input").GetComponent<Controller>();
         //_gameOverManager = GameObject.Find("GameOverManager").GetComponent<GameOverManager>();
         _gameMenuUI = GameObject.Find("Menu").GetComponent<GameMenuUI>();
-
         _audioSource = GetComponent<AudioSource>();
     }
 
