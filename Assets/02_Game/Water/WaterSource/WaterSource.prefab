@@ -178,6 +178,9 @@ MonoBehaviour:
   _isFullPS: 0
   SEFullWater: {fileID: 0}
   SEFullWaterLift: {fileID: 0}
+  _sideObjectList: []
+  _isInWater: 0
+  _isList: 0
 --- !u!114 &8566542402965229667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,7 +213,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.005, y: 0.005, z: 0.005}
-  m_Center: {x: 0, y: 0, z: 0.01}
+  m_Center: {x: 0, y: 0, z: 0.005}
 --- !u!65 &7264592168412697511
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -223,7 +226,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.005, y: 0.005, z: 0.005}
-  m_Center: {x: 0, y: 0.01, z: 0}
+  m_Center: {x: 0, y: 0.005, z: 0}
 --- !u!65 &262829559646397507
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -236,7 +239,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.005, y: 0.005, z: 0.005}
-  m_Center: {x: 0.01, y: 0, z: 0}
+  m_Center: {x: 0.005, y: 0, z: 0}
 --- !u!65 &7435285237166397486
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -249,7 +252,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.005, y: 0.005, z: 0.005}
-  m_Center: {x: -0.01, y: 0, z: 0}
+  m_Center: {x: -0.005, y: 0, z: 0}
 --- !u!65 &2925800319953714831
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -262,7 +265,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.005, y: 0.005, z: 0.005}
-  m_Center: {x: 0, y: 0, z: -0.01}
+  m_Center: {x: 0, y: 0, z: -0.005}
 --- !u!82 &-5720812055133355848
 AudioSource:
   m_ObjectHideFlags: 0

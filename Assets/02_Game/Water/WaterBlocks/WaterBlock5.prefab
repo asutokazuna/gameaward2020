@@ -203,7 +203,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WAIT_TIME: 0.1
   nTargetCnt: 70
-  ParticleSwitch: 0
   _SEwaterIn: {fileID: 8300000, guid: 2769d7a20bcd348418a1310f85b2f822, type: 3}
 --- !u!198 &3096823855036707998
 ParticleSystem:
@@ -4955,7 +4954,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.005, y: 0.005, z: 0.005}
-  m_Center: {x: -0.01, y: 0, z: 0}
+  m_Center: {x: -0.005, y: 0, z: 0}
 --- !u!65 &3096823854667681025
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4968,7 +4967,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.005, y: 0.005, z: 0.005}
-  m_Center: {x: 0, y: 0, z: -0.01}
+  m_Center: {x: 0, y: 0, z: -0.005}
 --- !u!65 &3096823854667681024
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4981,7 +4980,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.005, y: 0.005, z: 0.005}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: -0.005, z: 0}
 --- !u!65 &3096823854667681055
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4994,7 +4993,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.005, y: 0.005, z: 0.005}
-  m_Center: {x: 0.01, y: 0, z: 0}
+  m_Center: {x: 0.005, y: 0, z: 0}
 --- !u!114 &3096823854667681027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5018,6 +5017,9 @@ MonoBehaviour:
   _isFullPS: 0
   SEFullWater: {fileID: 8300000, guid: bfde2b45ba6400341bb4ce3d48794a8f, type: 3}
   SEFullWaterLift: {fileID: 8300000, guid: 3bbafe5f436a00a4c880295d11306ac2, type: 3}
+  _sideObjectList: []
+  _isInWater: 0
+  _isList: 0
 --- !u!114 &-7156662218057074220
 MonoBehaviour:
   m_ObjectHideFlags: 0

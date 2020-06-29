@@ -1,25 +1,38 @@
-﻿using System.Collections;
+﻿/**
+ * @file    BulbCreate.cs
+ * @brief   箱の中の水の生成
+ * @author  Shun Kato
+ * @date    2020/06/28      コメントをきれいに
+ */
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ * @class BulbCreate
+ * @brief 箱の中の水を生成するクラス
+ */
 public class BulbCreate : MonoBehaviour
 {
     private WaterFlow script;
     private bool bFirst;
     private bool bFill;
     private float fTimer;
-    public float WAIT_TIME;
+    public float WAIT_TIME;                 //！< こぼれる水の生成待機時間
 
     private int nOldWater;
 
     public int nTargetCnt;
 
-    public bool ParticleSwitch;
+    //public bool ParticleSwitch;
 
-    public AudioClip _SEwaterIn;
+    public AudioClip _SEwaterIn;            //!< 水の生成音
     private AudioSource _audioSource = default;
 
-    // Start is called before the first frame update
+    /**
+     * @brief 初期化処理
+     * @return なし
+     */
     void Start()
     {
         bFirst = false;
@@ -30,7 +43,10 @@ public class BulbCreate : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
+    /**
+     * @brief 更新処理
+     * @return なし
+     */
     void Update()
     {
         if(script._currentWater == 0)
@@ -48,6 +64,7 @@ public class BulbCreate : MonoBehaviour
                 }
             }
 
+            // 箱に水が入っていてなくなった時（持ち上げられたとき）
             if (nOldWater > 0)
             {
                 fTimer = WAIT_TIME;
@@ -57,6 +74,7 @@ public class BulbCreate : MonoBehaviour
             if(fTimer > 0.0f)
             {
                 fTimer -= Time.deltaTime;
+                // 箱を持ち上げてこぼれる水の生成
                 if(fTimer <= 0.0f)
                 {
                     fTimer = -1.0f;
@@ -72,6 +90,7 @@ public class BulbCreate : MonoBehaviour
             }
         }
 
+        // 箱内の水の生成
         if (script._currentWater > nTargetCnt)
         {
             if (!bFirst && gameObject.tag == "WaterBlock")
@@ -91,23 +110,23 @@ public class BulbCreate : MonoBehaviour
             }
         }
 
-        if (script._isFullWater)
-        {
-            if (!bFill)
-            {
-                bFill = true;
-
-                if(ParticleSwitch)
-                {
-                    this.GetComponent<ParticleSystem>().Play(true);
-                }
-                
-                
-
-            }
-        }
+        /* 使われていない処理 */
+        //if (script._isFullWater)
+        //{
+        //    if (!bFill)
+        //    {
+        //        bFill = true;
+        //
+        //        if(ParticleSwitch)
+        //        {
+        //            this.GetComponent<ParticleSystem>().Play(true);
+        //        }
+        //    }
+        //}
 
 
         nOldWater = script._currentWater;
     }
 }
+
+// EOF
