@@ -20,9 +20,9 @@ using System.Linq;
 public enum E_DIRECTION
 {
     FRONT = 0,            
-    RIGHT,            
-    BACK,         
     LEFT,         
+    BACK,         
+    RIGHT,            
     UP,     
     DOWN,          
 }
@@ -132,6 +132,7 @@ public class WaterFlow : MonoBehaviour
      */
     private void FixedUpdate()
     {
+        // 繋がってないとき
         if (_isList == false || GetComponent<BlockTank>()._lifted != E_HANDS_ACTION.NONE)
         {
             _isInWater = false;
@@ -144,6 +145,7 @@ public class WaterFlow : MonoBehaviour
 
         for(int i = 0; i < _sideObjectList.Count; ++i)
         {
+            // 横の箱が満タン
             if(_sideObjectList[i].GetComponent<WaterFlow>()._isFullWater == true){
                 _isInWater = true;
                 break;
@@ -468,10 +470,68 @@ public class WaterFlow : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         if (other.tag != "WaterBlock" &&
-            other.tag != "WaterSourceBlock" &&
-            other.tag != "Player"){
+            other.tag != "WaterSourceBlock") {
             return;
         }
+
+        Vector3 targetPos = (other.transform.position - transform.position) * 1.2f;
+
+        // X軸が正の方向が前向きで作ってあるので
+        if ((int)targetPos.x > 0)         // 前
+        {
+            TargetDirection = (int)E_DIRECTION.FRONT;
+        }
+        else if((int)targetPos.x < 0)    // 後ろ
+        {
+            TargetDirection = (int)E_DIRECTION.BACK;
+        }
+        else if((int)targetPos.z > 0)    // 左
+        {
+            TargetDirection = (int)E_DIRECTION.LEFT;
+        }
+        else if((int)targetPos.z < 0)    // 右
+        {
+            TargetDirection = (int)E_DIRECTION.RIGHT;
+        }
+        else if((int)targetPos.y > 0)    // 上
+        {
+            TargetDirection = (int)E_DIRECTION.UP;
+        }
+        else if((int)targetPos.y < 0)    // 下
+        {
+            TargetDirection = (int)E_DIRECTION.DOWN;
+        }
+
+        // 周囲だったら回転の補正を入れる
+        if(TargetDirection < (int)E_DIRECTION.UP)
+        {
+            int MyDir = (TargetDirection + 2 + other.GetComponent<WaterFlow>().RotateDirection + 4) % 4;
+            int tarDir = (TargetDirection + RotateDirection + 4) % 4;
+
+            if (direction[tarDir] == false ||          // 相手方向に穴がない
+                other.GetComponent<WaterFlow>().direction[MyDir] == false)  // 自分方向に穴がない
+            {
+                return;
+            }
+        }
+        else if(TargetDirection == (int)E_DIRECTION.UP)          // 上方向
+        {
+            if (direction[TargetDirection] == false ||          // 相手方向に穴がない
+          other.GetComponent<WaterFlow>().direction[TargetDirection + 1] == false)
+            {
+                return;
+            }
+        }
+        else if(TargetDirection == (int)E_DIRECTION.DOWN)          // 下方向
+        {
+            if (direction[TargetDirection] == false ||          // 相手方向に穴がない
+          other.GetComponent<WaterFlow>().direction[TargetDirection - 1] == false)
+            {
+                return;
+            }
+        }
+        
+        // --- 繋がっているリストに登録 ---
         bool _isDupli = false;
 
         for (int i = 0; i < _sideObjectList.Count; i++)
@@ -485,206 +545,6 @@ public class WaterFlow : MonoBehaviour
 
         if (_isDupli == false)
             _sideObjectList.Add(other.gameObject);
-
-        //Debug.Log("OnTriggerStay"+this.name);
-
-        //相手のタグが箱かつ、自分自身が満水かつ、持たれていなかったら
-        //if (other.gameObject.tag == "WaterBlock" && _isFullWater &&
-        //    this.GetComponent<BlockTank>()._lifted == E_HANDS_ACTION.NONE &&
-        //   other.GetComponent<BlockTank>()._lifted == E_HANDS_ACTION.NONE)
-        //{
-        //    other.GetComponent<WaterFlow>()._isInWater = true;
-        //
-        //    for (int i = 0; i < 4; i++)
-        //    {
-        //        if (direction[i])
-        //        {
-        //            TargetDirection = (i - RotateDirection + 4) % 4;
-        //
-        //            switch (TargetDirection)
-        //            {
-        //                case 0:
-        //                    if (other.transform.position.x >= this.transform.position.x + 0.9f &&
-        //                       other.transform.position.x <= this.transform.position.x + 1.1f &&
-        //                       other.transform.position.y >= this.transform.position.y - _adjust &&
-        //                       other.transform.position.y <= this.transform.position.y + _adjust &&
-        //                       other.transform.position.z >= this.transform.position.z - _adjust &&
-        //                       other.transform.position.z <= this.transform.position.z + _adjust)
-        //                    {
-        //                        // other.GetComponent<WaterFlow>()._currentWater++;
-        //                        if (other.GetComponent<WaterFlow>().direction[(TargetDirection + 2 + other.GetComponent<WaterFlow>().RotateDirection) % 4])
-        //                        {
-        //                            //繋がる
-        //                            WaterLeak[TargetDirection] = false;
-        //                            if (_currentWater > other.GetComponent<WaterFlow>()._currentWater)
-        //                            {
-        //                                other.GetComponent<WaterFlow>()._currentWater++;
-        //
-        //                                MinusWater();
-        //
-        //                                WaterLeak[i] = false;
-        //                            }
-        //
-        //                        }
-        //                        else
-        //                        {
-        //                            //繋がらない
-        //                        }
-        //                    }
-        //                    break;
-        //
-        //                case 1:
-        //                    if (other.transform.position.z >= this.transform.position.z + 0.9f &&
-        //                       other.transform.position.z <= this.transform.position.z + 1.1f &&
-        //                       other.transform.position.y >= this.transform.position.y - _adjust &&
-        //                       other.transform.position.y <= this.transform.position.y + _adjust &&
-        //                       other.transform.position.x >= this.transform.position.x - _adjust &&
-        //                       other.transform.position.x <= this.transform.position.x + _adjust)
-        //                    {
-        //                        if (other.GetComponent<WaterFlow>().direction[(TargetDirection + 2 + other.GetComponent<WaterFlow>().RotateDirection) % 4])
-        //                        {
-        //                            //繋がる
-        //                            WaterLeak[TargetDirection] = false;
-        //                            if (_currentWater > other.GetComponent<WaterFlow>()._currentWater)
-        //                            {
-        //                                other.GetComponent<WaterFlow>()._currentWater++;
-        //
-        //                                MinusWater();
-        //
-        //                                WaterLeak[i] = false;
-        //                            }
-        //                        }
-        //                        else
-        //                        {
-        //                            //繋がらない
-        //                        }
-        //                    }
-        //                    break;
-        //
-        //                case 2:
-        //
-        //                    // Debug.Log(other.transform.position.x);
-        //
-        //                    if (other.transform.position.x <= this.transform.position.x - 0.9f &&
-        //                       other.transform.position.x >= this.transform.position.x - 1.1f &&
-        //                       other.transform.position.y >= this.transform.position.y - _adjust &&
-        //                       other.transform.position.y <= this.transform.position.y + _adjust &&
-        //                       other.transform.position.z >= this.transform.position.z - _adjust &&
-        //                       other.transform.position.z <= this.transform.position.z + _adjust)
-        //                    {
-        //                        //Debug.Log("in");
-        //                        //int debug = (TargetDirection + 2 + other.GetComponent<WaterFlow>().RotateDirection) % 4;
-        //                        //Debug.Log(debug);
-        //                        if (other.GetComponent<WaterFlow>().direction[(TargetDirection + 2 + other.GetComponent<WaterFlow>().RotateDirection) % 4])
-        //                        {
-        //                            //繋がる
-        //                            WaterLeak[TargetDirection] = false;
-        //                            if (_currentWater > other.GetComponent<WaterFlow>()._currentWater)
-        //                            {
-        //                                other.GetComponent<WaterFlow>()._currentWater++;
-        //
-        //                                MinusWater();
-        //
-        //                                WaterLeak[i] = false;
-        //                            }
-        //                        }
-        //                        else
-        //                        {
-        //                            //繋がらない
-        //                        }
-        //                    }
-        //                    break;
-        //
-        //                case 3:
-        //                    if (other.transform.position.z <= this.transform.position.z - 0.9f &&
-        //                       other.transform.position.z >= this.transform.position.z - 1.1f &&
-        //                       other.transform.position.y >= this.transform.position.y - _adjust &&
-        //                       other.transform.position.y <= this.transform.position.y + _adjust &&
-        //                       other.transform.position.x >= this.transform.position.x - _adjust &&
-        //                       other.transform.position.x <= this.transform.position.x + _adjust)
-        //                    {
-        //                        if (other.GetComponent<WaterFlow>().direction[(TargetDirection + 2 + other.GetComponent<WaterFlow>().RotateDirection) % 4])
-        //                        {
-        //                            //繋がる
-        //                            WaterLeak[TargetDirection] = false;
-        //                            if (_currentWater > other.GetComponent<WaterFlow>()._currentWater)
-        //                            {
-        //                                other.GetComponent<WaterFlow>()._currentWater++;
-        //
-        //                                MinusWater();
-        //
-        //                                WaterLeak[i] = false;
-        //                            }
-        //                        }
-        //                        else
-        //                        {
-        //                            //繋がらない 
-        //                        }
-        //                    }
-        //                    break;
-        //            }
-        //        }
-        //    }
-        //
-        //    if (direction[4])
-        //    {
-        //        if (other.transform.position.z >= this.transform.position.z - _adjust &&
-        //            other.transform.position.z <= this.transform.position.z + _adjust &&
-        //            other.transform.position.y >= this.transform.position.y + 0.9f &&
-        //            other.transform.position.y <= this.transform.position.y + 1.1f &&
-        //            other.transform.position.x >= this.transform.position.x - _adjust &&
-        //            other.transform.position.x <= this.transform.position.x + _adjust)
-        //        {
-        //            if (other.GetComponent<WaterFlow>().direction[5])
-        //            {
-        //                //繋がる
-        //                WaterLeak[TargetDirection] = false;
-        //                if (_currentWater > other.GetComponent<WaterFlow>()._currentWater)
-        //                {
-        //                    other.GetComponent<WaterFlow>()._currentWater++;
-        //
-        //                    MinusWater();
-        //                }
-        //            }
-        //            else
-        //            {
-        //                //繋がらない
-        //            }
-        //        }
-        //    }
-        //
-        //    if (direction[5])
-        //    {
-        //        if (other.transform.position.z >= this.transform.position.z - _adjust &&
-        //            other.transform.position.z <= this.transform.position.z + _adjust &&
-        //            other.transform.position.y <= this.transform.position.y - 0.9f &&
-        //            other.transform.position.y >= this.transform.position.y - 1.1f &&
-        //            other.transform.position.x >= this.transform.position.x - _adjust &&
-        //            other.transform.position.x <= this.transform.position.x + _adjust)
-        //        {
-        //            if (other.GetComponent<WaterFlow>().direction[4])
-        //            {
-        //                //繋がる
-        //                WaterLeak[TargetDirection] = false;
-        //                if (_currentWater > other.GetComponent<WaterFlow>()._currentWater)
-        //                {
-        //                    other.GetComponent<WaterFlow>()._currentWater++;
-        //
-        //                    MinusWater();
-        //                }
-        //            }
-        //            else
-        //            {
-        //                //繋がらない
-        //            }
-        //        }
-        //    }
-        //}
-        //if (other.gameObject.tag == "WaterSourceBlock")
-        //{
-        //    _currentWater++;
-        //    add++;
-        //}
     }
 
     private void CreateFullPS()

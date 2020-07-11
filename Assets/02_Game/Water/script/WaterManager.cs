@@ -1,8 +1,9 @@
 ﻿/**
- * @file     WaterManager.cs
- * @brief    水の流れる道筋の管理
- * @author   kotakota
- * @date     2020/06/28     作成
+ * @file    WaterManager.cs
+ * @brief   水の流れる道筋の管理
+ * @author  ariga
+ * @date    2020/06/28      作成
+ * @date    2020/07/11      シングルトンの破棄が面倒なので使わないようにした
  */
 using System.Collections;
 using System.Collections.Generic;
@@ -17,36 +18,16 @@ public class WaterManager : MonoBehaviour
     [SerializeField]
     private List<GameObject> _tree;          //!< バランスツリーみたいなリスト
     GameObject _waterSource;                 //!< 水源ブロック
-    public static WaterManager _instance;    //!< インスタンス    
 
     /**
-     * @brief 一番最初の初期化処理
+     * @brief 初期化処理
      * @return なし
      */
-    private void Awake()
-    {
-        // シングルトン
-        if (_instance == null)
-        {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    /**
-     * @breif 初期化処理
-     * @return なし
-     */
-    void Start()
+    private void Start()
     {
         _waterSource = GameObject.FindWithTag("WaterSourceBlock");
         _tree = new List<GameObject>();
     }
-
 
     void Update()
     {
